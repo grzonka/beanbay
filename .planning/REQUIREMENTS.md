@@ -88,33 +88,33 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| BEAN-01 | — | Pending |
-| BEAN-02 | — | Pending |
-| BEAN-03 | — | Pending |
-| OPT-01 | — | Pending |
-| OPT-02 | — | Pending |
-| OPT-03 | — | Pending |
-| OPT-04 | — | Pending |
-| OPT-05 | — | Pending |
-| OPT-06 | — | Pending |
-| SHOT-01 | — | Pending |
-| SHOT-02 | — | Pending |
-| SHOT-03 | — | Pending |
-| VIZ-01 | — | Pending |
-| VIZ-02 | — | Pending |
-| VIZ-03 | — | Pending |
-| VIZ-04 | — | Pending |
-| VIZ-05 | — | Pending |
-| ANLYT-01 | — | Pending |
-| ANLYT-02 | — | Pending |
-| INFRA-01 | — | Pending |
-| INFRA-02 | — | Pending |
-| INFRA-03 | — | Pending |
+| BEAN-01 | Phase 2 | Pending |
+| BEAN-02 | Phase 2 | Pending |
+| BEAN-03 | Phase 2 | Pending |
+| OPT-01 | Phase 3 | Pending |
+| OPT-02 | Phase 3 | Pending |
+| OPT-03 | Phase 3 | Pending |
+| OPT-04 | Phase 3 | Pending |
+| OPT-05 | Phase 3 | Pending |
+| OPT-06 | Phase 3 | Pending |
+| SHOT-01 | Phase 4 | Pending |
+| SHOT-02 | Phase 4 | Pending |
+| SHOT-03 | Phase 3 | Pending |
+| VIZ-01 | Phase 5 | Pending |
+| VIZ-02 | Phase 5 | Pending |
+| VIZ-03 | Phase 4 | Pending |
+| VIZ-04 | Phase 6 | Pending |
+| VIZ-05 | Phase 5 | Pending |
+| ANLYT-01 | Phase 6 | Pending |
+| ANLYT-02 | Phase 6 | Pending |
+| INFRA-01 | Phase 2 | Pending |
+| INFRA-02 | Phase 1 | Pending |
+| INFRA-03 | Phase 1 | Pending |
 
 **Coverage:**
 - v1 requirements: 22 total
-- Mapped to phases: 0
-- Unmapped: 22 ⚠️
+- Mapped to phases: 22 ✓
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-21*
