@@ -20,6 +20,13 @@
 4. Campaign state persists across container restarts (JSON files in mounted volume)
 5. Stopping and restarting the container preserves all data (DB + campaigns survive)
 
+**Plans:** 3 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Project scaffolding, config, SQLAlchemy models, Alembic migrations
+- [ ] 01-02-PLAN.md — BayBE optimizer service layer (hybrid campaigns, thread-safe)
+- [ ] 01-03-PLAN.md — FastAPI app skeleton, Docker deployment, comprehensive tests
+
 **Depends on:** None
 
 ---
