@@ -1,0 +1,37 @@
+{
+  "mode": "yolo",
+  "depth": "comprehensive",
+  "parallelization": true,
+  "commit_docs": true,
+  "model_profile": "quality",
+  "profiles": {
+    "active_profile": "quality",
+    "presets": {
+      "quality": {
+        "planning": "github-copilot/claude-opus-4.6",
+        "execution": "github-copilot/claude-sonnet-4.6",
+        "verification": "github-copilot/claude-opus-4.6"
+      },
+      "balanced": {
+        "planning": "github-copilot/claude-opus-4.6",
+        "execution": "github-copilot/claude-sonnet-4.5",
+        "verification": "github-copilot/claude-sonnet-4.6"
+      },
+      "budget": {
+        "planning": "github-copilot/claude-sonnet-4.6",
+        "execution": "opencode/glm-5-free",
+        "verification": "opencode/glm-5-free"
+      }
+    },
+    "custom_overrides": {
+      "quality": {},
+      "balanced": {},
+      "budget": {}
+    }
+  },
+  "workflow": {
+    "research": true,
+    "plan_check": true,
+    "verifier": true
+  }
+}
