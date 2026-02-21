@@ -1,14 +1,14 @@
 # Project State: BrewFlow
 
-**Last updated:** 2026-02-21
-**Current phase:** Phase 2 (COMPLETE — all plans executed, 43/43 tests passing)
+**Last updated:** 2026-02-22
+**Current phase:** Phase 3 (COMPLETE — all plans executed, 60/60 tests passing)
 
 ## Project Reference
 
 See: .planning/PROJECT.md (updated 2026-02-21)
 
 **Core value:** Every espresso shot teaches the system something — the app must make it effortless to capture feedback from a phone at the espresso machine and return increasingly better recommendations.
-**Current focus:** Phase 2 complete, ready for Phase 3
+**Current focus:** Phase 3 complete — app is now usable for daily espresso optimization. Ready for Phase 4.
 
 ## Phase Status
 
@@ -16,10 +16,12 @@ See: .planning/PROJECT.md (updated 2026-02-21)
 |-------|------|--------|-------|----------|
 | 1 | Foundation & Infrastructure | ● Complete | 3/3 | 100% |
 | 2 | Bean Management & Mobile Shell | ● Complete | 2/2 | 100% |
-| 3 | Optimization Loop | ○ Not started | 0/0 | 0% |
+| 3 | Optimization Loop | ● Complete | 1/1 | 100% |
 | 4 | Shot History & Feedback Depth | ○ Not started | 0/0 | 0% |
 | 5 | Insights & Trust | ○ Not started | 0/0 | 0% |
 | 6 | Analytics & Exploration | ○ Not started | 0/0 | 0% |
+
+**Overall progress:** ████████░░░░░░░░░░░░ ~40% (6/~15 estimated plans)
 
 ## Active Decisions
 
@@ -30,6 +32,8 @@ See: .planning/PROJECT.md (updated 2026-02-21)
 - htmx v2.0.4 from CDN for dynamic UI updates
 - Active bean stored in httponly cookie (single-user home app, no auth)
 - TemplateResponse uses new signature (request, name, context) — no deprecation warnings
+- Server-side `pending_recommendations` dict (app.state) for single-user session state — keyed by UUID, cleaned up after recording
+- Deduplication via unique `recommendation_id` on Measurement table — safe to re-POST
 
 ## Blockers
 
@@ -50,10 +54,12 @@ See: .planning/PROJECT.md (updated 2026-02-21)
 - BayBE add_measurements with numerical_measurements_must_be_within_tolerance=False for rebuild scenarios
 - Active bean: httponly cookie "active_bean_id", 1-year expiry
 - HTML form delete: POST /beans/{id}/delete (forms can't send DELETE method)
+- Failed shots: is_failed=true auto-sets taste=1 in router before DB write
+- Best recipe: excludes failed shots (is_failed=False filter), highest taste wins
 
 ### Research Flags
 - ~~Phase 1: Investigate discrete vs continuous BayBE parameters~~ RESOLVED: hybrid approach works, 7.5KB files
-- Phase 3: Validate htmx + FastAPI integration patterns (HX-Request header detection) — PARTIALLY DONE: htmx integration working in Phase 2
+- ~~Phase 3: Validate htmx + FastAPI integration patterns~~ RESOLVED: htmx integration working, HX-Request header detection works
 - Phase 5: Research extracting uncertainty/confidence data from BayBE surrogate model
 
 ### Todos
@@ -62,14 +68,18 @@ None.
 ## Session Continuity
 
 ### Last Session
-- **Date:** 2026-02-21
-- **What happened:** Implemented per-bean parameter overrides (committed 93cefe2). Planned and executed Phase 2 — mobile shell (Jinja2 + htmx + dark theme CSS), bean CRUD router (list, create, detail, update, delete, activate, parameter overrides), all templates, and comprehensive tests. 43/43 tests passing.
-- **Where we left off:** Phase 2 complete. Ready for Phase 3 (Optimization Loop).
+- **Date:** 2026-02-22
+- **What happened:** Executed Phase 3 plan 03-01 (Brew Router & Optimization Loop). Router, templates, and CSS were pre-existing from commit 7786c8f. Added 17 tests covering the full optimization cycle. 60/60 tests passing.
+- **Where we left off:** Phase 3 complete. App is now usable for daily espresso optimization.
 
 ### Next Steps
-1. Plan Phase 3: Optimization Loop (recommendation UI, taste scoring, failed shots, repeat best)
-2. Execute Phase 3
-3. After Phase 3: app is usable for daily espresso optimization
+1. Plan Phase 4: Shot History & Feedback Depth
+   - Reverse-chronological shot history per bean
+   - Optional free-text notes on shots
+   - Expandable flavor profile panel (6 dimensions, collapsed by default)
+2. Execute Phase 4
+3. After Phase 4: begin Phase 5 (Insights & Trust — optimization progress chart, explore/exploit indicator)
 
 ---
 *State initialized: 2026-02-21*
+*Last updated: 2026-02-22*
