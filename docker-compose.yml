@@ -1,0 +1,13 @@
+services:
+  brewflow:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - brewflow-data:/data
+    environment:
+      - BREWFLOW_DATA_DIR=/data
+    restart: unless-stopped
+
+volumes:
+  brewflow-data:

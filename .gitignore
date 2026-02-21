@@ -1,0 +1,18 @@
+# Example repo (not part of this project)
+baybe-resources/
+
+# Data (local database & campaign state)
+data/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+*.egg-info/
+
+# marimo
+.marimo/
+
+# OS
+.DS_Store

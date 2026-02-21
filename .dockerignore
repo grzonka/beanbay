@@ -1,0 +1,13 @@
+.git
+.gitignore
+.planning
+.ruff_cache
+__pycache__
+*.pyc
+.venv
+venv
+data/
+tests/
+baybe-resources/
+__marimo__/
+*.egg-info

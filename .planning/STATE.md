@@ -1,20 +1,20 @@
 # Project State: BrewFlow
 
 **Last updated:** 2026-02-21
-**Current phase:** Phase 1 (planned, ready for execution)
+**Current phase:** Phase 1 (COMPLETE — all 3 plans executed, 12/12 tests passing)
 
 ## Project Reference
 
 See: .planning/PROJECT.md (updated 2026-02-21)
 
 **Core value:** Every espresso shot teaches the system something — the app must make it effortless to capture feedback from a phone at the espresso machine and return increasingly better recommendations.
-**Current focus:** Phase 1 — Foundation & Infrastructure
+**Current focus:** Phase 1 complete, ready for Phase 2
 
 ## Phase Status
 
 | Phase | Name | Status | Plans | Progress |
 |-------|------|--------|-------|----------|
-| 1 | Foundation & Infrastructure | ◐ Planned | 3/3 | 0% |
+| 1 | Foundation & Infrastructure | ● Complete | 3/3 | 100% |
 | 2 | Bean Management & Mobile Shell | ○ Not started | 0/0 | 0% |
 | 3 | Optimization Loop | ○ Not started | 0/0 | 0% |
 | 4 | Shot History & Feedback Depth | ○ Not started | 0/0 | 0% |
@@ -23,11 +23,13 @@ See: .planning/PROJECT.md (updated 2026-02-21)
 
 ## Active Decisions
 
-None yet.
+- Hybrid BayBE parameters confirmed: campaign JSON ~7.5KB (vs 20MB with discrete)
+- Fixed setuptools build backend from legacy `_Backend` to `setuptools.build_meta`
+- Added package discovery config to exclude `data/` directory
 
 ## Blockers
 
-None.
+- Docker build not verified (daemon not available in dev environment). Dockerfile and docker-compose.yml ready for Unraid deployment.
 
 ## Accumulated Context
 
@@ -37,26 +39,29 @@ None.
 - Dual storage: SQLite (source of truth) + JSON files (BayBE campaign cache)
 - Measurements-as-source-of-truth pattern (campaigns are rebuildable)
 - CPU-only PyTorch to save ~1GB in Docker image
+- Hybrid BayBE search space: 5 continuous + 1 categorical parameter
+- Campaign file size: ~7.5KB (confirmed, down from 20MB discrete)
+- Base.metadata.create_all() in lifespan alongside Alembic (safe — no-op if tables exist)
 
 ### Research Flags
-- Phase 1: Investigate discrete vs continuous BayBE parameters (continuous eliminates 20MB campaign files)
+- ~~Phase 1: Investigate discrete vs continuous BayBE parameters~~ RESOLVED: hybrid approach works, 7.5KB files
 - Phase 3: Validate htmx + FastAPI integration patterns (HX-Request header detection)
 - Phase 5: Research extracting uncertainty/confidence data from BayBE surrogate model
 
 ### Todos
-None yet.
+None.
 
 ## Session Continuity
 
 ### Last Session
 - **Date:** 2026-02-21
-- **What happened:** Phase 1 planning completed — 3 plans across 3 waves, verified by plan checker (PASS)
-- **Where we left off:** Phase 1 is fully planned and ready for execution. Plans: 01-01 (scaffolding + models), 01-02 (BayBE service), 01-03 (FastAPI + Docker + tests).
+- **What happened:** Phase 1 fully executed — all 3 waves (scaffolding+models, BayBE service, FastAPI+Docker+tests). 12/12 tests passing. FastAPI serves /health endpoint. OptimizerService creates hybrid campaigns, recommends with rounding, persists state.
+- **Where we left off:** Phase 1 is complete. All code, tests, and Docker files in place. Ready for Phase 2 planning.
 
 ### Next Steps
-1. Execute Phase 1 plans (Wave 1 → Wave 2 → Wave 3)
-2. Verify Phase 1 success criteria
-3. Plan Phase 2
+1. Verify Phase 1 on Unraid (docker compose build && docker compose up)
+2. Plan Phase 2: Bean Management & Mobile Shell
+3. Execute Phase 2
 
 ---
 *State initialized: 2026-02-21*
