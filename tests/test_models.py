@@ -144,3 +144,29 @@ def test_measurement_optional_fields(db_session):
     assert m.bitterness is None
     assert m.aroma is None
     assert m.intensity is None
+
+
+def test_bean_parameter_overrides(db_session):
+    """Bean.parameter_overrides stores and retrieves JSON overrides."""
+    overrides = {
+        "grind_setting": {"min": 18.0, "max": 22.0},
+        "temperature": {"min": 90.0, "max": 94.0},
+    }
+    bean = Bean(name="Override Bean", parameter_overrides=overrides)
+    db_session.add(bean)
+    db_session.flush()
+
+    assert bean.parameter_overrides is not None
+    assert bean.parameter_overrides["grind_setting"]["min"] == 18.0
+    assert bean.parameter_overrides["grind_setting"]["max"] == 22.0
+    assert bean.parameter_overrides["temperature"]["min"] == 90.0
+    assert bean.parameter_overrides["temperature"]["max"] == 94.0
+
+
+def test_bean_parameter_overrides_default_none(db_session):
+    """Bean.parameter_overrides defaults to None when not set."""
+    bean = Bean(name="No Override Bean")
+    db_session.add(bean)
+    db_session.flush()
+
+    assert bean.parameter_overrides is None

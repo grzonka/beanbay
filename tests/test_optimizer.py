@@ -5,7 +5,13 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from app.services.optimizer import OptimizerService, BAYBE_PARAM_COLUMNS
+from app.services.optimizer import (
+    DEFAULT_BOUNDS,
+    BAYBE_PARAM_COLUMNS,
+    OptimizerService,
+    _bounds_fingerprint,
+    _resolve_bounds,
+)
 
 
 pytestmark = pytest.mark.slow
@@ -130,3 +136,111 @@ async def test_rebuild_campaign(optimizer_service, tmp_campaigns_dir):
     # Should be able to recommend from rebuilt campaign
     rec = await optimizer_service.recommend("rebuild-bean")
     assert all(p in rec for p in BAYBE_PARAM_COLUMNS)
+
+
+# --- Parameter override tests ---
+
+
+def test_resolve_bounds_defaults():
+    """_resolve_bounds with no overrides returns DEFAULT_BOUNDS."""
+    assert _resolve_bounds(None) == DEFAULT_BOUNDS
+    assert _resolve_bounds({}) == DEFAULT_BOUNDS
+
+
+def test_resolve_bounds_partial_override():
+    """_resolve_bounds merges partial overrides onto defaults."""
+    overrides = {"grind_setting": {"min": 18.0, "max": 22.0}}
+    bounds = _resolve_bounds(overrides)
+    assert bounds["grind_setting"] == (18.0, 22.0)
+    # Other params unchanged
+    assert bounds["temperature"] == DEFAULT_BOUNDS["temperature"]
+    assert bounds["dose_in"] == DEFAULT_BOUNDS["dose_in"]
+
+
+def test_resolve_bounds_partial_min_only():
+    """_resolve_bounds can override just min, keeping default max."""
+    overrides = {"temperature": {"min": 90.0}}
+    bounds = _resolve_bounds(overrides)
+    assert bounds["temperature"] == (90.0, 96.0)  # max stays default
+
+
+def test_resolve_bounds_ignores_unknown_params():
+    """_resolve_bounds ignores parameters not in DEFAULT_BOUNDS."""
+    overrides = {"unknown_param": {"min": 1.0, "max": 10.0}}
+    bounds = _resolve_bounds(overrides)
+    assert bounds == DEFAULT_BOUNDS
+
+
+def test_bounds_fingerprint_stable():
+    """Same bounds produce the same fingerprint."""
+    b1 = _resolve_bounds(None)
+    b2 = _resolve_bounds({})
+    assert _bounds_fingerprint(b1) == _bounds_fingerprint(b2)
+
+
+def test_bounds_fingerprint_changes_with_overrides():
+    """Different overrides produce different fingerprints."""
+    fp_default = _bounds_fingerprint(_resolve_bounds(None))
+    fp_custom = _bounds_fingerprint(_resolve_bounds({"grind_setting": {"min": 18.0, "max": 22.0}}))
+    assert fp_default != fp_custom
+
+
+async def test_recommend_with_overrides(optimizer_service):
+    """Recommendations with custom bounds respect the narrowed range."""
+    overrides = {
+        "grind_setting": {"min": 20.0, "max": 22.0},
+        "temperature": {"min": 92.0, "max": 94.0},
+    }
+    rec = await optimizer_service.recommend("override-bean", overrides)
+
+    assert 20.0 <= rec["grind_setting"] <= 22.0
+    assert 92.0 <= rec["temperature"] <= 94.0
+    # Non-overridden params use defaults
+    assert 55.0 <= rec["preinfusion_pct"] <= 100.0
+    assert 18.5 <= rec["dose_in"] <= 20.0
+    assert 36.0 <= rec["target_yield"] <= 50.0
+    assert rec["saturation"] in ("yes", "no")
+
+
+async def test_campaign_invalidation_on_override_change(optimizer_service, tmp_campaigns_dir):
+    """Changing overrides rebuilds the campaign with new bounds."""
+    # Create campaign with default bounds and add a measurement
+    rec1 = await optimizer_service.recommend("invalidate-bean")
+    params = {k: rec1[k] for k in BAYBE_PARAM_COLUMNS}
+    optimizer_service.add_measurement("invalidate-bean", {**params, "taste": 7.0})
+
+    campaign_before = optimizer_service.get_or_create_campaign("invalidate-bean")
+    assert len(campaign_before.measurements) == 1
+
+    # Now change overrides — campaign should rebuild with measurements preserved
+    new_overrides = {"grind_setting": {"min": 20.0, "max": 22.0}}
+    campaign_after = optimizer_service.get_or_create_campaign("invalidate-bean", new_overrides)
+
+    # Measurements should be preserved after rebuild
+    assert len(campaign_after.measurements) == 1
+
+    # New recommendation should respect new bounds
+    rec2 = await optimizer_service.recommend("invalidate-bean", new_overrides)
+    assert 20.0 <= rec2["grind_setting"] <= 22.0
+
+
+async def test_rebuild_campaign_with_overrides(optimizer_service):
+    """rebuild_campaign respects custom overrides."""
+    overrides = {"temperature": {"min": 90.0, "max": 92.0}}
+    measurements = [
+        {
+            "grind_setting": 20.0,
+            "temperature": 91.0,
+            "preinfusion_pct": 75.0,
+            "dose_in": 19.0,
+            "target_yield": 40.0,
+            "saturation": "yes",
+            "taste": 7.0,
+        },
+    ]
+    df = pd.DataFrame(measurements)
+    campaign = optimizer_service.rebuild_campaign("rebuild-override-bean", df, overrides)
+    assert len(campaign.measurements) == 1
+
+    rec = await optimizer_service.recommend("rebuild-override-bean", overrides)
+    assert 90.0 <= rec["temperature"] <= 92.0
