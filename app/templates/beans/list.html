@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}My Beans — BrewFlow{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">My Beans</h1>
+</div>
+
+<!-- Create bean form -->
+<form
+  hx-post="/beans"
+  hx-target="#bean-list"
+  hx-swap="afterbegin"
+  hx-on::after-request="if(event.detail.successful) this.reset()"
+  class="card mb-lg"
+>
+  <div class="form-group">
+    <label class="form-label" for="name">Bean name</label>
+    <input
+      type="text"
+      id="name"
+      name="name"
+      class="form-input"
+      placeholder="e.g. Ethiopia Yirgacheffe"
+      required
+      autocomplete="off"
+    >
+  </div>
+  <div class="form-group">
+    <label class="form-label" for="roaster">Roaster (optional)</label>
+    <input
+      type="text"
+      id="roaster"
+      name="roaster"
+      class="form-input"
+      placeholder="e.g. Onyx Coffee Lab"
+      autocomplete="off"
+    >
+  </div>
+  <div class="form-group">
+    <label class="form-label" for="origin">Origin (optional)</label>
+    <input
+      type="text"
+      id="origin"
+      name="origin"
+      class="form-input"
+      placeholder="e.g. Yirgacheffe, Ethiopia"
+      autocomplete="off"
+    >
+  </div>
+  <button type="submit" class="btn btn-primary btn-full">
+    Add Bean
+    <span class="htmx-indicator spinner" style="margin-left: 8px;"></span>
+  </button>
+</form>
+
+<!-- Bean list -->
+<div id="bean-list">
+  {% if beans %}
+    {% for bean in beans %}
+      {% include "beans/_bean_card.html" %}
+    {% endfor %}
+  {% else %}
+    <div class="empty-state" id="empty-state">
+      <div class="empty-state-title">No beans yet</div>
+      <div class="empty-state-text">Add your first coffee bean above to start optimizing.</div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Remove empty state when first bean is added via htmx
+  document.body.addEventListener('htmx:afterSwap', function(e) {
+    var empty = document.getElementById('empty-state');
+    if (empty && document.querySelectorAll('.bean-card').length > 0) {
+      empty.remove();
+    }
+  });
+</script>
+{% endblock %}

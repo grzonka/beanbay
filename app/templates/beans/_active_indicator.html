@@ -1,0 +1,5 @@
+{% if active_bean %}
+  <a href="/beans/{{ active_bean.id }}">{{ active_bean.name }}</a>
+{% else %}
+  <span class="text-muted">No bean selected</span>
+{% endif %}

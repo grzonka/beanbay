@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}{{ bean.name }} — BrewFlow{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">{{ bean.name }}</h1>
+  {% if not (active_bean and active_bean.id == bean.id) %}
+    <form method="post" action="/beans/{{ bean.id }}/activate">
+      <button type="submit" class="btn btn-primary btn-sm">Set Active</button>
+    </form>
+  {% else %}
+    <span class="badge badge-active">Active</span>
+  {% endif %}
+</div>
+
+<!-- Bean info -->
+<div class="card mb-md">
+  <div class="card-meta mb-sm">
+    {{ bean.shot_count }} shot{{ "s" if bean.shot_count != 1 else "" }} recorded
+  </div>
+
+  <form method="post" action="/beans/{{ bean.id }}">
+    <div class="form-group">
+      <label class="form-label" for="name">Name</label>
+      <input type="text" id="name" name="name" class="form-input" value="{{ bean.name }}" required>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="roaster">Roaster</label>
+      <input type="text" id="roaster" name="roaster" class="form-input" value="{{ bean.roaster or '' }}" placeholder="Optional">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="origin">Origin</label>
+      <input type="text" id="origin" name="origin" class="form-input" value="{{ bean.origin or '' }}" placeholder="Optional">
+    </div>
+    <button type="submit" class="btn btn-secondary btn-full">Save Changes</button>
+  </form>
+</div>
+
+<!-- Parameter overrides -->
+<div class="card mb-md">
+  <button
+    type="button"
+    class="collapsible-toggle"
+    onclick="this.nextElementSibling.classList.toggle('open'); this.setAttribute('aria-expanded', this.nextElementSibling.classList.contains('open'))"
+    aria-expanded="false"
+  >
+    Custom Ranges
+    <span aria-hidden="true">&#9662;</span>
+  </button>
+
+  <div class="collapsible-content">
+    <p class="text-sm text-muted mb-md">
+      Customize the optimization bounds for this bean. Leave blank to use defaults.
+    </p>
+
+    <form method="post" action="/beans/{{ bean.id }}/overrides">
+      {% set overrides = bean.parameter_overrides or {} %}
+
+      {% for param, bounds in default_bounds.items() %}
+        {% set param_override = overrides.get(param, {}) if overrides else {} %}
+        {% set current_min = param_override.get('min', '') if param_override else '' %}
+        {% set current_max = param_override.get('max', '') if param_override else '' %}
+
+        <div class="range-row">
+          <span class="range-label">
+            {{ param | replace('_', ' ') | title }}
+            <span class="text-muted">(default: {{ bounds[0] }}–{{ bounds[1] }})</span>
+          </span>
+          <div class="form-group" style="margin-bottom: 0;">
+            <input
+              type="number"
+              name="{{ param }}_min"
+              class="form-input"
+              placeholder="{{ bounds[0] }}"
+              value="{{ current_min }}"
+              step="any"
+            >
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <input
+              type="number"
+              name="{{ param }}_max"
+              class="form-input"
+              placeholder="{{ bounds[1] }}"
+              value="{{ current_max }}"
+              step="any"
+            >
+          </div>
+        </div>
+      {% endfor %}
+
+      <button type="submit" class="btn btn-secondary btn-full mt-md">Save Ranges</button>
+    </form>
+  </div>
+</div>
+
+<!-- Danger zone -->
+<div class="card">
+  <button
+    type="button"
+    class="collapsible-toggle"
+    onclick="this.nextElementSibling.classList.toggle('open')"
+  >
+    Danger Zone
+    <span aria-hidden="true">&#9662;</span>
+  </button>
+
+  <div class="collapsible-content">
+    <p class="text-sm text-muted mb-md">
+      Deleting this bean will remove all {{ bean.shot_count }} measurement{{ "s" if bean.shot_count != 1 else "" }} and the optimization campaign.
+    </p>
+    <form method="post" action="/beans/{{ bean.id }}/delete">
+      <button type="submit" class="btn btn-danger btn-full" onclick="return confirm('Delete {{ bean.name }} and all its data?')">
+        Delete Bean
+      </button>
+    </form>
+  </div>
+</div>
+
+<a href="/beans" class="btn btn-secondary btn-full mt-lg">Back to Beans</a>
+{% endblock %}

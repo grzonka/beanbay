@@ -1,0 +1,20 @@
+<a href="/beans/{{ bean.id }}" class="card-link">
+  <div class="card bean-card" id="bean-{{ bean.id }}">
+    <div class="card-header">
+      <span class="card-title">{{ bean.name }}</span>
+      <div>
+        {% if active_bean and active_bean.id == bean.id %}
+          <span class="badge badge-active">Active</span>
+        {% endif %}
+        <span class="badge badge-count">{{ bean.shot_count }} shots</span>
+      </div>
+    </div>
+    {% if bean.roaster or bean.origin %}
+      <div class="card-subtitle">
+        {% if bean.roaster %}{{ bean.roaster }}{% endif %}
+        {% if bean.roaster and bean.origin %} · {% endif %}
+        {% if bean.origin %}{{ bean.origin }}{% endif %}
+      </div>
+    {% endif %}
+  </div>
+</a>
