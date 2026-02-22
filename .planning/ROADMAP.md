@@ -79,7 +79,7 @@ Plans:
 
 Plans:
 - [ ] 11-01-PLAN.md — Inactive taste slider + submit gate (UX-01, UX-02)
-- [ ] 11-02-PLAN.md — No-bean prompt on /brew (FLOW-01)
+- [x] 11-02-PLAN.md — No-bean prompt on /brew (FLOW-01)
 
 #### Phase 12: Manual Brew Input
 
@@ -108,5 +108,5 @@ Plans:
 | 8 | v0.1.0 | 2/2 | Complete | 2026-02-22 |
 | 9 | v0.1.0 | 1/1 | Complete | 2026-02-22 |
 | 10. Responsive Nav & Layout | v0.1.1 | 2/2 | ✅ Complete | 2026-02-22 |
-| 11. Brew UX Improvements | v0.1.1 | 0/TBD | Not started | - |
+| 11. Brew UX Improvements | v0.1.1 | 1/2 | In progress | - |
 | 12. Manual Brew Input | v0.1.1 | 0/TBD | Not started | - |
