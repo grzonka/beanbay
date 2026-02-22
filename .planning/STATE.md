@@ -1,7 +1,7 @@
 # Project State: BeanBay
 
 **Last updated:** 2026-02-22
-**Current phase:** Phase 7 — Rebrand & Cleanup (in progress)
+**Current phase:** Phase 7 complete. Ready for Phase 8 (Documentation & Release).
 
 ## Project Reference
 
@@ -25,20 +25,20 @@ See: .planning/MILESTONES.md
 
 | Phase | Name | Status |
 |-------|------|--------|
-| 7 | Rebrand & Cleanup | In progress (1/2 plans complete) |
+| 7 | Rebrand & Cleanup | ✅ Complete (2/2 plans) |
 | 8 | Documentation & Release | Not started |
 | 9 | Deployment Templates | Not started |
 
-**Overall progress:** 07-01 complete. 1/5 v1.1 plans done.
+**Overall progress:** Phase 7 fully complete. 2/5 v1.1 plans done.
 
 ## Current Position
 
-Phase: 7 of 9 (Rebrand & Cleanup)
-Plan: 1 of 2 in current phase
-Status: In progress
-Last activity: 2026-02-22 - Completed 07-01-PLAN.md
+Phase: 7 of 9 (Rebrand & Cleanup) — COMPLETE
+Plan: 2 of 2 in Phase 7
+Status: Phase complete — ready for Phase 8
+Last activity: 2026-02-22 - Completed 07-02-PLAN.md
 
-Progress: ░░░░░ 20% (1/5 v1.1 plans)
+Progress: ██░░░ 40% (2/5 v1.1 plans)
 
 ## Blockers
 
@@ -53,13 +53,13 @@ See: .planning/PROJECT.md (Key Decisions table)
 ### Backlog
 - **Manual brew input** — User can manually enter all 6 recipe parameters and submit a taste score, bypassing BayBE recommendation. Manual entries fed to BayBE via add_measurement. Deferred to v2.
 
-### Tech Debt (from v1 audit — to be fixed in Phase 7)
-- Duplicated _get_active_bean helper in brew.py and insights.py
-- Dead app/routes/ directory with empty __init__.py
-- In-memory pending_recommendations dict lost on server restart
-- Startup ALTER TABLE migration outside Alembic
-- Silent ValueError on override parsing
-See: .planning/milestones/v1-MILESTONE-AUDIT.md
+### Tech Debt (from v1 audit — RESOLVED in Phase 7)
+- ✅ Duplicated _get_active_bean helper in brew.py and insights.py
+- ✅ Dead app/routes/ directory with empty __init__.py
+- ✅ In-memory pending_recommendations dict lost on server restart
+- ✅ Startup ALTER TABLE migration outside Alembic
+- ✅ Silent ValueError on override parsing
+See: .planning/phases/07-rebrand-cleanup/07-02-SUMMARY.md
 
 ### Branding
 - **New name:** BeanBay (was BrewFlow)
@@ -71,13 +71,13 @@ See: .planning/milestones/v1-MILESTONE-AUDIT.md
 
 ### Last Session
 - **Date:** 2026-02-22
-- **What happened:** Executed 07-01-PLAN.md. Renamed all BrewFlow references to BeanBay across Python source files, HTML templates, static assets, and test assertions. All 108 tests pass.
-- **Where we left off:** 07-01 complete. Ready for 07-02 (tech debt cleanup).
+- **What happened:** Executed 07-02-PLAN.md. Fixed all 5 v1 tech debt items: deduped _get_active_bean, deleted dead app/routes/ dir, added file-backed pending_recommendations.json, created Alembic migration for flavor_tags, surfaced override parse errors to user. All 108 tests pass.
+- **Where we left off:** Phase 7 complete. Ready for Phase 8 (Documentation & Release).
 
 ### Next Steps
-1. Execute 07-02-PLAN.md — fix all 5 tech debt items
-2. Execute phases 8-9
-3. Create GitHub repo `grzonka/beanbay` (needed before Phase 8)
+1. Plan Phase 8 — `/gsd-plan-phase 8`
+2. Create GitHub repo `grzonka/beanbay` (needed for Phase 8 CI/release)
+3. Execute phases 8-9
 4. Deploy to Unraid
 
 ---
