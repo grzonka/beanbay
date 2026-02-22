@@ -10,6 +10,7 @@ Implements the core espresso optimization workflow:
 
 import json
 import uuid
+from pathlib import Path
 from typing import Optional
 
 from fastapi import APIRouter, Depends, Form, Request
@@ -17,6 +18,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
+from app.config import settings
 from app.database import get_db
 from app.models.bean import Bean
 from app.models.measurement import Measurement
@@ -29,6 +31,49 @@ templates = Jinja2Templates(directory="app/templates")
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
+_PENDING_FILE = "pending_recommendations.json"
+
+
+def _pending_path(data_dir: Path) -> Path:
+    """Return path to the pending recommendations JSON file."""
+    return data_dir / _PENDING_FILE
+
+
+def _save_pending(data_dir: Path, rec_id: str, rec: dict) -> None:
+    """Persist a pending recommendation to disk."""
+    path = _pending_path(data_dir)
+    try:
+        data = json.loads(path.read_text()) if path.exists() else {}
+    except (json.JSONDecodeError, OSError):
+        data = {}
+    data[rec_id] = rec
+    path.write_text(json.dumps(data))
+
+
+def _load_pending(data_dir: Path, rec_id: str) -> Optional[dict]:
+    """Load a single pending recommendation from disk, or None if not found."""
+    path = _pending_path(data_dir)
+    if not path.exists():
+        return None
+    try:
+        data = json.loads(path.read_text())
+        return data.get(rec_id)
+    except (json.JSONDecodeError, OSError):
+        return None
+
+
+def _remove_pending(data_dir: Path, rec_id: str) -> None:
+    """Remove a pending recommendation from disk."""
+    path = _pending_path(data_dir)
+    if not path.exists():
+        return
+    try:
+        data = json.loads(path.read_text())
+        data.pop(rec_id, None)
+        path.write_text(json.dumps(data))
+    except (json.JSONDecodeError, OSError):
+        pass
 
 
 def _require_active_bean(request: Request, db: Session) -> Optional[Bean]:
@@ -94,16 +139,9 @@ async def trigger_recommend(request: Request, db: Session = Depends(get_db)):
     )
     rec["insights"] = insights
 
-    # Store recommendation in session (redirect to display page)
+    # Store recommendation to disk (survives server restarts)
     rec_id = rec["recommendation_id"]
-
-    # Redirect to the display page, passing rec params via URL or via a temp store.
-    # We use a simple server-side approach: store recommendation in request.app.state
-    # keyed by recommendation_id. This is fine for a single-user home app.
-    request.app.state.pending_recommendations = getattr(
-        request.app.state, "pending_recommendations", {}
-    )
-    request.app.state.pending_recommendations[rec_id] = rec
+    _save_pending(settings.data_dir, rec_id, rec)
 
     return RedirectResponse(url=f"/brew/recommend/{rec_id}", status_code=303)
 
@@ -123,7 +161,11 @@ async def show_recommendation(
     rec = pending.get(recommendation_id)
 
     if not rec:
-        # Recommendation expired (server restart) or invalid ID → back to brew
+        # Try file-based store (survives server restarts; also covers cold start)
+        rec = _load_pending(settings.data_dir, recommendation_id)
+
+    if not rec:
+        # Recommendation not found or invalid ID → back to brew
         return RedirectResponse(url="/brew", status_code=303)
 
     ratio = _brew_ratio(rec.get("dose_in", 0), rec.get("target_yield", 0))
@@ -233,9 +275,10 @@ async def record_measurement(
         }
         optimizer.add_measurement(bean.id, measurement_data, overrides=bean.parameter_overrides)
 
-    # Clean up pending recommendation
+    # Clean up pending recommendation (from both in-memory and file store)
     pending = getattr(request.app.state, "pending_recommendations", {})
     pending.pop(recommendation_id, None)
+    _remove_pending(settings.data_dir, recommendation_id)
 
     return RedirectResponse(url="/brew", status_code=303)
 

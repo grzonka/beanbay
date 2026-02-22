@@ -43,6 +43,9 @@
 
 <!-- Parameter overrides -->
 <div class="card mb-md">
+  {% if error %}
+    <p class="text-sm mb-sm" style="color: var(--danger, #c0392b);">{{ error }}</p>
+  {% endif %}
   <button
     type="button"
     class="collapsible-toggle"

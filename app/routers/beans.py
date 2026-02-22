@@ -156,6 +156,7 @@ async def update_overrides(
 
     form = await request.form()
     overrides = {}
+    invalid_params = []
 
     for param, (default_min, default_max) in DEFAULT_BOUNDS.items():
         min_key = f"{param}_min"
@@ -177,7 +178,26 @@ async def update_overrides(
                 if spec:
                     overrides[param] = spec
             except ValueError:
-                pass  # Skip invalid values
+                invalid_params.append(param.replace("_", " "))
+
+    if invalid_params:
+        # Surface error to user — return detail page with error message
+        bean_data = _bean_with_shot_count(db, bean)
+        active_bean = _get_active_bean(request, db)
+        error_msg = f"Invalid values for: {', '.join(invalid_params)}. Please enter numbers only."
+        from fastapi.responses import HTMLResponse as _HTMLResponse
+
+        return templates.TemplateResponse(
+            request,
+            "beans/detail.html",
+            {
+                "bean": bean_data,
+                "active_bean": active_bean,
+                "default_bounds": DEFAULT_BOUNDS,
+                "error": error_msg,
+            },
+            status_code=422,
+        )
 
     bean.parameter_overrides = overrides if overrides else None
     db.commit()

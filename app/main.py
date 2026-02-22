@@ -26,15 +26,6 @@ async def lifespan(app: FastAPI):
     # Create tables if they don't exist (no-op if Alembic already ran)
     Base.metadata.create_all(bind=engine)
 
-    # Startup migration: add flavor_tags column to existing databases
-    from sqlalchemy import inspect as sa_inspect, text
-
-    inspector = sa_inspect(engine)
-    existing_cols = {c["name"] for c in inspector.get_columns("measurements")}
-    if "flavor_tags" not in existing_cols:
-        with engine.begin() as conn:
-            conn.execute(text("ALTER TABLE measurements ADD COLUMN flavor_tags TEXT"))
-
     # Initialize optimizer service
     app.state.optimizer = OptimizerService(settings.campaigns_dir)
 
