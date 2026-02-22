@@ -71,11 +71,12 @@ def _seed_measurement(
 # ---------------------------------------------------------------------------
 
 
-def test_brew_index_no_active_bean_redirects(client):
-    """GET /brew without active bean cookie -> redirect to /beans."""
-    response = client.get("/brew", follow_redirects=False)
-    assert response.status_code == 303
-    assert response.headers["location"] == "/beans"
+def test_brew_index_no_active_bean_shows_prompt(client):
+    """GET /brew without active bean cookie -> shows pick-a-bean prompt."""
+    response = client.get("/brew")
+    assert response.status_code == 200
+    assert "Pick a bean" in response.text
+    assert "/beans" in response.text
 
 
 # ---------------------------------------------------------------------------

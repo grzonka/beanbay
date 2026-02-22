@@ -7,6 +7,14 @@
   <h1 class="page-title">Brew</h1>
 </div>
 
+{% if no_active_bean %}
+<div class="empty-state" style="margin-top: 2rem;">
+  <div class="empty-state-text">
+    Pick a bean first to start brewing.
+    <a href="/beans" class="btn btn-primary" style="margin-top: var(--spacing-md); display: inline-block;">Go to Beans</a>
+  </div>
+</div>
+{% else %}
 <div class="brew-actions">
   <!-- Get Recommendation button -->
   <form method="post" action="/brew/recommend" class="brew-action-form">
@@ -31,5 +39,6 @@
     Get your first recommendation to start the optimization loop for <strong>{{ active_bean.name }}</strong>.
   </div>
 </div>
+{% endif %}
 {% endif %}
 {% endblock %}

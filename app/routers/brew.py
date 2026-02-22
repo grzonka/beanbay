@@ -112,7 +112,11 @@ async def brew_index(request: Request, db: Session = Depends(get_db)):
     """Main brew page — entry point for the optimization loop."""
     bean = _require_active_bean(request, db)
     if not bean:
-        return RedirectResponse(url="/beans", status_code=303)
+        return templates.TemplateResponse(
+            request,
+            "brew/index.html",
+            {"no_active_bean": True},
+        )
 
     has_measurements = db.query(Measurement).filter(Measurement.bean_id == bean.id).count() > 0
 
