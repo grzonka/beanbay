@@ -122,11 +122,12 @@ Plans:
 
 **Depends on:** Phase 3 (needs recommendation data), Phase 4 (needs history display patterns)
 
-**Plans:** 2 plans — ✓ Complete (2026-02-22)
+**Plans:** 3 plans
 
 Plans:
 - [x] 05-01-PLAN.md — Recommendation explanation (explore/exploit label + predicted taste range)
 - [x] 05-02-PLAN.md — Insights page with progress chart (Chart.js) + convergence indicator
+- [ ] 05-03-PLAN.md — Gap closure: fix recommend crash + improve phase badge accuracy
 
 ---
 
