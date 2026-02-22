@@ -21,8 +21,8 @@
 
   <!-- Brew Again form — pre-fills recommendation endpoint with best params -->
   <form method="post" action="/brew/record" id="brew-again-form">
-    <!-- Use a stable "best" recommendation_id so it deduplicates correctly each time -->
-    <input type="hidden" name="recommendation_id" value="best-{{ best.id }}">
+    <!-- Fresh UUID per visit — allows re-brewing best recipe multiple times -->
+    <input type="hidden" name="recommendation_id" value="{{ best_session_id }}">
     <input type="hidden" name="grind_setting" value="{{ best.grind_setting }}">
     <input type="hidden" name="temperature" value="{{ best.temperature }}">
     <input type="hidden" name="preinfusion_pct" value="{{ best.preinfusion_pct }}">

@@ -8,6 +8,7 @@ Implements the core espresso optimization workflow:
   GET  /brew/best                    — Show highest-rated shot
 """
 
+import uuid
 from typing import Optional
 
 from fastapi import APIRouter, Depends, Form, Request
@@ -218,8 +219,10 @@ async def show_best(request: Request, db: Session = Depends(get_db)):
     best = _best_measurement(bean.id, db)
 
     ratio = None
+    best_session_id = None
     if best:
         ratio = _brew_ratio(best.dose_in, best.target_yield)
+        best_session_id = str(uuid.uuid4())
 
     return templates.TemplateResponse(
         request,
@@ -228,5 +231,6 @@ async def show_best(request: Request, db: Session = Depends(get_db)):
             "active_bean": bean,
             "best": best,
             "ratio": ratio,
+            "best_session_id": best_session_id,
         },
     )

@@ -359,3 +359,86 @@ def test_show_best_no_active_bean(client):
     response = client.get("/brew/best")
     assert response.status_code == 303
     assert response.headers["location"] == "/beans"
+
+
+# ---------------------------------------------------------------------------
+# GET /brew/best — fresh UUID per visit (deduplication fix)
+# ---------------------------------------------------------------------------
+
+
+def test_show_best_recommendation_id_is_uuid(active_client, sample_bean, db):
+    """GET /brew/best returns a valid UUID as recommendation_id in the form."""
+    _seed_measurement(db, sample_bean.id, taste=8.0)
+
+    response = active_client.get("/brew/best")
+    assert response.status_code == 200
+
+    # Extract recommendation_id from the hidden input
+    import re
+
+    match = re.search(r'name="recommendation_id"\s+value="([^"]+)"', response.text)
+    assert match is not None, "recommendation_id hidden input not found in page"
+    extracted_id = match.group(1)
+
+    # Assert it's a valid UUID (should not raise)
+    parsed = uuid.UUID(extracted_id)
+    assert str(parsed) == extracted_id
+
+
+def test_show_best_brew_again_creates_new_measurement(active_client, sample_bean, db):
+    """Brew Again on /brew/best creates a new measurement each visit (dedup only blocks same-page double-submit)."""
+    from unittest.mock import MagicMock
+
+    mock_optimizer = MagicMock()
+    mock_optimizer.recommend = AsyncMock()
+    app.state.optimizer = mock_optimizer
+
+    _seed_measurement(db, sample_bean.id, taste=8.0)
+
+    import re
+
+    # --- First visit ---
+    response1 = active_client.get("/brew/best")
+    assert response1.status_code == 200
+    match1 = re.search(r'name="recommendation_id"\s+value="([^"]+)"', response1.text)
+    assert match1 is not None
+    rec_id_1 = match1.group(1)
+
+    # Submit "Brew Again" with first visit's recommendation_id
+    payload1 = {
+        "recommendation_id": rec_id_1,
+        "grind_setting": "20.0",
+        "temperature": "93.0",
+        "preinfusion_pct": "75.0",
+        "dose_in": "19.0",
+        "target_yield": "40.0",
+        "saturation": "yes",
+        "taste": "9.5",
+    }
+    r = active_client.post("/brew/record", data=payload1)
+    assert r.status_code == 303
+
+    # DB should now have 2 measurements
+    db.expire_all()
+    count = db.query(Measurement).filter(Measurement.bean_id == sample_bean.id).count()
+    assert count == 2
+
+    # --- Second visit ---
+    response2 = active_client.get("/brew/best")
+    assert response2.status_code == 200
+    match2 = re.search(r'name="recommendation_id"\s+value="([^"]+)"', response2.text)
+    assert match2 is not None
+    rec_id_2 = match2.group(1)
+
+    # The new recommendation_id must differ from the first
+    assert rec_id_2 != rec_id_1
+
+    # Submit "Brew Again" with second visit's recommendation_id
+    payload2 = {**payload1, "recommendation_id": rec_id_2, "taste": "9.0"}
+    r2 = active_client.post("/brew/record", data=payload2)
+    assert r2.status_code == 303
+
+    # DB should now have 3 measurements
+    db.expire_all()
+    count = db.query(Measurement).filter(Measurement.bean_id == sample_bean.id).count()
+    assert count == 3
