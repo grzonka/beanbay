@@ -28,8 +28,12 @@ COPY alembic.ini ./
 COPY migrations/ ./migrations/
 
 # Environment
+LABEL org.opencontainers.image.source="https://github.com/grzonka/beanbay"
+LABEL org.opencontainers.image.description="Coffee optimization powered by Bayesian learning"
+LABEL org.opencontainers.image.licenses="Apache-2.0"
+
 ENV CUDA_VISIBLE_DEVICES=""
-ENV BREWFLOW_DATA_DIR="/data"
+ENV BEANBAY_DATA_DIR="/data"
 ENV PYTHONUNBUFFERED=1
 
 # Create data directory

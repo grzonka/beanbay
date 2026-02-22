@@ -1,13 +1,14 @@
 services:
-  brewflow:
-    build: .
+  beanbay:
+    image: ghcr.io/grzonka/beanbay:latest
+    container_name: beanbay
     ports:
       - "8000:8000"
     volumes:
-      - brewflow-data:/data
+      - beanbay-data:/data
     environment:
-      - BREWFLOW_DATA_DIR=/data
+      - BEANBAY_DATA_DIR=/data
     restart: unless-stopped
 
 volumes:
-  brewflow-data:
+  beanbay-data:
