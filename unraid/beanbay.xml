@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>BeanBay</Name>
+  <Repository>ghcr.io/grzonka/beanbay:latest</Repository>
+  <Registry>https://github.com/grzonka/beanbay/pkgs/container/beanbay</Registry>
+  <Branch>
+    <Tag>latest</Tag>
+    <TagDescription>Latest stable release</TagDescription>
+  </Branch>
+  <Network>bridge</Network>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/grzonka/beanbay/issues</Support>
+  <Project>https://github.com/grzonka/beanbay</Project>
+  <Overview>
+    BeanBay is a phone-first web application for optimizing coffee recipes using Bayesian optimization (BayBE). Track your beans, get AI-powered recipe recommendations, rate your brews, and watch the optimizer dial in the perfect recipe for each coffee.
+
+    Self-hosted, single-user, designed for use at the espresso machine with your phone.
+
+    Visit beanbay.coffee for more information.
+  </Overview>
+  <Category>Productivity: Tools:</Category>
+  <WebUI>http://[IP]:[PORT:8000]</WebUI>
+  <Icon>https://raw.githubusercontent.com/grzonka/beanbay/main/unraid/beanbay-icon.png</Icon>
+  <ExtraParams/>
+  <DateInstalled/>
+  <Description>Coffee optimization powered by Bayesian learning. Track beans, brew, taste, optimize.</Description>
+  <Config Name="Web UI Port" Target="8000" Default="8000" Mode="tcp" Description="Web interface port" Type="Port" Display="always" Required="true" Mask="false">8000</Config>
+  <Config Name="Data Directory" Target="/data" Default="/mnt/user/appdata/beanbay" Mode="rw" Description="Persistent data storage (database and campaign files)" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/beanbay</Config>
+</Container>
