@@ -95,6 +95,13 @@ Plans:
 2. User can add free-text notes to a shot (either at submission time or retroactively) without disrupting the quick feedback flow
 3. User can expand a flavor profile panel during shot rating to score 6 dimensions (acidity, sweetness, body, bitterness, aroma, intensity) — but this panel is collapsed by default and never blocks the quick taste-score path
 
+**Plans:** 3 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — Schema + feedback panel (notes, flavor sliders, tags) on brew forms
+- [ ] 04-02-PLAN.md — History list page with filtering by bean and taste score
+- [ ] 04-03-PLAN.md — Shot detail modal + retroactive editing
+
 **Depends on:** Phase 3
 
 ---
