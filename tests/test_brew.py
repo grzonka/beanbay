@@ -806,3 +806,21 @@ def test_extend_ranges_no_active_bean_redirects(client):
     )
     assert response.status_code == 303
     assert response.headers["location"] == "/beans"
+
+
+def test_manual_form_has_range_data_attributes(active_client, sample_bean):
+    """GET /brew/manual -> number inputs have data-min, data-max, data-param attributes."""
+    response = active_client.get("/brew/manual")
+    assert response.status_code == 200
+    html = response.text
+    # data-min and data-max should appear for each parameter number input
+    assert 'data-min="15' in html or 'data-min="15.0' in html  # grind_setting default min
+    assert 'data-max="25' in html or 'data-max="25.0' in html  # grind_setting default max
+    assert 'data-param="grind_setting"' in html
+    assert 'data-param="temperature"' in html
+    assert 'data-param="preinfusion_pct"' in html
+    assert 'data-param="dose_in"' in html
+    assert 'data-param="target_yield"' in html
+    # Number inputs should NOT have min/max HTML attributes on param-number inputs
+    # (sliders still have them; number inputs use data-min/data-max instead)
+    assert 'id="is_manual_flag"' in html

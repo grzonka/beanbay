@@ -15,6 +15,7 @@
     <!-- Hidden fields -->
     <input type="hidden" name="recommendation_id" value="{{ manual_session_id }}">
     <input type="hidden" name="is_manual" value="true">
+    <input type="hidden" id="is_manual_flag" value="true">
 
     <!-- ------------------------------------------------------------------ -->
     <!-- Grind Setting -->
@@ -37,14 +38,15 @@
         >
         <input
           type="number"
-          class="param-number"
+          class="param-number form-input"
           id="grind_setting"
           name="grind_setting"
-          min="{{ bounds.grind_setting[0] }}"
-          max="{{ bounds.grind_setting[1] }}"
           step="0.5"
           value="{{ prefill.grind_setting }}"
-          oninput="document.getElementById('grind_setting_slider').value = this.value"
+          data-min="{{ bounds.grind_setting[0] }}"
+          data-max="{{ bounds.grind_setting[1] }}"
+          data-param="grind_setting"
+          oninput="var s=document.getElementById('grind_setting_slider'); s.value=Math.max(s.min,Math.min(s.max,this.value))"
         >
       </div>
     </div>
@@ -70,14 +72,15 @@
         >
         <input
           type="number"
-          class="param-number"
+          class="param-number form-input"
           id="temperature"
           name="temperature"
-          min="{{ bounds.temperature[0] }}"
-          max="{{ bounds.temperature[1] }}"
           step="1"
           value="{{ prefill.temperature }}"
-          oninput="document.getElementById('temperature_slider').value = this.value"
+          data-min="{{ bounds.temperature[0] }}"
+          data-max="{{ bounds.temperature[1] }}"
+          data-param="temperature"
+          oninput="var s=document.getElementById('temperature_slider'); s.value=Math.max(s.min,Math.min(s.max,this.value))"
         >
       </div>
     </div>
@@ -103,14 +106,15 @@
         >
         <input
           type="number"
-          class="param-number"
+          class="param-number form-input"
           id="preinfusion_pct"
           name="preinfusion_pct"
-          min="{{ bounds.preinfusion_pct[0] }}"
-          max="{{ bounds.preinfusion_pct[1] }}"
           step="5"
           value="{{ prefill.preinfusion_pct }}"
-          oninput="document.getElementById('preinfusion_pct_slider').value = this.value"
+          data-min="{{ bounds.preinfusion_pct[0] }}"
+          data-max="{{ bounds.preinfusion_pct[1] }}"
+          data-param="preinfusion_pct"
+          oninput="var s=document.getElementById('preinfusion_pct_slider'); s.value=Math.max(s.min,Math.min(s.max,this.value))"
         >
       </div>
     </div>
@@ -136,14 +140,15 @@
         >
         <input
           type="number"
-          class="param-number"
+          class="param-number form-input"
           id="dose_in"
           name="dose_in"
-          min="{{ bounds.dose_in[0] }}"
-          max="{{ bounds.dose_in[1] }}"
           step="0.5"
           value="{{ prefill.dose_in }}"
-          oninput="document.getElementById('dose_in_slider').value = this.value"
+          data-min="{{ bounds.dose_in[0] }}"
+          data-max="{{ bounds.dose_in[1] }}"
+          data-param="dose_in"
+          oninput="var s=document.getElementById('dose_in_slider'); s.value=Math.max(s.min,Math.min(s.max,this.value))"
         >
       </div>
     </div>
@@ -169,14 +174,15 @@
         >
         <input
           type="number"
-          class="param-number"
+          class="param-number form-input"
           id="target_yield"
           name="target_yield"
-          min="{{ bounds.target_yield[0] }}"
-          max="{{ bounds.target_yield[1] }}"
           step="1"
           value="{{ prefill.target_yield }}"
-          oninput="document.getElementById('target_yield_slider').value = this.value"
+          data-min="{{ bounds.target_yield[0] }}"
+          data-max="{{ bounds.target_yield[1] }}"
+          data-param="target_yield"
+          oninput="var s=document.getElementById('target_yield_slider'); s.value=Math.max(s.min,Math.min(s.max,this.value))"
         >
       </div>
     </div>
@@ -270,5 +276,38 @@
 {% endblock %}
 
 {% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var form = document.querySelector('form[action="/brew/record"]');
+  if (!form || !document.getElementById('is_manual_flag')) return;
+
+  form.addEventListener('submit', function(e) {
+    var outOfRange = [];
+    var extendData = new FormData();
+    form.querySelectorAll('.param-number').forEach(function(input) {
+      var val = parseFloat(input.value);
+      var min = parseFloat(input.dataset.min);
+      var max = parseFloat(input.dataset.max);
+      var param = input.dataset.param;
+      if (!param) return;
+      if (val < min || val > max) {
+        var newMin = Math.min(min, val);
+        var newMax = Math.max(max, val);
+        outOfRange.push(param.replace(/_/g, ' ') + ' to ' + newMin + '\u2013' + newMax);
+        extendData.append(param + '_min', newMin);
+        extendData.append(param + '_max', newMax);
+      }
+    });
+
+    if (outOfRange.length > 0) {
+      e.preventDefault();
+      if (confirm('Extend ' + outOfRange.join(' and ') + '?')) {
+        fetch('/brew/extend-ranges', { method: 'POST', body: extendData })
+          .then(function() { form.submit(); });
+      }
+    }
+  });
+});
+</script>
 <script src="/static/js/tags.js"></script>
 {% endblock %}
