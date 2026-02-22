@@ -14,9 +14,9 @@ Every coffee brew teaches the system something — the app must make it effortle
 
 ## Current State
 
-**Shipped:** v1 MVP (2026-02-22), v0.1.0 Release & Deploy (2026-02-22)
-**Active milestone:** v0.1.1 UX Polish & Manual Brew
-**Codebase:** ~7,632 LOC (Python, HTML, CSS/JS), 108 tests passing
+**Shipped:** v1 MVP, v0.1.0, v0.1.1 (all 2026-02-22)
+**Active milestone:** None — planning next
+**Codebase:** ~8,295 LOC (Python, HTML, CSS/JS), 130 tests passing
 **Stack:** FastAPI, Jinja2/htmx, SQLite, Chart.js, BayBE, Docker
 
 ## Requirements
@@ -34,10 +34,18 @@ Every coffee brew teaches the system something — the app must make it effortle
 - ✓ Mobile-first responsive UI that works well with messy hands — v1
 - ✓ Docker deployment for homeserver — v1
 - ✓ Accessible from anywhere on the local network — v1
+- ✓ Mobile hamburger/drawer navigation, desktop sidebar layout — v0.1.1
+- ✓ Active bean indicator displays cleanly without overflow in all viewports — v0.1.1
+- ✓ Taste score slider starts inactive and must be touched before submission — v0.1.1
+- ✓ Failed shot toggle preserves override behavior with new inactive pattern — v0.1.1
+- ✓ No-bean prompt on /brew with direct link to bean selection — v0.1.1
+- ✓ Manual brew input with all 6 parameters + taste score — v0.1.1
+- ✓ Manual brews feed into BayBE optimization via add_measurement — v0.1.1
+- ✓ Manual brews visually distinguishable in shot history (blue badge) — v0.1.1
 
 ### Active
 
-See `.planning/REQUIREMENTS.md` for v0.1.1 requirements (UX polish, manual brew, responsive layout).
+No active requirements. Start next milestone with `/gsd-new-milestone`.
 
 ### Out of Scope (current milestone)
 
@@ -53,12 +61,13 @@ See `.planning/REQUIREMENTS.md` for v0.1.1 requirements (UX polish, manual brew,
 ## Context
 
 - **Shipped v1:** 6 phases, 16 plans, 108 tests, ~7,632 LOC across Python/HTML/CSS/JS
+- **Shipped v0.1.0:** 3 phases, 5 plans. Rebrand, CI/CD, Docker image, Unraid template.
+- **Shipped v0.1.1:** 3 phases, 8 plans, 130 tests, ~8,295 LOC. Responsive nav, taste UX, manual brew.
 - **Hardware setup:** Sage Dual Boiler (Slayer mod) + DF83v grinder. Parameters tuned to this specific machine's ranges.
-- **BayBE:** Hybrid search space (5 continuous + 1 categorical), ~7.5KB campaign files. Three-phase optimization: random (0-4 shots) → Learning (5-7) → Bayesian optimization (8+).
+- **BayBE:** Hybrid search space (5 continuous + 1 categorical), ~7.5KB campaign files. Three-phase optimization: random (0-4 shots) -> Learning (5-7) -> Bayesian optimization (8+).
 - **Usage pattern:** Primarily phone at the espresso machine. Quick interactions most days, occasional deep tasting sessions on laptop.
 - **Deployment:** Unraid server via Docker. Single container, SQLite + BayBE JSON campaign files in persistent volume. Also available to any Docker user.
-- **Known tech debt:** v1 tech debt resolved in Phase 7. See milestones/v1-MILESTONE-AUDIT.md.
-- **UX feedback (v0.1.1):** Navigation tabs don't scale on mobile (too many items, bean name wraps). Desktop layout is phone-sized centered — doesn't use widescreen space. Taste score defaults to 7, encouraging lazy submissions.
+- **Known tech debt:** v1 tech debt resolved in Phase 7. v0.1.1 incurred 3 minor cosmetic items (orphaned CSS rules, inline styles in drawer, undefined --text-xs var). See milestones/v0.1.1-MILESTONE-AUDIT.md.
 
 ## Constraints
 
@@ -84,6 +93,12 @@ See `.planning/REQUIREMENTS.md` for v0.1.1 requirements (UX polish, manual brew,
 | Chart.js for visualization | CDN-loaded, no build step, rich chart types | ✓ Good — progress charts + heatmaps working |
 | Measurements as source of truth | Campaigns rebuildable from measurement data | ✓ Good — disaster recovery works |
 | Rebrand to BeanBay | Better name — "bean" first, "bay" as gathering place + Bayesian hint | ✓ Good — v0.1.0 shipped |
+| Hamburger/drawer on mobile | Tab row overflowed with many nav items + long bean name | ✓ Good — clean on all screen sizes |
+| Desktop sidebar layout | Centered 480px column wasted widescreen space | ✓ Good — full-width usage |
+| Inactive taste slider (data-touched) | Default 7.0 encouraged lazy submissions; "---" label signals unset | ✓ Good — deliberate scoring |
+| Inline no-bean prompt | Silent redirect confusing on mobile; keeps user in context | ✓ Good — clear guidance |
+| Manual brew with BayBE integration | Users need to record brews outside recommendation flow | ✓ Good — feeds optimization |
+| Adaptive parameter ranges | Manual brews may exceed default ranges; confirm + extend | ✓ Good — flexible without breaking optimizer |
 
 ---
-*Last updated: 2026-02-22 after v0.1.1 milestone start*
+*Last updated: 2026-02-22 after v0.1.1 milestone*
