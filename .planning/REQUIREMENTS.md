@@ -21,9 +21,9 @@ Requirements for this release. Each maps to roadmap phases.
 ### Brew Flow
 
 - [x] **FLOW-01**: When user navigates to Brew without an active bean, show a clear "Pick a bean" prompt with direct link to bean selection instead of silent redirect
-- [ ] **FLOW-02**: User can enter all 6 recipe parameters manually and submit a taste score, bypassing BayBE recommendation
-- [ ] **FLOW-03**: Manual brew data feeds into BayBE optimizer via add_measurement (counts as optimization data point)
-- [ ] **FLOW-04**: Manual brews are visually distinguishable from BayBE recommendations in shot history
+- [x] **FLOW-02**: User can enter all 6 recipe parameters manually and submit a taste score, bypassing BayBE recommendation
+- [x] **FLOW-03**: Manual brew data feeds into BayBE optimizer via add_measurement (counts as optimization data point)
+- [x] **FLOW-04**: Manual brews are visually distinguishable from BayBE recommendations in shot history
 
 ## Future Requirements (v2)
 
@@ -75,9 +75,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UX-01 | Phase 11 | Complete |
 | UX-02 | Phase 11 | Complete |
 | FLOW-01 | Phase 11 | Complete |
-| FLOW-02 | Phase 12 | Pending |
-| FLOW-03 | Phase 12 | Pending |
-| FLOW-04 | Phase 12 | Pending |
+| FLOW-02 | Phase 12 | Complete |
+| FLOW-03 | Phase 12 | Complete |
+| FLOW-04 | Phase 12 | Complete |
 
 **Coverage:**
 - v0.1.1 requirements: 9 total
@@ -86,4 +86,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-22*
-*Last updated: 2026-02-22 after roadmap creation (all 9 requirements mapped to Phases 10-12)*
+*Last updated: 2026-02-22 after Phase 12 completion (all 9 requirements complete)*
