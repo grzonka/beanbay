@@ -1345,11 +1345,59 @@ body {
     padding: var(--spacing-sm) var(--spacing-lg);
   }
 
-  .nav-drawer-bean a {
+    .nav-drawer-bean a {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     display: block;
     max-width: 160px;
   }
+}
+
+/* ==========================================================================
+   Manual brew — param input rows (slider + number pairs)
+   ========================================================================== */
+
+.param-input-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.param-slider {
+  flex: 1;
+  min-width: 0;
+  accent-color: var(--accent);
+}
+
+.param-number {
+  width: 80px;
+  flex-shrink: 0;
+  text-align: center;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: var(--text-base);
+}
+
+.param-unit {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  margin-left: var(--spacing-xs);
+}
+
+/* Saturation toggle — inline checkbox label */
+.saturation-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  cursor: pointer;
+}
+
+.saturation-toggle-label {
+  color: var(--text-secondary);
+  font-size: var(--text-base);
 }

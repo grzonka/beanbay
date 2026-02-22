@@ -271,6 +271,35 @@
   }
 
   // ---------------------------------------------------------------------------
+  // toggleFailed — shared across recommend, best, and manual brew forms
+  // Exposed as window.toggleFailed for inline onchange handlers
+  // ---------------------------------------------------------------------------
+
+  window.toggleFailed = function (checkbox) {
+    var tasteGroup = document.getElementById('taste-group');
+    var tasteInput = document.getElementById('taste');
+    var tasteDisplay = document.getElementById('taste-display');
+    var requiredMsg = document.getElementById('taste-required-msg');
+
+    if (checkbox.checked) {
+      tasteInput.value = '1';
+      tasteInput.dataset.touched = 'true';
+      tasteDisplay.textContent = '1.0';
+      tasteGroup.classList.add('touched');
+      tasteGroup.style.opacity = '0.4';
+      tasteGroup.style.pointerEvents = 'none';
+      if (requiredMsg) requiredMsg.classList.remove('visible');
+    } else {
+      tasteInput.value = '7.0';
+      tasteInput.dataset.touched = 'false';
+      tasteDisplay.textContent = '\u2014';
+      tasteGroup.classList.remove('touched');
+      tasteGroup.style.opacity = '';
+      tasteGroup.style.pointerEvents = 'auto';
+    }
+  };
+
+  // ---------------------------------------------------------------------------
   // Bootstrap
   // ---------------------------------------------------------------------------
 

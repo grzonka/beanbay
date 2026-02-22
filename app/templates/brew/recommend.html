@@ -95,30 +95,5 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-function toggleFailed(checkbox) {
-  const tasteGroup = document.getElementById('taste-group');
-  const tasteInput = document.getElementById('taste');
-  const tasteDisplay = document.getElementById('taste-display');
-  const requiredMsg = document.getElementById('taste-required-msg');
-
-  if (checkbox.checked) {
-    tasteInput.value = '1';
-    tasteInput.dataset.touched = 'true';
-    tasteDisplay.textContent = '1.0';
-    tasteGroup.classList.add('touched');
-    tasteGroup.style.opacity = '0.4';
-    tasteGroup.style.pointerEvents = 'none';
-    if (requiredMsg) requiredMsg.classList.remove('visible');
-  } else {
-    tasteInput.value = '7.0';
-    tasteInput.dataset.touched = 'false';
-    tasteDisplay.textContent = '\u2014';
-    tasteGroup.classList.remove('touched');
-    tasteGroup.style.opacity = '';
-    tasteGroup.style.pointerEvents = 'auto';
-  }
-}
-</script>
 <script src="/static/js/tags.js"></script>
 {% endblock %}

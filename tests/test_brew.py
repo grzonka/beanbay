@@ -664,3 +664,88 @@ def test_record_non_manual_allows_any_values(active_client, sample_bean, db_sess
     m = db_session.query(Measurement).filter(Measurement.recommendation_id == rec_id).first()
     assert m is not None
     assert m.grind_setting == 5.0
+
+
+# ---------------------------------------------------------------------------
+# GET /brew/manual — manual brew form
+# ---------------------------------------------------------------------------
+
+
+def test_manual_page_loads_with_active_bean(active_client):
+    """GET /brew/manual with active bean -> 200 and form present."""
+    response = active_client.get("/brew/manual")
+    assert response.status_code == 200
+    assert "Manual Brew" in response.text
+    assert "Submit Manual Brew" in response.text
+    assert 'name="is_manual"' in response.text
+    assert 'value="true"' in response.text
+
+
+def test_manual_page_no_active_bean_redirects(client):
+    """GET /brew/manual without active bean -> redirect to /beans."""
+    response = client.get("/brew/manual", follow_redirects=False)
+    assert response.status_code == 303
+    assert response.headers["location"] == "/beans"
+
+
+def test_manual_page_prefills_from_best(active_client, sample_bean, db_session):
+    """GET /brew/manual with measurements -> pre-fills from best measurement."""
+    _seed_measurement(db_session, sample_bean.id, taste=9.0)
+    response = active_client.get("/brew/manual")
+    assert response.status_code == 200
+    # The best measurement has grind_setting=20.0, temperature=93.0
+    assert "20.0" in response.text
+    assert "93" in response.text
+
+
+def test_manual_page_prefills_midpoint_no_measurements(active_client, sample_bean):
+    """GET /brew/manual with no measurements -> pre-fills midpoint of default bounds."""
+    response = active_client.get("/brew/manual")
+    assert response.status_code == 200
+    # grind_setting midpoint of (15, 25) = 20.0
+    assert "20.0" in response.text
+    # temperature midpoint of (86, 96) = 91
+    assert "91" in response.text
+
+
+def test_record_manual_brew_end_to_end(active_client, sample_bean, db_session):
+    """POST /brew/record from manual form saves with is_manual=True and redirects."""
+    from unittest.mock import MagicMock
+
+    mock_optimizer = MagicMock()
+    mock_optimizer.recommend = AsyncMock()
+    app.state.optimizer = mock_optimizer
+
+    rec_id = str(uuid.uuid4())
+    payload = {
+        "recommendation_id": rec_id,
+        "is_manual": "true",
+        "grind_setting": "20.0",
+        "temperature": "93.0",
+        "preinfusion_pct": "75.0",
+        "dose_in": "19.0",
+        "target_yield": "40.0",
+        "saturation": "yes",
+        "taste": "8.0",
+    }
+    response = active_client.post("/brew/record", data=payload, follow_redirects=False)
+    assert response.status_code == 303
+    assert response.headers["location"] == "/brew"
+
+    db_session.expire_all()
+    m = db_session.query(Measurement).filter(Measurement.recommendation_id == rec_id).first()
+    assert m is not None
+    assert m.is_manual is True
+    assert m.taste == 8.0
+
+
+def test_manual_page_shows_bean_bounds(active_client, sample_bean):
+    """GET /brew/manual -> shows default parameter bounds in form."""
+    response = active_client.get("/brew/manual")
+    assert response.status_code == 200
+    # Default grind bounds: 15–25
+    assert "15" in response.text
+    assert "25" in response.text
+    # Default temperature bounds: 86–96
+    assert "86" in response.text
+    assert "96" in response.text
