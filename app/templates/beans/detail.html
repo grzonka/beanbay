@@ -22,6 +22,7 @@
   <div class="card-meta mb-sm">
     {{ bean.shot_count }} shot{{ "s" if bean.shot_count != 1 else "" }} recorded
   </div>
+  <a href="/history?bean_id={{ bean.id }}" class="btn btn-secondary btn-sm mt-sm">View History</a>
 
   <form method="post" action="/beans/{{ bean.id }}">
     <div class="form-group">
