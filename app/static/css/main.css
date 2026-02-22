@@ -909,6 +909,11 @@ body {
   color: #e0b860;
 }
 
+.insight-badge-bayesian_early {
+  background: #2a3a32;
+  color: #7ae0a8;
+}
+
 .insight-explanation {
   font-size: var(--text-sm);
   color: var(--text-secondary);
