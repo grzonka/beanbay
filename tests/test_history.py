@@ -1,5 +1,6 @@
-"""Tests for history router — shot history list with filters."""
+"""Tests for history router — shot history list with filters and shot detail/edit."""
 
+import json
 import uuid
 from datetime import datetime, timedelta
 
@@ -216,3 +217,133 @@ def test_history_shots_partial_htmx(client, sample_bean, db):
     assert "BrewFlow" not in response.text
     # But should include the shot row
     assert "shot-row" in response.text
+
+
+# ---------------------------------------------------------------------------
+# Shot detail modal tests
+# ---------------------------------------------------------------------------
+
+
+def test_shot_detail_returns_modal_html(client, sample_bean, db):
+    """GET /history/{shot_id} returns 200 with shot details."""
+    shot = _seed_shot(db, sample_bean.id, taste=8.5)
+
+    response = client.get(f"/history/{shot.id}")
+    assert response.status_code == 200
+    html = response.text
+
+    # Should show taste score and grind setting
+    assert "8.5" in html
+    assert str(shot.grind_setting) in html
+    # Should show bean name
+    assert "Ethiopian Yirgacheffe" in html
+
+
+def test_shot_detail_includes_hx_trigger(client, sample_bean, db):
+    """GET /history/{shot_id} response includes HX-Trigger: openShotModal header."""
+    shot = _seed_shot(db, sample_bean.id, taste=7.0)
+
+    response = client.get(f"/history/{shot.id}")
+    assert response.status_code == 200
+    assert response.headers.get("HX-Trigger") == "openShotModal"
+
+
+def test_shot_detail_nonexistent_returns_404(client):
+    """GET /history/99999 returns 404."""
+    response = client.get("/history/99999")
+    assert response.status_code == 404
+
+
+def test_shot_edit_form_loads(client, sample_bean, db):
+    """GET /history/{shot_id}/edit returns 200 with edit form."""
+    shot = _seed_shot(db, sample_bean.id, taste=7.5)
+
+    response = client.get(f"/history/{shot.id}/edit")
+    assert response.status_code == 200
+    html = response.text
+
+    # Should contain form elements
+    assert "hx-post" in html
+    assert "edit-notes" in html
+    assert "flavor-slider" in html
+
+
+def test_shot_edit_saves_notes(client, sample_bean, db):
+    """POST /history/{shot_id}/edit with notes updates DB."""
+    shot = _seed_shot(db, sample_bean.id, taste=7.0)
+
+    response = client.post(
+        f"/history/{shot.id}/edit",
+        data={"notes": "great shot, very balanced"},
+    )
+    assert response.status_code == 200
+
+    db.expire_all()
+    updated = db.query(Measurement).filter(Measurement.id == shot.id).first()
+    assert updated.notes == "great shot, very balanced"
+
+
+def test_shot_edit_saves_flavor_dimensions(client, sample_bean, db):
+    """POST /history/{shot_id}/edit with flavor dimensions updates DB."""
+    shot = _seed_shot(db, sample_bean.id, taste=7.0)
+
+    response = client.post(
+        f"/history/{shot.id}/edit",
+        data={"acidity": "3", "sweetness": "5"},
+    )
+    assert response.status_code == 200
+
+    db.expire_all()
+    updated = db.query(Measurement).filter(Measurement.id == shot.id).first()
+    assert updated.acidity == 3.0
+    assert updated.sweetness == 5.0
+    # Unsubmitted dimensions should be None
+    assert updated.body is None
+
+
+def test_shot_edit_saves_flavor_tags(client, sample_bean, db):
+    """POST /history/{shot_id}/edit with flavor_tags saves as JSON list."""
+    shot = _seed_shot(db, sample_bean.id, taste=7.0)
+
+    response = client.post(
+        f"/history/{shot.id}/edit",
+        data={"flavor_tags": "chocolate,citrus"},
+    )
+    assert response.status_code == 200
+
+    db.expire_all()
+    updated = db.query(Measurement).filter(Measurement.id == shot.id).first()
+    tags = json.loads(updated.flavor_tags)
+    assert "chocolate" in tags
+    assert "citrus" in tags
+
+
+def test_shot_edit_clears_notes(client, sample_bean, db):
+    """POST /history/{shot_id}/edit with empty notes clears existing notes."""
+    shot = _seed_shot(db, sample_bean.id, taste=7.0, notes="old notes to clear")
+
+    response = client.post(
+        f"/history/{shot.id}/edit",
+        data={"notes": ""},
+    )
+    assert response.status_code == 200
+
+    db.expire_all()
+    updated = db.query(Measurement).filter(Measurement.id == shot.id).first()
+    assert updated.notes is None
+
+
+def test_shot_edit_returns_oob_row_update(client, sample_bean, db):
+    """POST /history/{shot_id}/edit response contains hx-swap-oob for the shot row."""
+    shot = _seed_shot(db, sample_bean.id, taste=7.0)
+
+    response = client.post(
+        f"/history/{shot.id}/edit",
+        data={"notes": "updated feedback"},
+    )
+    assert response.status_code == 200
+    html = response.text
+
+    # Response must contain oob swap for the row element
+    assert "hx-swap-oob" in html
+    assert f"shot-{shot.id}" in html

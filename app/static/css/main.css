@@ -787,7 +787,7 @@ body {
   }
 }
 
-/* Shot modal placeholder (styled in Plan 03) */
+/* Shot modal */
 .shot-modal {
   background: var(--bg-card);
   color: var(--text-primary);
@@ -800,4 +800,78 @@ body {
 
 .shot-modal::backdrop {
   background: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+  padding: var(--spacing-md);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-body {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: var(--spacing-sm) 0;
+}
+
+.modal-footer {
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--border);
+  margin-top: var(--spacing-md);
+}
+
+.modal-close {
+  min-height: 32px;
+  min-width: 32px;
+  padding: 0;
+}
+
+/* Flavor bar display (read-only in detail view) */
+.flavor-display { margin-top: var(--spacing-xs); }
+
+.flavor-display-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 30px;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xs);
+}
+
+.flavor-bar {
+  height: 8px;
+  background: var(--bg-input);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.flavor-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 4px;
+  transition: width 0.3s;
+}
+
+/* Shot detail sections */
+.shot-detail-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.shot-detail-taste {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.shot-detail-section {
+  border-top: 1px solid var(--border);
+  padding-top: var(--spacing-sm);
 }
