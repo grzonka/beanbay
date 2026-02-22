@@ -145,11 +145,11 @@ Plans:
 2. User can see a side-by-side comparison of the best recipe for each bean (parameters + taste score), highlighting how different beans prefer different settings
 3. User can view aggregate statistics including total shots pulled, average taste score, personal best, and improvement trend across all beans
 
-**Plans:** 2 plans
+**Plans:** 2 plans — ✓ Complete (2026-02-22)
 
 Plans:
-- [ ] 06-01-PLAN.md — Analytics page with brew statistics + cross-bean recipe comparison
-- [ ] 06-02-PLAN.md — Parameter exploration heatmap on insights page
+- [x] 06-01-PLAN.md — Analytics page with brew statistics + cross-bean recipe comparison
+- [x] 06-02-PLAN.md — Parameter exploration heatmap on insights page
 
 **Depends on:** Phase 4 (needs history data), Phase 5 (reuses chart patterns)
 

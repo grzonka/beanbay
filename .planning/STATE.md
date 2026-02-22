@@ -1,14 +1,14 @@
 # Project State: BrewFlow
 
 **Last updated:** 2026-02-22
-**Current phase:** Phase 5 (Insights & Trust) — Complete (3/3 plans done, including UAT fixes).
+**Current phase:** Phase 6 (Analytics & Exploration) — Complete (2/2 plans done).
 
 ## Project Reference
 
 See: .planning/PROJECT.md (updated 2026-02-21)
 
 **Core value:** Every espresso shot teaches the system something — the app must make it effortless to capture feedback from a phone at the espresso machine and return increasingly better recommendations.
-**Current focus:** Phase 5 complete (including UAT fix plan 03). Ready for Phase 6 (Analytics & Exploration).
+**Current focus:** Phase 6 complete (2/2 plans). All 6 phases and 22 requirements delivered.
 
 ## Phase Status
 
@@ -19,9 +19,9 @@ See: .planning/PROJECT.md (updated 2026-02-21)
 | 3 | Optimization Loop | ● Complete | 2/2 | 100% |
 | 4 | Shot History & Feedback Depth | ● Complete | 3/3 | 100% |
 | 5 | Insights & Trust | ● Complete | 3/3 | 100% |
-| 6 | Analytics & Exploration | ○ Not started | 0/0 | 0% |
+| 6 | Analytics & Exploration | ● Complete | 2/2 | 100% |
 
-**Overall progress:** ██████████████░░░░░░ ~74% (14/14 planned plans complete, Phase 6 TBD)
+**Overall progress:** ████████████████████ 100% (16/16 plans complete across all 6 phases)
 
 ## Active Decisions
 
@@ -56,10 +56,16 @@ See: .planning/PROJECT.md (updated 2026-02-21)
   - **[05-03]** switch_after=5 on TwoPhaseMetaRecommender — random exploration lasts 5 shots (was ~1)
   - **[05-03]** Three-phase badge: random (0-4) / bayesian_early-Learning (5-7) / bayesian-Bayesian optimization (8+)
   - **[05-03]** insight-badge-bayesian_early CSS class (green-tinted, #2a3a32 bg, #7ae0a8 text)
+  - **[06-02]** Chart.js scatter (not matrix plugin) for heatmap — no extra dependency; per-point `pointBackgroundColor` array from taste score JS function achieves equivalent visual
+  - **[06-02]** Taste color thresholds: red (≤3), muted/grey (≤6), amber (≤8), green (9-10) — matches espresso quality intuition
+  - **[06-02]** Failed shots as `crossRot` point style (not just color) — accessible distinction for color-blind users
+  - **[06-02]** 3-shot minimum threshold for heatmap_data — avoids uninformative near-empty charts
+  - **[06-02]** Multi-chart page: Chart.js CDN loaded once by first partial; subsequent partials omit CDN reload
 
 ## Blockers
 
 - Docker build not verified (daemon not available in dev environment). Dockerfile and docker-compose.yml ready for Unraid deployment.
+- **Pre-existing:** `tests/test_analytics.py::test_analytics_improvement_rate` fails — test doesn't set active bean cookie so global stats view renders instead of bean-specific stats. File is also untracked (not committed by plan 06-01). Needs fix before full test suite is clean.
 
 ## Accumulated Context
 
@@ -83,6 +89,8 @@ See: .planning/PROJECT.md (updated 2026-02-21)
   - Shot detail modal: GET /history/{id} → _shot_modal.html + HX-Trigger: openShotModal; GET/POST /history/{id}/edit → _shot_edit.html pre-populated; POST returns updated modal + oob row swap
   - Recommendation insights: OptimizerService.get_recommendation_insights() returns phase/explanation/predicted_range; partial `_recommendation_insights.html` shown on recommend page; phase detection via TwoPhaseMetaRecommender.select_recommender()
   - Progress chart: `/insights` page, Chart.js cumulative-best line + shot scatter, 5-state convergence badge, optimizer mode indicator
+  - Heatmap: `/insights` page, Chart.js scatter grind×temperature colored by taste (red→amber→green), failed shots as crossRot grey markers, 3-shot threshold for empty state
+  - Analytics page: `/analytics`, brew statistics (total shots, avg taste, personal best, improvement rate), cross-bean recipe comparison table
 
 ### Research Flags
 - ~~Phase 1: Investigate discrete vs continuous BayBE parameters~~ RESOLVED: hybrid approach works, 7.5KB files
@@ -96,11 +104,13 @@ See: .planning/PROJECT.md (updated 2026-02-21)
 
 ### Last Session
 - **Date:** 2026-02-22
-- **What happened:** Executed plan 05-03 (UAT gap fixes). Fixed BayBE crash on 2nd+ recommend (clear_cache fix), set switch_after=5, added bayesian_early/Learning phase badge. 2 tests updated, 2 new tests added. 100/100 pass. Phase 5 fully complete.
-- **Where we left off:** Phase 5 complete (3/3). Ready for Phase 6.
+- **What happened:** Executed plan 06-02 (parameter exploration heatmap). Added Chart.js scatter chart to insights page showing grind vs temperature colored by taste score. Failed shots shown as grey crossRot markers. 3 new tests added (all 9 insights tests pass). Phase 6 now complete (2/2 plans).
+- **Where we left off:** All 6 phases complete. 22/22 requirements delivered.
 
 ### Next Steps
-1. Define and execute Phase 6 (Analytics & Exploration) — TBD
+1. Fix pre-existing `test_analytics_improvement_rate` failure in `tests/test_analytics.py` (needs active bean cookie in test)
+2. Commit untracked `tests/test_analytics.py` once fix is applied
+3. Deploy to Unraid (Docker build not yet verified)
 
 ---
 *State initialized: 2026-02-21*
