@@ -1,14 +1,14 @@
 # Project State: BrewFlow
 
 **Last updated:** 2026-02-22
-**Current phase:** Phase 4 in progress — 2/3 plans complete.
+**Current phase:** Phase 4 complete — ready for Phase 5 (Insights & Trust).
 
 ## Project Reference
 
 See: .planning/PROJECT.md (updated 2026-02-21)
 
 **Core value:** Every espresso shot teaches the system something — the app must make it effortless to capture feedback from a phone at the espresso machine and return increasingly better recommendations.
-**Current focus:** Phase 4 (Shot History & Feedback Depth) — history view complete, ready for shot detail modal.
+**Current focus:** Phase 5 (Insights & Trust) — BayBE confidence signals, trend charts, recommendation explanations.
 
 ## Phase Status
 
@@ -17,11 +17,11 @@ See: .planning/PROJECT.md (updated 2026-02-21)
 | 1 | Foundation & Infrastructure | ● Complete | 3/3 | 100% |
 | 2 | Bean Management & Mobile Shell | ● Complete | 2/2 | 100% |
 | 3 | Optimization Loop | ● Complete | 2/2 | 100% |
-| 4 | Shot History & Feedback Depth | ◑ In progress | 2/3 | 67% |
+| 4 | Shot History & Feedback Depth | ● Complete | 3/3 | 100% |
 | 5 | Insights & Trust | ○ Not started | 0/0 | 0% |
 | 6 | Analytics & Exploration | ○ Not started | 0/0 | 0% |
 
-**Overall progress:** ██████████░░░░░░░░░░ ~55% (10/~17 estimated plans)
+**Overall progress:** ████████████░░░░░░░░ ~65% (12/~17 estimated plans)
 
 ## Active Decisions
 
@@ -40,9 +40,12 @@ See: .planning/PROJECT.md (updated 2026-02-21)
 - **[04-01]** `flavor_tags` stored as String (JSON-encoded) not JSON column type — SQLite compatibility
 - **[04-01]** Untouched flavor sliders: JS strips `name` attribute on form submit — null not 0 saved to DB
 - **[04-01]** Startup ALTER TABLE migration in lifespan for existing databases (inspect + ALTER TABLE)
-- **[04-02]** htmx filter pattern: each select uses hx-include to send sibling field — no submit button needed
-- **[04-02]** Shot enrichment in router: plain dicts with bean_name pre-computed — avoids lazy-load issues post-session
-- **[04-02]** min_taste normalized to int in router when whole number — ensures Jinja `selected` comparison works
+  - **[04-02]** htmx filter pattern: each select uses hx-include to send sibling field — no submit button needed
+  - **[04-02]** Shot enrichment in router: plain dicts with bean_name pre-computed — avoids lazy-load issues post-session
+  - **[04-02]** min_taste normalized to int in router when whole number — ensures Jinja `selected` comparison works
+  - **[04-03]** HX-Trigger: openShotModal header → JS custom event → dialog.showModal() — keeps JS minimal, no MutationObserver
+  - **[04-03]** hx-swap-oob="outerHTML:#shot-{id}" pattern: POST edit returns updated modal + in-place list row update in one response
+  - **[04-03]** history/index.html requires {% block scripts %} to load tags.js — openShotModal listener lives there
 
 ## Blockers
 
@@ -66,7 +69,8 @@ See: .planning/PROJECT.md (updated 2026-02-21)
 - Failed shots: is_failed=true auto-sets taste=1 in router before DB write
 - Best recipe: excludes failed shots (is_failed=False filter), highest taste wins
 - Feedback panel: collapsible partial `_feedback_panel.html`, included in brew forms; notes + 6 flavor sliders + tag input
-- History view: GET /history (full page) + GET /history/shots (htmx partial); filters by bean + min taste; shot rows with date/taste/grind/failed/notes indicators; modal scaffold for Plan 03
+  - History view: GET /history (full page) + GET /history/shots (htmx partial); filters by bean + min taste; shot rows with date/taste/grind/failed/notes indicators; modal scaffold for Plan 03
+  - Shot detail modal: GET /history/{id} → _shot_modal.html + HX-Trigger: openShotModal; GET/POST /history/{id}/edit → _shot_edit.html pre-populated; POST returns updated modal + oob row swap
 
 ### Research Flags
 - ~~Phase 1: Investigate discrete vs continuous BayBE parameters~~ RESOLVED: hybrid approach works, 7.5KB files
@@ -80,12 +84,11 @@ See: .planning/PROJECT.md (updated 2026-02-21)
 
 ### Last Session
 - **Date:** 2026-02-22
-- **What happened:** Executed plan 04-02 (shot history view). Created GET /history + GET /history/shots endpoints with bean + taste score filters. 4 templates (index, filter panel, shot list, shot row). History nav link. Bean detail "View History" deep-link. ~100 lines CSS. 10 new tests. 78/78 tests pass.
-- **Where we left off:** Phase 4 plan 2/3 complete. Ready for 04-03 (shot detail modal).
+- **What happened:** Executed plan 04-03 (shot detail modal + edit). Added GET/POST /history/{id} detail and edit endpoints, _shot_modal.html and _shot_edit.html templates, extended tags.js for edit modal IDs and htmx:afterSettle re-init, fixed missing {% block scripts %} in history/index.html. 9 new tests. 87/87 pass. Phase 4 complete.
+- **Where we left off:** Phase 4 all 3/3 plans complete. Ready for Phase 5 (Insights & Trust).
 
 ### Next Steps
-1. Execute Phase 4 plan 03: Shot detail modal
-2. After Phase 4: begin Phase 5 (Insights & Trust)
+1. Begin Phase 5: Insights & Trust (BayBE confidence signals, trend charts, recommendation explanations)
 
 ---
 *State initialized: 2026-02-21*
