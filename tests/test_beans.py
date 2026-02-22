@@ -2,6 +2,7 @@
 
 import pytest
 
+from app.models.bag import Bag
 from app.models.bean import Bean
 from app.models.measurement import Measurement
 
@@ -320,3 +321,207 @@ def test_deactivate_bean_nav_shows_clear_button(client, sample_bean):
     client.cookies.set("active_bean_id", sample_bean.id)
     response = client.get("/beans")
     assert response.status_code == 200
+
+
+# --- Bean metadata ---
+
+
+def test_create_bean_with_metadata(client):
+    """POST /beans with roast_date, process, variety stores and displays them."""
+    response = client.post(
+        "/beans",
+        data={
+            "name": "Ethiopia Washed",
+            "roast_date": "2026-01-15",
+            "process": "washed",
+            "variety": "SL-28",
+        },
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+
+    # Find the bean id by visiting the list and following to detail
+    list_response = client.get("/beans")
+    assert "Ethiopia Washed" in list_response.text
+
+    # Get bean from DB via the list page — parse bean id from href
+    import re
+
+    match = re.search(r'href="/beans/([^"]+)"', list_response.text)
+    assert match, "Bean link not found in list page"
+    bean_id = match.group(1)
+
+    detail = client.get(f"/beans/{bean_id}")
+    assert detail.status_code == 200
+    assert "Washed" in detail.text
+    assert "SL-28" in detail.text
+    assert "2026-01-15" in detail.text
+
+
+def test_create_bean_without_metadata(client):
+    """POST /beans with only name succeeds (backward compatible)."""
+    response = client.post(
+        "/beans",
+        data={"name": "Minimal Bean No Meta"},
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+
+    list_response = client.get("/beans")
+    assert "Minimal Bean No Meta" in list_response.text
+
+    import re
+
+    match = re.search(r'href="/beans/([^"]+)"', list_response.text)
+    assert match
+    bean_id = match.group(1)
+
+    detail = client.get(f"/beans/{bean_id}")
+    assert detail.status_code == 200
+
+
+def test_update_bean_with_metadata(client, sample_bean):
+    """POST /beans/{id} with metadata fields updates them."""
+    response = client.post(
+        f"/beans/{sample_bean.id}",
+        data={
+            "name": "Updated Ethiopian",
+            "roast_date": "2026-02-01",
+            "process": "natural",
+            "variety": "Gesha",
+        },
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+
+    detail = client.get(f"/beans/{sample_bean.id}")
+    assert "Updated Ethiopian" in detail.text
+    assert "Natural" in detail.text or "natural" in detail.text
+    assert "Gesha" in detail.text
+    assert "2026-02-01" in detail.text
+
+
+def test_update_bean_clear_metadata(client, sample_bean, db_session):
+    """POST /beans/{id} with empty process clears the field."""
+    # First set a process
+    sample_bean.process = "washed"
+    db_session.commit()
+
+    response = client.post(
+        f"/beans/{sample_bean.id}",
+        data={"name": sample_bean.name, "process": ""},
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+
+    db_session.expire_all()
+    updated = db_session.query(Bean).filter(Bean.id == sample_bean.id).first()
+    assert updated.process is None
+
+
+# --- Bag management ---
+
+
+def test_add_bag(client, sample_bean):
+    """POST /beans/{id}/bags adds a bag and redirects to detail."""
+    response = client.post(
+        f"/beans/{sample_bean.id}/bags",
+        data={
+            "purchase_date": "2026-01-20",
+            "cost": "15.50",
+            "weight_grams": "250",
+            "notes": "First bag",
+        },
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+    assert f"/beans/{sample_bean.id}" in response.headers["location"]
+
+    detail = client.get(f"/beans/{sample_bean.id}")
+    assert detail.status_code == 200
+    assert "15.50" in detail.text
+    assert "250" in detail.text
+
+
+def test_add_bag_minimal(client, sample_bean, db_session):
+    """POST /beans/{id}/bags with no optional fields creates a bag with no details."""
+    response = client.post(
+        f"/beans/{sample_bean.id}/bags",
+        data={
+            "purchase_date": "",
+            "cost": "",
+            "weight_grams": "",
+            "notes": "",
+        },
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+
+    db_session.expire_all()
+    bag = db_session.query(Bag).filter(Bag.bean_id == sample_bean.id).first()
+    assert bag is not None
+    assert bag.cost is None
+    assert bag.weight_grams is None
+    assert bag.purchase_date is None
+    assert bag.notes is None
+
+
+def test_delete_bag(client, sample_bean, db_session):
+    """POST /beans/{id}/bags/{bag_id}/delete removes the bag."""
+    # Add a bag first via the route
+    client.post(
+        f"/beans/{sample_bean.id}/bags",
+        data={"cost": "12.00"},
+        follow_redirects=False,
+    )
+    db_session.expire_all()
+    bag = db_session.query(Bag).filter(Bag.bean_id == sample_bean.id).first()
+    assert bag is not None
+    bag_id = bag.id
+
+    # Delete it
+    response = client.post(
+        f"/beans/{sample_bean.id}/bags/{bag_id}/delete",
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+
+    db_session.expire_all()
+    deleted = db_session.query(Bag).filter(Bag.id == bag_id).first()
+    assert deleted is None
+
+
+def test_bean_detail_shows_bags(client, sample_bean, db_session):
+    """GET /beans/{id} shows all bags for that bean."""
+    client.post(
+        f"/beans/{sample_bean.id}/bags",
+        data={"cost": "14.00", "weight_grams": "200"},
+        follow_redirects=False,
+    )
+    client.post(
+        f"/beans/{sample_bean.id}/bags",
+        data={"cost": "18.50", "weight_grams": "300"},
+        follow_redirects=False,
+    )
+
+    detail = client.get(f"/beans/{sample_bean.id}")
+    assert detail.status_code == 200
+    assert "14.00" in detail.text
+    assert "18.50" in detail.text
+
+
+def test_delete_bean_cascades_bags(client, sample_bean, db_session):
+    """Deleting a bean removes all its bags (cascade)."""
+    client.post(
+        f"/beans/{sample_bean.id}/bags",
+        data={"cost": "10.00"},
+        follow_redirects=False,
+    )
+    db_session.expire_all()
+    assert db_session.query(Bag).filter(Bag.bean_id == sample_bean.id).count() == 1
+
+    client.post(f"/beans/{sample_bean.id}/delete", follow_redirects=False)
+
+    db_session.expire_all()
+    orphaned = db_session.query(Bag).filter(Bag.bean_id == sample_bean.id).count()
+    assert orphaned == 0
