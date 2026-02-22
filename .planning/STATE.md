@@ -20,18 +20,18 @@ See: .planning/PROJECT.md (updated 2026-02-22)
 
 ## Current Position
 
-Phase: 12 of 12 (Manual Brew Input) — Plan 2 of TBD complete
-Plan: 2 of TBD — 12-02 complete
-Status: In progress — ready for Plan 12-03
-Last activity: 2026-02-22 — Completed 12-02-PLAN.md (GET /brew/manual route, manual.html form, toggleFailed extracted to tags.js, CSS classes, 6 new tests)
+Phase: 12 of 12 (Manual Brew Input) — Plan 3 of TBD complete
+Plan: 3 of TBD — 12-03 complete
+Status: In progress — ready for Plan 12-04
+Last activity: 2026-02-22 — Completed 12-03-PLAN.md (Manual badge in history rows/modal, batch delete with BayBE campaign rebuild, 7 new tests, 126 total)
 
-Progress: [██████████████████████████████████████████░░] ~92% (27 plans complete, v0.1.1 in progress)
+Progress: [███████████████████████████████████████████░] ~94% (28 plans complete, v0.1.1 in progress)
 
 ## Performance Metrics
 
 **Velocity:**
-  - Total plans completed: 27 (v1: 16, v0.1.0: 5, v0.1.1: 6)
-  - v0.1.1 plans completed: 6 (phase 10: 2, phase 11: 2, phase 12: 2)
+  - Total plans completed: 28 (v1: 16, v0.1.0: 5, v0.1.1: 7)
+  - v0.1.1 plans completed: 7 (phase 10: 2, phase 11: 2, phase 12: 3)
 - v0.1.1 total plans: TBD (refined during planning)
 
 ## Accumulated Context
@@ -50,6 +50,8 @@ See: .planning/PROJECT.md (Key Decisions table)
 | 12 | name attribute on number inputs (not sliders) | Sliders are for UX sync only; numbers carry submitted value with correct precision |
 | 12 | window.toggleFailed exposed from tags.js IIFE | Three templates needed same function; single source of truth avoids drift |
 | 12 | hidden(no) + checkbox(yes) for saturation | HTML checkbox submits nothing when unchecked; hidden ensures saturation=no always present |
+| 12 | Delete checkbox uses form attribute (not nested) | Checkbox inside shot card, outside delete form; HTML form= attribute links it regardless of DOM nesting |
+| 12 | Capture shot IDs before delete in tests | SQLAlchemy raises ObjectDeletedError accessing deleted instance attrs after expire_all() |
 
 ### Branding
 - **Name:** BeanBay | **Domain:** beanbay.coffee
@@ -65,12 +67,12 @@ See: .planning/PROJECT.md (Key Decisions table)
 
 ### Last Session
 - **Date:** 2026-02-22
-- **What happened:** Executed 12-02-PLAN.md — GET /brew/manual route added with pre-fill logic (best measurement or bounds midpoint); manual.html template with bidirectional slider+number param inputs; saturation toggle with hidden+checkbox pattern; toggleFailed extracted from recommend.html and best.html into window.toggleFailed in tags.js; CSS classes .param-input-row, .param-slider, .param-number, .param-unit, .saturation-toggle added; 6 new tests (29→35 brew, 119 total).
-- **Where we left off:** Phase 12 Plan 2 complete. Ready for Plan 12-03 (next plan in phase).
+- **What happened:** Executed 12-03-PLAN.md — Manual badge (blue #3b82f6) in history rows and modal; `is_manual` added to all three shot dicts; batch delete via POST /history/delete-batch with BayBE campaign rebuild per affected bean; delete mode toggle button + sticky action bar + per-row checkboxes; 7 new tests (19→26 history, 126 total).
+- **Where we left off:** Phase 12 Plan 3 complete. Ready for Plan 12-04 (next plan in phase).
 
 ### Next Steps
-1. Execute Phase 12 Plan 03 (see .planning/phases/12-manual-brew-input/12-03-PLAN.md)
+1. Execute Phase 12 Plan 04 (see .planning/phases/12-manual-brew-input/12-04-PLAN.md)
 
 ---
 *State initialized: 2026-02-21*
-*Last updated: 2026-02-22 after completing 12-02 manual brew form*
+*Last updated: 2026-02-22 after completing 12-03 manual badge + batch delete*
