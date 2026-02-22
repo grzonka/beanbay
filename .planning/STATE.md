@@ -20,18 +20,18 @@ See: .planning/PROJECT.md (updated 2026-02-22)
 
 ## Current Position
 
-Phase: 11 of 12 (Brew UX Improvements) — Phase complete
-Plan: 2 of 2 complete (11-01 and 11-02 both done)
-Status: Phase complete — ready for Phase 12
-Last activity: 2026-02-22 — Completed 11-01-PLAN.md (inactive taste slider + submit gate)
+Phase: 12 of 12 (Manual Brew Input) — Plan 1 of TBD complete
+Plan: 1 of TBD — 12-01 complete
+Status: In progress — ready for Plan 12-02
+Last activity: 2026-02-22 — Completed 12-01-PLAN.md (is_manual column, bean picker, Manual Input button, bounds validation)
 
-Progress: [████████████████████████████████████░░░░] 87%+ (25 plans complete, v0.1.1 in progress)
+Progress: [█████████████████████████████████████████░░░] 90%+ (26 plans complete, v0.1.1 in progress)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 25 (v1: 16, v0.1.0: 5, v0.1.1: 4)
-- v0.1.1 plans completed: 4 (phase 10: 2, phase 11: 2)
+  - Total plans completed: 26 (v1: 16, v0.1.0: 5, v0.1.1: 5)
+  - v0.1.1 plans completed: 5 (phase 10: 2, phase 11: 2, phase 12: 1)
 - v0.1.1 total plans: TBD (refined during planning)
 
 ## Accumulated Context
@@ -45,7 +45,8 @@ See: .planning/PROJECT.md (Key Decisions table)
 | 11 | Other brew routes still redirect when no bean | POST /recommend, GET /best, POST /record genuinely require a bean to function |
 | 11 | data-touched attribute on taste slider (not JS var) | State co-located with DOM element; easier to reset via toggleFailed; easier to inspect |
 | 11 | Display "—" as initial taste slider label | 7.0 default looked like a deliberate choice; "—" clearly signals unset |
-| 11 | toggleFailed sets data-touched=true | Failed Shot is intentional; taste override to 1 counts as rated; uncheck restores untouched |
+| 12 | Add POST /beans/set-active for bean picker form | Existing activate route uses path param; form <select> submits body field |
+| 12 | Bounds validation only for is_manual == "true" | Optimizer recs always in-bounds; manual entries need validation |
 
 ### Branding
 - **Name:** BeanBay | **Domain:** beanbay.coffee
@@ -61,11 +62,11 @@ See: .planning/PROJECT.md (Key Decisions table)
 
 ### Last Session
 - **Date:** 2026-02-22
-- **What happened:** Executed 11-01-PLAN.md — taste slider starts inactive/dimmed (opacity 0.4, display "—") on recommend and best pages; submit blocked with inline error until slider touched; Failed Shot toggle integration preserved.
-- **Where we left off:** Phase 11 complete (both plans done). Ready for Phase 12.
+- **What happened:** Executed 12-01-PLAN.md — is_manual Boolean column added to Measurement model + Alembic migration applied; brew page restructured with bean picker dropdown and Manual Input button; POST /brew/record validates bounds when is_manual=true (422 with violations); POST /beans/set-active added for bean picker form.
+- **Where we left off:** Phase 12 Plan 1 complete. Ready for Plan 12-02 (manual brew form at /brew/manual).
 
 ### Next Steps
-1. Execute Phase 12 (manual brew entry)
+1. Execute Phase 12 Plan 02 (manual brew form — the /brew/manual route + template)
 
 ---
 *State initialized: 2026-02-21*
