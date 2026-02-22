@@ -1,7 +1,7 @@
 # Project State: BeanBay
 
 **Last updated:** 2026-02-22
-**Current phase:** Phase 8 — Documentation & Release (in progress).
+**Current phase:** Phase 8 — Documentation & Release (complete).
 
 ## Project Reference
 
@@ -26,24 +26,24 @@ See: .planning/MILESTONES.md
 | Phase | Name | Status |
 |-------|------|--------|
 | 7 | Rebrand & Cleanup | ✅ Complete & Verified |
-| 8 | Documentation & Release | 🔄 In Progress (1/2 plans done) |
+| 8 | Documentation & Release | ✅ Complete (2/2 plans done) |
 | 9 | Deployment Templates | Not started |
 
-**Overall progress:** Phase 8 in progress. 3/5 v0.1.0 plans done.
+**Overall progress:** Phase 8 complete. 4/5 v0.1.0 plans done.
 
 ## Current Position
 
-Phase: 8 of 9 (Documentation & Release) — In Progress
-Plan: 1 of 2 in Phase 8
-Status: In progress
-Last activity: 2026-02-22 - Completed 08-01-PLAN.md (README.md created)
+Phase: 8 of 9 (Documentation & Release) — Complete
+Plan: 2 of 2 in Phase 8
+Status: Phase complete — ready for Phase 9
+Last activity: 2026-02-22 - Completed 08-02-PLAN.md (CI/CD workflows + v0.1.0 release)
 
-Progress: ███░░ 60% (3/5 v0.1.0 plans)
+Progress: ████░ 80% (4/5 v0.1.0 plans)
 
 ## Blockers
 
 - ~~GitHub repo not yet created.~~ ✅ `grzonka/beanbay` exists on GitHub.
-- Docker build not verified (daemon not available in dev environment).
+- ~~Docker build not verified (daemon not available in dev environment).~~ ✅ Docker Publish workflow triggered on v0.1.0 tag — building in GitHub Actions.
 
 ## Accumulated Context
 
@@ -64,21 +64,21 @@ See: .planning/phases/07-rebrand-cleanup/07-02-SUMMARY.md
 ### Branding
 - **New name:** BeanBay (was BrewFlow)
 - **Domain:** beanbay.coffee
-- **Repo:** grzonka/beanbay (to be created)
-- **Docker image:** ghcr.io/grzonka/beanbay
+- **Repo:** grzonka/beanbay ✅
+- **Docker image:** ghcr.io/grzonka/beanbay ✅ (publishing via GitHub Actions on tags)
+- **Release:** v0.1.0 live at https://github.com/grzonka/beanbay/releases/tag/v0.1.0
 
 ## Session Continuity
 
 ### Last Session
 - **Date:** 2026-02-22
-- **What happened:** Executed Phase 8 Plan 01. Created README.md with WIP indication, Docker quick start, dev setup, and Apache 2.0 license reference. 57 lines, concise and honest.
-- **Where we left off:** Phase 8 in progress. 1/2 plans done. Ready for 08-02 (GitHub Actions CI/CD + v0.1.0 release).
+- **What happened:** Executed Phase 8 Plan 02. Created GitHub Actions CI/CD workflows (test + Docker publish), CHANGELOG.md, and GitHub release v0.1.0. Phase 8 now complete.
+- **Where we left off:** Phase 8 complete. 4/5 v0.1.0 plans done. Ready for Phase 9 (Deployment Templates).
 
 ### Next Steps
-1. Execute 08-02 — GitHub Actions CI/CD workflows (test + Docker publish) + v0.1.0 release
-2. Execute 09-01 — Docker files update + Unraid CA XML template
-3. Deploy to Unraid
+1. Execute 09-01 — Docker files update + Unraid CA XML template
+2. Deploy to Unraid
 
 ---
 *State initialized: 2026-02-21*
-*Last updated: 2026-02-22 after 08-01 (README)*
+*Last updated: 2026-02-22 after 08-02 (CI/CD + v0.1.0 release)*
