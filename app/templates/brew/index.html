@@ -15,6 +15,19 @@
   </div>
 </div>
 {% else %}
+
+<!-- Bean picker -->
+<form method="post" action="/beans/set-active" class="bean-picker-form" style="margin-bottom: var(--spacing-lg);">
+  <label for="bean-picker" style="display: block; font-size: var(--font-sm); color: var(--text-secondary); margin-bottom: var(--spacing-xs);">Active bean</label>
+  <div style="display: flex; gap: var(--spacing-sm); align-items: center;">
+    <select id="bean-picker" name="bean_id" class="form-control" onchange="this.form.submit()" style="flex: 1;">
+      {% for b in beans %}
+      <option value="{{ b.id }}" {% if b.id == active_bean.id %}selected{% endif %}>{{ b.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+</form>
+
 <div class="brew-actions">
   <!-- Get Recommendation button -->
   <form method="post" action="/brew/recommend" class="brew-action-form">
@@ -30,6 +43,11 @@
     ⭐ Repeat Best
   </a>
   {% endif %}
+
+  <!-- Manual Input button -->
+  <a href="/brew/manual" class="btn btn-secondary btn-full brew-action-btn">
+    ✏️ Manual Input
+  </a>
 </div>
 
 {% if not has_measurements %}

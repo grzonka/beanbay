@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Optional
 
 from fastapi import APIRouter, Depends, Form, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
@@ -23,6 +23,7 @@ from app.database import get_db
 from app.models.bean import Bean
 from app.models.measurement import Measurement
 from app.routers.beans import _get_active_bean
+from app.services.optimizer import _resolve_bounds
 
 router = APIRouter(prefix="/brew", tags=["brew"])
 templates = Jinja2Templates(directory="app/templates")
@@ -119,11 +120,12 @@ async def brew_index(request: Request, db: Session = Depends(get_db)):
         )
 
     has_measurements = db.query(Measurement).filter(Measurement.bean_id == bean.id).count() > 0
+    beans = db.query(Bean).order_by(Bean.name).all()
 
     return templates.TemplateResponse(
         request,
         "brew/index.html",
-        {"active_bean": bean, "has_measurements": has_measurements},
+        {"active_bean": bean, "has_measurements": has_measurements, "beans": beans},
     )
 
 
@@ -209,12 +211,34 @@ async def record_measurement(
     aroma: Optional[float] = Form(None),
     intensity: Optional[float] = Form(None),
     flavor_tags: Optional[str] = Form(None),
+    is_manual: Optional[str] = Form(None),
     db: Session = Depends(get_db),
 ):
     """Record a measurement — saves to SQLite and BayBE campaign."""
     bean = _require_active_bean(request, db)
     if not bean:
         return RedirectResponse(url="/beans", status_code=303)
+
+    # Validate manual brews against bean parameter bounds
+    if is_manual == "true":
+        bounds = _resolve_bounds(bean.parameter_overrides)
+        param_values = {
+            "grind_setting": grind_setting,
+            "temperature": temperature,
+            "preinfusion_pct": preinfusion_pct,
+            "dose_in": dose_in,
+            "target_yield": target_yield,
+        }
+        violations = []
+        for param, value in param_values.items():
+            lo, hi = bounds[param]
+            if value < lo or value > hi:
+                violations.append({"param": param, "value": value, "min": lo, "max": hi})
+        if violations:
+            return JSONResponse(
+                status_code=422,
+                content={"error": "Parameters out of range", "violations": violations},
+            )
 
     # Auto-set taste to 1 for failed shots (choked / gusher)
     failed = is_failed == "true" or is_failed == "1" or is_failed == "on"
@@ -254,6 +278,7 @@ async def record_measurement(
             taste=taste,
             extraction_time=extraction_time if extraction_time else None,
             is_failed=failed,
+            is_manual=(is_manual == "true"),
             notes=notes.strip() if notes else None,
             acidity=_clamp_flavor(acidity),
             sweetness=_clamp_flavor(sweetness),

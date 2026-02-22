@@ -235,6 +235,28 @@ async def activate_bean(
     return response
 
 
+@router.post("/set-active")
+async def set_active_bean(
+    request: Request,
+    bean_id: str = Form(...),
+    db: Session = Depends(get_db),
+):
+    """Set active bean from a form POST (bean picker on brew page). Redirects back to /brew."""
+    bean = db.query(Bean).filter(Bean.id == bean_id).first()
+    if not bean:
+        return RedirectResponse(url="/brew", status_code=303)
+
+    response = RedirectResponse(url="/brew", status_code=303)
+    response.set_cookie(
+        key="active_bean_id",
+        value=bean_id,
+        max_age=60 * 60 * 24 * 365,  # 1 year
+        httponly=True,
+        samesite="lax",
+    )
+    return response
+
+
 @router.delete("/{bean_id}", response_class=HTMLResponse)
 async def delete_bean(
     request: Request,

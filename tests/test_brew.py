@@ -578,3 +578,89 @@ def test_recommendation_insights_no_prediction_first_shot(active_client, sample_
     # No predicted taste range shown for first shot
     assert "Expected taste" not in response.text
     assert "insight-prediction" not in response.text
+
+
+# ---------------------------------------------------------------------------
+# Manual input — bean picker, mode buttons, is_manual field
+# ---------------------------------------------------------------------------
+
+
+def test_brew_index_shows_manual_input_button(active_client):
+    """GET /brew with active bean -> contains 'Manual Input' and '/brew/manual'."""
+    response = active_client.get("/brew")
+    assert response.status_code == 200
+    assert "Manual Input" in response.text
+    assert "/brew/manual" in response.text
+
+
+def test_brew_index_shows_bean_picker(active_client, sample_bean):
+    """GET /brew with active bean -> contains <select and the active bean name."""
+    response = active_client.get("/brew")
+    assert response.status_code == 200
+    assert "<select" in response.text
+    assert sample_bean.name in response.text
+
+
+def test_record_manual_measurement(active_client, sample_bean, db_session):
+    """POST /brew/record with is_manual='true' -> is_manual=True saved in DB."""
+    from unittest.mock import MagicMock
+
+    rec_id = str(uuid.uuid4())
+    mock_optimizer = MagicMock()
+    mock_optimizer.recommend = AsyncMock()
+    app.state.optimizer = mock_optimizer
+
+    payload = _record_payload(rec_id, taste=7.5, is_manual="true")
+    response = active_client.post("/brew/record", data=payload, follow_redirects=False)
+    assert response.status_code == 303
+
+    db_session.expire_all()
+    m = db_session.query(Measurement).filter(Measurement.recommendation_id == rec_id).first()
+    assert m is not None
+    assert m.is_manual is True
+
+
+def test_record_manual_rejects_out_of_range(active_client, sample_bean, db_session):
+    """POST /brew/record with is_manual='true' and grind_setting=5.0 -> 422."""
+    from unittest.mock import MagicMock
+
+    rec_id = str(uuid.uuid4())
+    mock_optimizer = MagicMock()
+    mock_optimizer.recommend = AsyncMock()
+    app.state.optimizer = mock_optimizer
+
+    # grind_setting=5.0 is outside DEFAULT_BOUNDS (15.0, 25.0)
+    payload = _record_payload(rec_id, taste=7.0, is_manual="true")
+    payload["grind_setting"] = "5.0"
+    response = active_client.post("/brew/record", data=payload, follow_redirects=False)
+    assert response.status_code == 422
+
+    data = response.json()
+    assert data["error"] == "Parameters out of range"
+    assert any(v["param"] == "grind_setting" for v in data["violations"])
+
+    # Verify nothing was saved
+    db_session.expire_all()
+    m = db_session.query(Measurement).filter(Measurement.recommendation_id == rec_id).first()
+    assert m is None
+
+
+def test_record_non_manual_allows_any_values(active_client, sample_bean, db_session):
+    """POST /brew/record without is_manual flag allows out-of-range grind_setting=5.0."""
+    from unittest.mock import MagicMock
+
+    rec_id = str(uuid.uuid4())
+    mock_optimizer = MagicMock()
+    mock_optimizer.recommend = AsyncMock()
+    app.state.optimizer = mock_optimizer
+
+    # grind_setting=5.0 is outside DEFAULT_BOUNDS but no is_manual flag -> should save normally
+    payload = _record_payload(rec_id, taste=7.0)
+    payload["grind_setting"] = "5.0"
+    response = active_client.post("/brew/record", data=payload, follow_redirects=False)
+    assert response.status_code == 303
+
+    db_session.expire_all()
+    m = db_session.query(Measurement).filter(Measurement.recommendation_id == rec_id).first()
+    assert m is not None
+    assert m.grind_setting == 5.0
