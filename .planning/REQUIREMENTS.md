@@ -30,11 +30,11 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Visualization & Insights
 
-- [ ] **VIZ-01**: User can see optimization progress chart (cumulative best taste over time)
-- [ ] **VIZ-02**: User can see why a recipe was suggested (exploring vs exploiting)
+- [x] **VIZ-01**: User can see optimization progress chart (cumulative best taste over time)
+- [x] **VIZ-02**: User can see why a recipe was suggested (exploring vs exploiting)
 - [ ] **VIZ-03**: User can optionally rate 6 flavor dimensions (acidity, sweetness, body, bitterness, aroma, intensity) via expandable panel
 - [ ] **VIZ-04**: User can see parameter exploration heatmaps (grind x temp colored by taste)
-- [ ] **VIZ-05**: User can see exploration/exploitation balance indicator (how converged the optimizer is)
+- [x] **VIZ-05**: User can see exploration/exploitation balance indicator (how converged the optimizer is)
 
 ### Analytics
 
@@ -100,11 +100,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SHOT-01 | Phase 4 | Pending |
 | SHOT-02 | Phase 4 | Pending |
 | SHOT-03 | Phase 3 | Complete |
-| VIZ-01 | Phase 5 | Pending |
-| VIZ-02 | Phase 5 | Pending |
+| VIZ-01 | Phase 5 | Complete |
+| VIZ-02 | Phase 5 | Complete |
 | VIZ-03 | Phase 4 | Pending |
 | VIZ-04 | Phase 6 | Pending |
-| VIZ-05 | Phase 5 | Pending |
+| VIZ-05 | Phase 5 | Complete |
 | ANLYT-01 | Phase 6 | Pending |
 | ANLYT-02 | Phase 6 | Pending |
 | INFRA-01 | Phase 2 | Pending |
