@@ -1,7 +1,7 @@
 # Project State: BrewFlow
 
 **Last updated:** 2026-02-22
-**Current phase:** Phase 3 (COMPLETE — all plans executed, 60/60 tests passing)
+**Current phase:** Phase 3 (UAT complete — 4/6 tests passed, 2 issues diagnosed, fix plan ready)
 
 ## Project Reference
 
@@ -63,22 +63,22 @@ See: .planning/PROJECT.md (updated 2026-02-21)
 - Phase 5: Research extracting uncertainty/confidence data from BayBE surrogate model
 
 ### Todos
-None.
+- **Backlog: Manual brew input** — User can manually enter all 6 recipe parameters (grind, temp, preinfusion%, dose, yield, saturation) and submit a taste score, bypassing BayBE recommendation. Manual entries are saved to the Measurement table identically to recommended shots (with a flag distinguishing them, e.g. `source="manual"`) and fed into BayBE via `add_measurement` — so human intuition accelerates surrogate model convergence just like optimizer-guided shots. Likely fits in Phase 3 gap fixes (03-02) or as a standalone plan. UI entry point: a "Manual Brew" option on `/brew` alongside "Get Recommendation".
 
 ## Session Continuity
 
 ### Last Session
 - **Date:** 2026-02-22
-- **What happened:** Executed Phase 3 plan 03-01 (Brew Router & Optimization Loop). Router, templates, and CSS were pre-existing from commit 7786c8f. Added 17 tests covering the full optimization cycle. 60/60 tests passing.
-- **Where we left off:** Phase 3 complete. App is now usable for daily espresso optimization.
+- **What happened:** UAT for Phase 3. 4/6 tests passed. 2 issues found and diagnosed: (1) Repeat Best not updating — hardcoded recommendation_id in best.html; (2) No UI to clear active bean — missing deactivate endpoint. Fix plan 03-02 created and verified. Backlog item added: manual brew input.
+- **Where we left off:** Phase 3 fix plan ready. Execute 03-02 to close gaps, then proceed to Phase 4.
 
 ### Next Steps
-1. Plan Phase 4: Shot History & Feedback Depth
-   - Reverse-chronological shot history per bean
-   - Optional free-text notes on shots
-   - Expandable flavor profile panel (6 dimensions, collapsed by default)
-2. Execute Phase 4
-3. After Phase 4: begin Phase 5 (Insights & Trust — optimization progress chart, explore/exploit indicator)
+1. Execute Phase 3 fixes: `/gsd-execute-phase 3 --gaps-only` (plan 03-02)
+   - Fix Repeat Best deduplication bug
+   - Add active bean deselect UI
+   - Consider folding manual brew input into 03-02 or as 03-03
+2. Plan Phase 4: Shot History & Feedback Depth
+3. After Phase 4: begin Phase 5 (Insights & Trust)
 
 ---
 *State initialized: 2026-02-21*
