@@ -75,10 +75,11 @@ Plans:
   1. Taste score slider starts inactive/greyed (opacity 0.4, untouched state) and user cannot submit the brew form until they explicitly touch/interact with it
   2. When "Failed Shot" toggle is activated, taste score is overridden to 1 and the slider becomes disabled — same as existing behavior, preserved through the new inactive-start pattern
   3. When user navigates to /brew without an active bean, they see a clear "Pick a bean first" message with a direct link to bean selection — no silent redirect
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 11-01: TBD
+- [ ] 11-01-PLAN.md — Inactive taste slider + submit gate (UX-01, UX-02)
+- [ ] 11-02-PLAN.md — No-bean prompt on /brew (FLOW-01)
 
 #### Phase 12: Manual Brew Input
 
