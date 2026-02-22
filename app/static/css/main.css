@@ -666,6 +666,25 @@ body {
   color: var(--accent);
 }
 
+/* Taste slider inactive state — must be touched before submit */
+#taste-group {
+  opacity: 0.4;
+  transition: opacity 0.2s;
+}
+#taste-group.touched {
+  opacity: 1;
+}
+
+.taste-required-msg {
+  color: var(--danger);
+  font-size: var(--text-sm);
+  margin-top: var(--spacing-xs);
+  display: none;
+}
+.taste-required-msg.visible {
+  display: block;
+}
+
 /* Taste score slider */
 .score-slider {
   -webkit-appearance: none;

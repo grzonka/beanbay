@@ -32,7 +32,7 @@
 
     <div class="form-group" id="taste-group">
       <label class="form-label" for="taste">
-        Taste Score: <strong id="taste-display">7.0</strong> / 10
+        Taste Score: <strong id="taste-display">—</strong> / 10
       </label>
       <input
         type="range"
@@ -43,8 +43,10 @@
         max="10"
         step="0.5"
         value="7.0"
-        oninput="document.getElementById('taste-display').textContent = this.value"
+        data-touched="false"
+        oninput="this.dataset.touched='true'; document.getElementById('taste-group').classList.add('touched'); document.getElementById('taste-display').textContent = this.value"
       >
+      <div class="taste-required-msg" id="taste-required-msg">Rate the brew before submitting</div>
     </div>
 
     <div class="form-group">
@@ -102,16 +104,22 @@ function toggleFailed(checkbox) {
   const tasteGroup = document.getElementById('taste-group');
   const tasteInput = document.getElementById('taste');
   const tasteDisplay = document.getElementById('taste-display');
+  const requiredMsg = document.getElementById('taste-required-msg');
 
   if (checkbox.checked) {
     tasteInput.value = '1';
+    tasteInput.dataset.touched = 'true';
     tasteDisplay.textContent = '1.0';
+    tasteGroup.classList.add('touched');
     tasteGroup.style.opacity = '0.4';
     tasteGroup.style.pointerEvents = 'none';
+    if (requiredMsg) requiredMsg.classList.remove('visible');
   } else {
     tasteInput.value = '7.0';
-    tasteDisplay.textContent = '7.0';
-    tasteGroup.style.opacity = '1';
+    tasteInput.dataset.touched = 'false';
+    tasteDisplay.textContent = '\u2014';
+    tasteGroup.classList.remove('touched');
+    tasteGroup.style.opacity = '';
     tasteGroup.style.pointerEvents = 'auto';
   }
 }
