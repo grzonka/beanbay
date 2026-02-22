@@ -79,14 +79,25 @@ Plans:
 - Brew setup assembly: pick grinder + brewer + paper + water → named setup
 - Grind setting range becomes grinder-specific (not global default)
 
+**Plans:** 5 plans
+
+Plans:
+- [ ] 14-01-PLAN.md — Schema migration + model updates (equipment fields, retire lifecycle, brewer-method association)
+- [ ] 14-02-PLAN.md — Equipment router, page layout, grinder/brewer CRUD with modal forms
+- [ ] 14-03-PLAN.md — Paper/water recipe CRUD + equipment tests
+- [ ] 14-04-PLAN.md — Brew setup assembly wizard (multi-step)
+- [ ] 14-05-PLAN.md — Retire/restore lifecycle, brew page setup selection, comprehensive tests
+
 **Success Criteria:**
-1. User can create, edit, delete grinders with stepped/stepless dial configuration
-2. User can create, edit, delete brewers with method association
-3. User can create, edit, delete papers/filters
-4. User can create, edit, delete water recipes with optional mineral details and notes
-5. User can assemble equipment into named brew setups
+1. User can create, edit, retire/restore grinders with stepped/stepless dial configuration
+2. User can create, edit, retire/restore brewers with method association
+3. User can create, edit, retire/restore papers/filters
+4. User can create, edit, retire/restore water recipes with optional mineral details and notes
+5. User can assemble equipment into named brew setups via wizard
 6. Equipment pages are accessible from main navigation
 7. Phone-first UI with 48px+ touch targets maintained
+8. Brew page shows setup + bean selection panels
+9. Retire-only lifecycle with auto-cascade to setups
 
 ### Phase 15: Multi-Method Brewing & Setup Integration
 
@@ -168,6 +179,6 @@ Phase 16 (Transfer Learning)
 | 7-9 | v0.1.0 | 5/5 | Complete | 2026-02-22 |
 | 10-12 | v0.1.1 | 8/8 | Complete | 2026-02-22 |
 | 13 | v0.2.0 | 3/3 | Complete | 2026-02-22 |
-| 14 | v0.2.0 | 0/TBD | Pending | — |
+| 14 | v0.2.0 | 0/5 | Pending | — |
 | 15 | v0.2.0 | 0/TBD | Pending | — |
 | 16 | v0.2.0 | 0/TBD | Pending | — |
