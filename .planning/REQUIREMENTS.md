@@ -67,9 +67,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DATA-01 | Phase 13 | Pending |
-| DATA-02 | Phase 13 | Pending |
-| DATA-03 | Phase 13 | Pending |
+| DATA-01 | Phase 13 | Complete |
+| DATA-02 | Phase 13 | Complete |
+| DATA-03 | Phase 13 | Complete |
 | EQUIP-01 | Phase 14 | Pending |
 | EQUIP-02 | Phase 14 | Pending |
 | EQUIP-03 | Phase 14 | Pending |
@@ -79,16 +79,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | METHOD-01 | Phase 15 | Pending |
 | METHOD-02 | Phase 15 | Pending |
 | METHOD-03 | Phase 15 | Pending |
-| META-01 | Phase 13 | Pending |
-| META-02 | Phase 13 | Pending |
-| META-03 | Phase 13 | Pending |
+| META-01 | Phase 13 | Complete |
+| META-02 | Phase 13 | Complete |
+| META-03 | Phase 13 | Complete |
 | INTEL-01 | Phase 16 | Pending |
 | INTEL-02 | Phase 16 | Pending |
 | INTEL-03 | Phase 16 | Pending |
 | INTEL-04 | Phase 16 | Pending |
 | UI-01 | Phase 14 | Pending |
 | UI-02 | Phase 15 | Pending |
-| UI-03 | Phase 13 | Pending |
+| UI-03 | Phase 13 | Complete |
 | UI-04 | Phase 15 | Pending |
 
 **Coverage:**
