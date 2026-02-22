@@ -1,14 +1,14 @@
 # Project State: BrewFlow
 
 **Last updated:** 2026-02-22
-**Current phase:** Phase 5 (Insights & Trust) — Plan 01 complete.
+**Current phase:** Phase 5 (Insights & Trust) — Complete (2/2 plans done).
 
 ## Project Reference
 
 See: .planning/PROJECT.md (updated 2026-02-21)
 
 **Core value:** Every espresso shot teaches the system something — the app must make it effortless to capture feedback from a phone at the espresso machine and return increasingly better recommendations.
-**Current focus:** Phase 5 (Insights & Trust) — BayBE confidence signals, trend charts, recommendation explanations.
+**Current focus:** Phase 5 complete. Ready for Phase 6 (Analytics & Exploration).
 
 ## Phase Status
 
@@ -18,10 +18,10 @@ See: .planning/PROJECT.md (updated 2026-02-21)
 | 2 | Bean Management & Mobile Shell | ● Complete | 2/2 | 100% |
 | 3 | Optimization Loop | ● Complete | 2/2 | 100% |
 | 4 | Shot History & Feedback Depth | ● Complete | 3/3 | 100% |
-| 5 | Insights & Trust | ◐ In progress | 1/2 | 50% |
+| 5 | Insights & Trust | ● Complete | 2/2 | 100% |
 | 6 | Analytics & Exploration | ○ Not started | 0/0 | 0% |
 
-**Overall progress:** █████████████░░░░░░░ ~68% (13/14 plans complete, 1 remaining in Phase 5)
+**Overall progress:** ██████████████░░░░░░ ~74% (14/14 planned plans complete, Phase 6 TBD)
 
 ## Active Decisions
 
@@ -50,6 +50,9 @@ See: .planning/PROJECT.md (updated 2026-02-21)
   - **[05-01]** Insights stored as rec["insights"] inside pending_recommendations dict — co-located with recipe params
   - **[05-01]** predicted_range uses em dash (–) not hyphen — typography convention
   - **[05-01]** Prediction threshold: >= 2 measurements for meaningful posterior stats
+  - **[05-02]** Convergence detection: rule-based (n < 3 / n < 8 / trend comparison) — no BayBE convergence API exists
+  - **[05-02]** Chart.js CDN loaded in `_progress_chart.html` partial (not base.html) — guaranteed script load order
+  - **[05-02]** Chart data passed via `{{ chart_data | tojson }}` — no separate API endpoint needed
 
 ## Blockers
 
@@ -76,6 +79,7 @@ See: .planning/PROJECT.md (updated 2026-02-21)
   - History view: GET /history (full page) + GET /history/shots (htmx partial); filters by bean + min taste; shot rows with date/taste/grind/failed/notes indicators; modal scaffold for Plan 03
   - Shot detail modal: GET /history/{id} → _shot_modal.html + HX-Trigger: openShotModal; GET/POST /history/{id}/edit → _shot_edit.html pre-populated; POST returns updated modal + oob row swap
   - Recommendation insights: OptimizerService.get_recommendation_insights() returns phase/explanation/predicted_range; partial `_recommendation_insights.html` shown on recommend page; phase detection via TwoPhaseMetaRecommender.select_recommender()
+  - Progress chart: `/insights` page, Chart.js cumulative-best line + shot scatter, 5-state convergence badge, optimizer mode indicator
 
 ### Research Flags
 - ~~Phase 1: Investigate discrete vs continuous BayBE parameters~~ RESOLVED: hybrid approach works, 7.5KB files
@@ -89,11 +93,11 @@ See: .planning/PROJECT.md (updated 2026-02-21)
 
 ### Last Session
 - **Date:** 2026-02-22
-- **What happened:** Executed plan 05-01 (recommendation insights). Added `get_recommendation_insights()` to OptimizerService using BayBE `select_recommender()` for phase detection and `posterior_stats()` for predicted taste. Created `_recommendation_insights.html` partial. Wired into brew router and recommend.html. Added 5 tests (3 optimizer, 2 brew). 92/92 pass.
-- **Where we left off:** Phase 5, 1/2 plans complete. Ready for 05-02 (trend charts).
+- **What happened:** Executed plan 05-02 (insights page). Created `/insights` route with Chart.js progress chart (cumulative best + shot scatter), 5-state convergence badge, and optimizer mode indicator. Added Insights nav link. 6 new tests. 98/98 pass. Phase 5 complete.
+- **Where we left off:** Phase 5 complete (2/2). Ready for Phase 6.
 
 ### Next Steps
-1. Execute Phase 5 Plan 02: Trend charts (taste over time, Chart.js visualization)
+1. Define and execute Phase 6 (Analytics & Exploration) — TBD
 
 ---
 *State initialized: 2026-02-21*
