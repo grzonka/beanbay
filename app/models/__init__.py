@@ -1,4 +1,18 @@
 from app.models.bean import Bean
 from app.models.measurement import Measurement
+from app.models.brew_method import BrewMethod
+from app.models.equipment import Grinder, Brewer, Paper, WaterRecipe
+from app.models.brew_setup import BrewSetup
+from app.models.bag import Bag
 
-__all__ = ["Bean", "Measurement"]
+__all__ = [
+    "Bean",
+    "Measurement",
+    "BrewMethod",
+    "Grinder",
+    "Brewer",
+    "Paper",
+    "WaterRecipe",
+    "BrewSetup",
+    "Bag",
+]

@@ -37,6 +37,10 @@ class Measurement(Base):
     intensity = Column(Float, nullable=True)
     flavor_tags = Column(String, nullable=True)  # JSON-encoded list of tag strings
 
+    # Phase 13: Link to brew setup (nullable for backward compatibility)
+    brew_setup_id = Column(String, ForeignKey("brew_setups.id"), nullable=True, index=True)
+
     created_at = Column(DateTime, server_default=func.now())
 
     bean = relationship("Bean", back_populates="measurements")
+    brew_setup = relationship("BrewSetup")
