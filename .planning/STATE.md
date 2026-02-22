@@ -1,14 +1,14 @@
 # Project State: BrewFlow
 
 **Last updated:** 2026-02-22
-**Current phase:** Phase 3 (UAT complete — 4/6 tests passed, 2 issues diagnosed, fix plan ready)
+**Current phase:** Phase 3 complete — all UAT gaps closed, ready for Phase 4
 
 ## Project Reference
 
 See: .planning/PROJECT.md (updated 2026-02-21)
 
 **Core value:** Every espresso shot teaches the system something — the app must make it effortless to capture feedback from a phone at the espresso machine and return increasingly better recommendations.
-**Current focus:** Phase 3 complete — app is now usable for daily espresso optimization. Ready for Phase 4.
+**Current focus:** Phase 3 fully complete — 2 UAT gaps fixed (Repeat Best dedup + active bean deselect). Ready for Phase 4.
 
 ## Phase Status
 
@@ -16,12 +16,12 @@ See: .planning/PROJECT.md (updated 2026-02-21)
 |-------|------|--------|-------|----------|
 | 1 | Foundation & Infrastructure | ● Complete | 3/3 | 100% |
 | 2 | Bean Management & Mobile Shell | ● Complete | 2/2 | 100% |
-| 3 | Optimization Loop | ● Complete | 1/1 | 100% |
+| 3 | Optimization Loop | ● Complete | 2/2 | 100% |
 | 4 | Shot History & Feedback Depth | ○ Not started | 0/0 | 0% |
 | 5 | Insights & Trust | ○ Not started | 0/0 | 0% |
 | 6 | Analytics & Exploration | ○ Not started | 0/0 | 0% |
 
-**Overall progress:** ████████░░░░░░░░░░░░ ~40% (6/~15 estimated plans)
+**Overall progress:** █████████░░░░░░░░░░░ ~47% (8/~17 estimated plans)
 
 ## Active Decisions
 
@@ -34,6 +34,9 @@ See: .planning/PROJECT.md (updated 2026-02-21)
 - TemplateResponse uses new signature (request, name, context) — no deprecation warnings
 - Server-side `pending_recommendations` dict (app.state) for single-user session state — keyed by UUID, cleaned up after recording
 - Deduplication via unique `recommendation_id` on Measurement table — safe to re-POST
+- **[03-02]** Fresh UUID per `/brew/best` visit for `recommendation_id` — page-visit scoped, not stored
+- **[03-02]** `POST /beans/deactivate` placed before `/{bean_id}` wildcard to avoid FastAPI routing ambiguity
+- **[03-02]** Cookie deletion test pattern: assert `Max-Age=0` in Set-Cookie header, manually clear client cookie jar
 
 ## Blockers
 
@@ -63,22 +66,19 @@ See: .planning/PROJECT.md (updated 2026-02-21)
 - Phase 5: Research extracting uncertainty/confidence data from BayBE surrogate model
 
 ### Todos
-- **Backlog: Manual brew input** — User can manually enter all 6 recipe parameters (grind, temp, preinfusion%, dose, yield, saturation) and submit a taste score, bypassing BayBE recommendation. Manual entries are saved to the Measurement table identically to recommended shots (with a flag distinguishing them, e.g. `source="manual"`) and fed into BayBE via `add_measurement` — so human intuition accelerates surrogate model convergence just like optimizer-guided shots. Likely fits in Phase 3 gap fixes (03-02) or as a standalone plan. UI entry point: a "Manual Brew" option on `/brew` alongside "Get Recommendation".
+- **Backlog: Manual brew input** — User can manually enter all 6 recipe parameters (grind, temp, preinfusion%, dose, yield, saturation) and submit a taste score, bypassing BayBE recommendation. Manual entries are saved to the Measurement table identically to recommended shots (with a flag distinguishing them, e.g. `source="manual"`) and fed into BayBE via `add_measurement` — so human intuition accelerates surrogate model convergence just like optimizer-guided shots. Likely Phase 4 or standalone plan.
 
 ## Session Continuity
 
 ### Last Session
 - **Date:** 2026-02-22
-- **What happened:** UAT for Phase 3. 4/6 tests passed. 2 issues found and diagnosed: (1) Repeat Best not updating — hardcoded recommendation_id in best.html; (2) No UI to clear active bean — missing deactivate endpoint. Fix plan 03-02 created and verified. Backlog item added: manual brew input.
-- **Where we left off:** Phase 3 fix plan ready. Execute 03-02 to close gaps, then proceed to Phase 4.
+- **What happened:** Executed plan 03-02. Fixed 2 UAT gaps: (1) Repeat Best deduplication — replaced hardcoded `best-{{ best.id }}` with fresh UUID per visit; (2) Active bean deselect — added `POST /beans/deactivate`, Deselect button on detail page, ✕ button in nav. 5 new tests. 65/65 tests pass.
+- **Where we left off:** Phase 3 fully complete. Ready to plan and execute Phase 4.
 
 ### Next Steps
-1. Execute Phase 3 fixes: `/gsd-execute-phase 3 --gaps-only` (plan 03-02)
-   - Fix Repeat Best deduplication bug
-   - Add active bean deselect UI
-   - Consider folding manual brew input into 03-02 or as 03-03
-2. Plan Phase 4: Shot History & Feedback Depth
-3. After Phase 4: begin Phase 5 (Insights & Trust)
+1. Plan Phase 4: Shot History & Feedback Depth
+2. After Phase 4: begin Phase 5 (Insights & Trust)
+3. Consider manual brew input as Phase 4 plan or standalone
 
 ---
 *State initialized: 2026-02-21*
