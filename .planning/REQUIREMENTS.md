@@ -9,9 +9,9 @@ Requirements for this release. Each maps to roadmap phases.
 
 ### Navigation & Layout
 
-- [ ] **NAV-01**: Mobile navigation uses hamburger menu / drawer instead of top tab row
-- [ ] **NAV-02**: Desktop layout uses full screen width with sidebar navigation (not 480px centered column)
-- [ ] **NAV-03**: Active bean indicator displays cleanly without wrapping or overflow in all viewports
+- [x] **NAV-01**: Mobile navigation uses hamburger menu / drawer instead of top tab row
+- [x] **NAV-02**: Desktop layout uses full screen width with sidebar navigation (not 480px centered column)
+- [x] **NAV-03**: Active bean indicator displays cleanly without wrapping or overflow in all viewports
 
 ### Taste Score UX
 
@@ -69,9 +69,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| NAV-01 | Phase 10 | Pending |
-| NAV-02 | Phase 10 | Pending |
-| NAV-03 | Phase 10 | Pending |
+| NAV-01 | Phase 10 | Complete |
+| NAV-02 | Phase 10 | Complete |
+| NAV-03 | Phase 10 | Complete |
 | UX-01 | Phase 11 | Pending |
 | UX-02 | Phase 11 | Pending |
 | FLOW-01 | Phase 11 | Pending |
