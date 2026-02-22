@@ -6,6 +6,7 @@ Implements the core espresso optimization workflow:
   GET  /brew/recommend/{rec_id}      — Display recommendation + rate form
   POST /brew/record                  — Record measurement (taste/failed)
   GET  /brew/best                    — Show highest-rated shot
+  GET  /brew/manual                  — Manual brew entry form
 """
 
 import json
@@ -23,7 +24,7 @@ from app.database import get_db
 from app.models.bean import Bean
 from app.models.measurement import Measurement
 from app.routers.beans import _get_active_bean
-from app.services.optimizer import _resolve_bounds
+from app.services.optimizer import _resolve_bounds, _round_value
 
 router = APIRouter(prefix="/brew", tags=["brew"])
 templates = Jinja2Templates(directory="app/templates")
@@ -335,5 +336,55 @@ async def show_best(request: Request, db: Session = Depends(get_db)):
             "best": best,
             "ratio": ratio,
             "best_session_id": best_session_id,
+        },
+    )
+
+
+@router.get("/manual", response_class=HTMLResponse)
+async def manual_brew(request: Request, db: Session = Depends(get_db)):
+    """Manual brew entry form — pre-filled from best measurement or midpoint."""
+    bean = _require_active_bean(request, db)
+    if not bean:
+        return RedirectResponse(url="/beans", status_code=303)
+
+    bounds = _resolve_bounds(bean.parameter_overrides)
+    best = _best_measurement(bean.id, db)
+
+    # Pre-fill values: use best measurement if available, else midpoint of bounds
+    if best:
+        prefill = {
+            "grind_setting": best.grind_setting,
+            "temperature": best.temperature,
+            "preinfusion_pct": best.preinfusion_pct,
+            "dose_in": best.dose_in,
+            "target_yield": best.target_yield,
+            "saturation": best.saturation,
+        }
+    else:
+        prefill = {
+            param: _round_value((lo + hi) / 2, step)
+            for (param, (lo, hi)), step in zip(
+                bounds.items(),
+                [
+                    0.5,  # grind_setting
+                    1.0,  # temperature
+                    5.0,  # preinfusion_pct
+                    0.5,  # dose_in
+                    1.0,  # target_yield
+                ],
+            )
+        }
+        prefill["saturation"] = "yes"
+
+    manual_session_id = str(uuid.uuid4())
+
+    return templates.TemplateResponse(
+        request,
+        "brew/manual.html",
+        {
+            "active_bean": bean,
+            "bounds": bounds,
+            "prefill": prefill,
+            "manual_session_id": manual_session_id,
         },
     )

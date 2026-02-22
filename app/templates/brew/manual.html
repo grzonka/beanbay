@@ -1,0 +1,299 @@
+{% extends "base.html" %}
+
+{% block title %}Manual Brew — BeanBay{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Manual Brew</h1>
+  <a href="/brew" class="btn btn-secondary btn-sm">← Back</a>
+</div>
+
+<div class="card mb-md">
+  <div class="card-subtitle mb-md">{{ active_bean.name }}</div>
+
+  <form method="post" action="/brew/record">
+    <!-- Hidden fields -->
+    <input type="hidden" name="recommendation_id" value="{{ manual_session_id }}">
+    <input type="hidden" name="is_manual" value="true">
+
+    <!-- ------------------------------------------------------------------ -->
+    <!-- Grind Setting -->
+    <!-- ------------------------------------------------------------------ -->
+    <div class="form-group">
+      <label class="form-label">
+        Grind Setting
+        <span class="param-unit">({{ bounds.grind_setting[0] }}–{{ bounds.grind_setting[1] }})</span>
+      </label>
+      <div class="param-input-row">
+        <input
+          type="range"
+          class="param-slider"
+          id="grind_setting_slider"
+          min="{{ bounds.grind_setting[0] }}"
+          max="{{ bounds.grind_setting[1] }}"
+          step="0.5"
+          value="{{ prefill.grind_setting }}"
+          oninput="document.getElementById('grind_setting').value = parseFloat(this.value).toFixed(1)"
+        >
+        <input
+          type="number"
+          class="param-number"
+          id="grind_setting"
+          name="grind_setting"
+          min="{{ bounds.grind_setting[0] }}"
+          max="{{ bounds.grind_setting[1] }}"
+          step="0.5"
+          value="{{ prefill.grind_setting }}"
+          oninput="document.getElementById('grind_setting_slider').value = this.value"
+        >
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------------------------ -->
+    <!-- Temperature -->
+    <!-- ------------------------------------------------------------------ -->
+    <div class="form-group">
+      <label class="form-label">
+        Temperature
+        <span class="param-unit">°C ({{ bounds.temperature[0] }}–{{ bounds.temperature[1] }})</span>
+      </label>
+      <div class="param-input-row">
+        <input
+          type="range"
+          class="param-slider"
+          id="temperature_slider"
+          min="{{ bounds.temperature[0] }}"
+          max="{{ bounds.temperature[1] }}"
+          step="1"
+          value="{{ prefill.temperature }}"
+          oninput="document.getElementById('temperature').value = parseFloat(this.value).toFixed(0)"
+        >
+        <input
+          type="number"
+          class="param-number"
+          id="temperature"
+          name="temperature"
+          min="{{ bounds.temperature[0] }}"
+          max="{{ bounds.temperature[1] }}"
+          step="1"
+          value="{{ prefill.temperature }}"
+          oninput="document.getElementById('temperature_slider').value = this.value"
+        >
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------------------------ -->
+    <!-- Pre-infusion % -->
+    <!-- ------------------------------------------------------------------ -->
+    <div class="form-group">
+      <label class="form-label">
+        Pre-infusion %
+        <span class="param-unit">({{ bounds.preinfusion_pct[0] }}–{{ bounds.preinfusion_pct[1] }})</span>
+      </label>
+      <div class="param-input-row">
+        <input
+          type="range"
+          class="param-slider"
+          id="preinfusion_pct_slider"
+          min="{{ bounds.preinfusion_pct[0] }}"
+          max="{{ bounds.preinfusion_pct[1] }}"
+          step="5"
+          value="{{ prefill.preinfusion_pct }}"
+          oninput="document.getElementById('preinfusion_pct').value = parseFloat(this.value).toFixed(0)"
+        >
+        <input
+          type="number"
+          class="param-number"
+          id="preinfusion_pct"
+          name="preinfusion_pct"
+          min="{{ bounds.preinfusion_pct[0] }}"
+          max="{{ bounds.preinfusion_pct[1] }}"
+          step="5"
+          value="{{ prefill.preinfusion_pct }}"
+          oninput="document.getElementById('preinfusion_pct_slider').value = this.value"
+        >
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------------------------ -->
+    <!-- Dose In -->
+    <!-- ------------------------------------------------------------------ -->
+    <div class="form-group">
+      <label class="form-label">
+        Dose In
+        <span class="param-unit">g ({{ bounds.dose_in[0] }}–{{ bounds.dose_in[1] }})</span>
+      </label>
+      <div class="param-input-row">
+        <input
+          type="range"
+          class="param-slider"
+          id="dose_in_slider"
+          min="{{ bounds.dose_in[0] }}"
+          max="{{ bounds.dose_in[1] }}"
+          step="0.5"
+          value="{{ prefill.dose_in }}"
+          oninput="document.getElementById('dose_in').value = parseFloat(this.value).toFixed(1)"
+        >
+        <input
+          type="number"
+          class="param-number"
+          id="dose_in"
+          name="dose_in"
+          min="{{ bounds.dose_in[0] }}"
+          max="{{ bounds.dose_in[1] }}"
+          step="0.5"
+          value="{{ prefill.dose_in }}"
+          oninput="document.getElementById('dose_in_slider').value = this.value"
+        >
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------------------------ -->
+    <!-- Target Yield -->
+    <!-- ------------------------------------------------------------------ -->
+    <div class="form-group">
+      <label class="form-label">
+        Target Yield
+        <span class="param-unit">g ({{ bounds.target_yield[0] }}–{{ bounds.target_yield[1] }})</span>
+      </label>
+      <div class="param-input-row">
+        <input
+          type="range"
+          class="param-slider"
+          id="target_yield_slider"
+          min="{{ bounds.target_yield[0] }}"
+          max="{{ bounds.target_yield[1] }}"
+          step="1"
+          value="{{ prefill.target_yield }}"
+          oninput="document.getElementById('target_yield').value = parseFloat(this.value).toFixed(0)"
+        >
+        <input
+          type="number"
+          class="param-number"
+          id="target_yield"
+          name="target_yield"
+          min="{{ bounds.target_yield[0] }}"
+          max="{{ bounds.target_yield[1] }}"
+          step="1"
+          value="{{ prefill.target_yield }}"
+          oninput="document.getElementById('target_yield_slider').value = this.value"
+        >
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------------------------ -->
+    <!-- Saturation toggle -->
+    <!-- ------------------------------------------------------------------ -->
+    <div class="form-group">
+      <label class="form-label">Saturation</label>
+      <label class="saturation-toggle">
+        <input type="hidden" name="saturation" value="no">
+        <input
+          type="checkbox"
+          name="saturation"
+          value="yes"
+          {% if prefill.saturation == "yes" %}checked{% endif %}
+        >
+        <span class="saturation-toggle-label">Full saturation (yes)</span>
+      </label>
+      <div class="form-hint">Checked = yes, unchecked = no</div>
+    </div>
+
+    <!-- ------------------------------------------------------------------ -->
+    <!-- Taste score (inactive until touched) -->
+    <!-- ------------------------------------------------------------------ -->
+    <div class="form-group" id="taste-group">
+      <label class="form-label" for="taste">
+        Taste Score: <strong id="taste-display">—</strong> / 10
+      </label>
+      <input
+        type="range"
+        id="taste"
+        name="taste"
+        class="score-slider form-input"
+        min="1"
+        max="10"
+        step="0.5"
+        value="7.0"
+        data-touched="false"
+        oninput="this.dataset.touched='true'; document.getElementById('taste-group').classList.add('touched'); document.getElementById('taste-display').textContent = this.value"
+      >
+      <div class="form-hint">1 = undrinkable · 10 = perfect</div>
+      <div class="taste-required-msg" id="taste-required-msg">Rate the brew before submitting</div>
+    </div>
+
+    <!-- ------------------------------------------------------------------ -->
+    <!-- Extraction time (optional) -->
+    <!-- ------------------------------------------------------------------ -->
+    <div class="form-group">
+      <label class="form-label" for="extraction_time">
+        Extraction Time (seconds, optional)
+      </label>
+      <input
+        type="number"
+        id="extraction_time"
+        name="extraction_time"
+        class="form-input"
+        placeholder="e.g. 28"
+        min="5"
+        max="120"
+        step="1"
+      >
+    </div>
+
+    <!-- ------------------------------------------------------------------ -->
+    <!-- Failed shot toggle -->
+    <!-- ------------------------------------------------------------------ -->
+    <div class="form-group">
+      <label class="failed-toggle">
+        <input
+          type="checkbox"
+          id="is_failed"
+          name="is_failed"
+          value="true"
+          onchange="toggleFailed(this)"
+        >
+        <span class="failed-toggle-label">
+          ⚠️ Failed shot (choked / gusher)
+        </span>
+      </label>
+      <div class="form-hint">Auto-sets taste to 1 — still teaches the optimizer what not to do.</div>
+    </div>
+
+    {% include "brew/_feedback_panel.html" %}
+
+    <button type="submit" class="btn btn-primary btn-full">
+      Submit Manual Brew
+    </button>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function toggleFailed(checkbox) {
+  const tasteGroup = document.getElementById('taste-group');
+  const tasteInput = document.getElementById('taste');
+  const tasteDisplay = document.getElementById('taste-display');
+  const requiredMsg = document.getElementById('taste-required-msg');
+
+  if (checkbox.checked) {
+    tasteInput.value = '1';
+    tasteInput.dataset.touched = 'true';
+    tasteDisplay.textContent = '1.0';
+    tasteGroup.classList.add('touched');
+    tasteGroup.style.opacity = '0.4';
+    tasteGroup.style.pointerEvents = 'none';
+    if (requiredMsg) requiredMsg.classList.remove('visible');
+  } else {
+    tasteInput.value = '7.0';
+    tasteInput.dataset.touched = 'false';
+    tasteDisplay.textContent = '\u2014';
+    tasteGroup.classList.remove('touched');
+    tasteGroup.style.opacity = '';
+    tasteGroup.style.pointerEvents = 'auto';
+  }
+}
+</script>
+<script src="/static/js/tags.js"></script>
+{% endblock %}
