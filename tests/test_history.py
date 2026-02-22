@@ -3,7 +3,7 @@
 import json
 import uuid
 from datetime import datetime, timedelta
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -422,8 +422,6 @@ def test_delete_batch_rebuilds_campaign(client, sample_bean, db_session):
 
 def test_delete_batch_empty_ids_redirects(client, sample_bean, db_session):
     """POST /history/delete-batch with no shot_ids redirects without DB changes."""
-    from app.main import app
-
     shot = _seed_shot(db_session, sample_bean.id, taste=8.0)
 
     response = client.post(
