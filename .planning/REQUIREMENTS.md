@@ -21,7 +21,7 @@ Ship the existing v1 MVP as a properly branded, documented, and deployable produ
 | CLEAN-01 | Remove legacy files not part of BeanBay (my_espresso.py, __marimo__/, baybe-resources references) | Must |
 | CLEAN-02 | Remove dead app/routes/ directory (actual routers live in app/routers/) | Must |
 | CLEAN-03 | Create comprehensive README.md with project description, screenshots placeholder, setup instructions, Docker usage, and development guide | Must |
-| CLEAN-04 | Add LICENSE file (choose appropriate open-source license) | Should |
+| CLEAN-04 | LICENSE file present (Apache 2.0, already added via GitHub) | Should |
 
 ### Tech Debt
 

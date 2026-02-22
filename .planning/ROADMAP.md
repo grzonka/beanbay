@@ -36,12 +36,12 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 08-01-PLAN.md — Create README.md, LICENSE, clean up .gitignore, remove legacy files
+- [ ] 08-01-PLAN.md — Create concise README.md with WIP indication (LICENSE already present)
 - [ ] 08-02-PLAN.md — Create GitHub Actions CI/CD workflows (test + Docker publish)
 
 **Success criteria:**
-- README.md with project description, setup instructions, Docker usage, development guide
-- LICENSE file present
+- README.md with concise project description, WIP indication, Docker quick start, dev setup
+- LICENSE file present (Apache 2.0, already exists)
 - GitHub Actions workflow builds and publishes Docker image on release tags
 - GitHub release v1.1 created with changelog
 
