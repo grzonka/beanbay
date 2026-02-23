@@ -20,7 +20,7 @@ Runs as a single Docker container. No cloud, no accounts — just your espresso 
   <img src="assets/5.png" width="250" alt="Rate your shot — taste score, extraction time, flavor profile"/>
 </p>
 
-**1. Choose your setup and bean** → **2. Get an AI-optimized recipe** → **3. Brew, taste, and rate**
+**1. Choose your setup and bean** → **2. Get a BayBE-optimized recipe** → **3. Brew, taste, and rate**
 
 The optimizer starts with random exploration to map the parameter space, then progressively narrows in on your best recipe. Every shot — even failed ones — teaches it something.
 
