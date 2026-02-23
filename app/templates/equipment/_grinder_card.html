@@ -1,0 +1,35 @@
+{# Grinder card — used in equipment/index.html #}
+<div class="card grinder-card" style="{% if grinder.is_retired %}opacity: 0.6;{% endif %}">
+  <div class="card-header">
+    <div>
+      <div class="card-title">{{ grinder.name }}</div>
+      <div class="grinder-dial-info">
+        {% if grinder.dial_type == "stepped" %}
+          Stepped
+          {% if grinder.step_size is not none %}
+            · step {{ grinder.step_size }}
+          {% endif %}
+          {% if grinder.min_value is not none and grinder.max_value is not none %}
+            · {{ grinder.min_value }}–{{ grinder.max_value }}
+          {% endif %}
+        {% else %}
+          Stepless
+          {% if grinder.min_value is not none and grinder.max_value is not none %}
+            · range {{ grinder.min_value }}–{{ grinder.max_value }}
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+    {% if grinder.is_retired %}
+      <span class="badge badge-retired">Retired</span>
+    {% endif %}
+  </div>
+  <div class="card-actions">
+    <button
+      class="btn btn-secondary btn-sm"
+      onclick="openEditModal('/equipment/grinders/{{ grinder.id }}/edit')"
+    >
+      Edit
+    </button>
+  </div>
+</div>

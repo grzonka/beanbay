@@ -1,0 +1,111 @@
+{# Grinder create/edit form — included in modals #}
+{# If `grinder` is set, renders in edit mode; otherwise create mode #}
+
+{% if grinder %}
+<form method="post" action="/equipment/grinders/{{ grinder.id }}">
+{% else %}
+<form
+  method="post"
+  action="/equipment/grinders"
+  hx-post="/equipment/grinders"
+  hx-target="#grinder-list"
+  hx-swap="afterbegin"
+  hx-on::after-request="if(event.detail.successful){ closeEquipmentModal('grinder-add-modal'); this.reset(); }"
+>
+{% endif %}
+
+  <div class="form-group">
+    <label class="form-label" for="grinder-name">Name <span style="color:var(--danger)">*</span></label>
+    <input
+      type="text"
+      id="grinder-name"
+      name="name"
+      class="form-input"
+      placeholder="e.g. Comandante C40"
+      value="{{ grinder.name if grinder else '' }}"
+      required
+      autocomplete="off"
+    >
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">Dial Type</label>
+    <div class="radio-group" id="dial-type-group">
+      <label class="radio-option">
+        <input
+          type="radio"
+          name="dial_type"
+          value="stepless"
+          {% if not grinder or grinder.dial_type == 'stepless' %}checked{% endif %}
+          onchange="updateDialFields()"
+        >
+        <span class="radio-option-label">Stepless</span>
+      </label>
+      <label class="radio-option">
+        <input
+          type="radio"
+          name="dial_type"
+          value="stepped"
+          {% if grinder and grinder.dial_type == 'stepped' %}checked{% endif %}
+          onchange="updateDialFields()"
+        >
+        <span class="radio-option-label">Stepped</span>
+      </label>
+    </div>
+  </div>
+
+  <div id="stepped-fields" style="display:{% if grinder and grinder.dial_type == 'stepped' %}block{% else %}none{% endif %};">
+    <div class="form-group">
+      <label class="form-label" for="step-size">Step Size</label>
+      <input
+        type="number"
+        id="step-size"
+        name="step_size"
+        class="form-input"
+        step="any"
+        placeholder="e.g. 0.5"
+        value="{{ grinder.step_size if grinder and grinder.step_size is not none else '' }}"
+      >
+    </div>
+  </div>
+
+  <div class="range-row">
+    <div class="form-group" style="margin-bottom:0;">
+      <label class="form-label" for="min-value">Min Setting</label>
+      <input
+        type="number"
+        id="min-value"
+        name="min_value"
+        class="form-input"
+        step="any"
+        placeholder="e.g. 0"
+        value="{{ grinder.min_value if grinder and grinder.min_value is not none else '' }}"
+      >
+    </div>
+    <div class="form-group" style="margin-bottom:0;">
+      <label class="form-label" for="max-value">Max Setting</label>
+      <input
+        type="number"
+        id="max-value"
+        name="max_value"
+        class="form-input"
+        step="any"
+        placeholder="e.g. 40"
+        value="{{ grinder.max_value if grinder and grinder.max_value is not none else '' }}"
+      >
+    </div>
+  </div>
+
+  <div style="margin-top: var(--spacing-lg);">
+    <button type="submit" class="btn btn-primary btn-full">
+      {% if grinder %}Save Changes{% else %}Add Grinder{% endif %}
+    </button>
+  </div>
+</form>
+
+<script>
+  function updateDialFields() {
+    var stepped = document.querySelector('input[name="dial_type"][value="stepped"]').checked;
+    document.getElementById('stepped-fields').style.display = stepped ? 'block' : 'none';
+  }
+</script>

@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block title %}Equipment — BeanBay{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Equipment</h1>
+  <label style="display:flex; align-items:center; gap:var(--spacing-sm); cursor:pointer; font-size:var(--text-sm); color:var(--text-secondary);">
+    <input
+      type="checkbox"
+      {% if show_retired %}checked{% endif %}
+      onchange="window.location.href='/equipment' + (this.checked ? '?show_retired=true' : '')"
+      style="width:20px; height:20px; accent-color:var(--accent); cursor:pointer;"
+    >
+    Show retired
+  </label>
+</div>
+
+<!-- ── Grinders ─────────────────────────────────────────────── -->
+<button
+  class="collapsible-toggle"
+  onclick="this.nextElementSibling.classList.toggle('open'); this.setAttribute('aria-expanded', this.nextElementSibling.classList.contains('open'))"
+  aria-expanded="false"
+>
+  <div class="equipment-section-title">
+    Grinders
+    <span class="badge badge-count">{{ grinder_count }}</span>
+  </div>
+  <span aria-hidden="true">&#9662;</span>
+</button>
+<div class="collapsible-content" id="grinder-section">
+  <div style="padding-top: var(--spacing-sm);">
+    <button
+      class="btn btn-secondary btn-sm"
+      onclick="openEquipmentModal('grinder-add-modal')"
+      style="margin-bottom: var(--spacing-sm);"
+    >
+      + Add Grinder
+    </button>
+    <div id="grinder-list">
+      {% if grinders %}
+        {% for grinder in grinders %}
+          {% include "equipment/_grinder_card.html" %}
+        {% endfor %}
+      {% else %}
+        <div class="empty-state" style="padding: var(--spacing-lg) 0;" id="grinder-empty">
+          <div class="empty-state-text">No grinders yet — add your first one above.</div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- ── Brewers ──────────────────────────────────────────────── -->
+<button
+  class="collapsible-toggle"
+  onclick="this.nextElementSibling.classList.toggle('open'); this.setAttribute('aria-expanded', this.nextElementSibling.classList.contains('open'))"
+  aria-expanded="false"
+>
+  <div class="equipment-section-title">
+    Brewers
+    <span class="badge badge-count">{{ brewer_count }}</span>
+  </div>
+  <span aria-hidden="true">&#9662;</span>
+</button>
+<div class="collapsible-content" id="brewer-section">
+  <div style="padding-top: var(--spacing-sm);">
+    <button
+      class="btn btn-secondary btn-sm"
+      onclick="openEquipmentModal('brewer-add-modal')"
+      style="margin-bottom: var(--spacing-sm);"
+    >
+      + Add Brewer
+    </button>
+    <div id="brewer-list">
+      {% if brewers %}
+        {% for brewer in brewers %}
+          {% include "equipment/_brewer_card.html" %}
+        {% endfor %}
+      {% else %}
+        <div class="empty-state" style="padding: var(--spacing-lg) 0;" id="brewer-empty">
+          <div class="empty-state-text">No brewers yet — add your first one above.</div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- ── Papers / Filters ─────────────────────────────────────── -->
+<button
+  class="collapsible-toggle"
+  onclick="this.nextElementSibling.classList.toggle('open'); this.setAttribute('aria-expanded', this.nextElementSibling.classList.contains('open'))"
+  aria-expanded="false"
+>
+  <div class="equipment-section-title">
+    Papers &amp; Filters
+    <span class="badge badge-count">{{ paper_count }}</span>
+  </div>
+  <span aria-hidden="true">&#9662;</span>
+</button>
+<div class="collapsible-content">
+  <div style="padding: var(--spacing-sm) 0 var(--spacing-md);">
+    <p class="text-muted text-sm">Paper/filter CRUD coming in the next plan.</p>
+  </div>
+</div>
+
+<!-- ── Water Recipes ─────────────────────────────────────────── -->
+<button
+  class="collapsible-toggle"
+  onclick="this.nextElementSibling.classList.toggle('open'); this.setAttribute('aria-expanded', this.nextElementSibling.classList.contains('open'))"
+  aria-expanded="false"
+>
+  <div class="equipment-section-title">
+    Water Recipes
+    <span class="badge badge-count">{{ water_recipe_count }}</span>
+  </div>
+  <span aria-hidden="true">&#9662;</span>
+</button>
+<div class="collapsible-content">
+  <div style="padding: var(--spacing-sm) 0 var(--spacing-md);">
+    <p class="text-muted text-sm">Water recipe CRUD coming in the next plan.</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     Grinder Add Modal
+     ════════════════════════════════════════════════════════════ -->
+<div class="equipment-modal-overlay" id="grinder-add-modal" onclick="closeEquipmentModalOnOverlay(event, 'grinder-add-modal')">
+  <div class="equipment-modal-box">
+    <div class="equipment-modal-header">
+      <h2 class="equipment-modal-title">Add Grinder</h2>
+      <button class="equipment-modal-close" onclick="closeEquipmentModal('grinder-add-modal')" aria-label="Close">✕</button>
+    </div>
+    {% set grinder = None %}
+    {% include "equipment/_grinder_form.html" %}
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     Brewer Add Modal
+     ════════════════════════════════════════════════════════════ -->
+<div class="equipment-modal-overlay" id="brewer-add-modal" onclick="closeEquipmentModalOnOverlay(event, 'brewer-add-modal')">
+  <div class="equipment-modal-box">
+    <div class="equipment-modal-header">
+      <h2 class="equipment-modal-title">Add Brewer</h2>
+      <button class="equipment-modal-close" onclick="closeEquipmentModal('brewer-add-modal')" aria-label="Close">✕</button>
+    </div>
+    {% set brewer = None %}
+    {% include "equipment/_brewer_form.html" %}
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     Edit Modal (htmx-loaded content)
+     ════════════════════════════════════════════════════════════ -->
+<div class="equipment-modal-overlay" id="equipment-edit-modal" onclick="closeEquipmentModalOnOverlay(event, 'equipment-edit-modal')">
+  <div class="equipment-modal-box">
+    <div id="equipment-modal-content">
+      <!-- Loaded via htmx -->
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function openEquipmentModal(id) {
+    document.getElementById(id).classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeEquipmentModal(id) {
+    document.getElementById(id).classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function closeEquipmentModalOnOverlay(event, id) {
+    if (event.target === event.currentTarget) {
+      closeEquipmentModal(id);
+    }
+  }
+
+  function openEditModal(url) {
+    fetch(url, { headers: { 'HX-Request': 'true' } })
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById('equipment-modal-content').innerHTML = html;
+        openEquipmentModal('equipment-edit-modal');
+      });
+  }
+
+  // htmx: after grinder create, prepend card and close modal
+  document.body.addEventListener('htmx:afterSwap', function(e) {
+    var empty = document.getElementById('grinder-empty');
+    if (empty && document.querySelectorAll('.grinder-card').length > 0) {
+      empty.remove();
+    }
+    empty = document.getElementById('brewer-empty');
+    if (empty && document.querySelectorAll('.brewer-card').length > 0) {
+      empty.remove();
+    }
+  });
+</script>
+{% endblock %}

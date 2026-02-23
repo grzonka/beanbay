@@ -1,0 +1,60 @@
+{# Brewer create/edit form — included in modals #}
+{# If `brewer` is set, renders in edit mode; otherwise create mode #}
+{# Requires `brew_methods` variable for method checkboxes #}
+
+{% if brewer %}
+<form method="post" action="/equipment/brewers/{{ brewer.id }}">
+{% else %}
+<form
+  method="post"
+  action="/equipment/brewers"
+  hx-post="/equipment/brewers"
+  hx-target="#brewer-list"
+  hx-swap="afterbegin"
+  hx-on::after-request="if(event.detail.successful){ closeEquipmentModal('brewer-add-modal'); this.reset(); }"
+>
+{% endif %}
+
+  <div class="form-group">
+    <label class="form-label" for="brewer-name">Name <span style="color:var(--danger)">*</span></label>
+    <input
+      type="text"
+      id="brewer-name"
+      name="name"
+      class="form-input"
+      placeholder="e.g. Hario V60"
+      value="{{ brewer.name if brewer else '' }}"
+      required
+      autocomplete="off"
+    >
+  </div>
+
+  {% if brew_methods %}
+  <div class="form-group">
+    <label class="form-label">Brew Methods</label>
+    <div class="checkbox-group">
+      {% for method in brew_methods %}
+        <label class="checkbox-item">
+          <input
+            type="checkbox"
+            name="method_ids"
+            value="{{ method.id }}"
+            {% if brewer and method in brewer.methods %}checked{% endif %}
+          >
+          <span class="checkbox-item-label">{{ method.name }}</span>
+        </label>
+      {% endfor %}
+    </div>
+  </div>
+  {% else %}
+    <p class="text-muted text-sm" style="margin-bottom: var(--spacing-md);">
+      No brew methods available. Add brew methods via the database to assign them here.
+    </p>
+  {% endif %}
+
+  <div style="margin-top: var(--spacing-lg);">
+    <button type="submit" class="btn btn-primary btn-full">
+      {% if brewer %}Save Changes{% else %}Add Brewer{% endif %}
+    </button>
+  </div>
+</form>

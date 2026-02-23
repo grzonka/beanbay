@@ -1,0 +1,28 @@
+{# Brewer card — used in equipment/index.html #}
+<div class="card brewer-card" style="{% if brewer.is_retired %}opacity: 0.6;{% endif %}">
+  <div class="card-header">
+    <div>
+      <div class="card-title">{{ brewer.name }}</div>
+      {% if brewer.methods %}
+        <div class="method-tags">
+          {% for method in brewer.methods %}
+            <span class="method-tag">{{ method.name }}</span>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="card-subtitle" style="margin-top: var(--spacing-xs);">No methods assigned</div>
+      {% endif %}
+    </div>
+    {% if brewer.is_retired %}
+      <span class="badge badge-retired">Retired</span>
+    {% endif %}
+  </div>
+  <div class="card-actions">
+    <button
+      class="btn btn-secondary btn-sm"
+      onclick="openEditModal('/equipment/brewers/{{ brewer.id }}/edit')"
+    >
+      Edit
+    </button>
+  </div>
+</div>
