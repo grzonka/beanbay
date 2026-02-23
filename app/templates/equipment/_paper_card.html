@@ -1,0 +1,22 @@
+{# Paper card — used in equipment/index.html #}
+<div class="card paper-card" style="{% if paper.is_retired %}opacity: 0.6;{% endif %}">
+  <div class="card-header">
+    <div>
+      <div class="card-title">{{ paper.name }}</div>
+      {% if paper.description %}
+        <div class="card-subtitle text-muted">{{ paper.description }}</div>
+      {% endif %}
+    </div>
+    {% if paper.is_retired %}
+      <span class="badge badge-retired">Retired</span>
+    {% endif %}
+  </div>
+  <div class="card-actions">
+    <button
+      class="btn btn-secondary btn-sm"
+      onclick="openEditModal('/equipment/papers/{{ paper.id }}/edit')"
+    >
+      Edit
+    </button>
+  </div>
+</div>

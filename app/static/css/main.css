@@ -1623,3 +1623,32 @@ body {
   padding-top: var(--spacing-sm);
   border-top: 1px solid var(--border);
 }
+
+/* Water recipe mineral grid — compact 2-col layout */
+.mineral-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-sm);
+}
+
+@media (min-width: 480px) {
+  .mineral-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.mineral-field .form-label {
+  font-size: var(--text-xs);
+  margin-bottom: 2px;
+}
+
+.mineral-field .form-input {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--text-sm);
+}
+
+/* Paper card subtitle */
+.card-subtitle {
+  font-size: var(--text-sm);
+  margin-top: 2px;
+}

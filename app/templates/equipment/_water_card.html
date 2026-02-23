@@ -1,0 +1,35 @@
+{# Water recipe card — used in equipment/index.html #}
+<div class="card water-card" style="{% if recipe.is_retired %}opacity: 0.6;{% endif %}">
+  <div class="card-header">
+    <div>
+      <div class="card-title">{{ recipe.name }}</div>
+      {% if recipe.notes %}
+        <div class="card-subtitle text-muted">{{ recipe.notes }}</div>
+      {% endif %}
+      {% set minerals = [] %}
+      {% if recipe.gh is not none %}{% set _ = minerals.append("GH: " ~ recipe.gh|int) %}{% endif %}
+      {% if recipe.kh is not none %}{% set _ = minerals.append("KH: " ~ recipe.kh|int) %}{% endif %}
+      {% if recipe.ca is not none %}{% set _ = minerals.append("Ca: " ~ recipe.ca|int) %}{% endif %}
+      {% if recipe.mg is not none %}{% set _ = minerals.append("Mg: " ~ recipe.mg|int) %}{% endif %}
+      {% if recipe.na is not none %}{% set _ = minerals.append("Na: " ~ recipe.na|int) %}{% endif %}
+      {% if recipe.cl is not none %}{% set _ = minerals.append("Cl: " ~ recipe.cl|int) %}{% endif %}
+      {% if recipe.so4 is not none %}{% set _ = minerals.append("SO₄: " ~ recipe.so4|int) %}{% endif %}
+      {% if minerals %}
+        <div class="card-subtitle" style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: 2px;">
+          {{ minerals | join(" · ") }}
+        </div>
+      {% endif %}
+    </div>
+    {% if recipe.is_retired %}
+      <span class="badge badge-retired">Retired</span>
+    {% endif %}
+  </div>
+  <div class="card-actions">
+    <button
+      class="btn btn-secondary btn-sm"
+      onclick="openEditModal('/equipment/water-recipes/{{ recipe.id }}/edit')"
+    >
+      Edit
+    </button>
+  </div>
+</div>

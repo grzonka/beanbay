@@ -1,0 +1,90 @@
+{# Water recipe create/edit form — included in modals #}
+{# If `recipe` is set, renders in edit mode; otherwise create mode #}
+
+{% if recipe %}
+<form method="post" action="/equipment/water-recipes/{{ recipe.id }}">
+{% else %}
+<form
+  method="post"
+  action="/equipment/water-recipes"
+  hx-post="/equipment/water-recipes"
+  hx-target="#water-list"
+  hx-swap="afterbegin"
+  hx-on::after-request="if(event.detail.successful){ closeEquipmentModal('water-add-modal'); this.reset(); }"
+>
+{% endif %}
+
+  <div class="form-group">
+    <label class="form-label" for="water-name">Name <span style="color:var(--danger)">*</span></label>
+    <input
+      type="text"
+      id="water-name"
+      name="name"
+      class="form-input"
+      placeholder="e.g. Third Wave Water Classic Light"
+      value="{{ recipe.name if recipe else '' }}"
+      required
+      autocomplete="off"
+    >
+  </div>
+
+  <div class="form-group">
+    <label class="form-label" for="water-notes">Notes</label>
+    <textarea
+      id="water-notes"
+      name="notes"
+      class="form-input"
+      rows="2"
+      placeholder="e.g. Classic Light profile, mixed in 1 gallon distilled"
+    >{{ recipe.notes if recipe and recipe.notes else '' }}</textarea>
+  </div>
+
+  <details style="margin-bottom: var(--spacing-md);">
+    <summary style="cursor:pointer; font-size:var(--text-sm); color:var(--text-secondary); padding: var(--spacing-xs) 0; user-select:none;">
+      Mineral Details (ppm)
+    </summary>
+    <div class="mineral-grid" style="margin-top: var(--spacing-sm);">
+      <div class="form-group mineral-field">
+        <label class="form-label" for="water-gh">GH</label>
+        <input type="number" id="water-gh" name="gh" class="form-input" step="any" min="0"
+          placeholder="ppm" value="{{ recipe.gh if recipe and recipe.gh is not none else '' }}">
+      </div>
+      <div class="form-group mineral-field">
+        <label class="form-label" for="water-kh">KH</label>
+        <input type="number" id="water-kh" name="kh" class="form-input" step="any" min="0"
+          placeholder="ppm" value="{{ recipe.kh if recipe and recipe.kh is not none else '' }}">
+      </div>
+      <div class="form-group mineral-field">
+        <label class="form-label" for="water-ca">Ca</label>
+        <input type="number" id="water-ca" name="ca" class="form-input" step="any" min="0"
+          placeholder="ppm" value="{{ recipe.ca if recipe and recipe.ca is not none else '' }}">
+      </div>
+      <div class="form-group mineral-field">
+        <label class="form-label" for="water-mg">Mg</label>
+        <input type="number" id="water-mg" name="mg" class="form-input" step="any" min="0"
+          placeholder="ppm" value="{{ recipe.mg if recipe and recipe.mg is not none else '' }}">
+      </div>
+      <div class="form-group mineral-field">
+        <label class="form-label" for="water-na">Na</label>
+        <input type="number" id="water-na" name="na" class="form-input" step="any" min="0"
+          placeholder="ppm" value="{{ recipe.na if recipe and recipe.na is not none else '' }}">
+      </div>
+      <div class="form-group mineral-field">
+        <label class="form-label" for="water-cl">Cl</label>
+        <input type="number" id="water-cl" name="cl" class="form-input" step="any" min="0"
+          placeholder="ppm" value="{{ recipe.cl if recipe and recipe.cl is not none else '' }}">
+      </div>
+      <div class="form-group mineral-field">
+        <label class="form-label" for="water-so4">SO₄</label>
+        <input type="number" id="water-so4" name="so4" class="form-input" step="any" min="0"
+          placeholder="ppm" value="{{ recipe.so4 if recipe and recipe.so4 is not none else '' }}">
+      </div>
+    </div>
+  </details>
+
+  <div style="margin-top: var(--spacing-lg);">
+    <button type="submit" class="btn btn-primary btn-full">
+      {% if recipe %}Save Changes{% else %}Add Water Recipe{% endif %}
+    </button>
+  </div>
+</form>

@@ -1,0 +1,47 @@
+{# Paper create/edit form — included in modals #}
+{# If `paper` is set, renders in edit mode; otherwise create mode #}
+
+{% if paper %}
+<form method="post" action="/equipment/papers/{{ paper.id }}">
+{% else %}
+<form
+  method="post"
+  action="/equipment/papers"
+  hx-post="/equipment/papers"
+  hx-target="#paper-list"
+  hx-swap="afterbegin"
+  hx-on::after-request="if(event.detail.successful){ closeEquipmentModal('paper-add-modal'); this.reset(); }"
+>
+{% endif %}
+
+  <div class="form-group">
+    <label class="form-label" for="paper-name">Name <span style="color:var(--danger)">*</span></label>
+    <input
+      type="text"
+      id="paper-name"
+      name="name"
+      class="form-input"
+      placeholder="e.g. Cafec Abaca T-90"
+      value="{{ paper.name if paper else '' }}"
+      required
+      autocomplete="off"
+    >
+  </div>
+
+  <div class="form-group">
+    <label class="form-label" for="paper-description">Description</label>
+    <textarea
+      id="paper-description"
+      name="description"
+      class="form-input"
+      rows="2"
+      placeholder="e.g. Cafec Abaca light roast filter, bleached"
+    >{{ paper.description if paper and paper.description else '' }}</textarea>
+  </div>
+
+  <div style="margin-top: var(--spacing-lg);">
+    <button type="submit" class="btn btn-primary btn-full">
+      {% if paper %}Save Changes{% else %}Add Paper{% endif %}
+    </button>
+  </div>
+</form>
