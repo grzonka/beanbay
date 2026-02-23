@@ -22,16 +22,16 @@ See: .planning/PROJECT.md (updated 2026-02-22)
 ## Current Position
 
 Phase: 14 of 16 (Equipment Management) — 🔄 In progress
-Plan: 3 of 5 complete
+Plan: 4 of 5 complete
 Status: In progress
-Last activity: 2026-02-23 — Completed 14-03-PLAN.md (paper/water recipe CRUD + 17 equipment tests)
+Last activity: 2026-02-23 — Completed 14-04-PLAN.md (brew setup assembly wizard + setup cards)
 
-Progress: [█████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 46% (6/13 v0.2.0 plans)
+Progress: [██████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 54% (7/13 v0.2.0 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-  - Total plans completed: 33 (v1: 16, v0.1.0: 5, v0.1.1: 8, v0.2.0: 4)
+  - Total plans completed: 34 (v1: 16, v0.1.0: 5, v0.1.1: 8, v0.2.0: 5)
   - Total phases completed: 13 complete, 14 in progress
   - All milestones shipped same day (Feb 22, 2026)
 
@@ -60,14 +60,13 @@ See: .planning/PROJECT.md (Key Decisions table — 22 decisions tracked)
 
 ### Last Session
 - **Date:** 2026-02-23
-- **What happened:** Executed Phase 14 Plan 03. Added paper/filter CRUD and water recipe CRUD (all 7 mineral fields) to equipment router and page. Created all 4 card/form templates. 17 new equipment tests, 170/170 total passing.
-- **Where we left off:** Phase 14 plan 3 of 5 done. Ready for 14-04 (brew setup assembly wizard).
+- **What happened:** Executed Phase 14 Plan 04. Built 5-step brew setup assembly wizard (Brewer→Grinder→Filter→Water→Name) with single-page JS navigation, auto-name suggestion, and optional paper step. Added 4 routes (create/edit). Added Brew Setups section at top of equipment page (open by default) with compact setup cards. 170/170 tests passing.
+- **Where we left off:** Phase 14 plan 4 of 5 done. Ready for 14-05 (retire/restore lifecycle + brew page setup selection + comprehensive tests).
 
 ### Next Steps
-1. Execute Phase 14-04 (Brew setup assembly wizard — multi-step)
-2. Execute Phase 14-05 (Retire/restore lifecycle, brew page setup selection, comprehensive tests)
-3. Continue to Phase 15 and 16
+1. Execute Phase 14-05 (Retire/restore lifecycle, brew page setup selection, comprehensive tests)
+2. Continue to Phase 15 and 16
 
 ---
 *State initialized: 2026-02-21*
-*Last updated: 2026-02-23 — Phase 14 plan 1/5 done (equipment model extension + migration)*
+*Last updated: 2026-02-23 — Phase 14 plan 4/5 done (brew setup assembly wizard + setup cards)*

@@ -83,9 +83,9 @@ Plans:
 
 Plans:
 - [x] 14-01-PLAN.md — Schema migration + model updates (equipment fields, retire lifecycle, brewer-method association)
-- [ ] 14-02-PLAN.md — Equipment router, page layout, grinder/brewer CRUD with modal forms
-- [ ] 14-03-PLAN.md — Paper/water recipe CRUD + equipment tests
-- [ ] 14-04-PLAN.md — Brew setup assembly wizard (multi-step)
+- [x] 14-02-PLAN.md — Equipment router, page layout, grinder/brewer CRUD with modal forms
+- [x] 14-03-PLAN.md — Paper/water recipe CRUD + equipment tests
+- [x] 14-04-PLAN.md — Brew setup assembly wizard (multi-step)
 - [ ] 14-05-PLAN.md — Retire/restore lifecycle, brew page setup selection, comprehensive tests
 
 **Success Criteria:**
@@ -179,6 +179,6 @@ Phase 16 (Transfer Learning)
 | 7-9 | v0.1.0 | 5/5 | Complete | 2026-02-22 |
 | 10-12 | v0.1.1 | 8/8 | Complete | 2026-02-22 |
 | 13 | v0.2.0 | 3/3 | Complete | 2026-02-22 |
-| 14 | v0.2.0 | 1/5 | In progress | — |
+| 14 | v0.2.0 | 4/5 | In progress | — |
 | 15 | v0.2.0 | 0/TBD | Pending | — |
 | 16 | v0.2.0 | 0/TBD | Pending | — |
