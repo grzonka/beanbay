@@ -16,6 +16,8 @@
     <input type="hidden" name="recommendation_id" value="{{ manual_session_id }}">
     <input type="hidden" name="is_manual" value="true">
     <input type="hidden" id="is_manual_flag" value="true">
+    <input type="hidden" name="method" value="{{ method or 'espresso' }}">
+    <input type="hidden" name="brew_setup_id" value="{{ setup_id or '' }}">
 
     <!-- ------------------------------------------------------------------ -->
     <!-- Grind Setting -->
@@ -86,8 +88,9 @@
     </div>
 
     <!-- ------------------------------------------------------------------ -->
-    <!-- Pre-infusion % -->
+    <!-- Pre-infusion % (espresso only) -->
     <!-- ------------------------------------------------------------------ -->
+    {% if method != 'pour-over' %}
     <div class="form-group">
       <label class="form-label">
         Pre-infusion %
@@ -118,6 +121,7 @@
         >
       </div>
     </div>
+    {% endif %}
 
     <!-- ------------------------------------------------------------------ -->
     <!-- Dose In -->
@@ -154,8 +158,72 @@
     </div>
 
     <!-- ------------------------------------------------------------------ -->
-    <!-- Target Yield -->
+    <!-- Target Yield (espresso) / Brew Volume (pour-over) -->
     <!-- ------------------------------------------------------------------ -->
+    {% if method == 'pour-over' %}
+    <!-- Bloom Weight -->
+    <div class="form-group">
+      <label class="form-label">
+        Bloom Weight
+        <span class="param-unit">g ({{ bounds.bloom_weight[0] }}–{{ bounds.bloom_weight[1] }})</span>
+      </label>
+      <div class="param-input-row">
+        <input
+          type="range"
+          class="param-slider"
+          id="bloom_weight_slider"
+          min="{{ bounds.bloom_weight[0] }}"
+          max="{{ bounds.bloom_weight[1] }}"
+          step="1"
+          value="{{ prefill.bloom_weight }}"
+          oninput="document.getElementById('bloom_weight').value = parseFloat(this.value).toFixed(0)"
+        >
+        <input
+          type="number"
+          class="param-number form-input"
+          id="bloom_weight"
+          name="bloom_weight"
+          step="1"
+          value="{{ prefill.bloom_weight }}"
+          data-min="{{ bounds.bloom_weight[0] }}"
+          data-max="{{ bounds.bloom_weight[1] }}"
+          data-param="bloom_weight"
+          oninput="var s=document.getElementById('bloom_weight_slider'); s.value=Math.max(s.min,Math.min(s.max,this.value))"
+        >
+      </div>
+    </div>
+    <!-- Brew Volume -->
+    <div class="form-group">
+      <label class="form-label">
+        Brew Volume
+        <span class="param-unit">ml ({{ bounds.brew_volume[0] }}–{{ bounds.brew_volume[1] }})</span>
+      </label>
+      <div class="param-input-row">
+        <input
+          type="range"
+          class="param-slider"
+          id="brew_volume_slider"
+          min="{{ bounds.brew_volume[0] }}"
+          max="{{ bounds.brew_volume[1] }}"
+          step="5"
+          value="{{ prefill.brew_volume }}"
+          oninput="document.getElementById('brew_volume').value = parseFloat(this.value).toFixed(0)"
+        >
+        <input
+          type="number"
+          class="param-number form-input"
+          id="brew_volume"
+          name="brew_volume"
+          step="5"
+          value="{{ prefill.brew_volume }}"
+          data-min="{{ bounds.brew_volume[0] }}"
+          data-max="{{ bounds.brew_volume[1] }}"
+          data-param="brew_volume"
+          oninput="var s=document.getElementById('brew_volume_slider'); s.value=Math.max(s.min,Math.min(s.max,this.value))"
+        >
+      </div>
+    </div>
+    {% else %}
     <div class="form-group">
       <label class="form-label">
         Target Yield
@@ -186,10 +254,12 @@
         >
       </div>
     </div>
+    {% endif %}
 
     <!-- ------------------------------------------------------------------ -->
-    <!-- Saturation toggle -->
+    <!-- Saturation toggle (espresso only) -->
     <!-- ------------------------------------------------------------------ -->
+    {% if method != 'pour-over' %}
     <div class="form-group">
       <label class="form-label">Saturation</label>
       <label class="saturation-toggle">
@@ -204,6 +274,7 @@
       </label>
       <div class="form-hint">Checked = yes, unchecked = no</div>
     </div>
+    {% endif %}
 
     <!-- ------------------------------------------------------------------ -->
     <!-- Taste score (inactive until touched) -->

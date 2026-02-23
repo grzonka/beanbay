@@ -23,12 +23,20 @@
   <form method="post" action="/brew/record">
     <!-- Hidden recipe params -->
     <input type="hidden" name="recommendation_id" value="{{ recommendation_id }}">
+    <input type="hidden" name="method" value="{{ rec.method or 'espresso' }}">
+    <input type="hidden" name="brew_setup_id" value="{{ rec.setup_id or '' }}">
     <input type="hidden" name="grind_setting" value="{{ rec.grind_setting }}">
     <input type="hidden" name="temperature" value="{{ rec.temperature }}">
+    {% if rec.method == 'pour-over' %}
+    <input type="hidden" name="bloom_weight" value="{{ rec.bloom_weight }}">
+    <input type="hidden" name="dose_in" value="{{ rec.dose_in }}">
+    <input type="hidden" name="brew_volume" value="{{ rec.brew_volume }}">
+    {% else %}
     <input type="hidden" name="preinfusion_pct" value="{{ rec.preinfusion_pct }}">
     <input type="hidden" name="dose_in" value="{{ rec.dose_in }}">
     <input type="hidden" name="target_yield" value="{{ rec.target_yield }}">
     <input type="hidden" name="saturation" value="{{ rec.saturation }}">
+    {% endif %}
 
     <!-- Taste score -->
     <div class="form-group" id="taste-group">

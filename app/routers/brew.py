@@ -27,7 +27,12 @@ from app.models.bean import Bean
 from app.models.brew_setup import BrewSetup
 from app.models.measurement import Measurement
 from app.routers.beans import _get_active_bean
-from app.services.optimizer import DEFAULT_BOUNDS, _resolve_bounds, _round_value
+from app.services.optimizer import (
+    DEFAULT_BOUNDS,
+    _resolve_bounds,
+    _round_value,
+)
+from app.services.optimizer_key import make_campaign_key
 
 router = APIRouter(prefix="/brew", tags=["brew"])
 templates = Jinja2Templates(directory="app/templates")
@@ -119,6 +124,22 @@ def _get_active_setup(request: Request, db: Session) -> Optional[BrewSetup]:
     )
 
 
+def _get_method_from_setup(setup: Optional[BrewSetup]) -> str:
+    """Derive brew method name from the active setup. Defaults to 'espresso'."""
+    if setup is None:
+        return "espresso"
+    if setup.brew_method is None:
+        return "espresso"
+    return setup.brew_method.name.lower()
+
+
+def _get_campaign_key(bean: Bean, setup: Optional[BrewSetup]) -> str:
+    """Build a campaign key from bean + active setup."""
+    method = _get_method_from_setup(setup)
+    setup_id = str(setup.id) if setup else None
+    return make_campaign_key(str(bean.id), method, setup_id)
+
+
 # ---------------------------------------------------------------------------
 # Routes
 # ---------------------------------------------------------------------------
@@ -183,14 +204,20 @@ async def trigger_recommend(request: Request, db: Session = Depends(get_db)):
     if not bean:
         return RedirectResponse(url="/beans", status_code=303)
 
+    active_setup = _get_active_setup(request, db)
+    campaign_key = _get_campaign_key(bean, active_setup)
+    method = _get_method_from_setup(active_setup)
+
     optimizer = request.app.state.optimizer
-    rec = await optimizer.recommend(bean.id, overrides=bean.parameter_overrides)
+    rec = await optimizer.recommend(campaign_key, overrides=bean.parameter_overrides, method=method)
 
     # Compute recommendation insights (explore vs exploit explanation + predicted taste)
     insights = optimizer.get_recommendation_insights(
-        bean.id, rec, overrides=bean.parameter_overrides
+        campaign_key, rec, overrides=bean.parameter_overrides, method=method
     )
     rec["insights"] = insights
+    rec["method"] = method
+    rec["setup_id"] = str(active_setup.id) if active_setup else None
 
     # Store recommendation to disk (survives server restarts)
     rec_id = rec["recommendation_id"]
@@ -243,10 +270,14 @@ async def record_measurement(
     recommendation_id: str = Form(...),
     grind_setting: float = Form(...),
     temperature: float = Form(...),
-    preinfusion_pct: float = Form(...),
+    preinfusion_pct: Optional[float] = Form(None),
     dose_in: float = Form(...),
-    target_yield: float = Form(...),
-    saturation: str = Form(...),
+    target_yield: Optional[float] = Form(None),
+    saturation: Optional[str] = Form(None),
+    bloom_weight: Optional[float] = Form(None),
+    brew_volume: Optional[float] = Form(None),
+    method: str = Form("espresso"),
+    brew_setup_id: Optional[str] = Form(None),
     taste: float = Form(7.0),
     extraction_time: Optional[float] = Form(None),
     is_failed: Optional[str] = Form(None),
@@ -268,16 +299,27 @@ async def record_measurement(
 
     # Validate manual brews against bean parameter bounds
     if is_manual == "true":
-        bounds = _resolve_bounds(bean.parameter_overrides)
-        param_values = {
-            "grind_setting": grind_setting,
-            "temperature": temperature,
-            "preinfusion_pct": preinfusion_pct,
-            "dose_in": dose_in,
-            "target_yield": target_yield,
-        }
+        bounds = _resolve_bounds(bean.parameter_overrides, method=method)
+        if method == "pour-over":
+            param_values = {
+                "grind_setting": grind_setting,
+                "temperature": temperature,
+                "bloom_weight": bloom_weight or 40.0,
+                "dose_in": dose_in,
+                "brew_volume": brew_volume or 250.0,
+            }
+        else:
+            param_values = {
+                "grind_setting": grind_setting,
+                "temperature": temperature,
+                "preinfusion_pct": preinfusion_pct or 75.0,
+                "dose_in": dose_in,
+                "target_yield": target_yield or 40.0,
+            }
         violations = []
         for param, value in param_values.items():
+            if param not in bounds:
+                continue
             lo, hi = bounds[param]
             if value < lo or value > hi:
                 violations.append({"param": param, "value": value, "min": lo, "max": hi})
@@ -318,10 +360,11 @@ async def record_measurement(
             recommendation_id=recommendation_id,
             grind_setting=grind_setting,
             temperature=temperature,
-            preinfusion_pct=preinfusion_pct,
+            preinfusion_pct=preinfusion_pct if method != "pour-over" else None,
             dose_in=dose_in,
-            target_yield=target_yield,
-            saturation=saturation,
+            target_yield=target_yield if method != "pour-over" else None,
+            saturation=saturation if method != "pour-over" else None,
+            brew_setup_id=brew_setup_id if brew_setup_id else None,
             taste=taste,
             extraction_time=extraction_time if extraction_time else None,
             is_failed=failed,
@@ -340,16 +383,31 @@ async def record_measurement(
 
         # Also add to BayBE campaign
         optimizer = request.app.state.optimizer
-        measurement_data = {
-            "grind_setting": grind_setting,
-            "temperature": temperature,
-            "preinfusion_pct": preinfusion_pct,
-            "dose_in": dose_in,
-            "target_yield": target_yield,
-            "saturation": saturation,
-            "taste": taste,
-        }
-        optimizer.add_measurement(bean.id, measurement_data, overrides=bean.parameter_overrides)
+        campaign_key = make_campaign_key(
+            str(bean.id), method, brew_setup_id if brew_setup_id else None
+        )
+        if method == "pour-over":
+            measurement_data = {
+                "grind_setting": grind_setting,
+                "temperature": temperature,
+                "bloom_weight": bloom_weight or 40.0,
+                "dose_in": dose_in,
+                "brew_volume": brew_volume or 250.0,
+                "taste": taste,
+            }
+        else:
+            measurement_data = {
+                "grind_setting": grind_setting,
+                "temperature": temperature,
+                "preinfusion_pct": preinfusion_pct or 75.0,
+                "dose_in": dose_in,
+                "target_yield": target_yield or 40.0,
+                "saturation": saturation or "yes",
+                "taste": taste,
+            }
+        optimizer.add_measurement(
+            campaign_key, measurement_data, overrides=bean.parameter_overrides, method=method
+        )
 
     # Clean up pending recommendation (from both in-memory and file store)
     pending = getattr(request.app.state, "pending_recommendations", {})
@@ -393,11 +451,21 @@ async def manual_brew(request: Request, db: Session = Depends(get_db)):
     if not bean:
         return RedirectResponse(url="/beans", status_code=303)
 
-    bounds = _resolve_bounds(bean.parameter_overrides)
+    active_setup = _get_active_setup(request, db)
+    method = _get_method_from_setup(active_setup)
+    bounds = _resolve_bounds(bean.parameter_overrides, method=method)
     best = _best_measurement(bean.id, db)
 
     # Pre-fill values: use best measurement if available, else midpoint of bounds
-    if best:
+    if best and method == "pour-over":
+        prefill = {
+            "grind_setting": best.grind_setting,
+            "temperature": best.temperature,
+            "bloom_weight": 40.0,  # pour-over params not stored on old measurements
+            "dose_in": best.dose_in,
+            "brew_volume": 250.0,
+        }
+    elif best:
         prefill = {
             "grind_setting": best.grind_setting,
             "temperature": best.temperature,
@@ -405,6 +473,14 @@ async def manual_brew(request: Request, db: Session = Depends(get_db)):
             "dose_in": best.dose_in,
             "target_yield": best.target_yield,
             "saturation": best.saturation,
+        }
+    elif method == "pour-over":
+        prefill = {
+            param: _round_value((lo + hi) / 2, step)
+            for (param, (lo, hi)), step in zip(
+                bounds.items(),
+                [0.5, 1.0, 1.0, 0.5, 5.0],  # grind, temp, bloom, dose, volume
+            )
         }
     else:
         prefill = {
@@ -423,12 +499,16 @@ async def manual_brew(request: Request, db: Session = Depends(get_db)):
         prefill["saturation"] = "yes"
 
     manual_session_id = str(uuid.uuid4())
+    setup_id = str(active_setup.id) if active_setup else None
 
     return templates.TemplateResponse(
         request,
         "brew/manual.html",
         {
             "active_bean": bean,
+            "active_setup": active_setup,
+            "method": method,
+            "setup_id": setup_id,
             "bounds": bounds,
             "prefill": prefill,
             "manual_session_id": manual_session_id,
