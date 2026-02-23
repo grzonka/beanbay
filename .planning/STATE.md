@@ -22,11 +22,11 @@ See: .planning/PROJECT.md (updated 2026-02-22)
 ## Current Position
 
 Phase: 14 of 16 (Equipment Management) — 🔄 In progress
-Plan: 1 of 5 complete
+Plan: 2 of 5 complete
 Status: In progress
-Last activity: 2026-02-23 — Completed 14-01-PLAN.md (equipment model extension + migration)
+Last activity: 2026-02-23 — Completed 14-02-PLAN.md (equipment router + grinder/brewer CRUD UI)
 
-Progress: [████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 29% (4/13 v0.2.0 plans)
+Progress: [████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 38% (5/13 v0.2.0 plans)
 
 ## Performance Metrics
 
