@@ -3,6 +3,7 @@
 import pytest
 
 from app.models.brew_method import BrewMethod
+from app.models.brew_setup import BrewSetup
 from app.models.equipment import Brewer, Grinder, Paper, WaterRecipe
 
 
@@ -367,3 +368,343 @@ def test_edit_water_recipe_form(client, sample_water_recipe):
     )
     assert response.status_code == 200
     assert "Third Wave Water Classic Light" in response.text
+
+
+# ── Brew Setup fixture ────────────────────────────────────────────────────
+
+
+@pytest.fixture()
+def sample_setup(
+    db_session, sample_grinder, sample_brewer, sample_paper, sample_water_recipe, espresso_method
+):
+    """Create a brew setup using all equipment components."""
+    setup = BrewSetup(
+        name="My Espresso Setup",
+        brew_method_id=espresso_method.id,
+        grinder_id=sample_grinder.id,
+        brewer_id=sample_brewer.id,
+        paper_id=sample_paper.id,
+        water_recipe_id=sample_water_recipe.id,
+    )
+    db_session.add(setup)
+    db_session.commit()
+    db_session.refresh(setup)
+    return setup
+
+
+# ── Retire / Restore — Grinder ───────────────────────────────────────────
+
+
+def test_retire_grinder(client, sample_grinder, db_session):
+    """POST /equipment/grinders/{id}/retire sets is_retired=True."""
+    response = client.post(
+        f"/equipment/grinders/{sample_grinder.id}/retire",
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+
+    db_session.expire_all()
+    updated = db_session.query(Grinder).filter(Grinder.id == sample_grinder.id).first()
+    assert updated.is_retired is True
+
+
+def test_restore_grinder(client, sample_grinder, db_session):
+    """POST /equipment/grinders/{id}/restore sets is_retired=False."""
+    sample_grinder.is_retired = True
+    db_session.commit()
+
+    response = client.post(
+        f"/equipment/grinders/{sample_grinder.id}/restore",
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+
+    db_session.expire_all()
+    updated = db_session.query(Grinder).filter(Grinder.id == sample_grinder.id).first()
+    assert updated.is_retired is False
+
+
+def test_retire_grinder_cascades_to_setups(client, sample_setup, db_session):
+    """Retiring a grinder auto-retires all setups using that grinder."""
+    grinder_id = sample_setup.grinder_id
+    assert sample_setup.is_retired is False
+
+    client.post(f"/equipment/grinders/{grinder_id}/retire", follow_redirects=False)
+
+    db_session.expire_all()
+    setup = db_session.query(BrewSetup).filter(BrewSetup.id == sample_setup.id).first()
+    assert setup.is_retired is True
+
+
+def test_restore_grinder_does_not_auto_restore_setups(client, sample_setup, db_session):
+    """Restoring a grinder does NOT auto-restore previously retired setups."""
+    grinder_id = sample_setup.grinder_id
+    # First retire the grinder (which auto-retires the setup)
+    client.post(f"/equipment/grinders/{grinder_id}/retire", follow_redirects=False)
+    db_session.expire_all()
+    setup = db_session.query(BrewSetup).filter(BrewSetup.id == sample_setup.id).first()
+    assert setup.is_retired is True
+
+    # Now restore the grinder
+    client.post(f"/equipment/grinders/{grinder_id}/restore", follow_redirects=False)
+    db_session.expire_all()
+    setup = db_session.query(BrewSetup).filter(BrewSetup.id == sample_setup.id).first()
+    # Setup remains retired — user must restore it manually
+    assert setup.is_retired is True
+
+
+# ── Retire / Restore — Brewer ────────────────────────────────────────────
+
+
+def test_retire_brewer(client, sample_brewer, db_session):
+    """POST /equipment/brewers/{id}/retire sets is_retired=True."""
+    response = client.post(
+        f"/equipment/brewers/{sample_brewer.id}/retire",
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+
+    db_session.expire_all()
+    updated = db_session.query(Brewer).filter(Brewer.id == sample_brewer.id).first()
+    assert updated.is_retired is True
+
+
+def test_restore_brewer(client, sample_brewer, db_session):
+    """POST /equipment/brewers/{id}/restore sets is_retired=False."""
+    sample_brewer.is_retired = True
+    db_session.commit()
+
+    response = client.post(
+        f"/equipment/brewers/{sample_brewer.id}/restore",
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+
+    db_session.expire_all()
+    updated = db_session.query(Brewer).filter(Brewer.id == sample_brewer.id).first()
+    assert updated.is_retired is False
+
+
+def test_retire_brewer_cascades_to_setups(client, sample_setup, db_session):
+    """Retiring a brewer auto-retires all setups using that brewer."""
+    brewer_id = sample_setup.brewer_id
+    client.post(f"/equipment/brewers/{brewer_id}/retire", follow_redirects=False)
+
+    db_session.expire_all()
+    setup = db_session.query(BrewSetup).filter(BrewSetup.id == sample_setup.id).first()
+    assert setup.is_retired is True
+
+
+# ── Retire / Restore — Paper ─────────────────────────────────────────────
+
+
+def test_retire_paper(client, sample_paper, db_session):
+    """POST /equipment/papers/{id}/retire sets is_retired=True."""
+    response = client.post(
+        f"/equipment/papers/{sample_paper.id}/retire",
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+
+    db_session.expire_all()
+    updated = db_session.query(Paper).filter(Paper.id == sample_paper.id).first()
+    assert updated.is_retired is True
+
+
+def test_restore_paper(client, sample_paper, db_session):
+    """POST /equipment/papers/{id}/restore sets is_retired=False."""
+    sample_paper.is_retired = True
+    db_session.commit()
+
+    response = client.post(
+        f"/equipment/papers/{sample_paper.id}/restore",
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+
+    db_session.expire_all()
+    updated = db_session.query(Paper).filter(Paper.id == sample_paper.id).first()
+    assert updated.is_retired is False
+
+
+def test_retire_paper_cascades_to_setups(client, sample_setup, db_session):
+    """Retiring a paper auto-retires all setups using that paper."""
+    paper_id = sample_setup.paper_id
+    client.post(f"/equipment/papers/{paper_id}/retire", follow_redirects=False)
+
+    db_session.expire_all()
+    setup = db_session.query(BrewSetup).filter(BrewSetup.id == sample_setup.id).first()
+    assert setup.is_retired is True
+
+
+# ── Retire / Restore — Water Recipe ─────────────────────────────────────
+
+
+def test_retire_water_recipe(client, sample_water_recipe, db_session):
+    """POST /equipment/water-recipes/{id}/retire sets is_retired=True."""
+    response = client.post(
+        f"/equipment/water-recipes/{sample_water_recipe.id}/retire",
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+
+    db_session.expire_all()
+    updated = db_session.query(WaterRecipe).filter(WaterRecipe.id == sample_water_recipe.id).first()
+    assert updated.is_retired is True
+
+
+def test_restore_water_recipe(client, sample_water_recipe, db_session):
+    """POST /equipment/water-recipes/{id}/restore sets is_retired=False."""
+    sample_water_recipe.is_retired = True
+    db_session.commit()
+
+    response = client.post(
+        f"/equipment/water-recipes/{sample_water_recipe.id}/restore",
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+
+    db_session.expire_all()
+    updated = db_session.query(WaterRecipe).filter(WaterRecipe.id == sample_water_recipe.id).first()
+    assert updated.is_retired is False
+
+
+def test_retire_water_recipe_cascades_to_setups(client, sample_setup, db_session):
+    """Retiring a water recipe auto-retires all setups using it."""
+    recipe_id = sample_setup.water_recipe_id
+    client.post(f"/equipment/water-recipes/{recipe_id}/retire", follow_redirects=False)
+
+    db_session.expire_all()
+    setup = db_session.query(BrewSetup).filter(BrewSetup.id == sample_setup.id).first()
+    assert setup.is_retired is True
+
+
+# ── Retire / Restore — Brew Setup ────────────────────────────────────────
+
+
+def test_retire_setup(client, sample_setup, db_session):
+    """POST /equipment/setups/{id}/retire sets is_retired=True on the setup."""
+    response = client.post(
+        f"/equipment/setups/{sample_setup.id}/retire",
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+
+    db_session.expire_all()
+    updated = db_session.query(BrewSetup).filter(BrewSetup.id == sample_setup.id).first()
+    assert updated.is_retired is True
+
+
+def test_restore_setup(client, sample_setup, db_session):
+    """POST /equipment/setups/{id}/restore sets is_retired=False."""
+    sample_setup.is_retired = True
+    db_session.commit()
+
+    response = client.post(
+        f"/equipment/setups/{sample_setup.id}/restore",
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+
+    db_session.expire_all()
+    updated = db_session.query(BrewSetup).filter(BrewSetup.id == sample_setup.id).first()
+    assert updated.is_retired is False
+
+
+# ── Show retired toggle ───────────────────────────────────────────────────
+
+
+def test_retired_equipment_hidden_by_default(client, sample_grinder, db_session):
+    """Retired grinder is NOT shown on the default equipment page as a card."""
+    sample_grinder.is_retired = True
+    db_session.commit()
+
+    response = client.get("/equipment")
+    assert response.status_code == 200
+    # When no active (non-retired) grinders exist, the grinder list shows the empty state
+    assert "No grinders yet" in response.text
+
+
+def test_retired_equipment_shown_with_toggle(client, sample_grinder, db_session):
+    """Retired grinder IS shown as a card when show_retired=true query param is set."""
+    sample_grinder.is_retired = True
+    db_session.commit()
+
+    response = client.get("/equipment?show_retired=true")
+    assert response.status_code == 200
+    # When show_retired=true, the retired grinder card is rendered
+    assert "Comandante C40" in response.text
+    assert "Retired" in response.text
+
+
+# ── Wizard excludes retired equipment ────────────────────────────────────
+
+
+def test_wizard_excludes_retired_grinder(client, sample_grinder, db_session):
+    """Brew setup wizard does not offer retired grinders for selection."""
+    sample_grinder.is_retired = True
+    db_session.commit()
+
+    response = client.get("/equipment/setups/new")
+    assert response.status_code == 200
+    # Retired grinder should not appear in wizard step options
+    assert "Comandante C40" not in response.text
+
+
+def test_wizard_excludes_retired_brewer(client, sample_brewer, db_session):
+    """Brew setup wizard does not offer retired brewers for selection."""
+    sample_brewer.is_retired = True
+    db_session.commit()
+
+    response = client.get("/equipment/setups/new")
+    assert response.status_code == 200
+    assert "Rancilio Silvia" not in response.text
+
+
+# ── Brew page setup selection ─────────────────────────────────────────────
+
+
+def test_brew_page_set_setup_cookie(client, sample_setup):
+    """POST /brew/set-setup sets active_setup_id cookie."""
+    response = client.post(
+        "/brew/set-setup",
+        data={"setup_id": sample_setup.id},
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+    assert "active_setup_id" in response.cookies
+
+
+def test_brew_page_shows_active_setup(client, sample_setup):
+    """GET /brew shows active setup name when cookie is set."""
+    # Set the active setup cookie
+    client.cookies.set("active_setup_id", sample_setup.id)
+
+    response = client.get("/brew")
+    assert response.status_code == 200
+    assert "My Espresso Setup" in response.text
+
+
+def test_brew_page_set_setup_ignores_retired(client, sample_setup, db_session):
+    """POST /brew/set-setup does not set cookie for a retired setup."""
+    sample_setup.is_retired = True
+    db_session.commit()
+
+    response = client.post(
+        "/brew/set-setup",
+        data={"setup_id": sample_setup.id},
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+    # Cookie should not be set (or not contain the retired setup id)
+    assert "active_setup_id" not in response.cookies
+
+
+def test_brew_page_retired_setup_not_in_selector(client, sample_setup, db_session):
+    """Retired setups do not appear in the brew page setup selector."""
+    sample_setup.is_retired = True
+    db_session.commit()
+
+    response = client.get("/brew")
+    assert response.status_code == 200
+    assert "My Espresso Setup" not in response.text
