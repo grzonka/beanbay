@@ -88,10 +88,12 @@ Wave 3: Phases 20, 21 (parallel — both depend on 19)
 - `rebuild_campaign` still works (measurements in SQLite are source of truth)
 - Data directory becomes optional (only for legacy compatibility during migration)
 
-**Plans:** 0 plans
+**Plans:** 3 plans
 
 Plans:
-- [ ] TBD — to be created by /gsd-plan-phase
+- [ ] 17-01-PLAN.md — New models (CampaignState, PendingRecommendation) + migration service
+- [ ] 17-02-PLAN.md — OptimizerService + brew.py + lifespan refactor to DB-backed storage
+- [ ] 17-03-PLAN.md — Test fixture updates + test assertions + new migration tests
 
 **Success Criteria:**
 1. All campaign state stored in SQLite `campaigns` table
@@ -285,10 +287,15 @@ Plans:
 - Dark theme via daisyUI theme system (no custom CSS variables needed)
 - Custom CSS reduced to layout-specific overrides only
 
-**Plans:** 0 plans
+**Plans:** 6 plans
 
 Plans:
-- [ ] TBD — to be created by /gsd-plan-phase
+- [ ] 22-01-PLAN.md — Infrastructure + Base Layout (Tailwind CLI, input.css, base.html drawer, Dockerfile CSS stage)
+- [ ] 22-02-PLAN.md — Beans + Brew Pages (4 beans + 7 brew templates)
+- [ ] 22-03-PLAN.md — Equipment Pages (11 templates, modal conversion, wizard)
+- [ ] 22-04-PLAN.md — History Pages (6 templates, shot modal, filter collapse)
+- [ ] 22-05-PLAN.md — Insights + Analytics Pages (7 templates, Chart.js preserved)
+- [ ] 22-06-PLAN.md — Cleanup + Verification (stale class audit, tests, Docker, human verify)
 
 **Success Criteria:**
 1. Tailwind CSS + daisyUI installed and configured with `coffee` theme
@@ -331,9 +338,9 @@ Wave 3 (parallel):                  20 (Espresso)  21 (New Methods)
 | 14 | v0.2.0 | 5/5 | Complete | 2026-02-23 |
 | 15 | v0.2.0 | 3/3 | Complete | 2026-02-23 |
 | 16 | v0.2.0 | 2/2 | Complete | 2026-02-23 |
-| 17 | v0.3.0 | 0/? | Planned | — |
+| 17 | v0.3.0 | 0/3 | Planned | — |
 | 18 | v0.3.0 | 0/? | Planned | — |
 | 19 | v0.3.0 | 0/? | Planned | — |
 | 20 | v0.3.0 | 0/? | Planned | — |
 | 21 | v0.3.0 | 0/? | Planned | — |
-| 22 | v0.3.0 | 0/? | Planned | — |
+| 22 | v0.3.0 | 0/6 | Planned | — |
