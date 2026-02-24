@@ -52,6 +52,126 @@
     </p>
   {% endif %}
 
+  {# ── Capability fields (progressive disclosure) ────────────────────── #}
+  <details style="margin-bottom: var(--spacing-md);">
+    <summary style="cursor:pointer; font-weight:600; color:var(--text-secondary); margin-bottom:var(--spacing-sm);">
+      Advanced Capabilities
+      {% if brewer and derive_tier %}
+        <span class="badge badge-tier" style="margin-left:var(--spacing-xs);">Tier {{ derive_tier(brewer) }}</span>
+      {% endif %}
+    </summary>
+
+    {# Temperature ────────────────────────────────────────────── #}
+    <div class="form-group">
+      <label class="form-label" for="temp-control-type">Temperature Control</label>
+      <select id="temp-control-type" name="temp_control_type" class="form-input">
+        <option value="none"     {% if brewer and brewer.temp_control_type == 'none'     %}selected{% endif %}>None (no user control)</option>
+        <option value="preset"   {% if brewer and brewer.temp_control_type == 'preset'   %}selected{% endif %}>Preset (fixed / steam wand)</option>
+        <option value="pid"      {% if brewer and brewer.temp_control_type == 'pid'      %}selected{% endif %}>PID (adjustable setpoint)</option>
+        <option value="profiling"{% if brewer and brewer.temp_control_type == 'profiling'%}selected{% endif %}>Profiling (ramp curves)</option>
+      </select>
+    </div>
+
+    <div style="display:flex; gap:var(--spacing-sm);">
+      <div class="form-group" style="flex:1;">
+        <label class="form-label" for="temp-min">Min Temp (°C)</label>
+        <input type="number" id="temp-min" name="temp_min" class="form-input"
+          step="0.5" placeholder="e.g. 85"
+          value="{{ brewer.temp_min if brewer and brewer.temp_min is not none else '' }}">
+      </div>
+      <div class="form-group" style="flex:1;">
+        <label class="form-label" for="temp-max">Max Temp (°C)</label>
+        <input type="number" id="temp-max" name="temp_max" class="form-input"
+          step="0.5" placeholder="e.g. 96"
+          value="{{ brewer.temp_max if brewer and brewer.temp_max is not none else '' }}">
+      </div>
+      <div class="form-group" style="flex:1;">
+        <label class="form-label" for="temp-step">Step (°C)</label>
+        <input type="number" id="temp-step" name="temp_step" class="form-input"
+          step="0.1" placeholder="e.g. 1"
+          value="{{ brewer.temp_step if brewer and brewer.temp_step is not none else '' }}">
+      </div>
+    </div>
+
+    {# Pre-infusion ────────────────────────────────────────────── #}
+    <div class="form-group">
+      <label class="form-label" for="preinfusion-type">Pre-infusion</label>
+      <select id="preinfusion-type" name="preinfusion_type" class="form-input">
+        <option value="none"                {% if brewer and brewer.preinfusion_type == 'none'                %}selected{% endif %}>None</option>
+        <option value="fixed"               {% if brewer and brewer.preinfusion_type == 'fixed'               %}selected{% endif %}>Fixed (always on)</option>
+        <option value="timed"               {% if brewer and brewer.preinfusion_type == 'timed'               %}selected{% endif %}>Timed (user sets duration)</option>
+        <option value="adjustable_pressure" {% if brewer and brewer.preinfusion_type == 'adjustable_pressure' %}selected{% endif %}>Adjustable pressure</option>
+        <option value="programmable"        {% if brewer and brewer.preinfusion_type == 'programmable'        %}selected{% endif %}>Programmable</option>
+        <option value="manual"              {% if brewer and brewer.preinfusion_type == 'manual'              %}selected{% endif %}>Manual</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="preinfusion-max-time">Max Pre-infusion Time (s)</label>
+      <input type="number" id="preinfusion-max-time" name="preinfusion_max_time" class="form-input"
+        step="1" min="0" placeholder="e.g. 30"
+        value="{{ brewer.preinfusion_max_time if brewer and brewer.preinfusion_max_time is not none else '' }}">
+    </div>
+
+    {# Pressure ────────────────────────────────────────────────── #}
+    <div class="form-group">
+      <label class="form-label" for="pressure-control-type">Pressure Control</label>
+      <select id="pressure-control-type" name="pressure_control_type" class="form-input">
+        <option value="fixed"            {% if brewer and brewer.pressure_control_type == 'fixed'            %}selected{% endif %}>Fixed (non-adjustable)</option>
+        <option value="opv_adjustable"   {% if brewer and brewer.pressure_control_type == 'opv_adjustable'   %}selected{% endif %}>OPV adjustable</option>
+        <option value="electronic"       {% if brewer and brewer.pressure_control_type == 'electronic'       %}selected{% endif %}>Electronic</option>
+        <option value="manual_profiling" {% if brewer and brewer.pressure_control_type == 'manual_profiling' %}selected{% endif %}>Manual profiling</option>
+        <option value="programmable"     {% if brewer and brewer.pressure_control_type == 'programmable'     %}selected{% endif %}>Programmable</option>
+      </select>
+    </div>
+
+    <div style="display:flex; gap:var(--spacing-sm);">
+      <div class="form-group" style="flex:1;">
+        <label class="form-label" for="pressure-min">Min Pressure (bar)</label>
+        <input type="number" id="pressure-min" name="pressure_min" class="form-input"
+          step="0.5" placeholder="e.g. 6"
+          value="{{ brewer.pressure_min if brewer and brewer.pressure_min is not none else '' }}">
+      </div>
+      <div class="form-group" style="flex:1;">
+        <label class="form-label" for="pressure-max">Max Pressure (bar)</label>
+        <input type="number" id="pressure-max" name="pressure_max" class="form-input"
+          step="0.5" placeholder="e.g. 9"
+          value="{{ brewer.pressure_max if brewer and brewer.pressure_max is not none else '' }}">
+      </div>
+    </div>
+
+    {# Flow control ────────────────────────────────────────────── #}
+    <div class="form-group">
+      <label class="form-label" for="flow-control-type">Flow Control</label>
+      <select id="flow-control-type" name="flow_control_type" class="form-input">
+        <option value="none"           {% if brewer and brewer.flow_control_type == 'none'           %}selected{% endif %}>None</option>
+        <option value="manual_paddle"  {% if brewer and brewer.flow_control_type == 'manual_paddle'  %}selected{% endif %}>Manual paddle</option>
+        <option value="manual_valve"   {% if brewer and brewer.flow_control_type == 'manual_valve'   %}selected{% endif %}>Manual valve</option>
+        <option value="programmable"   {% if brewer and brewer.flow_control_type == 'programmable'   %}selected{% endif %}>Programmable</option>
+      </select>
+    </div>
+
+    {# Bloom & Stop mode ───────────────────────────────────────── #}
+    <div class="form-group">
+      <label class="checkbox-item">
+        <input type="checkbox" name="has_bloom" value="true"
+          {% if brewer and brewer.has_bloom %}checked{% endif %}>
+        <span class="checkbox-item-label">Has bloom / bypass capability</span>
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="stop-mode">Stop Mode</label>
+      <select id="stop-mode" name="stop_mode" class="form-input">
+        <option value="manual"      {% if brewer and brewer.stop_mode == 'manual'      %}selected{% endif %}>Manual</option>
+        <option value="timed"       {% if brewer and brewer.stop_mode == 'timed'       %}selected{% endif %}>Timed</option>
+        <option value="volumetric"  {% if brewer and brewer.stop_mode == 'volumetric'  %}selected{% endif %}>Volumetric</option>
+        <option value="gravimetric" {% if brewer and brewer.stop_mode == 'gravimetric' %}selected{% endif %}>Gravimetric (scale-based)</option>
+      </select>
+    </div>
+
+  </details>
+
   <div style="margin-top: var(--spacing-lg);">
     <button type="submit" class="btn btn-primary btn-full">
       {% if brewer %}Save Changes{% else %}Add Brewer{% endif %}

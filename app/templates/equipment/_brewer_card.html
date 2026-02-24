@@ -1,8 +1,14 @@
 {# Brewer card — used in equipment/index.html #}
+{# Requires `derive_tier` in context for tier badge #}
 <div class="card brewer-card" style="{% if brewer.is_retired %}opacity: 0.6;{% endif %}">
   <div class="card-header">
     <div>
-      <div class="card-title">{{ brewer.name }}</div>
+      <div class="card-title">
+        {{ brewer.name }}
+        {% if derive_tier %}
+          <span class="badge badge-tier" style="margin-left:var(--spacing-xs); font-size:0.7rem;">T{{ derive_tier(brewer) }}</span>
+        {% endif %}
+      </div>
       {% if brewer.methods %}
         <div class="method-tags">
           {% for method in brewer.methods %}
