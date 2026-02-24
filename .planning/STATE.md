@@ -1,7 +1,7 @@
 # Project State: BeanBay
 
 **Last updated:** 2026-02-24
-**Current phase:** Phase 17 — Campaign Storage Migration (planned, not started)
+**Current phase:** Phase 17 — Campaign Storage Migration (in progress, 17-02 complete)
 
 ## Project Reference
 
@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-02-24)
 ## Current Position
 
 Phase: 17+18+22 in progress (Wave 1 — all independent)
-Plan: 17-01 ✅, 18-01 ✅, 22-01 ✅ — 3 plans complete across wave
-Status: Phase 17 Plans 02+03 remain; Phase 18 Plan 02 ready; Phase 22 Plan 02 ready
-Last activity: 2026-02-24 — Completed 22-01-PLAN.md (Tailwind+daisyUI infra, base.html drawer layout, Dockerfile CSS stage)
+Plan: 17-01 ✅, 17-02 ✅, 18-01 ✅, 22-01 ✅ — 4 plans complete across wave
+Status: Phase 17 Plan 03 remains (test fixture updates); Phase 18 Plan 02 ready; Phase 22 Plan 02 ready
+Last activity: 2026-02-24 — Completed 17-02-PLAN.md (OptimizerService + brew.py + main.py + migration.py refactored to DB-backed storage)
 
-Progress: [███░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] ~6% (3/~18 v0.3.0 plans)
+Progress: [████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] ~8% (4/~18 v0.3.0 plans)
 
 ## Performance Metrics
 
@@ -72,6 +72,12 @@ See: .planning/PROJECT.md (Key Decisions table — 22+ decisions tracked)
 - **Legacy migration at startup:** `migrate_legacy_campaigns()` runs in `main.py` lifespan, transparently maps old `{bean_id}` keys to `{bean_id}__espresso__None`
 - **brew_setup_name in shot dict:** Template has no ORM access, so `brew_setup_name` added as plain key to shot dicts in `_build_shot_dicts()` (not ORM relationship access)
 
+### Phase 17 Plan 02 Key Decisions
+- **try/finally/session.close() not context manager:** SessionLocal is a plain sessionmaker, not a context manager. Fixed bug in migration.py where `with session_factory() as session:` would fail at runtime.
+- **Transfer metadata in CampaignState.transfer_metadata column:** Replaces .transfer sidecar file. In-memory `_transfer_metadata` dict caches alongside `_cache` and `_fingerprints`.
+- **migrate_legacy_campaign_files() as standalone function in migration.py:** OptimizerService no longer has campaigns_dir, so moved from OptimizerService.migrate_legacy_campaigns(). Also renames .transfer sidecar files (bug fix vs original).
+- **campaigns_dir = settings.data_dir / 'campaigns' in lifespan:** Avoids the side-effect of settings.campaigns_dir property (which called mkdir). Directory creation is now handled only by migration functions that need it.
+
 ### Phase 17 Plan 01 Key Decisions
 - **campaign_json as opaque Text blob:** BayBE Campaign.to_json() output stored as raw Text, not decomposed. BayBE controls its own serialization format.
 - **Migration functions accept session_factory as argument:** Not importing SessionLocal directly — enables testability with in-memory SQLite (same pattern OptimizerService will use in Plan 02).
@@ -108,16 +114,15 @@ See: .planning/PROJECT.md (Key Decisions table — 22+ decisions tracked)
 
 ### Last Session
 - **Date:** 2026-02-24
-- **What happened:** Executed Phase 22 Plan 01. Created app/static/css/input.css with Tailwind v4 + daisyUI v5 config and all custom component layers. Rewrote base.html with daisyUI drawer (coffee theme, checkbox-based, no JS, lg:drawer-open desktop sidebar). Added 3-stage Docker build with css-builder stage (Tailwind standalone CLI). Created Makefile with css/css-watch targets.
-- **Where we left off:** Phase 22 Plan 01 complete. Phase 17 Plan 01 and Phase 18 Plan 01 also complete. Next: continue Phase 17 (02+03), Phase 18 Plan 02, or Phase 22 Plan 02 (beans templates).
+- **What happened:** Executed Phase 17 Plan 02. Refactored OptimizerService from file I/O to DB-backed persistence using CampaignState model. Updated brew.py pending helpers to use PendingRecommendation model. Updated lifespan in main.py to wire DB-backed architecture (migrate legacy files → migrate campaigns → migrate pending → OptimizerService(SessionLocal)). Added migrate_legacy_campaign_files() to migration.py, fixed session pattern bug (with→try/finally/close).
+- **Where we left off:** Phase 17 Plan 02 complete. Next: Phase 17 Plan 03 (test fixture updates) or Phase 18/22 Plan 02s.
 
 ### Next Steps
-1. Execute Phase 17 Plan 02 — OptimizerService + brew.py refactor to use DB (17-02-PLAN.md)
-2. Execute Phase 17 Plan 03 — test fixture updates + new migration tests (17-03-PLAN.md)
-3. Execute Phase 18 Plan 02 — Brewer routes + UI with capability form fields (18-02-PLAN.md)
-4. Execute Phase 22 Plan 02 — Beans templates with daisyUI (22-02-PLAN.md)
-5. Wave 1 phases (17, 18, 22) are independent — can execute in any order
+1. Execute Phase 17 Plan 03 — test fixture updates + new migration tests (17-03-PLAN.md)
+2. Execute Phase 18 Plan 02 — Brewer routes + UI with capability form fields (18-02-PLAN.md)
+3. Execute Phase 22 Plan 02 — Beans templates with daisyUI (22-02-PLAN.md)
+4. Wave 1 phases (17, 18, 22) are independent — can execute in any order
 
 ---
 *State initialized: 2026-02-21*
-*Last updated: 2026-02-24 — Completed 22-01 (Tailwind+daisyUI infra, base.html drawer, Dockerfile CSS stage)*
+*Last updated: 2026-02-24 — Completed 17-02 (OptimizerService + brew.py + main.py + migration.py → DB-backed)*
