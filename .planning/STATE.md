@@ -1,7 +1,7 @@
 # Project State: BeanBay
 
 **Last updated:** 2026-02-24
-**Current phase:** Phase 22 — Frontend Modernization daisyUI (in progress, 22-04 complete)
+**Current phase:** Phase 22 — Frontend Modernization daisyUI (in progress, 22-05 complete)
 
 ## Project Reference
 
@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-02-24)
 ## Current Position
 
 Phase: 17+18+22 in progress (Wave 2 — all independent)
-Plan: 17-01 ✅, 17-02 ✅, 18-01 ✅, 22-01 ✅, 22-02 ✅, 22-04 ✅ — 6 plans complete across waves
-Status: Phase 17 Plan 03 remains (test fixture updates); Phase 22 Plan 05+ ready (brew/equipment/analytics templates)
-Last activity: 2026-02-24 — Completed 22-04-PLAN.md (6 history/ templates restyled with daisyUI collapse, cards, modal)
+Plan: 17-01 ✅, 17-02 ✅, 18-01 ✅, 22-01 ✅, 22-02 ✅, 22-04 ✅, 22-05 ✅ — 7 plans complete across waves
+Status: Phase 17 Plan 03 remains (test fixture updates); Phase 22 Plan 06 ready (remaining templates)
+Last activity: 2026-02-24 — Completed 22-05-PLAN.md (7 insights/analytics templates restyled with daisyUI, Chart.js preserved)
 
-Progress: [██████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] ~11% (6/~18 v0.3.0 plans)
+Progress: [███████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] ~13% (7/~18 v0.3.0 plans)
 
 ## Performance Metrics
 
@@ -90,6 +90,11 @@ See: .planning/PROJECT.md (Key Decisions table — 22+ decisions tracked)
 - **TYPE_CHECKING guard for Bean/Session imports in optimizer.py:** Avoids circular import at module load time; type hints only, not runtime
 - **None return when no training data:** Even with matching similar_beans, if no actual DB measurements exist for those beans, returns None gracefully
 
+### Phase 22 Plan 05 Key Decisions
+- **Chart.js hex colors left as-is:** Colors like `#c87941`, `#b0a090` are Chart.js dataset config values, not CSS class references — preserved exactly
+- **chart-container preserved:** Custom CSS class in input.css provides fixed height for canvas rendering
+- **Custom layout classes preserved:** `stats-grid`, `comparison-list`, `comparison-bean`, `recipe-grid` are structural layout classes from input.css
+
 ### Phase 22 Plan 04 Key Decisions
 - **daisyUI collapse (checkbox-based) replaces JS classList toggle:** Filter panel collapses/expands with zero JavaScript
 - **modal-backdrop form[method=dialog]:** Enables click-outside-to-close natively via HTML dialog API
@@ -127,14 +132,14 @@ See: .planning/PROJECT.md (Key Decisions table — 22+ decisions tracked)
 
 ### Last Session
 - **Date:** 2026-02-24
-- **What happened:** Executed Phase 22 Plan 04. Restyled all 6 history/ templates: index.html with daisyUI collapse filter panel and modal pattern; _shot_row.html as card bg-base-200 cards; _filter_panel.html with select select-bordered; _shot_modal.html with daisyUI badges and custom CSS preserved; _shot_edit.html with daisyUI form controls preserving flavor-slider and tag input behavior.
-- **Where we left off:** Phase 22 Plan 04 complete. Next: Phase 22 Plan 05+ (brew/equipment/analytics templates) or Phase 17 Plan 03.
+- **What happened:** Executed Phase 22 Plan 05. Restyled 7 insights/analytics templates. insights/index.html uses daisyUI card pattern; _convergence_badge.html uses badge badge-lg with color variants; _progress_chart.html and _heatmap_chart.html preserve chart-container class and all Chart.js JavaScript exactly. analytics/index.html uses daisyUI cards; _stats_card.html preserves stats-grid custom class with Tailwind stat items; _comparison_table.html preserves comparison-list/comparison-bean/recipe-grid with Tailwind param blocks.
+- **Where we left off:** Phase 22 Plan 05 complete. Next: Phase 22 Plan 06 (remaining templates).
 
 ### Next Steps
-1. Execute Phase 22 Plan 05+ — brew, equipment, analytics templates with daisyUI
+1. Execute Phase 22 Plan 06 — remaining templates with daisyUI
 2. Execute Phase 17 Plan 03 — test fixture updates + new migration tests (17-03-PLAN.md)
 3. Wave 1/2 phases (17, 18, 22) are independent — can continue in any order
 
 ---
 *State initialized: 2026-02-21*
-*Last updated: 2026-02-24 — Completed 22-04 (6 history/ templates → daisyUI collapse, cards, modal, form controls)*
+*Last updated: 2026-02-24 — Completed 22-05 (7 insights/analytics templates → daisyUI cards, Chart.js preserved, custom layout classes kept)*
