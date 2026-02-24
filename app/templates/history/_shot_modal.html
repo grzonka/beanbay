@@ -1,110 +1,110 @@
-<div class="modal-content">
-  <div class="modal-header">
-    <h2 class="card-title">Shot Details</h2>
-    <button type="button" class="btn btn-secondary btn-sm modal-close"
+<div>
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-4 pb-2 border-b border-base-300">
+    <h2 class="text-lg font-bold">Shot Details</h2>
+    <button type="button" class="btn btn-ghost btn-sm btn-square"
       onclick="document.getElementById('shot-modal').close()">✕</button>
   </div>
 
-  <div class="modal-body">
-    <!-- Bean name + datetime -->
-    <div class="shot-detail-meta mb-md">
-      <span class="text-secondary">{{ shot.bean_name }}</span>
-      <span class="text-muted text-sm">{{ shot.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
-    </div>
+  <!-- Bean + datetime -->
+  <div class="flex items-center justify-between mb-4">
+    <span class="text-base-content/70">{{ shot.bean_name }}</span>
+    <span class="text-sm text-base-content/40">{{ shot.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+  </div>
 
-    <!-- Taste score (big) -->
-    <div class="shot-detail-taste mb-md">
-      <span class="recipe-value {% if shot.is_failed %}text-danger{% endif %}">
-        {{ shot.taste }}<span class="recipe-unit">/10</span>
-      </span>
-      {% if shot.is_manual %}<span class="badge badge-manual">Manual</span>{% endif %}
-      {% if shot.is_failed %}<span class="badge badge-failed">Failed</span>{% endif %}
-    </div>
+  <!-- Taste score (big) -->
+  <div class="flex items-center gap-3 mb-4">
+    <span class="recipe-value {% if shot.is_failed %}text-error{% endif %}">
+      {{ shot.taste }}<span class="recipe-unit">/10</span>
+    </span>
+    {% if shot.is_manual %}<span class="badge badge-ghost">Manual</span>{% endif %}
+    {% if shot.is_failed %}<span class="badge badge-error">Failed</span>{% endif %}
+  </div>
 
-    <!-- Recipe params -->
-    <div class="shot-detail-params mb-md">
-      <div class="recipe-params" style="font-size: var(--text-sm);">
-        <div class="recipe-param">
-          <span class="recipe-label">Grind</span>
-          <span class="recipe-value" style="font-size: var(--text-lg);">{{ shot.grind_setting }}</span>
-        </div>
-        <div class="recipe-param">
-          <span class="recipe-label">Temp</span>
-          <span class="recipe-value" style="font-size: var(--text-lg);">{{ shot.temperature }}<span class="recipe-unit">°C</span></span>
-        </div>
-        <div class="recipe-param">
-          <span class="recipe-label">Pre-inf</span>
-          <span class="recipe-value" style="font-size: var(--text-lg);">{{ shot.preinfusion_pct }}<span class="recipe-unit">%</span></span>
-        </div>
-        <div class="recipe-param">
-          <span class="recipe-label">Dose</span>
-          <span class="recipe-value" style="font-size: var(--text-lg);">{{ shot.dose_in }}<span class="recipe-unit">g</span></span>
-        </div>
-        <div class="recipe-param">
-          <span class="recipe-label">Yield</span>
-          <span class="recipe-value" style="font-size: var(--text-lg);">{{ shot.target_yield }}<span class="recipe-unit">g</span></span>
-        </div>
-        <div class="recipe-param">
-          <span class="recipe-label">Saturation</span>
-          <span class="recipe-value" style="font-size: var(--text-sm);">{{ shot.saturation }}</span>
-        </div>
+  <!-- Recipe params — uses custom CSS grid from input.css -->
+  <div class="mb-4">
+    <div class="recipe-params text-sm">
+      <div class="recipe-param">
+        <span class="recipe-label">Grind</span>
+        <span class="recipe-value text-lg">{{ shot.grind_setting }}</span>
       </div>
-      {% if ratio %}
-      <div class="ratio mt-sm">
-        <span class="ratio-label">Ratio</span>
-        <span class="ratio-value">{{ ratio }}</span>
+      <div class="recipe-param">
+        <span class="recipe-label">Temp</span>
+        <span class="recipe-value text-lg">{{ shot.temperature }}<span class="recipe-unit">°C</span></span>
       </div>
-      {% endif %}
-      {% if shot.extraction_time %}
-      <div class="shot-detail-extraction text-secondary text-sm mt-sm">
-        Extraction: {{ shot.extraction_time }}s
+      <div class="recipe-param">
+        <span class="recipe-label">Pre-inf</span>
+        <span class="recipe-value text-lg">{{ shot.preinfusion_pct }}<span class="recipe-unit">%</span></span>
       </div>
-      {% endif %}
+      <div class="recipe-param">
+        <span class="recipe-label">Dose</span>
+        <span class="recipe-value text-lg">{{ shot.dose_in }}<span class="recipe-unit">g</span></span>
+      </div>
+      <div class="recipe-param">
+        <span class="recipe-label">Yield</span>
+        <span class="recipe-value text-lg">{{ shot.target_yield }}<span class="recipe-unit">g</span></span>
+      </div>
+      <div class="recipe-param">
+        <span class="recipe-label">Saturation</span>
+        <span class="recipe-value text-sm">{{ shot.saturation }}</span>
+      </div>
     </div>
-
-    <!-- Notes (if any) -->
-    {% if shot.notes %}
-    <div class="shot-detail-section mb-md">
-      <span class="form-label">Notes</span>
-      <p>{{ shot.notes }}</p>
+    {% if ratio %}
+    <div class="ratio mt-2">
+      <span class="text-sm font-semibold text-base-content/70">Ratio</span>
+      <span class="font-bold">{{ ratio }}</span>
     </div>
     {% endif %}
-
-    <!-- Flavor dimensions (if any rated) -->
-    {% if shot.acidity is not none or shot.sweetness is not none or shot.body is not none or shot.bitterness is not none or shot.aroma is not none or shot.intensity is not none %}
-    <div class="shot-detail-section mb-md">
-      <span class="form-label">Flavor Profile</span>
-      <div class="flavor-display">
-        {% for dim, val in [("Acidity", shot.acidity), ("Sweetness", shot.sweetness), ("Body", shot.body), ("Bitterness", shot.bitterness), ("Aroma", shot.aroma), ("Intensity", shot.intensity)] %}
-          {% if val is not none %}
-          <div class="flavor-display-row">
-            <span class="flavor-label">{{ dim }}</span>
-            <div class="flavor-bar">
-              <div class="flavor-bar-fill" style="width: {{ (val / 5 * 100) | int }}%"></div>
-            </div>
-            <span class="flavor-value">{{ val | int }}</span>
-          </div>
-          {% endif %}
-        {% endfor %}
-      </div>
-    </div>
-    {% endif %}
-
-    <!-- Flavor tags (if any) -->
-    {% if shot.flavor_tags_list %}
-    <div class="shot-detail-section mb-md">
-      <span class="form-label">Flavor Tags</span>
-      <div class="tag-list">
-        {% for tag in shot.flavor_tags_list %}
-        <span class="tag-chip">{{ tag }}</span>
-        {% endfor %}
-      </div>
+    {% if shot.extraction_time %}
+    <div class="text-sm text-base-content/70 mt-2">
+      Extraction: {{ shot.extraction_time }}s
     </div>
     {% endif %}
   </div>
 
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary btn-full"
+  <!-- Notes -->
+  {% if shot.notes %}
+  <div class="mb-4">
+    <span class="text-sm font-semibold text-base-content/70">Notes</span>
+    <p class="mt-1">{{ shot.notes }}</p>
+  </div>
+  {% endif %}
+
+  <!-- Flavor dimensions -->
+  {% if shot.acidity is not none or shot.sweetness is not none or shot.body is not none or shot.bitterness is not none or shot.aroma is not none or shot.intensity is not none %}
+  <div class="mb-4">
+    <span class="text-sm font-semibold text-base-content/70">Flavor Profile</span>
+    <div class="mt-2">
+      {% for dim, val in [("Acidity", shot.acidity), ("Sweetness", shot.sweetness), ("Body", shot.body), ("Bitterness", shot.bitterness), ("Aroma", shot.aroma), ("Intensity", shot.intensity)] %}
+        {% if val is not none %}
+        <div class="flavor-display-row">
+          <span class="text-sm text-base-content/70">{{ dim }}</span>
+          <div class="flavor-bar bg-base-300">
+            <div class="flavor-bar-fill bg-primary" style="width: {{ (val / 5 * 100) | int }}%"></div>
+          </div>
+          <span class="text-sm font-semibold">{{ val | int }}</span>
+        </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Flavor tags -->
+  {% if shot.flavor_tags_list %}
+  <div class="mb-4">
+    <span class="text-sm font-semibold text-base-content/70">Flavor Tags</span>
+    <div class="flex flex-wrap gap-1 mt-2">
+      {% for tag in shot.flavor_tags_list %}
+      <span class="badge badge-outline">{{ tag }}</span>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Footer -->
+  <div class="mt-4 pt-2 border-t border-base-300">
+    <button type="button" class="btn btn-ghost w-full min-h-12"
       hx-get="/history/{{ shot.id }}/edit" hx-target="#shot-modal-container" hx-swap="innerHTML">
       Edit Feedback
     </button>
