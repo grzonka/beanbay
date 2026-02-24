@@ -17,6 +17,7 @@ from app.database import Base, engine, get_db
 from app.main import app
 from app.models import Bean, BrewMethod, BrewSetup, Brewer, Grinder, Measurement, Paper, WaterRecipe  # noqa: F401 — registers models with Base
 from app.models import Bag  # noqa: F401 — registers Bag with Base
+from app.models import CampaignState, PendingRecommendation  # noqa: F401 — registers with Base
 from app.services.optimizer import OptimizerService
 
 # Create tables once on the (in-memory) engine.
@@ -59,6 +60,10 @@ def tmp_campaigns_dir(tmp_path: Path) -> Path:
 
 
 @pytest.fixture()
-def optimizer_service(tmp_campaigns_dir: Path) -> OptimizerService:
-    """OptimizerService with temporary storage."""
-    return OptimizerService(tmp_campaigns_dir)
+def optimizer_service(db_session) -> OptimizerService:
+    """OptimizerService with test DB session factory."""
+
+    def _test_session_factory():
+        return db_session
+
+    return OptimizerService(_test_session_factory)

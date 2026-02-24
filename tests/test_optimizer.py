@@ -3,6 +3,7 @@
 import pandas as pd
 import pytest
 
+from app.models.campaign_state import CampaignState
 from app.services.optimizer import (
     DEFAULT_BOUNDS,
     BAYBE_PARAM_COLUMNS,
@@ -16,14 +17,18 @@ from app.services.optimizer_key import make_campaign_key
 pytestmark = pytest.mark.slow
 
 
-async def test_create_campaign(optimizer_service, tmp_campaigns_dir):
+async def test_create_campaign(optimizer_service, db_session):
     """get_or_create_campaign creates and persists a campaign."""
     key = make_campaign_key("test-bean", "espresso", None)
     campaign = optimizer_service.get_or_create_campaign(key)
     assert campaign is not None
 
-    campaign_file = tmp_campaigns_dir / "test-bean__espresso__none.json"
-    assert campaign_file.exists()
+    # Verify persisted to DB
+    row = (
+        db_session.query(CampaignState).filter_by(campaign_key="test-bean__espresso__none").first()
+    )
+    assert row is not None
+    assert row.campaign_json  # non-empty
 
 
 async def test_recommend_returns_all_params(optimizer_service):
@@ -59,7 +64,7 @@ async def test_recommend_rounding(optimizer_service):
     assert rec["target_yield"] % 1.0 == 0, f"yield not rounded: {rec['target_yield']}"
 
 
-async def test_add_measurement_and_recommend_again(optimizer_service, tmp_campaigns_dir):
+async def test_add_measurement_and_recommend_again(optimizer_service, db_session):
     """Full cycle: recommend -> add measurement -> recommend again."""
     key = make_campaign_key("cycle-bean", "espresso", None)
     rec1 = await optimizer_service.recommend(key)
@@ -72,13 +77,16 @@ async def test_add_measurement_and_recommend_again(optimizer_service, tmp_campai
     rec2 = await optimizer_service.recommend(key)
     assert all(p in rec2 for p in BAYBE_PARAM_COLUMNS)
 
-    # Campaign file was updated
-    campaign_file = tmp_campaigns_dir / "cycle-bean__espresso__none.json"
-    assert campaign_file.exists()
+    # Campaign row was updated in DB
+    row = (
+        db_session.query(CampaignState).filter_by(campaign_key="cycle-bean__espresso__none").first()
+    )
+    assert row is not None
+    assert row.campaign_json  # non-empty
 
 
-async def test_campaign_persistence_across_restart(optimizer_service, tmp_campaigns_dir):
-    """Campaign state survives service restart (new instance, same dir)."""
+async def test_campaign_persistence_across_restart(optimizer_service, db_session):
+    """Campaign state survives service restart (new instance, same DB)."""
     key = make_campaign_key("persist-bean", "espresso", None)
 
     # Create campaign and add measurement
@@ -86,8 +94,11 @@ async def test_campaign_persistence_across_restart(optimizer_service, tmp_campai
     params = {k: rec[k] for k in BAYBE_PARAM_COLUMNS}
     optimizer_service.add_measurement(key, {**params, "taste": 8.0})
 
-    # Create new service instance (simulates restart)
-    new_service = OptimizerService(tmp_campaigns_dir)
+    # Create new service instance (simulates restart — empty cache, same DB)
+    def _factory():
+        return db_session
+
+    new_service = OptimizerService(_factory)
     campaign = new_service.get_or_create_campaign(key)
 
     # Campaign should have the measurement
@@ -98,19 +109,21 @@ async def test_campaign_persistence_across_restart(optimizer_service, tmp_campai
     assert all(p in rec2 for p in BAYBE_PARAM_COLUMNS)
 
 
-async def test_campaign_file_size_hybrid(optimizer_service, tmp_campaigns_dir):
+async def test_campaign_json_size_hybrid(optimizer_service, db_session):
     """Hybrid campaign JSON is <500KB (vs 20MB with discrete)."""
     key = make_campaign_key("size-bean", "espresso", None)
     rec = await optimizer_service.recommend(key)
     params = {k: rec[k] for k in BAYBE_PARAM_COLUMNS}
     optimizer_service.add_measurement(key, {**params, "taste": 7.0})
 
-    campaign_file = tmp_campaigns_dir / "size-bean__espresso__none.json"
-    file_size = campaign_file.stat().st_size
-    assert file_size < 500_000, f"Campaign file too large: {file_size} bytes"
+    row = (
+        db_session.query(CampaignState).filter_by(campaign_key="size-bean__espresso__none").first()
+    )
+    json_size = len(row.campaign_json)
+    assert json_size < 500_000, f"Campaign JSON too large: {json_size} bytes"
 
 
-async def test_rebuild_campaign(optimizer_service, tmp_campaigns_dir):
+async def test_rebuild_campaign(optimizer_service):
     """rebuild_campaign creates a fresh campaign from measurement data."""
     key = make_campaign_key("rebuild-bean", "espresso", None)
 
@@ -211,7 +224,7 @@ async def test_recommend_with_overrides(optimizer_service):
     assert rec["saturation"] in ("yes", "no")
 
 
-async def test_campaign_invalidation_on_override_change(optimizer_service, tmp_campaigns_dir):
+async def test_campaign_invalidation_on_override_change(optimizer_service):
     """Changing overrides rebuilds the campaign with new bounds."""
     key = make_campaign_key("invalidate-bean", "espresso", None)
 
