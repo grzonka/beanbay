@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-02-24)
 
 ## Current Position
 
-Phase: 17 of 22 (Campaign Storage Migration) — in progress
-Plan: 1 of 3 complete — 17-01-PLAN.md done
-Status: Phase 17 in progress — Plan 01 complete, Plans 02 and 03 remain
-Last activity: 2026-02-24 — Completed 17-01-PLAN.md (CampaignState + PendingRecommendation models + migration service)
+Phase: 17+18 in progress (Wave 1 — both independent)
+Plan: 17-01 ✅, 18-01 ✅ — multiple plans complete across wave
+Status: Phase 17 Plans 02+03 remain; Phase 18 Plan 02 ready
+Last activity: 2026-02-24 — Completed 18-01-PLAN.md (Brewer capability model, migration, derive_tier, 27 tests)
 
-Progress: [█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 2% (1/11 v0.3.0 plans)
+Progress: [██░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] ~4% (2/11 v0.3.0 plans)
 
 ## Performance Metrics
 
@@ -101,14 +101,15 @@ See: .planning/PROJECT.md (Key Decisions table — 22+ decisions tracked)
 
 ### Last Session
 - **Date:** 2026-02-24
-- **What happened:** Executed Phase 17 Plan 01. Created CampaignState and PendingRecommendation SQLAlchemy models. Created migrate_campaigns_to_db() and migrate_pending_to_db() idempotent migration functions. All 240 tests pass.
-- **Where we left off:** Phase 17 Plan 01 complete. Next: Plan 02 (OptimizerService + brew.py + lifespan refactor to DB-backed storage).
+- **What happened:** Executed Phase 18 Plan 01. Extended Brewer model with 13 capability columns (temp, preinfusion, pressure, flow, bloom, stop_mode). Created idempotent Alembic migration 4500e5aafecb. Created app/utils/brewer_capabilities.py with derive_tier() (5-tier UX system). Added 27 tests (all pass, 267 total passing).
+- **Where we left off:** Phase 18 Plan 01 complete. Phase 17 Plan 01 also complete (from a prior session). Next: continue Phase 17 (02+03) or Phase 18 Plan 02 (Brewer routes/UI).
 
 ### Next Steps
 1. Execute Phase 17 Plan 02 — OptimizerService + brew.py refactor to use DB (17-02-PLAN.md)
 2. Execute Phase 17 Plan 03 — test fixture updates + new migration tests (17-03-PLAN.md)
-3. After Phase 17: Continue v0.3.0 Wave 1 (Phase 18 or 22 — both independent)
+3. Execute Phase 18 Plan 02 — Brewer routes + UI with capability form fields (18-02-PLAN.md)
+4. Wave 1 phases (17, 18, 22) are independent — can execute in any order
 
 ---
 *State initialized: 2026-02-21*
-*Last updated: 2026-02-24 — v0.3.0 roadmap finalized (6 phases: 17-22, 3 waves)*
+*Last updated: 2026-02-24 — Completed 18-01 (Brewer capability model + derive_tier)*
