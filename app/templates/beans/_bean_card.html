@@ -1,25 +1,27 @@
-<a href="/beans/{{ bean.id }}" class="card-link">
-  <div class="card bean-card" id="bean-{{ bean.id }}">
-    <div class="card-header">
-      <span class="card-title">{{ bean.name }}</span>
-      <div>
-        {% if active_bean and active_bean.id == bean.id %}
-          <span class="badge badge-active">Active</span>
-        {% endif %}
-        <span class="badge badge-count">{{ bean.shot_count }} shots</span>
+<a href="/beans/{{ bean.id }}" class="block no-underline">
+  <div class="card bg-base-200 border border-base-300 bean-card" id="bean-{{ bean.id }}">
+    <div class="card-body p-4">
+      <div class="flex items-center justify-between">
+        <span class="card-title text-base">{{ bean.name }}</span>
+        <div class="flex items-center gap-2">
+          {% if active_bean and active_bean.id == bean.id %}
+            <span class="badge badge-primary">Active</span>
+          {% endif %}
+          <span class="badge badge-ghost">{{ bean.shot_count }} shots</span>
+        </div>
       </div>
+      {% if bean.roaster or bean.origin %}
+        <div class="text-sm text-base-content/50">
+          {% if bean.roaster %}{{ bean.roaster }}{% endif %}
+          {% if bean.roaster and bean.origin %} · {% endif %}
+          {% if bean.origin %}{{ bean.origin }}{% endif %}
+        </div>
+      {% endif %}
+      {% if bean.process %}
+        <div>
+          <span class="badge badge-outline badge-sm">{{ bean.process|capitalize }}</span>
+        </div>
+      {% endif %}
     </div>
-    {% if bean.roaster or bean.origin %}
-      <div class="card-subtitle">
-        {% if bean.roaster %}{{ bean.roaster }}{% endif %}
-        {% if bean.roaster and bean.origin %} · {% endif %}
-        {% if bean.origin %}{{ bean.origin }}{% endif %}
-      </div>
-    {% endif %}
-    {% if bean.process %}
-      <div>
-        <span class="badge" style="font-size: 0.75rem;">{{ bean.process|capitalize }}</span>
-      </div>
-    {% endif %}
   </div>
 </a>
