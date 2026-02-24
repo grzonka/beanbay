@@ -3,9 +3,9 @@
     {% include "history/_shot_row.html" %}
   {% endfor %}
 {% else %}
-  <div class="empty-state">
-    <div class="empty-state-title">No shots found</div>
-    <div class="empty-state-text">
+  <div class="text-center py-8 text-base-content/50">
+    <div class="text-lg font-semibold text-base-content/70 mb-2">No shots found</div>
+    <div class="text-sm">
       {% if filter_bean_id or filter_min_taste %}
         Try adjusting your filters.
       {% else %}
