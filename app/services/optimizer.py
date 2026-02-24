@@ -5,7 +5,7 @@ generate recommendations, accept measurements, and persist campaign state.
 
 Campaign keys have the format: {bean_id}__{method}__{setup_id}
 (or {bean_id}__espresso__none if no setup is selected).
-Legacy bare bean_id keys are migrated at startup via migrate_legacy_campaigns().
+Legacy bare bean_id keys are migrated at startup via migrate_legacy_campaign_files().
 """
 
 import asyncio
@@ -13,7 +13,6 @@ import hashlib
 import json
 import threading
 import uuid
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -29,8 +28,6 @@ from baybe.recommenders import BotorchRecommender, TwoPhaseMetaRecommender
 from baybe.recommenders.pure.nonpredictive.sampling import RandomRecommender
 from baybe.searchspace import SearchSpace
 from baybe.targets import NumericalTarget
-
-from app.services.optimizer_key import is_legacy_key, make_campaign_key
 
 # BayBE parameter column names for espresso (the 6 recipe params)
 BAYBE_PARAM_COLUMNS = [
@@ -181,24 +178,68 @@ def _build_parameters(
 
 
 class OptimizerService:
-    """Thread-safe BayBE campaign manager with disk persistence.
+    """Thread-safe BayBE campaign manager with DB persistence.
 
     Campaigns are keyed by: {bean_id}__{method}__{setup_id}
-    Legacy bare-UUID campaign files are migrated at startup.
+    Legacy bare-UUID campaign files are migrated at startup via
+    migrate_legacy_campaign_files().
     """
 
-    def __init__(self, campaigns_dir: Path):
-        self._campaigns_dir = campaigns_dir
-        self._campaigns_dir.mkdir(parents=True, exist_ok=True)
+    def __init__(self, session_factory):
+        self._session_factory = session_factory
         self._cache: dict[str, Campaign] = {}
         self._fingerprints: dict[str, str] = {}
+        self._transfer_metadata: dict[str, dict] = {}
         self._lock = threading.Lock()
 
-    def _campaign_path(self, campaign_key: str) -> Path:
-        return self._campaigns_dir / f"{campaign_key}.json"
+    def _load_from_db(self, campaign_key: str) -> tuple[str | None, str | None]:
+        """Load campaign JSON and bounds fingerprint from DB.
 
-    def _fingerprint_path(self, campaign_key: str) -> Path:
-        return self._campaigns_dir / f"{campaign_key}.bounds"
+        Returns:
+            (campaign_json, fingerprint) tuple. Both None if campaign not found.
+        """
+        from app.models.campaign_state import CampaignState
+
+        session = self._session_factory()
+        try:
+            row = session.query(CampaignState).filter_by(campaign_key=campaign_key).first()
+            if row is None:
+                return None, None
+            # Also populate transfer metadata cache if present
+            if row.transfer_metadata:
+                self._transfer_metadata[campaign_key] = row.transfer_metadata
+            return row.campaign_json, row.bounds_fingerprint
+        finally:
+            session.close()
+
+    def _save_to_db(self, campaign_key: str) -> None:
+        """Upsert campaign JSON + fingerprint to DB. Must be called with lock held."""
+        from app.models.campaign_state import CampaignState
+
+        campaign = self._cache[campaign_key]
+        campaign_json = campaign.to_json()
+        fingerprint = self._fingerprints.get(campaign_key, "")
+        transfer_meta = self._transfer_metadata.get(campaign_key)
+
+        session = self._session_factory()
+        try:
+            row = session.query(CampaignState).filter_by(campaign_key=campaign_key).first()
+            if row is None:
+                row = CampaignState(
+                    campaign_key=campaign_key,
+                    campaign_json=campaign_json,
+                    bounds_fingerprint=fingerprint or None,
+                    transfer_metadata=transfer_meta,
+                )
+                session.add(row)
+            else:
+                row.campaign_json = campaign_json
+                row.bounds_fingerprint = fingerprint or None
+                if transfer_meta is not None:
+                    row.transfer_metadata = transfer_meta
+            session.commit()
+        finally:
+            session.close()
 
     @staticmethod
     def _create_fresh_campaign(
@@ -220,31 +261,6 @@ class OptimizerService:
         recommender = TwoPhaseMetaRecommender(recommender=BotorchRecommender(), switch_after=5)
         return Campaign(searchspace=searchspace, objective=objective, recommender=recommender)
 
-    def migrate_legacy_campaigns(self) -> int:
-        """Migrate old bare-UUID campaign files to new key format.
-
-        Old format: {bean_id}.json / {bean_id}.bounds
-        New format: {bean_id}__espresso__none.json / {bean_id}__espresso__none.bounds
-
-        Returns:
-            Number of campaign files migrated.
-        """
-        migrated = 0
-        for json_file in sorted(self._campaigns_dir.glob("*.json")):
-            stem = json_file.stem
-            if is_legacy_key(stem):
-                new_key = make_campaign_key(stem, "espresso", None)
-                new_json = self._campaigns_dir / f"{new_key}.json"
-                new_bounds = self._campaigns_dir / f"{new_key}.bounds"
-                # Only migrate if target doesn't already exist
-                if not new_json.exists():
-                    json_file.rename(new_json)
-                    old_bounds = self._campaigns_dir / f"{stem}.bounds"
-                    if old_bounds.exists() and not new_bounds.exists():
-                        old_bounds.rename(new_bounds)
-                    migrated += 1
-        return migrated
-
     def get_or_create_campaign(
         self,
         campaign_key: str,
@@ -253,7 +269,7 @@ class OptimizerService:
         target_bean: "Bean | None" = None,
         db: "Session | None" = None,
     ) -> Campaign:
-        """Get campaign from cache, disk, or create fresh. Thread-safe.
+        """Get campaign from cache, DB, or create fresh. Thread-safe.
 
         If the resolved bounds fingerprint differs from the stored one
         (i.e. the user changed parameter overrides), the campaign is
@@ -276,15 +292,12 @@ class OptimizerService:
         current_fp = _bounds_fingerprint(_resolve_bounds(overrides, method))
 
         with self._lock:
-            # Load from disk if not cached
+            # Load from DB if not cached
             if campaign_key not in self._cache:
-                path = self._campaign_path(campaign_key)
-                fp_path = self._fingerprint_path(campaign_key)
-                if path.exists():
-                    self._cache[campaign_key] = Campaign.from_json(path.read_text())
-                    self._fingerprints[campaign_key] = (
-                        fp_path.read_text().strip() if fp_path.exists() else ""
-                    )
+                campaign_json, stored_fp = self._load_from_db(campaign_key)
+                if campaign_json is not None:
+                    self._cache[campaign_key] = Campaign.from_json(campaign_json)
+                    self._fingerprints[campaign_key] = stored_fp or ""
                 else:
                     # Try transfer learning for new campaigns when bean+db provided
                     campaign = None
@@ -298,23 +311,18 @@ class OptimizerService:
                             )
                             if result is not None:
                                 campaign, metadata = result
-                                # Write transfer metadata file
-                                transfer_path = self._campaigns_dir / f"{campaign_key}.transfer"
-                                transfer_path.write_text(
-                                    json.dumps(
-                                        {
-                                            "contributing_beans": metadata.contributing_beans,
-                                            "total_training_measurements": metadata.total_training_measurements,
-                                        }
-                                    )
-                                )
+                                # Store transfer metadata in DB via cache
+                                self._transfer_metadata[campaign_key] = {
+                                    "contributing_beans": metadata.contributing_beans,
+                                    "total_training_measurements": metadata.total_training_measurements,
+                                }
 
                     if campaign is None:
                         campaign = self._create_fresh_campaign(overrides, method)
 
                     self._cache[campaign_key] = campaign
                     self._fingerprints[campaign_key] = current_fp
-                    self._save_campaign_unlocked(campaign_key)
+                    self._save_to_db(campaign_key)
 
             # Check if overrides changed → rebuild with new bounds
             stored_fp = self._fingerprints.get(campaign_key, "")
@@ -337,15 +345,26 @@ class OptimizerService:
                     )
                 self._cache[campaign_key] = new_campaign
                 self._fingerprints[campaign_key] = current_fp
-                self._save_campaign_unlocked(campaign_key)
+                self._save_to_db(campaign_key)
 
             return self._cache[campaign_key]
 
     def get_transfer_metadata(self, campaign_key: str) -> dict | None:
         """Return transfer metadata dict if this campaign was seeded via transfer learning."""
-        path = self._campaigns_dir / f"{campaign_key}.transfer"
-        if path.exists():
-            return json.loads(path.read_text())
+        # Check in-memory cache first
+        if campaign_key in self._transfer_metadata:
+            return self._transfer_metadata[campaign_key]
+        # Fall back to DB query
+        from app.models.campaign_state import CampaignState
+
+        session = self._session_factory()
+        try:
+            row = session.query(CampaignState).filter_by(campaign_key=campaign_key).first()
+            if row is not None and row.transfer_metadata:
+                self._transfer_metadata[campaign_key] = row.transfer_metadata
+                return row.transfer_metadata
+        finally:
+            session.close()
         return None
 
     async def recommend(
@@ -373,7 +392,7 @@ class OptimizerService:
             with self._lock:
                 campaign.clear_cache()
                 rec_df = campaign.recommend(batch_size=1)
-                self._save_campaign_unlocked(campaign_key)
+                self._save_to_db(campaign_key)
             rec = rec_df.iloc[0].to_dict()
 
             # Round to practical precision
@@ -416,7 +435,7 @@ class OptimizerService:
         df = pd.DataFrame([baybe_data])
         with self._lock:
             campaign.add_measurements(df)
-            self._save_campaign_unlocked(campaign_key)
+            self._save_to_db(campaign_key)
 
     def rebuild_campaign(
         self,
@@ -445,7 +464,7 @@ class OptimizerService:
         with self._lock:
             self._cache[campaign_key] = campaign
             self._fingerprints[campaign_key] = current_fp
-            self._save_campaign_unlocked(campaign_key)
+            self._save_to_db(campaign_key)
         return campaign
 
     def get_recommendation_insights(
@@ -545,11 +564,3 @@ class OptimizerService:
             "predicted_range": predicted_range,
             "shot_count": shot_count,
         }
-
-    def _save_campaign_unlocked(self, campaign_key: str) -> None:
-        """Save campaign JSON + bounds fingerprint to disk. Must be called with lock held."""
-        campaign = self._cache[campaign_key]
-        self._campaign_path(campaign_key).write_text(campaign.to_json())
-        fp = self._fingerprints.get(campaign_key, "")
-        if fp:
-            self._fingerprint_path(campaign_key).write_text(fp)
