@@ -1,38 +1,42 @@
 {# Compact brew setup card — used in the Brew Setups section of equipment/index.html #}
-<div class="setup-card{% if setup.is_retired %} setup-card-retired{% endif %}">
-  <div class="setup-card-name">
-    {{ setup.name }}
-    {% if setup.is_retired %}
-      <span class="badge badge-retired" style="margin-left: 6px; font-size: var(--text-xs);">Retired</span>
-    {% endif %}
-  </div>
-  <div class="setup-card-components">
-    {% if setup.brewer %}
-      <span class="setup-card-component">{{ setup.brewer.name }}</span>
-    {% endif %}
-    {% if setup.grinder %}
-      <span class="setup-card-component">{{ setup.grinder.name }}</span>
-    {% endif %}
-    {% if setup.paper %}
-      <span class="setup-card-component">{{ setup.paper.name }}</span>
-    {% endif %}
-    {% if setup.water_recipe %}
-      <span class="setup-card-component">{{ setup.water_recipe.name }}</span>
-    {% endif %}
-    {% if setup.brew_method %}
-      <span class="setup-card-component">{{ setup.brew_method.name }}</span>
-    {% endif %}
-  </div>
-  <div class="card-actions">
-    <a href="/equipment/setups/{{ setup.id }}/edit" class="btn btn-secondary btn-sm">Edit</a>
-    {% if setup.is_retired %}
-      <form method="post" action="/equipment/setups/{{ setup.id }}/restore" style="display:inline;">
-        <button type="submit" class="btn btn-primary btn-sm">Restore</button>
-      </form>
-    {% else %}
-      <form method="post" action="/equipment/setups/{{ setup.id }}/retire" style="display:inline;">
-        <button type="submit" class="btn btn-danger btn-sm">Retire</button>
-      </form>
-    {% endif %}
+<div class="card bg-base-200 border border-base-300 mb-2{% if setup.is_retired %} opacity-60{% endif %}">
+  <div class="card-body p-4">
+    <div class="flex items-center justify-between">
+      <h3 class="font-semibold">
+        {{ setup.name }}
+        {% if setup.is_retired %}
+          <span class="badge badge-ghost ml-1.5 text-xs">Retired</span>
+        {% endif %}
+      </h3>
+    </div>
+    <div class="flex flex-wrap gap-1 text-sm text-base-content/70">
+      {% if setup.brewer %}
+        <span class="inline-flex items-center gap-1">{{ setup.brewer.name }}</span>
+      {% endif %}
+      {% if setup.grinder %}
+        <span class="inline-flex items-center gap-1">{{ setup.grinder.name }}</span>
+      {% endif %}
+      {% if setup.paper %}
+        <span class="inline-flex items-center gap-1">{{ setup.paper.name }}</span>
+      {% endif %}
+      {% if setup.water_recipe %}
+        <span class="inline-flex items-center gap-1">{{ setup.water_recipe.name }}</span>
+      {% endif %}
+      {% if setup.brew_method %}
+        <span class="inline-flex items-center gap-1">{{ setup.brew_method.name }}</span>
+      {% endif %}
+    </div>
+    <div class="flex items-center justify-end gap-2 mt-2 pt-2 border-t border-base-300">
+      <a href="/equipment/setups/{{ setup.id }}/edit" class="btn btn-ghost btn-sm">Edit</a>
+      {% if setup.is_retired %}
+        <form method="post" action="/equipment/setups/{{ setup.id }}/restore" style="display:inline;">
+          <button type="submit" class="btn btn-primary btn-sm">Restore</button>
+        </form>
+      {% else %}
+        <form method="post" action="/equipment/setups/{{ setup.id }}/retire" style="display:inline;">
+          <button type="submit" class="btn btn-error btn-sm">Retire</button>
+        </form>
+      {% endif %}
+    </div>
   </div>
 </div>

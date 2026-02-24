@@ -3,8 +3,8 @@
 {% block title %}{% if edit_mode %}Edit Setup{% else %}Create Setup{% endif %} — BeanBay{% endblock %}
 
 {% block content %}
-<div class="page-header">
-  <h1 class="page-title">{% if edit_mode %}Edit Setup{% else %}Create Setup{% endif %}</h1>
+<div class="flex items-center justify-between mb-6">
+  <h1 class="text-2xl font-bold">{% if edit_mode %}Edit Setup{% else %}Create Setup{% endif %}</h1>
   <a href="/equipment" class="btn btn-secondary btn-sm">Cancel</a>
 </div>
 
@@ -29,7 +29,7 @@
 
   {# ── Step 1: Pick a Brewer ──────────────────────────────────── #}
   <div class="wizard-step-content active" id="step-0">
-    <h2 class="wizard-step-title">Pick a Brewer</h2>
+    <h2 class="text-xl font-semibold mb-4">Pick a Brewer</h2>
 
     {% if brewers %}
       <div class="wizard-options" role="radiogroup" aria-label="Choose a brewer">
@@ -45,7 +45,7 @@
             >
             <div class="wizard-option-name">{{ brewer.name }}</div>
             {% if brewer.methods %}
-              <div class="method-tags" style="margin-top: var(--spacing-xs);">
+              <div class="method-tags mt-1">
                 {% for method in brewer.methods %}
                   <span class="method-tag">{{ method.name }}</span>
                 {% endfor %}
@@ -57,9 +57,7 @@
         {% endfor %}
       </div>
     {% else %}
-      <div class="empty-state" style="padding: var(--spacing-lg) 0;">
-        <div class="empty-state-text">No brewers yet.</div>
-      </div>
+      <div class="py-6 text-center text-base-content/60">No brewers yet.</div>
     {% endif %}
 
     <a href="/equipment" class="wizard-add-link">+ Add a brewer first</a>
@@ -67,7 +65,7 @@
 
   {# ── Step 2: Pick a Grinder ─────────────────────────────────── #}
   <div class="wizard-step-content" id="step-1">
-    <h2 class="wizard-step-title">Pick a Grinder</h2>
+    <h2 class="text-xl font-semibold mb-4">Pick a Grinder</h2>
 
     {% if grinders %}
       <div class="wizard-options" role="radiogroup" aria-label="Choose a grinder">
@@ -96,9 +94,7 @@
         {% endfor %}
       </div>
     {% else %}
-      <div class="empty-state" style="padding: var(--spacing-lg) 0;">
-        <div class="empty-state-text">No grinders yet.</div>
-      </div>
+      <div class="py-6 text-center text-base-content/60">No grinders yet.</div>
     {% endif %}
 
     <a href="/equipment" class="wizard-add-link">+ Add a grinder first</a>
@@ -106,7 +102,7 @@
 
   {# ── Step 3: Pick a Paper / Filter (optional) ───────────────── #}
   <div class="wizard-step-content" id="step-2">
-    <h2 class="wizard-step-title">Pick a Filter <span class="wizard-optional-label">(optional)</span></h2>
+    <h2 class="text-xl font-semibold mb-4">Pick a Filter <span class="text-sm text-base-content/60 font-normal">(optional)</span></h2>
 
     <div class="wizard-options" role="radiogroup" aria-label="Choose a filter or skip">
       {# Skip option — always first #}
@@ -146,7 +142,7 @@
 
   {# ── Step 4: Pick a Water Recipe ────────────────────────────── #}
   <div class="wizard-step-content" id="step-3">
-    <h2 class="wizard-step-title">Pick a Water Recipe</h2>
+    <h2 class="text-xl font-semibold mb-4">Pick a Water Recipe</h2>
 
     {% if water_recipes %}
       <div class="wizard-options" role="radiogroup" aria-label="Choose a water recipe">
@@ -170,15 +166,13 @@
             {% if recipe.ca is not none %}{% set _ = minerals.append("Ca: " ~ recipe.ca|int) %}{% endif %}
             {% if recipe.mg is not none %}{% set _ = minerals.append("Mg: " ~ recipe.mg|int) %}{% endif %}
             {% if minerals %}
-              <div class="wizard-option-meta" style="font-size: var(--text-xs);">{{ minerals | join(" · ") }}</div>
+              <div class="wizard-option-meta text-xs">{{ minerals | join(" · ") }}</div>
             {% endif %}
           </label>
         {% endfor %}
       </div>
     {% else %}
-      <div class="empty-state" style="padding: var(--spacing-lg) 0;">
-        <div class="empty-state-text">No water recipes yet.</div>
-      </div>
+      <div class="py-6 text-center text-base-content/60">No water recipes yet.</div>
     {% endif %}
 
     <a href="/equipment" class="wizard-add-link">+ Add a water recipe first</a>
@@ -186,71 +180,71 @@
 
   {# ── Step 5: Name Your Setup ─────────────────────────────────── #}
   <div class="wizard-step-content" id="step-4">
-    <h2 class="wizard-step-title">Name Your Setup</h2>
+    <h2 class="text-xl font-semibold mb-4">Name Your Setup</h2>
 
-    <div class="form-group" style="margin-bottom: var(--spacing-lg);">
-      <label class="form-label" for="setup-name">Setup Name</label>
+    <div class="form-control mb-6">
+      <label class="label"><span class="label-text">Setup Name</span></label>
       <input
         type="text"
         id="setup-name"
         name="name"
-        class="form-input"
+        class="input input-bordered w-full text-base"
         placeholder="e.g. Morning V60"
         value="{% if edit_mode %}{{ setup.name or '' }}{% endif %}"
         required
         autocomplete="off"
-        style="font-size: var(--text-base); padding: var(--spacing-md);"
       >
-      <p class="form-hint">Give this combination a memorable name.</p>
+      <label class="label"><span class="label-text-alt text-base-content/60">Give this combination a memorable name.</span></label>
     </div>
 
     {# Summary of selected components #}
-    <div class="setup-summary-preview card" id="setup-summary-preview" style="margin-bottom: var(--spacing-lg);">
-      <div class="card-title" style="margin-bottom: var(--spacing-sm);">Your Setup</div>
-      <div id="summary-brewer" class="setup-summary-row">
-        <span class="setup-summary-label">Brewer:</span>
-        <span class="setup-summary-value" id="summary-brewer-name">—</span>
-      </div>
-      <div id="summary-grinder" class="setup-summary-row">
-        <span class="setup-summary-label">Grinder:</span>
-        <span class="setup-summary-value" id="summary-grinder-name">—</span>
-      </div>
-      <div id="summary-paper" class="setup-summary-row">
-        <span class="setup-summary-label">Filter:</span>
-        <span class="setup-summary-value" id="summary-paper-name">None</span>
-      </div>
-      <div id="summary-water" class="setup-summary-row">
-        <span class="setup-summary-label">Water:</span>
-        <span class="setup-summary-value" id="summary-water-name">—</span>
+    <div class="card bg-base-200 border border-base-300 mb-6" id="setup-summary-preview">
+      <div class="card-body p-4">
+        <div class="font-semibold text-base mb-2">Your Setup</div>
+        <div id="summary-brewer" class="flex justify-between py-1">
+          <span class="text-base-content/60 text-sm">Brewer:</span>
+          <span class="font-medium text-sm" id="summary-brewer-name">—</span>
+        </div>
+        <div id="summary-grinder" class="flex justify-between py-1">
+          <span class="text-base-content/60 text-sm">Grinder:</span>
+          <span class="font-medium text-sm" id="summary-grinder-name">—</span>
+        </div>
+        <div id="summary-paper" class="flex justify-between py-1">
+          <span class="text-base-content/60 text-sm">Filter:</span>
+          <span class="font-medium text-sm" id="summary-paper-name">None</span>
+        </div>
+        <div id="summary-water" class="flex justify-between py-1">
+          <span class="text-base-content/60 text-sm">Water:</span>
+          <span class="font-medium text-sm" id="summary-water-name">—</span>
+        </div>
       </div>
     </div>
   </div>
 
   {# ── Navigation buttons ──────────────────────────────────────── #}
-  <div class="wizard-nav">
+  <div class="flex gap-3 mt-6">
     <button
       type="button"
       id="btn-back"
-      class="btn btn-secondary"
+      class="btn btn-secondary min-h-12 flex-1"
       onclick="wizardBack()"
-      style="display:none; min-height: 48px; flex: 1;"
+      style="display:none;"
     >
       ← Back
     </button>
     <button
       type="button"
       id="btn-next"
-      class="btn btn-primary"
+      class="btn btn-primary min-h-12 flex-1"
       onclick="wizardNext()"
-      style="min-height: 48px; flex: 1;"
     >
       Next →
     </button>
     <button
       type="submit"
       id="btn-submit"
-      class="btn btn-primary"
-      style="display:none; min-height: 48px; flex: 1;"
+      class="btn btn-primary min-h-12 flex-1"
+      style="display:none;"
     >
       {% if edit_mode %}Save Setup{% else %}Create Setup{% endif %}
     </button>
