@@ -101,6 +101,12 @@ See: .planning/PROJECT.md (Key Decisions table — 22+ decisions tracked)
 - **Custom CSS classes preserved alongside daisyUI:** recipe-params, flavor-bar, flavor-slider-row, .touched from input.css stay intact
 - **Dynamic flavor-bar-fill width as inline style:** Required runtime percentage value; cannot be a Tailwind class
 
+### Phase 22 Plan 03 Key Decisions
+- **Native `<dialog>` replaces custom overlay:** `showModal()`/`close()` native browser API; `<form method="dialog" class="modal-backdrop">` handles click-outside natively
+- **Keep identifying card classes:** `grinder-card`, `brewer-card`, `paper-card`, `water-card` used by `htmx:afterSwap` handler to `querySelector` and remove empty-state placeholder
+- **Keep all wizard custom classes:** `wizard-steps`, `wizard-option-card`, `wizard-step-label`, `wizard-step-connector`, `wizard-step-content` defined in `input.css @layer components`; referenced by wizard JS
+- **daisyUI checkbox collapse for equipment sections:** `<input type="checkbox">` allows multiple sections open simultaneously (details/summary does not)
+
 ### Phase 22 Plan 02 Key Decisions
 - **`empty-state` stays as `id=`:** Used by `list.html`'s JavaScript `querySelector('#empty-state')` — NOT a CSS class; visual styling via Tailwind utilities
 - **`_recipe_card.html` left unchanged:** All `recipe-params`/`recipe-param`/etc. already correct via `input.css @layer components`
