@@ -1,7 +1,7 @@
 # Project State: BeanBay
 
-**Last updated:** 2026-02-25
-**Current phase:** Phase 22 — Frontend Modernization daisyUI (in progress, 22-05 complete)
+**Last updated:** 2026-02-26
+**Current phase:** Phase 22 — Frontend Modernization daisyUI ✅ COMPLETE
 
 ## Project Reference
 
@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-02-24)
 
 ## Current Position
 
-Phase: 22 in progress (Wave 1 — independent of completed phases)
-Plan: 17-01 ✅, 17-02 ✅, 17-03 ✅, 18-01 ✅, 18-02 ✅, 22-01 ✅, 22-02 ✅, 22-04 ✅, 22-05 ✅ — 10 plans complete across waves
-Status: Phase 17 COMPLETE. Phase 18 COMPLETE. Phase 22 Plan 06 ready (remaining templates).
-Last activity: 2026-02-25 — Completed Phase 18 (Brewer Capability Model) — 2 plans, 284 tests passing
+Phase: 22 COMPLETE. Phase 17 COMPLETE. Phase 18 COMPLETE. Wave 1 done.
+Plan: 17-01 ✅, 17-02 ✅, 17-03 ✅, 18-01 ✅, 18-02 ✅, 22-01 ✅, 22-02 ✅, 22-04 ✅, 22-05 ✅, 22-06 ✅ — 10 plans complete
+Status: Phases 17, 18, 22 all COMPLETE. Next: Phase 19 (parameter evolution) or Phase 20/21.
+Last activity: 2026-02-26 — Completed Phase 22 Plan 06 (cleanup + espresso theme human-approved)
 
-Progress: [██████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] ~20% (10/~18 v0.3.0 plans)
+Progress: [████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] ~25% (11/~18 v0.3.0 plans)
 
 ## Performance Metrics
 
@@ -99,6 +99,11 @@ See: .planning/PROJECT.md (Key Decisions table — 22+ decisions tracked)
 - **TYPE_CHECKING guard for Bean/Session imports in optimizer.py:** Avoids circular import at module load time; type hints only, not runtime
 - **None return when no training data:** Even with matching similar_beans, if no actual DB measurements exist for those beans, returns None gracefully
 
+### Phase 22 Plan 06 Key Decisions
+- **Custom espresso theme over daisyUI built-in coffee:** Built-in coffee theme had wrong palette; custom theme defined in `@plugin daisyui-theme.mjs` block to exactly match original hand-rolled CSS colors
+- **oklch chroma boosted 3x from exact hex conversion:** Exact hex→oklch gives chroma ~0.010 for dark browns, which looks grey at low luminance. Human eye needs ~0.030 chroma for warmth to be perceptible.
+- **Lightness set +4% above exact hex:** Exact values (20/27/30%) were slightly too dark for comfortable reading; 24/30/34% approved by user
+
 ### Phase 22 Plan 05 Key Decisions
 - **Chart.js hex colors left as-is:** Colors like `#c87941`, `#b0a090` are Chart.js dataset config values, not CSS class references — preserved exactly
 - **chart-container preserved:** Custom CSS class in input.css provides fixed height for canvas rendering
@@ -146,14 +151,14 @@ See: .planning/PROJECT.md (Key Decisions table — 22+ decisions tracked)
 ## Session Continuity
 
 ### Last Session
-- **Date:** 2026-02-25
-- **What happened:** Completed Phase 18 (Brewer Capability Model). Plan 18-02: updated brewer create/edit routes to accept 13 capability fields, redesigned brewer form with `<details>`-based progressive disclosure for machine capabilities, added T1-T5 tier badges to brewer cards via derive_tier(), added 6 new capability CRUD tests. Fixed stale dev server issue (started without --reload before Phase 18 changes). 284 tests pass, 0 failures. Verification: 7/7 must-haves passed.
-- **Where we left off:** Phase 18 complete. Phase 22 Plan 06 ready. Phase 19 (Parameter Registry) is next Wave 2 dependency (requires Phase 18).
+- **Date:** 2026-02-26
+- **What happened:** Completed Phase 22 Plan 06 (cleanup + verification). Fixed custom `espresso` daisyUI theme through 3 iterations: (1) wrong oklch values were ~half correct lightness, (2) correct lightness but chroma too low (0.010) so backgrounds looked grey, (3) final: chroma boosted 3x (0.030) + lightness +4% for comfortable warmth. Human visually approved. 284 tests pass, Docker build succeeds.
+- **Where we left off:** Phases 17, 18, 22 all complete. Wave 1 of v0.3.0 done.
 
 ### Next Steps
-1. Execute Phase 22 Plan 06 — remaining templates + cleanup with daisyUI
-2. Plan Phase 19 — Parameter Registry & Dynamic Search Space (depends on Phase 18, now complete)
-3. Phase 22 is independent — can continue in parallel with Phase 19 planning
+1. Plan Phase 19 — Parameter Registry & Dynamic Search Space (depends on Phase 18 ✅)
+2. Plan Phase 20 — Advanced Espresso Parameters (depends on Phase 19)
+3. Phase 21 — Pour-over / Aeropress parameter sets (depends on Phase 19)
 
 ---
 *State initialized: 2026-02-21*
