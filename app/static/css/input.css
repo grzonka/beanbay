@@ -1,5 +1,7 @@
 @import "tailwindcss";
-@plugin "./daisyui.mjs";
+@plugin "./daisyui.mjs" {
+  themes: coffee --default;
+}
 
 /* ── Custom components with no daisyUI equivalent ────────────── */
 @layer components {
@@ -97,6 +99,7 @@
     border-radius: 4px;
     outline: none;
     cursor: pointer;
+    background: oklch(35% 0.03 55);
   }
 
   .score-slider::-webkit-slider-thumb {
@@ -106,6 +109,7 @@
     height: 32px;
     border-radius: 50%;
     cursor: pointer;
+    background: oklch(72% 0.123 63);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
   }
 
@@ -114,7 +118,9 @@
     height: 32px;
     border-radius: 50%;
     cursor: pointer;
+    background: oklch(72% 0.123 63);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    border: none;
   }
 
   /* Flavor slider — smaller thumb, untouched = faded */
@@ -127,6 +133,7 @@
     outline: none;
     opacity: 0.4;
     transition: opacity 0.2s;
+    background: oklch(35% 0.03 55);
   }
 
   .flavor-slider.touched { opacity: 1; }
@@ -138,6 +145,7 @@
     height: 24px;
     border-radius: 50%;
     cursor: pointer;
+    background: oklch(72% 0.123 63);
   }
 
   .flavor-slider::-moz-range-thumb {
@@ -145,6 +153,8 @@
     height: 24px;
     border-radius: 50%;
     cursor: pointer;
+    background: oklch(72% 0.123 63);
+    border: none;
   }
 
   /* Chart container — fixed height for Chart.js canvases */
