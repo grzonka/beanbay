@@ -132,8 +132,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 18-01-PLAN.md — Brewer model extension + Alembic migration + derive_tier() utility + tests
-- [ ] 18-02-PLAN.md — Route updates + form progressive disclosure + tier badge + CRUD tests
+- [x] 18-01-PLAN.md — Brewer model extension + Alembic migration + derive_tier() utility + tests
+- [x] 18-02-PLAN.md — Route updates + form progressive disclosure + tier badge + CRUD tests
 
 **Success Criteria:**
 1. Brewer model has all capability columns with appropriate defaults
@@ -339,7 +339,7 @@ Wave 3 (parallel):                  20 (Espresso)  21 (New Methods)
 | 15 | v0.2.0 | 3/3 | Complete | 2026-02-23 |
 | 16 | v0.2.0 | 2/2 | Complete | 2026-02-23 |
 | 17 | v0.3.0 | 3/3 | Complete | 2026-02-24 |
-| 18 | v0.3.0 | 0/? | Planned | — |
+| 18 | v0.3.0 | 2/2 | Complete | 2026-02-25 |
 | 19 | v0.3.0 | 0/? | Planned | — |
 | 20 | v0.3.0 | 0/? | Planned | — |
 | 21 | v0.3.0 | 0/? | Planned | — |

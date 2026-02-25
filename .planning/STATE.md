@@ -1,6 +1,6 @@
 # Project State: BeanBay
 
-**Last updated:** 2026-02-24
+**Last updated:** 2026-02-25
 **Current phase:** Phase 22 — Frontend Modernization daisyUI (in progress, 22-05 complete)
 
 ## Project Reference
@@ -22,18 +22,18 @@ See: .planning/PROJECT.md (updated 2026-02-24)
 
 ## Current Position
 
-Phase: 18+22 in progress (Wave 1 — both independent)
-Plan: 17-01 ✅, 17-02 ✅, 17-03 ✅, 18-01 ✅, 22-01 ✅, 22-02 ✅, 22-04 ✅, 22-05 ✅ — 8 plans complete across waves
-Status: Phase 17 COMPLETE. Phase 22 Plan 06 ready (remaining templates). Phase 18 Plan 02 ready.
-Last activity: 2026-02-24 — Completed Phase 17 (Campaign Storage Migration) — all 3 plans done
+Phase: 22 in progress (Wave 1 — independent of completed phases)
+Plan: 17-01 ✅, 17-02 ✅, 17-03 ✅, 18-01 ✅, 18-02 ✅, 22-01 ✅, 22-02 ✅, 22-04 ✅, 22-05 ✅ — 10 plans complete across waves
+Status: Phase 17 COMPLETE. Phase 18 COMPLETE. Phase 22 Plan 06 ready (remaining templates).
+Last activity: 2026-02-25 — Completed Phase 18 (Brewer Capability Model) — 2 plans, 284 tests passing
 
-Progress: [████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] ~15% (8/~18 v0.3.0 plans)
+Progress: [██████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] ~20% (10/~18 v0.3.0 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-  - Total plans completed: 42 (v1: 16, v0.1.0: 5, v0.1.1: 8, v0.2.0: 13)
-  - Total phases completed: 16 complete
+  - Total plans completed: 44 (v1: 16, v0.1.0: 5, v0.1.1: 8, v0.2.0: 13, v0.3.0: 5 so far)
+  - Total phases completed: 18 complete
   - All milestones shipped same day (Feb 22-23, 2026)
 
 ## Accumulated Context
@@ -71,6 +71,11 @@ See: .planning/PROJECT.md (Key Decisions table — 22+ decisions tracked)
 - **Pour-over param set:** Adds `preinfusion_pct`, `target_yield`, `saturation` (all continuous, ranges tuned for V60-style brewing)
 - **Legacy migration at startup:** `migrate_legacy_campaigns()` runs in `main.py` lifespan, transparently maps old `{bean_id}` keys to `{bean_id}__espresso__None`
 - **brew_setup_name in shot dict:** Template has no ORM access, so `brew_setup_name` added as plain key to shot dicts in `_build_shot_dicts()` (not ORM relationship access)
+
+### Phase 18 Plan 02 Key Decisions
+- **Hardcoded select options in template:** Avoids passing constants through every route that renders the brewer form; values change rarely
+- **Native `<details>` for progressive disclosure:** No JavaScript needed; auto-opens in edit mode when non-default capabilities are set
+- **Tier badge as `badge badge-sm`:** Compact T1-T5 label next to brewer name; defensive `{% if derive_tier is defined %}` guard
 
 ### Phase 17 Plan 02 Key Decisions
 - **try/finally/session.close() not context manager:** SessionLocal is a plain sessionmaker, not a context manager. Fixed bug in migration.py where `with session_factory() as session:` would fail at runtime.
@@ -141,15 +146,15 @@ See: .planning/PROJECT.md (Key Decisions table — 22+ decisions tracked)
 ## Session Continuity
 
 ### Last Session
-- **Date:** 2026-02-24
-- **What happened:** Fixed 3 remaining test failures from Phase 17 gap closure. `test_transfer_learning_integration.py` tests were asserting on `_campaigns_dir .transfer` file existence, but Phase 17-02 removed `_campaigns_dir` and moved transfer metadata to `CampaignState.transfer_metadata` DB column. Updated 3 tests to use `optimizer_service.get_transfer_metadata(campaign_key)` instead. Also confirmed 3 history tests were already fixed during Phase 22 work. 284 tests pass, 0 failures.
-- **Where we left off:** Phase 17 fully complete (284/284 tests passing). Phase 22 Plan 06 and Phase 18 Plan 02 are next candidates.
+- **Date:** 2026-02-25
+- **What happened:** Completed Phase 18 (Brewer Capability Model). Plan 18-02: updated brewer create/edit routes to accept 13 capability fields, redesigned brewer form with `<details>`-based progressive disclosure for machine capabilities, added T1-T5 tier badges to brewer cards via derive_tier(), added 6 new capability CRUD tests. Fixed stale dev server issue (started without --reload before Phase 18 changes). 284 tests pass, 0 failures. Verification: 7/7 must-haves passed.
+- **Where we left off:** Phase 18 complete. Phase 22 Plan 06 ready. Phase 19 (Parameter Registry) is next Wave 2 dependency (requires Phase 18).
 
 ### Next Steps
 1. Execute Phase 22 Plan 06 — remaining templates + cleanup with daisyUI
-2. Execute Phase 18 Plan 02 — Brewer capability route updates + form progressive disclosure
-3. Wave 1/2 phases (18, 22) are independent — can continue in any order
+2. Plan Phase 19 — Parameter Registry & Dynamic Search Space (depends on Phase 18, now complete)
+3. Phase 22 is independent — can continue in parallel with Phase 19 planning
 
 ---
 *State initialized: 2026-02-21*
-*Last updated: 2026-02-24 — Phase 17 gap closure complete (284/284 tests passing, 0 failures)*
+*Last updated: 2026-02-25 — Phase 18 COMPLETE (Brewer Capability Model — 2 plans, 34 new tests, 284 total passing)*
