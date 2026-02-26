@@ -14,10 +14,10 @@ Every coffee brew teaches the system something — the app must make it effortle
 
 ## Current State
 
-**Shipped:** v1 MVP, v0.1.0, v0.1.1 (2026-02-22), v0.2.0 (2026-02-23)
-**Active milestone:** v0.3.0 — Equipment intelligence, capability-driven parameters, new brew methods, campaign DB migration, frontend modernization
-**Codebase:** ~10K+ LOC (Python, HTML, CSS/JS), 240 tests passing
-**Stack:** FastAPI, Jinja2/htmx, SQLite, Chart.js, BayBE, Docker
+**Shipped:** v1 MVP, v0.1.0, v0.1.1 (2026-02-22), v0.2.0 (2026-02-23), v0.3.0 (2026-02-26)
+**Active milestone:** None — ready for next milestone planning
+**Codebase:** ~10K+ LOC (Python, HTML, CSS/JS), 408 tests passing
+**Stack:** FastAPI, Jinja2/htmx, SQLite, Chart.js, BayBE, Tailwind/daisyUI, Docker
 
 ## Requirements
 
@@ -43,14 +43,18 @@ Every coffee brew teaches the system something — the app must make it effortle
 - ✓ Manual brews feed into BayBE optimization via add_measurement — v0.1.1
 - ✓ Manual brews visually distinguishable in shot history (blue badge) — v0.1.1
 
-### Active (v0.3.0)
+### Active
 
-- **Campaign DB migration** — Move campaign JSON files and pending_recommendations.json into SQLite tables. Single DB file for all state. Atomic operations, easier backup/restore.
-- **Brewer capability model** — Brewers declare their capabilities (temperature control, pre-infusion type, pressure profiling, flow control) via structured flags. Capabilities drive parameter selection, not tiers.
-- **Parameter Registry** — Replace hardcoded `_build_parameters()` with data-driven `PARAMETER_REGISTRY` dict mapping method → parameter definitions with capability conditions. Dynamic search space construction.
-- **Espresso parameter evolution** — `preinfusion_pct` → `preinfusion_time` (seconds), `saturation` deprecated. New capability-conditional parameters: brew_pressure, pressure_profile, bloom_pause, flow_rate, temp_profile, brew_mode.
-- **New brew methods** — Add french-press, aeropress, turkish, moka-pot, cold-brew (5 new methods → 7 total). Method parameters come from registry.
-- **Frontend modernization (Phase 1)** — Tailwind CSS + daisyUI with built-in `coffee` theme. Replace hand-rolled CSS. Phone-first responsive. Dark mode via daisyUI themes.
+No active milestone. Ready for next milestone planning.
+
+### Completed (v0.3.0)
+
+- ✓ Campaign DB migration — Campaign JSON files and pending_recommendations.json moved into SQLite tables. Single DB file for all state. Atomic operations, easier backup/restore.
+- ✓ Brewer capability model — Brewers declare their capabilities (temperature control, pre-infusion type, pressure profiling, flow control) via structured flags. Capabilities drive parameter selection.
+- ✓ Parameter Registry — Data-driven `PARAMETER_REGISTRY` dict mapping method → parameter definitions with capability conditions. Dynamic search space construction for all 7 brew methods.
+- ✓ Espresso parameter evolution — `preinfusion_pct` → `preinfusion_pressure_pct`, `saturation` reworked as active boolean toggle. New capability-conditional parameters. Campaign outdated detection with rebuild prompt.
+- ✓ New brew methods — Added french-press, aeropress, turkish, moka-pot, cold-brew (5 new methods → 7 total). Method-aware templates and history.
+- ✓ Frontend modernization (Phase 1) — Tailwind CSS + daisyUI with custom espresso theme. Phone-first responsive. 408 tests passing.
 
 ### Completed (v0.2.0)
 
@@ -74,12 +78,12 @@ Every coffee brew teaches the system something — the app must make it effortle
 - **Shipped v0.1.0:** 3 phases, 5 plans. Rebrand, CI/CD, Docker image, Unraid template.
 - **Shipped v0.1.1:** 3 phases, 8 plans, 130 tests, ~8,295 LOC. Responsive nav, taste UX, manual brew.
 - **Shipped v0.2.0:** 4 phases, 13 plans, 240 tests. Equipment management (grinders, brewers, papers, water), brew setups, multi-method (espresso + pour-over), enhanced bean metadata (bags, process, variety), cross-brew transfer learning via BayBE TaskParameter.
-- **v0.3.0 scope:** Equipment intelligence (capability-driven brewer model), parameter registry (dynamic search spaces), espresso parameter evolution, 5 new brew methods, campaign DB migration, frontend modernization (daisyUI).
+- **Shipped v0.3.0:** 6 phases, 18 plans, 408 tests. Campaign DB migration, brewer capability model, parameter registry (7 brew methods), espresso parameter evolution, method-aware templates, Tailwind + daisyUI frontend.
 - **Hardware setup:** Sage Dual Boiler (Slayer mod) + DF83v grinder. Parameters tuned to this specific machine's ranges.
-- **BayBE:** Hybrid search space (5 continuous + 1 categorical), ~7.5KB campaign files. Three-phase optimization: random (0-4 shots) -> Learning (5-7) -> Bayesian optimization (8+).
+- **BayBE:** Hybrid search space (5+ continuous + categorical), campaigns stored in SQLite. Three-phase optimization: random (0-4 shots) -> Learning (5-7) -> Bayesian optimization (8+).
 - **Usage pattern:** Primarily phone at the espresso machine. Quick interactions most days, occasional deep tasting sessions on laptop.
-- **Deployment:** Unraid server via Docker. Single container, SQLite + BayBE JSON campaign files in persistent volume. Also available to any Docker user.
-- **Known tech debt:** v0.2.0 campaign files (JSON on disk) are the most fragile architectural element — migrating to DB in Phase 17. Pre-existing LSP type warnings on SQLAlchemy Column types (cosmetic, not functional). Non-espresso brewer card shows "Espresso" label (bug B001).
+- **Deployment:** Unraid server via Docker. Single container, SQLite for all state (measurements, campaigns, equipment). Also available to any Docker user.
+- **Known tech debt:** Non-espresso brewer card shows "Espresso" label (bug B001). Pre-existing LSP type warnings on SQLAlchemy Column types (cosmetic, not functional).
 
 ## Constraints
 
@@ -122,4 +126,4 @@ Every coffee brew teaches the system something — the app must make it effortle
 | htmx + Tailwind + daisyUI (v0.3) | Phase 1 frontend: low effort, big visual improvement; daisyUI has built-in coffee theme | Decided — SvelteKit deferred to Phase 2 |
 
 ---
-*Last updated: 2026-02-24 after v0.3.0 roadmap finalized*
+*Last updated: 2026-02-26 after v0.3.0 milestone archived*
