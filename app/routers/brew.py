@@ -40,19 +40,75 @@ from app.services.optimizer_key import make_campaign_key
 router = APIRouter(prefix="/brew", tags=["brew"])
 templates = Jinja2Templates(directory="app/templates")
 
+# Human-readable labels for parameter names.
+# Used by templates for clear, scannable parameter display.
+PARAM_LABELS: dict[str, str] = {
+    "grind_setting": "Grind Setting",
+    "temperature": "Temperature",
+    "dose_in": "Dose",
+    "target_yield": "Target Yield",
+    "preinfusion_time": "Pre-infusion Time",
+    "preinfusion_pressure": "Pre-infusion Pressure",
+    "brew_pressure": "Brew Pressure",
+    "pressure_profile": "Pressure Profile",
+    "flow_rate": "Flow Rate",
+    "bloom_pause": "Bloom Pause",
+    "temp_profile": "Temperature Profile",
+    "brew_mode": "Brew Mode",
+    "saturation": "Saturation",
+    "bloom_weight": "Bloom Water",
+    "brew_volume": "Brew Volume",
+    "steep_time": "Steep Time",
+    "preinfusion_pressure_pct": "Pre-infusion %",
+}
+
+# Short recipe-card labels (space-constrained display).
+PARAM_SHORT_LABELS: dict[str, str] = {
+    "grind_setting": "Grind",
+    "temperature": "Temp",
+    "dose_in": "Dose",
+    "target_yield": "Yield",
+    "preinfusion_time": "Pre-inf",
+    "preinfusion_pressure": "Pre-inf Press",
+    "brew_pressure": "Pressure",
+    "pressure_profile": "Profile",
+    "flow_rate": "Flow",
+    "bloom_pause": "Bloom Pause",
+    "temp_profile": "Temp Profile",
+    "brew_mode": "Mode",
+    "saturation": "Saturation",
+    "bloom_weight": "Bloom",
+    "brew_volume": "Volume",
+    "steep_time": "Steep",
+    "preinfusion_pressure_pct": "Pre-inf %",
+}
+
+# Descriptions explaining what each parameter controls and why it matters.
+# Shown via info-icon tooltips on recommendation and manual brew pages.
+PARAM_DESCRIPTIONS: dict[str, str] = {
+    "grind_setting": "How fine or coarse the coffee is ground. Finer grinds slow extraction and increase intensity.",
+    "temperature": "Water temperature in °C. Higher temps extract more, but can over-extract and add bitterness.",
+    "dose_in": "Weight of dry coffee grounds in grams.",
+    "target_yield": "Target weight of liquid espresso in the cup (grams).",
+    "preinfusion_time": "Seconds at low pressure before full extraction begins. Helps saturate the puck evenly.",
+    "preinfusion_pressure": "Pressure (bar) during the pre-infusion phase, before ramping to full brew pressure.",
+    "brew_pressure": "Main extraction pressure in bar. Standard espresso is ~9 bar.",
+    "pressure_profile": "How pressure changes over the shot — flat, ramping up, ramping down, or with a pre-infusion ramp.",
+    "flow_rate": "Water flow rate through the coffee in ml/s. Lower flow = longer contact time.",
+    "bloom_pause": "Seconds to pause after initial wetting, letting CO₂ escape from fresh grounds.",
+    "temp_profile": "How temperature changes during extraction — flat, ramping up, or declining.",
+    "brew_mode": "Whether the machine prioritizes holding target pressure or target flow rate.",
+    "saturation": "Pre-wet the puck at low flow before full extraction. Helps even out channeling.",
+    "bloom_weight": "Weight of water (grams) used for the initial bloom pour in pour-over.",
+    "brew_volume": "Total water volume in ml for the full brew.",
+    "steep_time": "Total immersion time in seconds before pressing or filtering.",
+    "preinfusion_pressure_pct": "Legacy pre-infusion intensity as a percentage of full pressure.",
+}
+
 # One-time onboarding hints shown on first encounter of each parameter.
 # Passed to recommend.html so data-param-hint attributes can be set server-side.
-PARAM_HINTS: dict[str, str] = {
-    "preinfusion_time": "Hold at low pressure for this duration before ramping up",
-    "preinfusion_pressure": "Pressure during the pre-infusion phase (bar)",
-    "brew_pressure": "Target pressure during the main extraction (bar)",
-    "pressure_profile": "How pressure changes during extraction",
-    "flow_rate": "Water flow rate through the puck (ml/s)",
-    "bloom_pause": "Pause to let grounds bloom before continuing",
-    "temp_profile": "How temperature changes during extraction",
-    "brew_mode": "Whether to prioritize pressure or flow control",
-    "saturation": "Pre-wet the puck at low flow rate before extraction",
-}
+# (Kept for backward compat — uses same descriptions as PARAM_DESCRIPTIONS)
+PARAM_HINTS: dict[str, str] = {k: v for k, v in PARAM_DESCRIPTIONS.items()}
 
 # All measurement columns that can be set from form data, keyed by param name.
 # This covers core params + all method-specific params across Phases 20 and 21.
@@ -326,6 +382,9 @@ async def show_recommendation(
             "transfer_metadata": transfer_metadata,
             "param_defs": param_defs,
             "param_hints": PARAM_HINTS,
+            "param_labels": PARAM_LABELS,
+            "param_short_labels": PARAM_SHORT_LABELS,
+            "param_descriptions": PARAM_DESCRIPTIONS,
             "method": method,
         },
     )
@@ -521,6 +580,8 @@ async def show_best(request: Request, db: Session = Depends(get_db)):
             "ratio": ratio,
             "best_session_id": best_session_id,
             "param_defs": param_defs,
+            "param_short_labels": PARAM_SHORT_LABELS,
+            "param_descriptions": PARAM_DESCRIPTIONS,
             "method": method,
         },
     )
@@ -594,6 +655,8 @@ async def manual_brew(request: Request, db: Session = Depends(get_db)):
             "prefill": prefill,
             "manual_session_id": manual_session_id,
             "param_defs": param_defs,
+            "param_labels": PARAM_LABELS,
+            "param_descriptions": PARAM_DESCRIPTIONS,
         },
     )
 

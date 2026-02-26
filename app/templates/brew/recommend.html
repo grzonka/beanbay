@@ -35,7 +35,7 @@
     id="hint-{{ pdef.name }}"
   >
     <span class="text-sm flex-1">
-      <strong class="font-semibold capitalize">{{ pdef.name | replace("_", " ") }}:</strong>
+      <strong class="font-semibold">{{ param_labels[pdef.name] if param_labels is defined and pdef.name in param_labels else pdef.name | replace("_", " ") | title }}:</strong>
       {{ param_hints[pdef.name] }}
     </span>
     <button

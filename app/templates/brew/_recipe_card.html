@@ -2,219 +2,188 @@
    Context variables needed:
      - rec: dict (from recommendation) OR measurement object with same attrs
      - ratio: str like "1:2.1"
+     - param_short_labels: dict of param_name → short display label (optional, falls back to defaults)
+     - param_descriptions: dict of param_name → tooltip description (optional)
    Phase 20: displays preinfusion_time when present,
    hides saturation for new campaigns, shows capability-driven advanced params.
 #}
 
-<div class="recipe-params">
-  <div class="recipe-param" data-param="grind_setting">
-    <span class="recipe-label">Grind</span>
+{# Fallback short labels if not passed from route #}
+{% set _labels = param_short_labels if param_short_labels is defined else {} %}
+{% set _descs = param_descriptions if param_descriptions is defined else {} %}
+
+{# Macro for a recipe param with optional info tooltip #}
+{% macro param_block(name, label_fallback, value, unit='', is_badge=false) %}
+  {% set label = _labels.get(name, label_fallback) if _labels else label_fallback %}
+  {% set desc = _descs.get(name, '') if _descs else '' %}
+  <div class="recipe-param" data-param="{{ name }}">
+    <span class="recipe-label">
+      {{ label }}
+      {% if desc %}
+        <span class="tooltip tooltip-top ml-0.5 cursor-help align-middle" data-tip="{{ desc }}">
+          <svg xmlns="http://www.w3.org/2000/svg" class="inline h-3.5 w-3.5 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"/>
+          </svg>
+        </span>
+      {% endif %}
+    </span>
     <span class="recipe-value">
-      {% if rec is mapping %}{{ rec.grind_setting }}{% else %}{{ rec.grind_setting }}{% endif %}
+      {% if is_badge %}
+        <span class="badge badge-outline badge-sm">{{ value | replace("_", " ") }}</span>
+      {% else %}
+        {{ value }}{% if unit %}<span class="recipe-unit">{{ unit }}</span>{% endif %}
+      {% endif %}
     </span>
   </div>
+{% endmacro %}
 
+<div class="recipe-params">
+  {# ── Grind Setting ──────────────────────────────────────────────── #}
+  {% if rec is mapping %}
+    {{ param_block('grind_setting', 'Grind', rec.grind_setting) }}
+  {% else %}
+    {{ param_block('grind_setting', 'Grind', rec.grind_setting) }}
+  {% endif %}
+
+  {# ── Temperature ────────────────────────────────────────────────── #}
   {% if rec is mapping %}
     {% if rec.temperature is defined and rec.temperature is not none %}
-    <div class="recipe-param" data-param="temperature">
-      <span class="recipe-label">Temp</span>
-      <span class="recipe-value">{{ rec.temperature }}<span class="recipe-unit">°C</span></span>
-    </div>
+      {{ param_block('temperature', 'Temp', rec.temperature, '°C') }}
     {% endif %}
   {% else %}
     {% if rec.temperature is not none %}
-    <div class="recipe-param" data-param="temperature">
-      <span class="recipe-label">Temp</span>
-      <span class="recipe-value">{{ rec.temperature }}<span class="recipe-unit">°C</span></span>
-    </div>
+      {{ param_block('temperature', 'Temp', rec.temperature, '°C') }}
     {% endif %}
   {% endif %}
 
+  {# ── Pre-infusion ──────────────────────────────────────────────── #}
   {% if rec is mapping %}
-    {# Dict (recommendation) — show preinfusion_time if present, else preinfusion_pressure_pct #}
     {% if rec.preinfusion_time is defined and rec.preinfusion_time is not none %}
-    <div class="recipe-param" data-param="preinfusion_time">
-      <span class="recipe-label">Pre-inf</span>
-      <span class="recipe-value">
-        {{ rec.preinfusion_time }}
-        <span class="recipe-unit">s</span>
-      </span>
-    </div>
+      {{ param_block('preinfusion_time', 'Pre-inf', rec.preinfusion_time, 's') }}
     {% elif rec.preinfusion_pressure_pct is defined and rec.preinfusion_pressure_pct is not none %}
-    <div class="recipe-param" data-param="preinfusion_pressure_pct">
-      <span class="recipe-label">Pre-inf</span>
-      <span class="recipe-value">
-        {{ rec.preinfusion_pressure_pct }}
-        <span class="recipe-unit">%</span>
-      </span>
-    </div>
+      {{ param_block('preinfusion_pressure_pct', 'Pre-inf %', rec.preinfusion_pressure_pct, '%') }}
     {% endif %}
   {% else %}
-    {# ORM object (Measurement) — prefer preinfusion_time, fall back to preinfusion_pressure_pct #}
     {% if rec.preinfusion_time is not none %}
-    <div class="recipe-param" data-param="preinfusion_time">
-      <span class="recipe-label">Pre-inf</span>
-      <span class="recipe-value">
-        {{ rec.preinfusion_time }}
-        <span class="recipe-unit">s</span>
-      </span>
-    </div>
+      {{ param_block('preinfusion_time', 'Pre-inf', rec.preinfusion_time, 's') }}
     {% elif rec.preinfusion_pressure_pct is not none %}
-    <div class="recipe-param" data-param="preinfusion_pressure_pct">
-      <span class="recipe-label">Pre-inf</span>
-      <span class="recipe-value">
-        {{ rec.preinfusion_pressure_pct }}
-        <span class="recipe-unit">%</span>
-      </span>
-    </div>
+      {{ param_block('preinfusion_pressure_pct', 'Pre-inf %', rec.preinfusion_pressure_pct, '%') }}
     {% endif %}
   {% endif %}
 
-  <div class="recipe-param" data-param="dose_in">
-    <span class="recipe-label">Dose</span>
-    <span class="recipe-value">
-      {% if rec is mapping %}{{ rec.dose_in }}{% else %}{{ rec.dose_in }}{% endif %}
-      <span class="recipe-unit">g</span>
-    </span>
-  </div>
+  {# ── Pre-infusion Pressure ─────────────────────────────────────── #}
+  {% if rec is mapping %}
+    {% if rec.preinfusion_pressure is defined and rec.preinfusion_pressure is not none %}
+      {{ param_block('preinfusion_pressure', 'Pre-inf Press', rec.preinfusion_pressure, 'bar') }}
+    {% endif %}
+  {% else %}
+    {% if rec.preinfusion_pressure is not none %}
+      {{ param_block('preinfusion_pressure', 'Pre-inf Press', rec.preinfusion_pressure, 'bar') }}
+    {% endif %}
+  {% endif %}
 
-  {# Phase 21: steep_time for french-press, aeropress, cold-brew, etc. #}
+  {# ── Dose ───────────────────────────────────────────────────────── #}
+  {% if rec is mapping %}
+    {{ param_block('dose_in', 'Dose', rec.dose_in, 'g') }}
+  {% else %}
+    {{ param_block('dose_in', 'Dose', rec.dose_in, 'g') }}
+  {% endif %}
+
+  {# ── Steep Time (french-press, aeropress, cold-brew) ────────────── #}
   {% if rec is mapping %}
     {% if rec.steep_time is defined and rec.steep_time is not none %}
-    <div class="recipe-param" data-param="steep_time">
-      <span class="recipe-label">Steep</span>
-      <span class="recipe-value">{{ rec.steep_time }}<span class="recipe-unit">s</span></span>
-    </div>
+      {{ param_block('steep_time', 'Steep', rec.steep_time, 's') }}
     {% endif %}
   {% else %}
     {% if rec.steep_time is not none %}
-    <div class="recipe-param" data-param="steep_time">
-      <span class="recipe-label">Steep</span>
-      <span class="recipe-value">{{ rec.steep_time }}<span class="recipe-unit">s</span></span>
-    </div>
+      {{ param_block('steep_time', 'Steep', rec.steep_time, 's') }}
     {% endif %}
   {% endif %}
 
-  {# Phase 21: bloom_weight for pour-over, etc. #}
+  {# ── Bloom Weight (pour-over) ───────────────────────────────────── #}
   {% if rec is mapping %}
     {% if rec.bloom_weight is defined and rec.bloom_weight is not none %}
-    <div class="recipe-param" data-param="bloom_weight">
-      <span class="recipe-label">Bloom</span>
-      <span class="recipe-value">{{ rec.bloom_weight }}<span class="recipe-unit">g</span></span>
-    </div>
+      {{ param_block('bloom_weight', 'Bloom', rec.bloom_weight, 'g') }}
     {% endif %}
   {% else %}
     {% if rec.bloom_weight is not none %}
-    <div class="recipe-param" data-param="bloom_weight">
-      <span class="recipe-label">Bloom</span>
-      <span class="recipe-value">{{ rec.bloom_weight }}<span class="recipe-unit">g</span></span>
-    </div>
+      {{ param_block('bloom_weight', 'Bloom', rec.bloom_weight, 'g') }}
     {% endif %}
   {% endif %}
 
+  {# ── Target Yield / Brew Volume ─────────────────────────────────── #}
   {% if rec is mapping %}
     {% if rec.target_yield is defined and rec.target_yield is not none %}
-    <div class="recipe-param" data-param="target_yield">
-      <span class="recipe-label">Yield</span>
-      <span class="recipe-value">{{ rec.target_yield }}<span class="recipe-unit">g</span></span>
-    </div>
+      {{ param_block('target_yield', 'Yield', rec.target_yield, 'g') }}
     {% elif rec.brew_volume is defined and rec.brew_volume is not none %}
-    <div class="recipe-param" data-param="brew_volume">
-      <span class="recipe-label">Volume</span>
-      <span class="recipe-value">{{ rec.brew_volume }}<span class="recipe-unit">ml</span></span>
-    </div>
+      {{ param_block('brew_volume', 'Volume', rec.brew_volume, 'ml') }}
     {% endif %}
   {% else %}
     {% if rec.target_yield is not none %}
-    <div class="recipe-param" data-param="target_yield">
-      <span class="recipe-label">Yield</span>
-      <span class="recipe-value">{{ rec.target_yield }}<span class="recipe-unit">g</span></span>
-    </div>
+      {{ param_block('target_yield', 'Yield', rec.target_yield, 'g') }}
     {% endif %}
   {% endif %}
 
   {# Show brew_volume separately when target_yield is also present #}
   {% if rec is mapping %}
     {% if rec.target_yield is defined and rec.target_yield is not none and rec.brew_volume is defined and rec.brew_volume is not none %}
-    <div class="recipe-param" data-param="brew_volume">
-      <span class="recipe-label">Volume</span>
-      <span class="recipe-value">{{ rec.brew_volume }}<span class="recipe-unit">ml</span></span>
-    </div>
+      {{ param_block('brew_volume', 'Volume', rec.brew_volume, 'ml') }}
     {% endif %}
   {% else %}
     {% if rec.target_yield is not none and rec.brew_volume is not none %}
-    <div class="recipe-param" data-param="brew_volume">
-      <span class="recipe-label">Volume</span>
-      <span class="recipe-value">{{ rec.brew_volume }}<span class="recipe-unit">ml</span></span>
-    </div>
+      {{ param_block('brew_volume', 'Volume', rec.brew_volume, 'ml') }}
     {% endif %}
   {% endif %}
 
-  {# Phase 20: show brew_pressure when present #}
+  {# ── Brew Pressure ──────────────────────────────────────────────── #}
   {% if rec is mapping %}
     {% if rec.brew_pressure is defined and rec.brew_pressure is not none %}
-    <div class="recipe-param" data-param="brew_pressure">
-      <span class="recipe-label">Pressure</span>
-      <span class="recipe-value">{{ rec.brew_pressure }}<span class="recipe-unit">bar</span></span>
-    </div>
+      {{ param_block('brew_pressure', 'Pressure', rec.brew_pressure, 'bar') }}
     {% endif %}
     {% if rec.pressure_profile is defined and rec.pressure_profile is not none %}
-    <div class="recipe-param" data-param="pressure_profile">
-      <span class="recipe-label">Profile</span>
-      <span class="recipe-value"><span class="badge badge-outline badge-sm">{{ rec.pressure_profile | replace("_", " ") }}</span></span>
-    </div>
+      {{ param_block('pressure_profile', 'Profile', rec.pressure_profile, is_badge=true) }}
     {% endif %}
     {% if rec.flow_rate is defined and rec.flow_rate is not none %}
-    <div class="recipe-param" data-param="flow_rate">
-      <span class="recipe-label">Flow</span>
-      <span class="recipe-value">{{ rec.flow_rate }}<span class="recipe-unit">ml/s</span></span>
-    </div>
+      {{ param_block('flow_rate', 'Flow', rec.flow_rate, 'ml/s') }}
     {% endif %}
     {% if rec.brew_mode is defined and rec.brew_mode is not none %}
-    <div class="recipe-param" data-param="brew_mode">
-      <span class="recipe-label">Mode</span>
-      <span class="recipe-value"><span class="badge badge-outline badge-sm">{{ rec.brew_mode | replace("_", " ") }}</span></span>
-    </div>
+      {{ param_block('brew_mode', 'Mode', rec.brew_mode, is_badge=true) }}
+    {% endif %}
+    {# Bloom Pause #}
+    {% if rec.bloom_pause is defined and rec.bloom_pause is not none %}
+      {{ param_block('bloom_pause', 'Bloom Pause', rec.bloom_pause, 's') }}
+    {% endif %}
+    {# Temp Profile #}
+    {% if rec.temp_profile is defined and rec.temp_profile is not none %}
+      {{ param_block('temp_profile', 'Temp Profile', rec.temp_profile, is_badge=true) }}
     {% endif %}
     {# Legacy: show saturation only for old-style recommendations that include it #}
     {% if rec.saturation is defined and rec.saturation is not none %}
-    <div class="recipe-param" data-param="saturation">
-      <span class="recipe-label">Saturation</span>
-      <span class="recipe-value"><span class="badge badge-outline badge-sm">{{ rec.saturation }}</span></span>
-    </div>
+      {{ param_block('saturation', 'Saturation', rec.saturation, is_badge=true) }}
     {% endif %}
   {% else %}
     {# ORM Measurement object #}
     {% if rec.brew_pressure is not none %}
-    <div class="recipe-param" data-param="brew_pressure">
-      <span class="recipe-label">Pressure</span>
-      <span class="recipe-value">{{ rec.brew_pressure }}<span class="recipe-unit">bar</span></span>
-    </div>
+      {{ param_block('brew_pressure', 'Pressure', rec.brew_pressure, 'bar') }}
     {% endif %}
     {% if rec.pressure_profile is not none %}
-    <div class="recipe-param" data-param="pressure_profile">
-      <span class="recipe-label">Profile</span>
-      <span class="recipe-value"><span class="badge badge-outline badge-sm">{{ rec.pressure_profile | replace("_", " ") }}</span></span>
-    </div>
+      {{ param_block('pressure_profile', 'Profile', rec.pressure_profile, is_badge=true) }}
     {% endif %}
     {% if rec.flow_rate is not none %}
-    <div class="recipe-param" data-param="flow_rate">
-      <span class="recipe-label">Flow</span>
-      <span class="recipe-value">{{ rec.flow_rate }}<span class="recipe-unit">ml/s</span></span>
-    </div>
+      {{ param_block('flow_rate', 'Flow', rec.flow_rate, 'ml/s') }}
     {% endif %}
     {% if rec.brew_mode is not none %}
-    <div class="recipe-param" data-param="brew_mode">
-      <span class="recipe-label">Mode</span>
-      <span class="recipe-value"><span class="badge badge-outline badge-sm">{{ rec.brew_mode | replace("_", " ") }}</span></span>
-    </div>
+      {{ param_block('brew_mode', 'Mode', rec.brew_mode, is_badge=true) }}
+    {% endif %}
+    {% if rec.bloom_pause is not none %}
+      {{ param_block('bloom_pause', 'Bloom Pause', rec.bloom_pause, 's') }}
+    {% endif %}
+    {% if rec.temp_profile is not none %}
+      {{ param_block('temp_profile', 'Temp Profile', rec.temp_profile, is_badge=true) }}
     {% endif %}
     {# Legacy: show saturation for historical measurements that have it #}
     {% if rec.saturation is not none %}
-    <div class="recipe-param" data-param="saturation">
-      <span class="recipe-label">Saturation</span>
-      <span class="recipe-value"><span class="badge badge-outline badge-sm">{{ rec.saturation }}</span></span>
-    </div>
+      {{ param_block('saturation', 'Saturation', rec.saturation, is_badge=true) }}
     {% endif %}
   {% endif %}
 </div>

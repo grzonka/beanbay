@@ -31,20 +31,20 @@
         'dose_in': 'g',
         'target_yield': 'g',
         'preinfusion_time': 's',
+        'preinfusion_pressure': 'bar',
         'brew_pressure': 'bar',
         'flow_rate': 'ml/s',
         'bloom_weight': 'g',
         'brew_volume': 'ml',
         'steep_time': 's',
         'bloom_pause': 's',
-        'preinfusion_pressure': 'bar',
       } %}
 
-      {# Human-readable labels per param #}
-      {% set labels = {
+      {# Human-readable labels — prefer server-side dict, fall back to local map #}
+      {% set _fallback_labels = {
         'grind_setting': 'Grind Setting',
         'temperature': 'Temperature',
-        'dose_in': 'Dose In',
+        'dose_in': 'Dose',
         'target_yield': 'Target Yield',
         'preinfusion_time': 'Pre-infusion Time',
         'preinfusion_pressure': 'Pre-infusion Pressure',
@@ -53,11 +53,24 @@
         'bloom_pause': 'Bloom Pause',
         'flow_rate': 'Flow Rate',
         'brew_mode': 'Brew Mode',
-        'bloom_weight': 'Bloom Weight',
+        'bloom_weight': 'Bloom Water',
         'brew_volume': 'Brew Volume',
         'steep_time': 'Steep Time',
         'temp_profile': 'Temperature Profile',
       } %}
+      {% set labels = param_labels if param_labels is defined else _fallback_labels %}
+      {% set descs = param_descriptions if param_descriptions is defined else {} %}
+
+      {# Info icon for parameter tooltips #}
+      {% macro info_icon(param_name) %}
+        {% if param_name in descs %}
+          <span class="tooltip tooltip-right ml-1 cursor-help align-middle" data-tip="{{ descs[param_name] }}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="inline h-3.5 w-3.5 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"/>
+            </svg>
+          </span>
+        {% endif %}
+      {% endmacro %}
 
       {% for pdef in param_defs %}
         {% set pname = pdef.name %}
@@ -68,7 +81,7 @@
         <!-- {{ plabel }} (categorical) -->
         <div class="form-control mb-4">
           <label class="label">
-            <span class="label-text">{{ plabel }}</span>
+            <span class="label-text">{{ plabel }}{{ info_icon(pname) }}</span>
           </label>
           <select
             name="{{ pname }}"
@@ -91,7 +104,7 @@
         {% set pval = prefill[pname] if pname in prefill else ((pmin + pmax) / 2) %}
         <div class="form-control mb-4">
           <label class="label">
-            <span class="label-text">{{ plabel }}</span>
+            <span class="label-text">{{ plabel }}{{ info_icon(pname) }}</span>
             <span class="label-text-alt">{{ punit ~ ' ' if punit }}({{ pmin }}–{{ pmax }})</span>
           </label>
           <div class="param-input-row">
