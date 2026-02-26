@@ -1,7 +1,7 @@
 # Project State: BeanBay
 
 **Last updated:** 2026-02-26
-**Current phase:** Phase 21 — New Brew Methods (next up)
+**Current phase:** Phase 21 — New Brew Methods (in progress)
 
 ## Project Reference
 
@@ -22,24 +22,32 @@ See: .planning/PROJECT.md (updated 2026-02-24)
 
 ## Current Position
 
-Phase: 20 — Espresso Parameter Evolution ✅ Complete
-Plan: 20-03 ✅ — 3/3 plans complete
-Status: Phase 20 complete. All 3 plans shipped. Next: Phase 21 (New Brew Methods).
-Last activity: 2026-02-26 — Completed Phase 20 Plan 03 (Brew UI capability-driven parameter display). 408 tests passing.
+Phase: 21 — New Brew Methods (in progress)
+Plan: 21-01 ✅ — 1/? plans complete
+Status: Phase 21 Plan 01 complete. Method-aware templates shipped. 408 tests passing.
+Last activity: 2026-02-26 — Completed Phase 21 Plan 01 (Method-aware template rendering).
 
-Progress: [████████████████████░░░░░░░░░░░░░░░░░░░░░] ~42% (17+/~18 v0.3.0 plans)
+Progress: [█████████████████████░░░░░░░░░░░░░░░░░░░░] ~43% (18+/~18 v0.3.0 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-  - Total plans completed: 45 (v1: 16, v0.1.0: 5, v0.1.1: 8, v0.2.0: 13, v0.3.0: 6 so far)
-  - Total phases completed: 19 complete, 20 in progress
+  - Total plans completed: 46 (v1: 16, v0.1.0: 5, v0.1.1: 8, v0.2.0: 13, v0.3.0: 7 so far)
+  - Total phases completed: 20 complete, 21 in progress
   - All milestones shipped same day (Feb 22-23, 2026)
 
 ## Accumulated Context
 
 ### Key Technical Decisions
 See: .planning/PROJECT.md (Key Decisions table — 22+ decisions tracked)
+
+### Phase 21 Plan 01 Key Decisions
+- **Temperature hidden (not "N/A") for cold-brew:** `{% if rec.temperature is not none %}` wraps both the ORM and dict paths — cold-brew shots never show "Temp: None°C"; absence is more accurate than a placeholder
+- **steep_time and bloom_weight placed after Dose in recipe card:** Natural brewing order (dose first, then steep/bloom); consistent with how non-espresso methods are documented
+- **Method badge shown only for non-espresso on brew index:** Espresso is the implicit default; labeling it would be redundant noise for existing users; badge is `capitalize` for nice display of "french-press" → "french-press"
+- **All Phase 20+21 columns added to `_load_shot_detail` in one pass:** Cleaner than incremental additions; model already had all columns — just needed to wire to dict
+- **`brew_method` in shot list dicts defaults to `"espresso"`:** Backward compat for legacy shots without brew_setup; informational only for now, enables future display in shot row
+- **Shot modal renders all params conditionally, no unconditional None display:** Replaces hardcoded 6-param grid; any method's shot can now display correctly in history
 
 ### Phase 20 Plan 03 Key Decisions
 - **Hint cards server-rendered as hidden, JS reveals on DOMContentLoaded:** No flash of visible content before JS runs; `hidden` class removed only for params not yet in localStorage
@@ -186,13 +194,13 @@ See: .planning/PROJECT.md (Key Decisions table — 22+ decisions tracked)
 
 ### Last Session
 - **Date:** 2026-02-26
-- **What happened:** Completed Phase 20 Plan 03 — dynamic hidden inputs in best.html, PARAM_HINTS dict + dismissible onboarding hints on recommend.html, new-badge via hints.js (localStorage per bean), categorical badge styling, data-param attrs on recipe card, head_extra block in base.html, 3 new tests. 408/408 tests pass.
-- **Where we left off:** Phase 20 complete (all 3 plans done). Next: Phase 21 — New Brew Methods.
+- **What happened:** Completed Phase 21 Plan 01 — method-aware recipe card (conditional temp, steep_time, bloom_weight, brew_volume), brew index method badge, `_load_shot_detail` wired for all Phase 20+21 columns, shot modal fully dynamic. 408/408 tests pass.
+- **Where we left off:** Phase 21 Plan 01 complete. Next: remaining Phase 21 plans (brew form for new methods, method selection UX, etc.)
 
 ### Next Steps
-1. Phase 21 — New Brew Methods (pour-over, French press, Aeropress, Moka pot, Chemex, cold brew)
+1. Phase 21 — remaining plans (brew form for non-espresso methods, method selection on brew page)
 2. Phase 22 continues in parallel (already done — frontend modernization)
 
 ---
 *State initialized: 2026-02-21*
-*Last updated: 2026-02-26 — Phase 20 Plan 03 COMPLETE (Brew UI capability-driven parameter display — 408 tests passing)*
+*Last updated: 2026-02-26 — Phase 21 Plan 01 COMPLETE (Method-aware template rendering — 408 tests passing)*
