@@ -54,21 +54,6 @@
           <li><a href="/analytics" class="text-base font-semibold min-h-12">Analytics</a></li>
         </ul>
 
-        <div class="divider mx-4 my-2"></div>
-
-        <!-- Active bean indicator -->
-        <div class="px-6 py-2 text-sm" id="active-bean-indicator">
-          {% if active_bean %}
-            <div class="flex items-center gap-2">
-              <a href="/beans/{{ active_bean.id }}" class="truncate flex-1 text-base-content/70 no-underline hover:text-base-content">{{ active_bean.name }}</a>
-              <form method="post" action="/beans/deactivate" class="flex-shrink-0">
-                <button type="submit" class="btn btn-ghost btn-xs">&#10005;</button>
-              </form>
-            </div>
-          {% else %}
-            <span class="text-base-content/40">No bean selected</span>
-          {% endif %}
-        </div>
       </aside>
     </div>
   </div>

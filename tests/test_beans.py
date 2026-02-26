@@ -310,11 +310,6 @@ def test_deactivate_bean(client, sample_bean):
     assert "active_bean_id" in set_cookie
     assert "Max-Age=0" in set_cookie
 
-    # After clearing the cookie manually, the page should show "No bean selected"
-    client.cookies.delete("active_bean_id")
-    response2 = client.get("/beans")
-    assert "No bean selected" in response2.text
-
 
 def test_deactivate_bean_detail_shows_button(client, sample_bean):
     """Bean detail page shows 'Deselect' button when that bean is active."""
