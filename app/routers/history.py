@@ -64,6 +64,11 @@ def _build_shot_dicts(
                 "brew_ratio": brew_ratio,
                 "flavor_tags": tags,
                 "brew_setup_name": m.brew_setup.name if m.brew_setup else None,
+                "brew_method": (
+                    m.brew_setup.brew_method.name
+                    if m.brew_setup and m.brew_setup.brew_method
+                    else "espresso"
+                ),
             }
         )
     return shots
@@ -96,6 +101,17 @@ def _load_shot_detail(shot_id: int, db: Session) -> dict:
         "dose_in": m.dose_in,
         "target_yield": m.target_yield,
         "saturation": m.saturation,
+        "preinfusion_time": m.preinfusion_time,
+        "preinfusion_pressure": m.preinfusion_pressure,
+        "brew_pressure": m.brew_pressure,
+        "pressure_profile": m.pressure_profile,
+        "bloom_pause": m.bloom_pause,
+        "flow_rate": m.flow_rate,
+        "temp_profile": m.temp_profile,
+        "steep_time": m.steep_time,
+        "brew_volume": m.brew_volume,
+        "bloom_weight": m.bloom_weight,
+        "brew_mode": m.brew_mode,
         "extraction_time": m.extraction_time,
         "is_failed": m.is_failed,
         "is_manual": getattr(m, "is_manual", False) or False,

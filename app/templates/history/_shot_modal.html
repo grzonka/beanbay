@@ -28,26 +28,99 @@
         <span class="recipe-label">Grind</span>
         <span class="recipe-value text-lg">{{ shot.grind_setting }}</span>
       </div>
+      {% if shot.temperature is not none %}
       <div class="recipe-param">
         <span class="recipe-label">Temp</span>
         <span class="recipe-value text-lg">{{ shot.temperature }}<span class="recipe-unit">°C</span></span>
       </div>
-      <div class="recipe-param">
-        <span class="recipe-label">Pre-inf</span>
-        <span class="recipe-value text-lg">{{ shot.preinfusion_pressure_pct }}<span class="recipe-unit">%</span></span>
-      </div>
+      {% endif %}
       <div class="recipe-param">
         <span class="recipe-label">Dose</span>
         <span class="recipe-value text-lg">{{ shot.dose_in }}<span class="recipe-unit">g</span></span>
       </div>
+      {% if shot.preinfusion_time is not none %}
+      <div class="recipe-param">
+        <span class="recipe-label">Pre-inf</span>
+        <span class="recipe-value text-lg">{{ shot.preinfusion_time }}<span class="recipe-unit">s</span></span>
+      </div>
+      {% elif shot.preinfusion_pressure_pct is not none %}
+      <div class="recipe-param">
+        <span class="recipe-label">Pre-inf</span>
+        <span class="recipe-value text-lg">{{ shot.preinfusion_pressure_pct }}<span class="recipe-unit">%</span></span>
+      </div>
+      {% endif %}
+      {% if shot.preinfusion_pressure is not none %}
+      <div class="recipe-param">
+        <span class="recipe-label">Pre-inf P</span>
+        <span class="recipe-value text-lg">{{ shot.preinfusion_pressure }}<span class="recipe-unit">bar</span></span>
+      </div>
+      {% endif %}
+      {% if shot.target_yield is not none %}
       <div class="recipe-param">
         <span class="recipe-label">Yield</span>
         <span class="recipe-value text-lg">{{ shot.target_yield }}<span class="recipe-unit">g</span></span>
       </div>
+      {% endif %}
+      {% if shot.brew_volume is not none %}
+      <div class="recipe-param">
+        <span class="recipe-label">Volume</span>
+        <span class="recipe-value text-lg">{{ shot.brew_volume }}<span class="recipe-unit">ml</span></span>
+      </div>
+      {% endif %}
+      {% if shot.steep_time is not none %}
+      <div class="recipe-param">
+        <span class="recipe-label">Steep</span>
+        <span class="recipe-value text-lg">{{ shot.steep_time }}<span class="recipe-unit">s</span></span>
+      </div>
+      {% endif %}
+      {% if shot.bloom_weight is not none %}
+      <div class="recipe-param">
+        <span class="recipe-label">Bloom</span>
+        <span class="recipe-value text-lg">{{ shot.bloom_weight }}<span class="recipe-unit">g</span></span>
+      </div>
+      {% endif %}
+      {% if shot.brew_pressure is not none %}
+      <div class="recipe-param">
+        <span class="recipe-label">Pressure</span>
+        <span class="recipe-value text-lg">{{ shot.brew_pressure }}<span class="recipe-unit">bar</span></span>
+      </div>
+      {% endif %}
+      {% if shot.pressure_profile is not none %}
+      <div class="recipe-param">
+        <span class="recipe-label">Profile</span>
+        <span class="recipe-value text-sm"><span class="badge badge-outline badge-sm">{{ shot.pressure_profile | replace("_", " ") }}</span></span>
+      </div>
+      {% endif %}
+      {% if shot.flow_rate is not none %}
+      <div class="recipe-param">
+        <span class="recipe-label">Flow</span>
+        <span class="recipe-value text-lg">{{ shot.flow_rate }}<span class="recipe-unit">ml/s</span></span>
+      </div>
+      {% endif %}
+      {% if shot.brew_mode is not none %}
+      <div class="recipe-param">
+        <span class="recipe-label">Mode</span>
+        <span class="recipe-value text-sm"><span class="badge badge-outline badge-sm">{{ shot.brew_mode | replace("_", " ") }}</span></span>
+      </div>
+      {% endif %}
+      {% if shot.saturation is not none %}
       <div class="recipe-param">
         <span class="recipe-label">Saturation</span>
-        <span class="recipe-value text-sm">{{ shot.saturation }}</span>
+        <span class="recipe-value text-sm"><span class="badge badge-outline badge-sm">{{ shot.saturation }}</span></span>
       </div>
+      {% endif %}
+      {% if shot.bloom_pause is not none %}
+      <div class="recipe-param">
+        <span class="recipe-label">Bloom Pause</span>
+        <span class="recipe-value text-lg">{{ shot.bloom_pause }}<span class="recipe-unit">s</span></span>
+      </div>
+      {% endif %}
+      {% if shot.temp_profile is not none %}
+      <div class="recipe-param">
+        <span class="recipe-label">Temp Profile</span>
+        <span class="recipe-value text-sm"><span class="badge badge-outline badge-sm">{{ shot.temp_profile | replace("_", " ") }}</span></span>
+      </div>
+      {% endif %}
     </div>
     {% if ratio %}
     <div class="ratio mt-2">
