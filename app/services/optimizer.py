@@ -38,7 +38,7 @@ from app.services.parameter_registry import (
 # ---------------------------------------------------------------------------
 # Backward-compat re-exports
 # These constants reflect the NEW (Phase 20) parameter sets.
-# Existing serialised campaigns that include legacy params (preinfusion_pct,
+# Existing serialised campaigns that include legacy params (preinfusion_pressure_pct,
 # saturation) continue to work via Campaign.from_json() which deserialises
 # the stored searchspace JSON; these constants are only used for creating
 # NEW campaigns and filtering measurements to BayBE columns.

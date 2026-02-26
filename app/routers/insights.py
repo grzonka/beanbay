@@ -164,7 +164,7 @@ async def insights_page(request: Request, db: Session = Depends(get_db)):
             "temperature": m.temperature,
             "dose_in": m.dose_in,
             "target_yield": m.target_yield,
-            "preinfusion_pct": m.preinfusion_pct,
+            "preinfusion_pressure_pct": m.preinfusion_pressure_pct,
             "saturation": m.saturation,
         }
         for m in measurements_raw

@@ -51,7 +51,7 @@ def _seed_shot(
         recommendation_id=str(uuid.uuid4()),
         grind_setting=20.0,
         temperature=93.0,
-        preinfusion_pct=75.0,
+        preinfusion_pressure_pct=75.0,
         dose_in=19.0,
         target_yield=40.0,
         saturation="yes",

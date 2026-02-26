@@ -36,7 +36,7 @@ def test_create_measurement(db_session):
         bean_id=bean.id,
         grind_setting=20.0,
         temperature=93.0,
-        preinfusion_pct=75.0,
+        preinfusion_pressure_pct=75.0,
         dose_in=19.0,
         target_yield=40.0,
         saturation="yes",
@@ -49,7 +49,7 @@ def test_create_measurement(db_session):
     assert isinstance(measurement.id, int)
     assert measurement.grind_setting == 20.0
     assert measurement.temperature == 93.0
-    assert measurement.preinfusion_pct == 75.0
+    assert measurement.preinfusion_pressure_pct == 75.0
     assert measurement.dose_in == 19.0
     assert measurement.target_yield == 40.0
     assert measurement.saturation == "yes"
@@ -66,7 +66,7 @@ def test_bean_measurement_relationship(db_session):
         bean_id=bean.id,
         grind_setting=20.0,
         temperature=93.0,
-        preinfusion_pct=75.0,
+        preinfusion_pressure_pct=75.0,
         dose_in=19.0,
         target_yield=40.0,
         saturation="yes",
@@ -76,7 +76,7 @@ def test_bean_measurement_relationship(db_session):
         bean_id=bean.id,
         grind_setting=21.0,
         temperature=94.0,
-        preinfusion_pct=80.0,
+        preinfusion_pressure_pct=80.0,
         dose_in=19.5,
         target_yield=42.0,
         saturation="no",
@@ -100,7 +100,7 @@ def test_measurement_recommendation_id_unique(db_session):
     params = dict(
         grind_setting=20.0,
         temperature=93.0,
-        preinfusion_pct=75.0,
+        preinfusion_pressure_pct=75.0,
         dose_in=19.0,
         target_yield=40.0,
         saturation="yes",
@@ -130,7 +130,7 @@ def test_measurement_optional_fields(db_session):
         bean_id=bean.id,
         grind_setting=20.0,
         temperature=93.0,
-        preinfusion_pct=75.0,
+        preinfusion_pressure_pct=75.0,
         dose_in=19.0,
         target_yield=40.0,
         saturation="yes",
@@ -380,7 +380,7 @@ def test_measurement_brew_setup_relationship(db_session):
         brew_setup_id=bs.id,
         grind_setting=20.0,
         temperature=93.0,
-        preinfusion_pct=75.0,
+        preinfusion_pressure_pct=75.0,
         dose_in=19.0,
         target_yield=40.0,
         saturation="yes",
@@ -403,7 +403,7 @@ def test_measurement_brew_setup_nullable(db_session):
         bean_id=bean.id,
         grind_setting=20.0,
         temperature=93.0,
-        preinfusion_pct=75.0,
+        preinfusion_pressure_pct=75.0,
         dose_in=19.0,
         target_yield=40.0,
         saturation="yes",

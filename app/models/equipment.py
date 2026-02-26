@@ -72,6 +72,8 @@ class Brewer(Base):
     # Flow capabilities
     flow_control_type = Column(String, nullable=False, default="none")
     # Values: "none", "manual_paddle", "manual_valve", "programmable"
+    saturation_flow_rate = Column(Float, nullable=True)
+    # ml/s — fixed brewer-level setting for saturation flow rate (e.g., 1.5 for Sage DB slayer mod)
 
     # Bloom capability
     has_bloom = Column(Boolean, nullable=False, default=False)

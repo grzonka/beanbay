@@ -62,7 +62,7 @@ def test_french_press_params():
     assert "dose_in" in params
     assert "brew_volume" in params
     # Should NOT have espresso-only params
-    assert "preinfusion_pct" not in params
+    assert "preinfusion_pressure_pct" not in params
     assert "saturation" not in params
 
 
@@ -76,7 +76,7 @@ def test_aeropress_params():
     assert "brew_volume" in params
     assert "brew_mode" in params
     # Should NOT have espresso-only params
-    assert "preinfusion_pct" not in params
+    assert "preinfusion_pressure_pct" not in params
 
 
 def test_cold_brew_params():
@@ -121,7 +121,7 @@ def test_optimizer_french_press_campaign(db_session):
     assert "grind_setting" in param_names
     assert "temperature" in param_names
     # Should NOT have espresso params
-    assert "preinfusion_pct" not in param_names
+    assert "preinfusion_pressure_pct" not in param_names
     assert "saturation" not in param_names
 
 

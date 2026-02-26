@@ -47,7 +47,7 @@ _MEASUREMENT_FLOAT_COLUMNS = {
     "temperature",
     "dose_in",
     "target_yield",
-    "preinfusion_pct",
+    "preinfusion_pressure_pct",
     "preinfusion_time",
     "preinfusion_pressure",
     "brew_pressure",
@@ -149,7 +149,7 @@ def _extract_params_from_form(method: str, form_data: dict) -> dict:
 
     Returns a dict of {param_name: value} for all known measurement columns
     that appear in the form data. Handles both float and string params.
-    Includes legacy params (preinfusion_pct, saturation) for backward compat
+    Includes legacy params (preinfusion_pressure_pct, saturation) for backward compat
     with old campaigns that still have them in their searchspace.
     """
     result = {}
@@ -401,7 +401,7 @@ async def record_measurement(
             dose_in=params.get("dose_in", 0.0),
             # Espresso params
             target_yield=params.get("target_yield"),
-            preinfusion_pct=params.get("preinfusion_pct"),
+            preinfusion_pressure_pct=params.get("preinfusion_pressure_pct"),
             saturation=params.get("saturation"),
             preinfusion_time=params.get("preinfusion_time"),
             preinfusion_pressure=params.get("preinfusion_pressure"),
@@ -511,10 +511,6 @@ async def manual_brew(request: Request, db: Session = Depends(get_db)):
             val = getattr(best, name, None)
             if val is not None:
                 prefill[name] = val
-        # Phase 20: prefer preinfusion_time over preinfusion_pct for legacy measurements
-        if "preinfusion_time" in active_param_names and prefill.get("preinfusion_time") is None:
-            if best.preinfusion_pct is not None:
-                prefill["preinfusion_time"] = round(best.preinfusion_pct / 100.0 * 15.0, 1)
         # Fill any missing active params with midpoints
         for pdef in param_defs:
             name = pdef["name"]
@@ -588,4 +584,3 @@ async def extend_ranges(
     db.commit()
 
     return JSONResponse(content={"status": "ok"})
-

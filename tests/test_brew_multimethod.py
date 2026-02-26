@@ -190,11 +190,11 @@ def test_optimizer_pour_over_campaign_has_bloom_param(db_session):
     assert "brew_volume" in param_names
     # Pour-over should NOT have espresso-only params
     assert "saturation" not in param_names
-    assert "preinfusion_pct" not in param_names
+    assert "preinfusion_pressure_pct" not in param_names
 
 
 def test_optimizer_espresso_campaign_phase20_tier1(db_session):
-    """Phase 20: New espresso campaigns use Tier 1 params only (no legacy preinfusion_pct/saturation)."""
+    """Phase 20: New espresso campaigns use Tier 1 params only (no legacy preinfusion_pressure_pct/saturation)."""
     from app.services.optimizer import OptimizerService
 
     def _factory():
@@ -207,8 +207,8 @@ def test_optimizer_espresso_campaign_phase20_tier1(db_session):
     param_names = [p.name for p in campaign.searchspace.parameters]
     # Phase 20: legacy params excluded from new campaigns
     assert "saturation" not in param_names, "Legacy saturation must not appear in new campaigns"
-    assert "preinfusion_pct" not in param_names, (
-        "Legacy preinfusion_pct must not appear in new campaigns"
+    assert "preinfusion_pressure_pct" not in param_names, (
+        "Legacy preinfusion_pressure_pct must not appear in new campaigns"
     )
     # Tier 1 core params must be present
     assert "grind_setting" in param_names
@@ -238,7 +238,7 @@ def _record_payload(rec_id: str, taste: float = 8.0, **kwargs) -> dict:
         "recommendation_id": rec_id,
         "grind_setting": "20.0",
         "temperature": "93.0",
-        "preinfusion_pct": "75.0",
+        "preinfusion_pressure_pct": "75.0",
         "dose_in": "19.0",
         "target_yield": "40.0",
         "saturation": "yes",
@@ -291,7 +291,7 @@ def test_method_context_in_history(active_client, sample_bean, sample_setup, db_
         recommendation_id=str(uuid.uuid4()),
         grind_setting=20.0,
         temperature=93.0,
-        preinfusion_pct=75.0,
+        preinfusion_pressure_pct=75.0,
         dose_in=19.0,
         target_yield=40.0,
         saturation="yes",

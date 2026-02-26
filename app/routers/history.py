@@ -92,7 +92,7 @@ def _load_shot_detail(shot_id: int, db: Session) -> dict:
         "taste": m.taste,
         "grind_setting": m.grind_setting,
         "temperature": m.temperature,
-        "preinfusion_pct": m.preinfusion_pct,
+        "preinfusion_pressure_pct": m.preinfusion_pressure_pct,
         "dose_in": m.dose_in,
         "target_yield": m.target_yield,
         "saturation": m.saturation,

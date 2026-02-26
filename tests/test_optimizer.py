@@ -46,7 +46,7 @@ async def test_recommend_returns_all_params(optimizer_service):
     assert rec["recommendation_id"]  # non-empty
 
     # Check bounds — Phase 20 Tier 1: grind_setting, temperature, dose_in, target_yield
-    # preinfusion_pct and saturation are legacy params excluded from new campaigns
+    # preinfusion_pressure_pct and saturation are legacy params excluded from new campaigns
     assert 15.0 <= rec["grind_setting"] <= 25.0
     assert 86.0 <= rec["temperature"] <= 96.0
     assert 18.5 <= rec["dose_in"] <= 20.0
@@ -62,7 +62,7 @@ async def test_recommend_rounding(optimizer_service):
     assert rec["temperature"] % 1.0 == 0, f"temp not rounded: {rec['temperature']}"
     assert rec["dose_in"] % 0.5 == 0, f"dose not rounded: {rec['dose_in']}"
     assert rec["target_yield"] % 1.0 == 0, f"yield not rounded: {rec['target_yield']}"
-    # preinfusion_pct is a legacy param excluded from new Phase-20 campaigns
+    # preinfusion_pressure_pct is a legacy param excluded from new Phase-20 campaigns
 
 
 async def test_add_measurement_and_recommend_again(optimizer_service, db_session):
@@ -133,7 +133,7 @@ async def test_rebuild_campaign(optimizer_service):
         {
             "grind_setting": 20.0,
             "temperature": 93.0,
-            "preinfusion_pct": 75.0,
+            "preinfusion_pressure_pct": 75.0,
             "dose_in": 19.0,
             "target_yield": 40.0,
             "saturation": "yes",
@@ -142,7 +142,7 @@ async def test_rebuild_campaign(optimizer_service):
         {
             "grind_setting": 21.0,
             "temperature": 94.0,
-            "preinfusion_pct": 80.0,
+            "preinfusion_pressure_pct": 80.0,
             "dose_in": 19.5,
             "target_yield": 42.0,
             "saturation": "no",
@@ -219,7 +219,7 @@ async def test_recommend_with_overrides(optimizer_service):
     assert 20.0 <= rec["grind_setting"] <= 22.0
     assert 92.0 <= rec["temperature"] <= 94.0
     # Non-overridden Phase-20 Tier-1 params use defaults
-    # preinfusion_pct and saturation are legacy params excluded from new campaigns
+    # preinfusion_pressure_pct and saturation are legacy params excluded from new campaigns
     assert 18.5 <= rec["dose_in"] <= 20.0
     assert 36.0 <= rec["target_yield"] <= 50.0
 
@@ -256,7 +256,7 @@ async def test_rebuild_campaign_with_overrides(optimizer_service):
         {
             "grind_setting": 20.0,
             "temperature": 91.0,
-            "preinfusion_pct": 75.0,
+            "preinfusion_pressure_pct": 75.0,
             "dose_in": 19.0,
             "target_yield": 40.0,
             "saturation": "yes",

@@ -33,7 +33,7 @@ from app.services.parameter_registry import (
 LEGACY_BAYBE_PARAM_COLUMNS = [
     "grind_setting",
     "temperature",
-    "preinfusion_pct",
+    "preinfusion_pressure_pct",
     "dose_in",
     "target_yield",
     "saturation",
@@ -48,7 +48,7 @@ LEGACY_POUR_OVER_PARAM_COLUMNS = [
 LEGACY_DEFAULT_BOUNDS = {
     "grind_setting": (15.0, 25.0),
     "temperature": (86.0, 96.0),
-    "preinfusion_pct": (55.0, 100.0),
+    "preinfusion_pressure_pct": (55.0, 100.0),
     "dose_in": (18.5, 20.0),
     "target_yield": (36.0, 50.0),
 }
@@ -62,7 +62,7 @@ LEGACY_POUR_OVER_DEFAULT_BOUNDS = {
 LEGACY_ROUNDING_RULES = {
     "grind_setting": 0.5,
     "temperature": 1.0,
-    "preinfusion_pct": 5.0,
+    "preinfusion_pressure_pct": 5.0,
     "dose_in": 0.5,
     "target_yield": 1.0,
 }
@@ -174,7 +174,7 @@ class TestEspressoBackwardCompat:
     def test_espresso_columns_no_brewer_returns_tier1(self):
         """Phase 20: get_param_columns('espresso') with no brewer returns Tier 1 (4 params).
 
-        Legacy params (preinfusion_pct, saturation) are excluded from new campaigns.
+        Legacy params (preinfusion_pressure_pct, saturation) are excluded from new campaigns.
         Capability-gated params are excluded when no brewer context is provided.
         """
         columns = get_param_columns("espresso")
@@ -184,14 +184,16 @@ class TestEspressoBackwardCompat:
         """get_default_bounds includes legacy params — needed for form validation + history."""
         bounds = get_default_bounds("espresso")
         # Legacy params must still have bounds for backward compat display
-        assert "preinfusion_pct" in bounds
-        assert bounds["preinfusion_pct"] == LEGACY_DEFAULT_BOUNDS["preinfusion_pct"]
+        assert "preinfusion_pressure_pct" in bounds
+        assert (
+            bounds["preinfusion_pressure_pct"] == LEGACY_DEFAULT_BOUNDS["preinfusion_pressure_pct"]
+        )
 
     def test_espresso_bounds_match_legacy_for_core_params(self):
         """Core param bounds (grind, temp, dose, yield) must match legacy values."""
         bounds = get_default_bounds("espresso")
         core_legacy = {
-            k: v for k, v in LEGACY_DEFAULT_BOUNDS.items() if k not in ("preinfusion_pct",)
+            k: v for k, v in LEGACY_DEFAULT_BOUNDS.items() if k not in ("preinfusion_pressure_pct",)
         }
         for param, expected in core_legacy.items():
             assert bounds[param] == expected, f"espresso bounds mismatch for {param}"
@@ -200,7 +202,7 @@ class TestEspressoBackwardCompat:
         """Core param rounding rules (grind, temp, dose, yield) must match legacy values."""
         rules = get_rounding_rules("espresso")
         core_legacy = {
-            k: v for k, v in LEGACY_ROUNDING_RULES.items() if k not in ("preinfusion_pct",)
+            k: v for k, v in LEGACY_ROUNDING_RULES.items() if k not in ("preinfusion_pressure_pct",)
         }
         for param, expected in core_legacy.items():
             assert rules[param] == expected, f"espresso rounding mismatch for {param}"
@@ -208,8 +210,10 @@ class TestEspressoBackwardCompat:
     def test_espresso_legacy_rounding_still_present(self):
         """get_rounding_rules includes legacy params — used for historical data display."""
         rules = get_rounding_rules("espresso")
-        assert "preinfusion_pct" in rules
-        assert rules["preinfusion_pct"] == LEGACY_ROUNDING_RULES["preinfusion_pct"]
+        assert "preinfusion_pressure_pct" in rules
+        assert (
+            rules["preinfusion_pressure_pct"] == LEGACY_ROUNDING_RULES["preinfusion_pressure_pct"]
+        )
 
     def test_espresso_build_no_brewer_returns_four_params(self):
         """Phase 20: build_parameters_for_setup('espresso') with no brewer returns Tier 1 (4 params).
@@ -228,10 +232,12 @@ class TestEspressoBackwardCompat:
         assert len(categorical) == 0
 
     def test_espresso_legacy_params_excluded_from_new_campaigns(self):
-        """preinfusion_pct and saturation must NOT appear in new espresso campaigns."""
+        """preinfusion_pressure_pct and saturation must NOT appear in new espresso campaigns."""
         params = build_parameters_for_setup("espresso")
         names = [p.name for p in params]
-        assert "preinfusion_pct" not in names, "Legacy preinfusion_pct must not be in new campaigns"
+        assert "preinfusion_pressure_pct" not in names, (
+            "Legacy preinfusion_pressure_pct must not be in new campaigns"
+        )
         assert "saturation" not in names, "Legacy saturation must not be in new campaigns"
 
 
@@ -358,7 +364,9 @@ class TestCapabilityFiltering:
         ]:
             assert core_param in names, f"Core param {core_param} missing with basic brewer"
         # Legacy params must NOT appear in new campaigns
-        assert "preinfusion_pct" not in names, "Legacy param must not appear in new campaigns"
+        assert "preinfusion_pressure_pct" not in names, (
+            "Legacy param must not appear in new campaigns"
+        )
         assert "saturation" not in names, "Legacy param must not appear in new campaigns"
 
 

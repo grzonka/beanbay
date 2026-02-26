@@ -38,7 +38,7 @@ def _make_rec(rec_id: str | None = None) -> dict:
         "recommendation_id": rec_id or str(uuid.uuid4()),
         "grind_setting": 20.0,
         "temperature": 93.0,
-        "preinfusion_pct": 75.0,
+        "preinfusion_pressure_pct": 75.0,
         "dose_in": 19.0,
         "target_yield": 40.0,
         "saturation": "yes",
@@ -54,7 +54,7 @@ def _seed_measurement(
         recommendation_id=rec_id or str(uuid.uuid4()),
         grind_setting=20.0,
         temperature=93.0,
-        preinfusion_pct=75.0,
+        preinfusion_pressure_pct=75.0,
         dose_in=19.0,
         target_yield=40.0,
         saturation="yes",
@@ -176,7 +176,7 @@ def test_show_recommendation_displays_params(active_client, sample_bean, db_sess
     # 6 params visible
     assert "20.0" in response.text  # grind_setting
     assert "93" in response.text  # temperature
-    assert "75" in response.text  # preinfusion_pct
+    assert "75" in response.text  # preinfusion_pressure_pct
     assert "19" in response.text  # dose_in
     assert "40" in response.text  # target_yield
     assert "yes" in response.text  # saturation
@@ -203,7 +203,7 @@ def _record_payload(
         "recommendation_id": rec_id,
         "grind_setting": "20.0",
         "temperature": "93.0",
-        "preinfusion_pct": "75.0",
+        "preinfusion_pressure_pct": "75.0",
         "dose_in": "19.0",
         "target_yield": "40.0",
         "saturation": "yes",
@@ -328,7 +328,7 @@ def test_show_best_excludes_failed_shots(active_client, sample_bean, db_session)
         recommendation_id=str(uuid.uuid4()),
         grind_setting=20.0,
         temperature=93.0,
-        preinfusion_pct=75.0,
+        preinfusion_pressure_pct=75.0,
         dose_in=19.0,
         target_yield=40.0,
         saturation="yes",
@@ -407,7 +407,7 @@ def test_show_best_brew_again_creates_new_measurement(active_client, sample_bean
         "recommendation_id": rec_id_1,
         "grind_setting": "20.0",
         "temperature": "93.0",
-        "preinfusion_pct": "75.0",
+        "preinfusion_pressure_pct": "75.0",
         "dose_in": "19.0",
         "target_yield": "40.0",
         "saturation": "yes",
@@ -723,7 +723,7 @@ def test_record_manual_brew_end_to_end(active_client, sample_bean, db_session):
         "is_manual": "true",
         "grind_setting": "20.0",
         "temperature": "93.0",
-        "preinfusion_pct": "75.0",
+        "preinfusion_pressure_pct": "75.0",
         "dose_in": "19.0",
         "target_yield": "40.0",
         "saturation": "yes",
@@ -817,7 +817,7 @@ def test_manual_form_has_range_data_attributes(active_client, sample_bean):
     # data-min and data-max should appear for each parameter number input
     assert 'data-min="15' in html or 'data-min="15.0' in html  # grind_setting default min
     assert 'data-max="25' in html or 'data-max="25.0' in html  # grind_setting default max
-    # Phase 20 Tier-1 active params (preinfusion_pct is legacy — excluded from new campaigns)
+    # Phase 20 Tier-1 active params (preinfusion_pressure_pct is legacy — excluded from new campaigns)
     assert 'data-param="grind_setting"' in html
     assert 'data-param="temperature"' in html
     assert 'data-param="dose_in"' in html

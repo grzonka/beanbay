@@ -21,7 +21,7 @@ Each parameter definition dict has the following keys:
   - legacy (bool): if True, param is excluded from new campaigns but kept for historical compat
 
 Phase 20 — Espresso parameter evolution:
-  - preinfusion_pct: legacy=True (kept for backward compat; excluded from new campaigns)
+  - preinfusion_pressure_pct: legacy=True (kept for backward compat; excluded from new campaigns)
   - saturation: legacy=True (kept for backward compat; excluded from new campaigns)
   - New espresso core: grind_setting, temperature, dose_in, target_yield
   - Tier 2: + preinfusion_time (gated on preinfusion_type != "none")
@@ -80,7 +80,7 @@ PARAMETER_REGISTRY: dict[str, list[dict[str, Any]]] = {
     # brew_mode: categorical for programmable flow control
     #
     # Legacy (legacy=True — excluded from new campaigns, kept for existing ones):
-    #   preinfusion_pct, saturation
+    #   preinfusion_pressure_pct, saturation
     # ------------------------------------------------------------------
     "espresso": [
         # ── Tier 1: always included ────────────────────────────────────
@@ -167,7 +167,7 @@ PARAMETER_REGISTRY: dict[str, list[dict[str, Any]]] = {
         # Existing serialized BayBE campaigns that include these in their
         # searchspace continue to work via Campaign.from_json().
         {
-            "name": "preinfusion_pct",
+            "name": "preinfusion_pressure_pct",
             "type": "continuous",
             "bounds": (55.0, 100.0),
             "rounding": 5.0,
@@ -490,7 +490,7 @@ def build_parameters_for_setup(
 ) -> list:
     """Build BayBE parameter objects for the given method and brewer.
 
-    Legacy-flagged parameters (e.g. preinfusion_pct, saturation) are excluded from
+    Legacy-flagged parameters (e.g. preinfusion_pressure_pct, saturation) are excluded from
     new campaigns.  Existing serialised campaigns with legacy params in their searchspace
     continue to work via Campaign.from_json() without going through this function.
 

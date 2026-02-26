@@ -1,6 +1,5 @@
 """Tests for TransferLearningService — BayBE campaign seeding via TaskParameter."""
 
-
 from app.models.bean import Bean
 from app.models.brew_method import BrewMethod
 from app.models.brew_setup import BrewSetup
@@ -41,7 +40,7 @@ def make_espresso_measurement(db, bean_id, brew_setup_id=None, taste=7.0):
         brew_setup_id=brew_setup_id,
         grind_setting=18.0,
         temperature=91.0,
-        preinfusion_pct=70.0,
+        preinfusion_pressure_pct=70.0,
         dose_in=19.0,
         target_yield=40.0,
         saturation="yes",

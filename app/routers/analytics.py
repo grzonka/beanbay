@@ -113,7 +113,7 @@ def _compute_comparison(db: Session) -> list[dict]:
                 "taste": best.taste,
                 "grind_setting": best.grind_setting,
                 "temperature": best.temperature,
-                "preinfusion_pct": best.preinfusion_pct,
+                "preinfusion_pressure_pct": best.preinfusion_pressure_pct,
                 "dose_in": best.dose_in,
                 "target_yield": best.target_yield,
                 "saturation": best.saturation,

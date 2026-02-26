@@ -1,6 +1,5 @@
 """Tests for SimilarityService — bean similarity matching for transfer learning."""
 
-
 from app.models.bean import Bean
 from app.models.brew_method import BrewMethod
 from app.models.brew_setup import BrewSetup
@@ -41,7 +40,7 @@ def make_espresso_measurement(db, bean_id, brew_setup_id=None, taste=7.0):
         brew_setup_id=brew_setup_id,
         grind_setting=18.0,
         temperature=91.0,
-        preinfusion_pct=70.0,
+        preinfusion_pressure_pct=70.0,
         dose_in=19.0,
         target_yield=40.0,
         saturation="yes",
@@ -59,7 +58,7 @@ def make_pour_over_measurement(db, bean_id, brew_setup_id, taste=7.0):
         brew_setup_id=brew_setup_id,
         grind_setting=28.0,
         temperature=94.0,
-        preinfusion_pct=0.0,  # unused but non-null in schema
+        preinfusion_pressure_pct=0.0,  # unused but non-null in schema
         dose_in=15.0,
         target_yield=250.0,
         saturation="no",

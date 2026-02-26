@@ -53,8 +53,8 @@
       {% endfor %}
       {# Legacy params: pass through if present in recommendation (old campaigns) #}
       {% if rec is mapping %}
-        {% if rec.preinfusion_pct is defined and rec.preinfusion_pct is not none %}
-      <input type="hidden" name="preinfusion_pct" value="{{ rec.preinfusion_pct }}">
+        {% if rec.preinfusion_pressure_pct is defined and rec.preinfusion_pressure_pct is not none %}
+      <input type="hidden" name="preinfusion_pressure_pct" value="{{ rec.preinfusion_pressure_pct }}">
         {% endif %}
         {% if rec.saturation is defined and rec.saturation is not none %}
       <input type="hidden" name="saturation" value="{{ rec.saturation }}">

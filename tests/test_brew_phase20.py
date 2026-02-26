@@ -1,11 +1,10 @@
 """Phase 20 tests: Espresso Parameter Evolution.
 
 Covers:
-  - Alembic data migration: preinfusion_pct → preinfusion_time formula
   - New Phase 20 columns present and nullable on Measurement
   - record_measurement stores new espresso params (brew_pressure, flow_rate, etc.)
-  - Legacy param (preinfusion_pct) stored on historical measurements (backward-compat reads)
-  - Tier 1 active params exclude legacy preinfusion_pct / saturation
+  - Legacy param (preinfusion_pressure_pct) stored on historical measurements (backward-compat reads)
+  - Tier 1 active params exclude legacy preinfusion_pressure_pct / saturation
 """
 
 import uuid
@@ -62,14 +61,14 @@ def test_espresso_tier1_active_params():
     assert "dose_in" in params
     assert "target_yield" in params
     # Legacy excluded from new campaigns
-    assert "preinfusion_pct" not in params
+    assert "preinfusion_pressure_pct" not in params
     assert "saturation" not in params
 
 
 def test_espresso_legacy_params_identified():
-    """get_legacy_param_columns returns preinfusion_pct and saturation for espresso."""
+    """get_legacy_param_columns returns preinfusion_pressure_pct and saturation for espresso."""
     legacy = get_legacy_param_columns("espresso")
-    assert "preinfusion_pct" in legacy
+    assert "preinfusion_pressure_pct" in legacy
     assert "saturation" in legacy
 
 
@@ -96,7 +95,7 @@ def test_espresso_default_bounds_include_new_params():
     assert "brew_pressure" in bounds
     assert "flow_rate" in bounds
     # Legacy param bounds still present (for backward compat display)
-    assert "preinfusion_pct" in bounds
+    assert "preinfusion_pressure_pct" in bounds
 
 
 # ---------------------------------------------------------------------------
@@ -161,8 +160,8 @@ def test_measurement_stores_phase20_new_params(db_session, sample_bean):
     assert m.brew_mode == "standard"
 
 
-def test_measurement_legacy_preinfusion_pct_nullable(db_session, sample_bean):
-    """Phase 20: preinfusion_pct and saturation are nullable (relaxed NOT NULL)."""
+def test_measurement_legacy_preinfusion_pressure_pct_nullable(db_session, sample_bean):
+    """Phase 20: preinfusion_pressure_pct and saturation are nullable (relaxed NOT NULL)."""
     m = Measurement(
         bean_id=sample_bean.id,
         recommendation_id=str(uuid.uuid4()),
@@ -172,75 +171,15 @@ def test_measurement_legacy_preinfusion_pct_nullable(db_session, sample_bean):
         target_yield=40.0,
         taste=8.0,
         is_failed=False,
-        preinfusion_pct=None,
+        preinfusion_pressure_pct=None,
         saturation=None,
     )
     db_session.add(m)
     db_session.commit()
     db_session.refresh(m)
 
-    assert m.preinfusion_pct is None
+    assert m.preinfusion_pressure_pct is None
     assert m.saturation is None
-
-
-# ---------------------------------------------------------------------------
-# Data migration formula: preinfusion_pct → preinfusion_time
-# ---------------------------------------------------------------------------
-
-
-def test_preinfusion_data_migration_formula():
-    """Data migration formula: time_seconds = ROUND(preinfusion_pct / 100.0 * 15.0, 1)."""
-    # This mirrors the SQL: ROUND(preinfusion_pct / 100.0 * 15.0, 1)
-    test_cases = [
-        (55.0, 8.2),  # 55/100*15 = 8.25 → rounds to 8.2 (Python round)
-        (75.0, 11.2),  # 75/100*15 = 11.25 → rounds to 11.2
-        (100.0, 15.0),  # 100/100*15 = 15.0
-        (0.0, 0.0),  # 0/100*15 = 0.0
-    ]
-    for pct, expected_approx in test_cases:
-        result = round(pct / 100.0 * 15.0, 1)
-        assert abs(result - expected_approx) < 0.2, (
-            f"preinfusion_pct={pct} → expected ≈{expected_approx}, got {result}"
-        )
-
-
-def test_preinfusion_migration_stored_in_measurement(db_session, sample_bean):
-    """A row with preinfusion_pct set but preinfusion_time null gets migrated formula value."""
-    # Simulate a pre-Phase-20 row: has preinfusion_pct, no preinfusion_time
-    m = Measurement(
-        bean_id=sample_bean.id,
-        recommendation_id=str(uuid.uuid4()),
-        grind_setting=20.0,
-        temperature=93.0,
-        dose_in=19.0,
-        target_yield=40.0,
-        taste=7.5,
-        is_failed=False,
-        preinfusion_pct=75.0,
-        preinfusion_time=None,  # not yet migrated
-    )
-    db_session.add(m)
-    db_session.commit()
-
-    # Simulate the migration logic manually (what the Alembic script does)
-    from sqlalchemy import text
-
-    db_session.execute(
-        text(
-            """
-            UPDATE measurements
-            SET preinfusion_time = ROUND(preinfusion_pct / 100.0 * 15.0, 1)
-            WHERE preinfusion_pct IS NOT NULL
-              AND preinfusion_time IS NULL
-            """
-        )
-    )
-    db_session.commit()
-
-    db_session.expire_all()
-    refreshed = db_session.query(Measurement).filter_by(id=m.id).first()
-    expected = round(75.0 / 100.0 * 15.0, 1)  # 11.2 or 11.3
-    assert refreshed.preinfusion_time == pytest.approx(expected, abs=0.15)
 
 
 # ---------------------------------------------------------------------------

@@ -2,7 +2,7 @@
    Context variables needed:
      - rec: dict (from recommendation) OR measurement object with same attrs
      - ratio: str like "1:2.1"
-   Phase 20: displays preinfusion_time instead of preinfusion_pct when present,
+   Phase 20: displays preinfusion_time when present,
    hides saturation for new campaigns, shows capability-driven advanced params.
 #}
 
@@ -23,7 +23,7 @@
   </div>
 
   {% if rec is mapping %}
-    {# Dict (recommendation) — show preinfusion_time if present, else preinfusion_pct #}
+    {# Dict (recommendation) — show preinfusion_time if present, else preinfusion_pressure_pct #}
     {% if rec.preinfusion_time is defined and rec.preinfusion_time is not none %}
     <div class="recipe-param">
       <span class="recipe-label">Pre-inf</span>
@@ -32,17 +32,17 @@
         <span class="recipe-unit">s</span>
       </span>
     </div>
-    {% elif rec.preinfusion_pct is defined and rec.preinfusion_pct is not none %}
+    {% elif rec.preinfusion_pressure_pct is defined and rec.preinfusion_pressure_pct is not none %}
     <div class="recipe-param">
       <span class="recipe-label">Pre-inf</span>
       <span class="recipe-value">
-        {{ rec.preinfusion_pct }}
+        {{ rec.preinfusion_pressure_pct }}
         <span class="recipe-unit">%</span>
       </span>
     </div>
     {% endif %}
   {% else %}
-    {# ORM object (Measurement) — prefer preinfusion_time, fall back to preinfusion_pct #}
+    {# ORM object (Measurement) — prefer preinfusion_time, fall back to preinfusion_pressure_pct #}
     {% if rec.preinfusion_time is not none %}
     <div class="recipe-param">
       <span class="recipe-label">Pre-inf</span>
@@ -51,11 +51,11 @@
         <span class="recipe-unit">s</span>
       </span>
     </div>
-    {% elif rec.preinfusion_pct is not none %}
+    {% elif rec.preinfusion_pressure_pct is not none %}
     <div class="recipe-param">
       <span class="recipe-label">Pre-inf</span>
       <span class="recipe-value">
-        {{ rec.preinfusion_pct }}
+        {{ rec.preinfusion_pressure_pct }}
         <span class="recipe-unit">%</span>
       </span>
     </div>

@@ -18,12 +18,14 @@ class Measurement(Base):
     dose_in = Column(Float, nullable=False)
 
     # Espresso-specific parameters (nullable for non-espresso methods)
-    preinfusion_pct = Column(Float, nullable=True)
+    preinfusion_pressure_pct = Column(
+        Float, nullable=True
+    )  # pump pressure % during pre-infusion (55-100%)
     target_yield = Column(Float, nullable=True)
     saturation = Column(String, nullable=True)
 
     # Phase 20: Advanced espresso parameters (all nullable)
-    preinfusion_time = Column(Float, nullable=True)  # seconds (replaces preinfusion_pct)
+    preinfusion_time = Column(Float, nullable=True)  # seconds — pre-infusion hold time
     preinfusion_pressure = Column(Float, nullable=True)  # bar — pressure during pre-infusion
     brew_pressure = Column(Float, nullable=True)  # bar — target brew pressure
     pressure_profile = Column(

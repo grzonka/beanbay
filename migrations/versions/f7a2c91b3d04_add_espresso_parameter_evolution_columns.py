@@ -8,18 +8,19 @@ Phase 20 changes:
   1. Add 8 new nullable columns to measurements table:
        preinfusion_time, preinfusion_pressure, brew_pressure, pressure_profile,
        bloom_pause, flow_rate, temp_profile, brew_mode
-  2. Data migration: preinfusion_pct → preinfusion_time
-       Conversion: time_seconds = preinfusion_pct / 100 * 15.0
-       Only applied to rows where preinfusion_pct is not null and preinfusion_time is null.
-  3. Make preinfusion_pct and saturation nullable (they were NOT NULL before).
+  2. Make preinfusion_pct and saturation nullable (they were NOT NULL before).
      SQLite batch-mode ALTER TABLE is used for the constraint relaxation.
+
+Note: preinfusion_pct was always pump pressure percentage (55-100%), NOT a time proxy.
+No data migration between preinfusion_pct and preinfusion_time — they measure different things.
+The column is renamed to preinfusion_pressure_pct in the next migration (rename_preinfusion_pct_add_saturation_flow_rate).
 """
 
 from typing import Sequence, Union
 
 import sqlalchemy as sa
 from alembic import op
-from sqlalchemy import inspect, text
+from sqlalchemy import inspect
 
 
 # revision identifiers, used by Alembic.
@@ -37,7 +38,7 @@ def _get_column_names(inspector, table_name: str) -> set:
 
 
 def upgrade() -> None:
-    """Upgrade schema — add new parameter columns + migrate preinfusion_pct."""
+    """Upgrade schema — add new parameter columns; relax nullability on preinfusion_pct/saturation."""
     conn = op.get_bind()
     inspector = inspect(conn)
     m_cols = _get_column_names(inspector, "measurements")
@@ -61,24 +62,7 @@ def upgrade() -> None:
                 batch_op.add_column(sa.Column(col_name, col_type, nullable=True))
 
     # ------------------------------------------------------------------ #
-    # 2. Data migration: preinfusion_pct → preinfusion_time               #
-    #    time_seconds = preinfusion_pct / 100.0 * 15.0                    #
-    #    Only rows where preinfusion_pct IS NOT NULL                       #
-    #    and preinfusion_time IS NULL (avoid double-applying on re-run)    #
-    # ------------------------------------------------------------------ #
-    conn.execute(
-        text(
-            """
-            UPDATE measurements
-            SET preinfusion_time = ROUND(preinfusion_pct / 100.0 * 15.0, 1)
-            WHERE preinfusion_pct IS NOT NULL
-              AND preinfusion_time IS NULL
-            """
-        )
-    )
-
-    # ------------------------------------------------------------------ #
-    # 3. Relax NOT NULL constraints on preinfusion_pct and saturation     #
+    # 2. Relax NOT NULL constraints on preinfusion_pct and saturation     #
     #    SQLite requires batch mode (full table rebuild) for this.        #
     # ------------------------------------------------------------------ #
     # Re-inspect after column additions to get current state
