@@ -180,46 +180,41 @@ Plans:
 
 ### Phase 20: Espresso Parameter Evolution
 
-**Goal:** Espresso parameters evolve from the current flat set to a capability-driven model — `preinfusion_pct` → `preinfusion_time`, `saturation` deprecated, new parameters (brew_pressure, pressure_profile, bloom_pause, flow_rate) available based on machine capabilities
+**Goal:** Espresso parameters evolve from the current flat set to a capability-driven model — `preinfusion_pct` renamed to `preinfusion_pressure_pct` (it was always pump pressure %), `saturation` reworked as active boolean toggle (not deprecated), new parameters available based on machine capabilities, campaign transition with rebuild prompt
 
 **Depends on:** Phase 18 (brewer capabilities), Phase 19 (parameter registry for dynamic building)
-**Requirements:** New espresso params in Measurement table, preinfusion_pct migration, saturation deprecation, capability-conditional UI, existing data preserved
+**Requirements:** Schema corrections per CONTEXT.md overrides, brewer wired into campaign creation, campaign outdated detection, UI hints for new params
 
-**Why this phase:** This is where the research hits the codebase. Users with capable machines (Sage DB, Lelit Bianca, Decent DE1) get parameters their machines actually support. Users with basic machines see only what they can control. The `preinfusion_pct` → `preinfusion_time` migration makes parameters physically meaningful.
+**Why this phase:** This is where the research hits the codebase. Users with capable machines (Sage DB, Lelit Bianca, Decent DE1) get parameters their machines actually support. Users with basic machines see only what they can control. Campaigns are now brewer-aware.
 
 **What gets built:**
-- New nullable columns on Measurement: `preinfusion_time`, `preinfusion_pressure`, `brew_pressure`, `pressure_profile`, `bloom_pause`, `flow_rate`, `temp_profile`, `brew_mode`
-- Alembic migration for new columns (nullable — no impact on existing rows)
-- `preinfusion_pct` → `preinfusion_time` data migration for existing measurements:
-  - Linear mapping: `preinfusion_time = ((pct - 55) / 45) * preinfusion_max_time`
-  - Default `preinfusion_max_time = 15s` (Sage DB range)
-  - `preinfusion_pct` column kept but excluded from new BayBE campaigns
-- `saturation` excluded from new BayBE campaigns (column kept for historical data)
-- Recommendation display and recording updated for new parameters
-- Brew form shows capability-appropriate parameters:
-  - Tier 1: grind, dose, yield (3 params)
-  - Tier 2: + temperature (4 params)
-  - Tier 3: + preinfusion_time (5 params)
-  - Tier 4: + brew_pressure and/or pressure_profile (5-6 params)
-  - Tier 5: + flow_rate, preinfusion_pressure, bloom_pause (6-8 params)
-- Campaign migration: new campaigns use new params; existing campaigns rebuilt on next access if brewer capabilities are set
-- `brew_mode` categorical: `pressure_priority` / `flow_priority` for machines that support both (e.g., Decent DE1, Meticulous Espresso)
+- `preinfusion_pct` → `preinfusion_pressure_pct` column rename (Alembic migration, NOT a data conversion — always was pump pressure %)
+- `saturation` reworked: NOT deprecated, becomes boolean toggle gated by `flow_control_type != 'none'`, `saturation_flow_rate` added to Brewer model
+- Missing registry entries: `preinfusion_pressure`, `bloom_pause`, `temp_profile` with capability gates
+- Brewer threaded through all campaign creation (optimizer, transfer learning, brew router)
+- Campaign structural fingerprinting: detect when brewer capabilities change the param set
+- Campaign rebuild prompt: "Your brewer now supports [params]. Rebuild?" with "remind once then quiet"
+- Dynamic hidden inputs in best.html (replaces hardcoded 6-param list)
+- One-time parameter onboarding hints, "new" badge after campaign rebuild
+- Flat ordered recommendation display with categorical badge styling
 
-**Plans:** 0 plans
+**Plans:** 3 plans
 
 Plans:
-- [ ] TBD — to be created by /gsd-plan-phase
+- [ ] 20-01-PLAN.md — Schema & Registry: rename preinfusion_pct, saturation rework, missing registry entries, Alembic migration
+- [ ] 20-02-PLAN.md — Brewer wiring: thread brewer into campaigns, structural fingerprint, outdated detection, rebuild prompt
+- [ ] 20-03-PLAN.md — Template & UI: dynamic best.html, param hints, "new" badge, flat ordered display
 
 **Success Criteria:**
-1. New espresso parameters stored in Measurement table
-2. `preinfusion_pct` data migrated to `preinfusion_time` for existing measurements
-3. `saturation` no longer included in new BayBE campaigns
-4. Brew form dynamically shows/hides parameters based on brewer capabilities
-5. Tier 1 machine users see only 3 parameters; Tier 5 see up to 8
-6. Existing campaigns continue to work (backward compatible)
-7. New campaigns use physical-unit parameters (seconds, bar, ml/s)
-8. Recommendation display adapts to show only relevant parameters
-9. All existing tests pass; parameter evolution tests added
+1. `preinfusion_pct` renamed to `preinfusion_pressure_pct` across entire codebase
+2. `saturation` is active boolean toggle gated by `flow_control_type != 'none'` (NOT deprecated)
+3. `preinfusion_pressure`, `bloom_pause`, `temp_profile` in registry with correct capability gates
+4. Campaigns created with brewer context use capability-appropriate parameters
+5. Campaign outdated detection prompts user when brewer capabilities change
+6. "Remind once then quiet" behavior for rebuild prompts
+7. best.html uses dynamic hidden inputs (works for any param count)
+8. One-time onboarding hints for new params, "new" badge after rebuild
+9. All existing tests pass; Phase 20 tests added
 
 ### Phase 21: New Brew Methods
 
@@ -343,6 +338,6 @@ Wave 3 (parallel):                  20 (Espresso)  21 (New Methods)
 | 17 | v0.3.0 | 3/3 | Complete | 2026-02-24 |
 | 18 | v0.3.0 | 2/2 | Complete | 2026-02-25 |
 | 19 | v0.3.0 | 3/3 | Complete | 2026-02-26 |
-| 20 | v0.3.0 | 0/? | Planned | — |
+| 20 | v0.3.0 | 0/3 | Planned | — |
 | 21 | v0.3.0 | 0/? | Planned | — |
 | 22 | v0.3.0 | 6/6 | Complete | 2026-02-26 |
