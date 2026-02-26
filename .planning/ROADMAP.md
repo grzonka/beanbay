@@ -64,6 +64,15 @@ Plans:
 Plans:
 - [x] 24-01-PLAN.md — Dashboard route + template with stats, recent brews, and quick actions
 
+### Phase 25: UX Bean Flow Polish ⏳ IN PROGRESS
+
+**Goal:** Clean up bean selection UX — remove active-bean from sidebar, add bean pickers to Insights and Analytics, make history filter visible by default, add dashboard intro message.
+**Plans:** 2 plans
+
+Plans:
+- [ ] 25-01-PLAN.md — Sidebar cleanup, dashboard intro, Insights bean picker
+- [ ] 25-02-PLAN.md — Analytics per-bean filter, history filter always visible
+
 ---
 
 ## Progress
@@ -85,3 +94,4 @@ Plans:
 | 22 | v0.3.0 | 6/6 | Complete | 2026-02-26 |
 | 23 | v0.3.0 Fixes | 3/3 | Complete | 2026-02-26 |
 | 24 | Home Dashboard | 1/1 | Complete | 2026-02-26 |
+| 25 | UX Bean Flow Polish | 0/2 | In Progress | — |

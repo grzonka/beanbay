@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 
 ## Current Position
 
-Phase: 24-home-dashboard (Plan 1 of 1 complete — phase COMPLETE)
-Status: Phase 24 complete — home dashboard shipped
-Last activity: 2026-02-26 — Completed 24-01-PLAN.md (dashboard route + template)
+Phase: 25-ux-bean-flow (Plan 0 of 2 complete — executing)
+Status: Phase 25 in progress — UX bean flow polish
+Last activity: 2026-02-27 — Phase 25 plans written, executing
 
-Progress: All 5 milestones shipped (46 plans across 22 phases) + phase 23 complete (3/3) + phase 24 complete (1/1)
-Ready for: v0.3.0 release (git tag, Docker image, changelog)
+Progress: All 5 milestones shipped (46 plans across 22 phases) + phase 23 complete (3/3) + phase 24 complete (1/1) + phase 25 in progress
+Ready for: Phase 25 execution
 
 ## Performance Metrics
 
@@ -215,12 +215,14 @@ See: .planning/PROJECT.md (Key Decisions table — 22+ decisions tracked)
 ## Session Continuity
 
 ### Last Session
-- **Date:** 2026-02-26
-- **What happened:** Completed plan 24-01. Built home dashboard page at `/` with stats grid, active bean card, recent brews list, and quick actions. Brand links in nav updated to point to `/`. All 409 tests pass.
-- **Where we left off:** Phase 24 complete. Ready for v0.3.0 release.
+- **Date:** 2026-02-27
+- **What happened:** Phase 25 (UX Bean Flow Polish) planned. Two wave-1 plans: 25-01 (sidebar cleanup, dashboard intro, insights bean picker) and 25-02 (analytics per-bean filter, history filter visible).
+- **Where we left off:** Executing Phase 25 plans.
 
 ### Next Steps
-1. v0.3.0 release (git tag, Docker image, changelog)
+1. Execute Phase 25 plans (wave 1, parallel)
+2. Verify Phase 25
+3. v0.3.0 release (git tag, Docker image, changelog)
 
 ---
 *State initialized: 2026-02-21*
