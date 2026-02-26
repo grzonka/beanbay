@@ -18,7 +18,7 @@
   <div class="wizard-step-connector"></div>
   <div class="wizard-step" data-step="3">4<span class="wizard-step-label">Water</span></div>
   <div class="wizard-step-connector"></div>
-  <div class="wizard-step" data-step="4">5<span class="wizard-step-label">Name</span></div>
+  <div class="wizard-step" data-step="4">5<span class="wizard-step-label">Confirm</span></div>
 </div>
 
 <form
@@ -30,6 +30,7 @@
   {# ── Step 1: Pick a Brewer ──────────────────────────────────── #}
   <div class="wizard-step-content active" id="step-0">
     <h2 class="text-xl font-semibold mb-4">Pick a Brewer</h2>
+    <div class="text-error text-sm mt-1 mb-3 hidden" id="step-0-error">Please select a brewer to continue.</div>
 
     {% if brewers %}
       <div class="wizard-options" role="radiogroup" aria-label="Choose a brewer">
@@ -66,6 +67,7 @@
   {# ── Step 2: Pick a Grinder ─────────────────────────────────── #}
   <div class="wizard-step-content" id="step-1">
     <h2 class="text-xl font-semibold mb-4">Pick a Grinder</h2>
+    <div class="text-error text-sm mt-1 mb-3 hidden" id="step-1-error">Please select a grinder to continue.</div>
 
     {% if grinders %}
       <div class="wizard-options" role="radiogroup" aria-label="Choose a grinder">
@@ -143,6 +145,7 @@
   {# ── Step 4: Pick a Water Recipe ────────────────────────────── #}
   <div class="wizard-step-content" id="step-3">
     <h2 class="text-xl font-semibold mb-4">Pick a Water Recipe</h2>
+    <div class="text-error text-sm mt-1 mb-3 hidden" id="step-3-error">Please select a water recipe to continue.</div>
 
     {% if water_recipes %}
       <div class="wizard-options" role="radiogroup" aria-label="Choose a water recipe">
@@ -178,11 +181,12 @@
     <a href="/equipment" class="wizard-add-link">+ Add a water recipe first</a>
   </div>
 
-  {# ── Step 5: Name Your Setup ─────────────────────────────────── #}
+  {# ── Step 5: Confirm Your Setup ──────────────────────────────── #}
   <div class="wizard-step-content" id="step-4">
-    <h2 class="text-xl font-semibold mb-4">Name Your Setup</h2>
+    <h2 class="text-xl font-semibold mb-1">Confirm Your Setup</h2>
+    <p class="text-base-content/60 text-sm mb-4">Review your selections and give this setup a name.</p>
 
-    <div class="form-control mb-6">
+    <div class="form-control mb-4">
       <label class="label"><span class="label-text">Setup Name</span></label>
       <input
         type="text"
@@ -196,25 +200,26 @@
       >
       <label class="label"><span class="label-text-alt text-base-content/60">Give this combination a memorable name.</span></label>
     </div>
+    <div class="text-error text-sm mb-3 hidden" id="step-4-error">Please give your setup a name.</div>
 
     {# Summary of selected components #}
     <div class="card bg-base-200 border border-base-300 mb-6" id="setup-summary-preview">
       <div class="card-body p-4">
-        <div class="font-semibold text-base mb-2">Your Setup</div>
-        <div id="summary-brewer" class="flex justify-between py-1">
-          <span class="text-base-content/60 text-sm">Brewer:</span>
+        <div class="font-semibold text-base mb-3">Setup Summary</div>
+        <div id="summary-brewer" class="flex justify-between py-1 border-b border-base-300">
+          <span class="text-base-content/60 text-sm">Brewer</span>
           <span class="font-medium text-sm" id="summary-brewer-name">—</span>
         </div>
-        <div id="summary-grinder" class="flex justify-between py-1">
-          <span class="text-base-content/60 text-sm">Grinder:</span>
+        <div id="summary-grinder" class="flex justify-between py-1 border-b border-base-300">
+          <span class="text-base-content/60 text-sm">Grinder</span>
           <span class="font-medium text-sm" id="summary-grinder-name">—</span>
         </div>
-        <div id="summary-paper" class="flex justify-between py-1">
-          <span class="text-base-content/60 text-sm">Filter:</span>
+        <div id="summary-paper" class="flex justify-between py-1 border-b border-base-300">
+          <span class="text-base-content/60 text-sm">Filter</span>
           <span class="font-medium text-sm" id="summary-paper-name">None</span>
         </div>
         <div id="summary-water" class="flex justify-between py-1">
-          <span class="text-base-content/60 text-sm">Water:</span>
+          <span class="text-base-content/60 text-sm">Water</span>
           <span class="font-medium text-sm" id="summary-water-name">—</span>
         </div>
       </div>
@@ -245,8 +250,9 @@
       id="btn-submit"
       class="btn btn-primary min-h-12 flex-1"
       style="display:none;"
+      onclick="this.classList.add('loading'); this.disabled = true;"
     >
-      {% if edit_mode %}Save Setup{% else %}Create Setup{% endif %}
+      {% if edit_mode %}Save Setup{% else %}Create Setup & Start Brewing →{% endif %}
     </button>
   </div>
 
@@ -259,19 +265,26 @@
   var totalSteps = 5;
   var currentStep = 0;
 
-  // Names map for summary (brewer/grinder/water) — built from server-rendered data
+  // Names map for summary (brewer/grinder/water/paper) — built from server-rendered data
+  // Using tojson filter to safely escape special characters (prevents XSS)
   var BREWERS = {
-    {% for brewer in brewers %}"{{ brewer.id }}": "{{ brewer.name }}"{% if not loop.last %},{% endif %}{% endfor %}
+    {% for brewer in brewers %}{{ brewer.id | tojson }}: {{ brewer.name | tojson }}{% if not loop.last %},{% endif %}{% endfor %}
   };
   var GRINDERS = {
-    {% for grinder in grinders %}"{{ grinder.id }}": "{{ grinder.name }}"{% if not loop.last %},{% endif %}{% endfor %}
+    {% for grinder in grinders %}{{ grinder.id | tojson }}: {{ grinder.name | tojson }}{% if not loop.last %},{% endif %}{% endfor %}
   };
   var PAPERS = {
-    {% for paper in papers %}"{{ paper.id }}": "{{ paper.name }}"{% if not loop.last %},{% endif %}{% endfor %}
+    {% for paper in papers %}{{ paper.id | tojson }}: {{ paper.name | tojson }}{% if not loop.last %},{% endif %}{% endfor %}
   };
   var WATER_RECIPES = {
-    {% for recipe in water_recipes %}"{{ recipe.id }}": "{{ recipe.name }}"{% if not loop.last %},{% endif %}{% endfor %}
+    {% for recipe in water_recipes %}{{ recipe.id | tojson }}: {{ recipe.name | tojson }}{% if not loop.last %},{% endif %}{% endfor %}
   };
+
+  function clearAllErrors() {
+    document.querySelectorAll('[id^="step-"][id$="-error"]').forEach(function(el) {
+      el.classList.add('hidden');
+    });
+  }
 
   function showStep(n) {
     document.querySelectorAll('.wizard-step-content').forEach(function(el, i) {
@@ -286,7 +299,7 @@
     document.getElementById('btn-next').style.display = n < totalSteps - 1 ? 'block' : 'none';
     document.getElementById('btn-submit').style.display = n === totalSteps - 1 ? 'block' : 'none';
 
-    // When entering step 5 (Name), auto-fill name and update summary
+    // When entering step 5 (Confirm), auto-fill name and update summary
     if (n === 4) {
       updateSummary();
       autoFillName();
@@ -299,26 +312,25 @@
   }
 
   function validateStep(n) {
-    if (n === 0) {
-      if (!getSelectedValue('brewer_id')) {
-        alert('Please select a brewer to continue.');
-        return false;
-      }
-    } else if (n === 1) {
-      if (!getSelectedValue('grinder_id')) {
-        alert('Please select a grinder to continue.');
-        return false;
-      }
-    } else if (n === 3) {
-      if (!getSelectedValue('water_recipe_id')) {
-        alert('Please select a water recipe to continue.');
-        return false;
-      }
-    } else if (n === 4) {
+    clearAllErrors();
+
+    if (n === 0 && !getSelectedValue('brewer_id')) {
+      document.getElementById('step-0-error').classList.remove('hidden');
+      return false;
+    }
+    if (n === 1 && !getSelectedValue('grinder_id')) {
+      document.getElementById('step-1-error').classList.remove('hidden');
+      return false;
+    }
+    if (n === 3 && !getSelectedValue('water_recipe_id')) {
+      document.getElementById('step-3-error').classList.remove('hidden');
+      return false;
+    }
+    if (n === 4) {
       var nameInput = document.getElementById('setup-name');
       if (!nameInput.value.trim()) {
+        document.getElementById('step-4-error').classList.remove('hidden');
         nameInput.focus();
-        alert('Please give your setup a name.');
         return false;
       }
     }
@@ -352,6 +364,11 @@
       nameInput.select();
     }
   }
+
+  // Clear errors when any selection changes
+  document.getElementById('wizard-form').addEventListener('change', function() {
+    clearAllErrors();
+  });
 
   window.wizardNext = function() {
     if (!validateStep(currentStep)) return;
