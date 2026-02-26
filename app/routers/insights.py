@@ -1,11 +1,14 @@
 """Insights router — optimization progress, convergence, and trust signals."""
 
+from typing import Optional
+
 from fastapi import APIRouter, Depends, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from app.database import get_db
+from app.models.bean import Bean
 from app.models.measurement import Measurement
 from app.routers.beans import _get_active_bean
 
@@ -141,11 +144,40 @@ def _build_chart_data(measurements_list: list[dict]) -> dict:
 
 
 @router.get("", response_class=HTMLResponse)
-async def insights_page(request: Request, db: Session = Depends(get_db)):
-    """Insights page — optimization progress and convergence for the active bean."""
-    bean = _get_active_bean(request, db)
+async def insights_page(
+    request: Request,
+    bean_id: Optional[str] = None,
+    db: Session = Depends(get_db),
+):
+    """Insights page — optimization progress and convergence for the selected bean."""
+    # Resolve bean: query param takes precedence, then cookie fallback
+    bean = None
+    if bean_id:
+        bean = db.query(Bean).filter(Bean.id == bean_id).first()
     if not bean:
-        return RedirectResponse(url="/beans", status_code=303)
+        bean = _get_active_bean(request, db)
+
+    # Always fetch all beans for the picker dropdown
+    beans = db.query(Bean).order_by(Bean.name).all()
+    selected_bean_id = bean.id if bean else None
+
+    # No bean selected — render a minimal page with the picker
+    if not bean:
+        return templates.TemplateResponse(
+            request,
+            "insights/index.html",
+            {
+                "active_bean": None,
+                "beans": beans,
+                "selected_bean_id": selected_bean_id,
+                "shot_count": 0,
+                "convergence": None,
+                "optimizer_phase": None,
+                "best_taste": None,
+                "chart_data": None,
+                "heatmap_data": None,
+            },
+        )
 
     # Get all measurements for this bean, ordered by creation time
     measurements_raw = (
@@ -221,6 +253,8 @@ async def insights_page(request: Request, db: Session = Depends(get_db)):
         "insights/index.html",
         {
             "active_bean": bean,
+            "beans": beans,
+            "selected_bean_id": selected_bean_id,
             "shot_count": shot_count,
             "convergence": convergence,
             "optimizer_phase": optimizer_phase,

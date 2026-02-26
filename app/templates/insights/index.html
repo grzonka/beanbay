@@ -7,6 +7,22 @@
   <h1 class="text-xl font-bold">Insights</h1>
 </div>
 
+<!-- Bean selector -->
+<div class="card bg-base-200 border border-base-300 mb-4">
+  <div class="card-body p-4">
+    <div class="text-sm font-semibold text-base-content/70 mb-1 uppercase tracking-wider">Bean</div>
+    <select class="select select-bordered w-full min-h-12"
+            onchange="window.location.href='/insights?bean_id=' + this.value">
+      <option value="" disabled {% if not active_bean %}selected{% endif %}>Pick a bean…</option>
+      {% for b in beans %}
+      <option value="{{ b.id }}" {% if active_bean and b.id == active_bean.id %}selected{% endif %}>{{ b.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+</div>
+
+{% if active_bean %}
+
 <!-- Bean + shot count header -->
 <div class="card bg-base-200 border border-base-300 mb-4">
   <div class="card-body p-4">
@@ -63,4 +79,10 @@
   <a href="/brew/best" class="btn btn-ghost w-full min-h-12 border border-base-300">View Best Recipe</a>
   {% endif %}
 </div>
+
+{% else %}
+<div class="text-center py-8 text-base-content/50">
+  <p class="text-sm">Select a bean above to see optimization insights.</p>
+</div>
+{% endif %}
 {% endblock %}
