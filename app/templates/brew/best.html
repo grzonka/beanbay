@@ -25,12 +25,17 @@
   <form method="post" action="/brew/record" id="brew-again-form">
     <!-- Fresh UUID per visit — allows re-brewing best recipe multiple times -->
     <input type="hidden" name="recommendation_id" value="{{ best_session_id }}">
-    <input type="hidden" name="grind_setting" value="{{ best.grind_setting }}">
-    <input type="hidden" name="temperature" value="{{ best.temperature }}">
+    {# Dynamic hidden inputs — driven by param_defs so all Phase 20+ params are forwarded correctly #}
+    {% for p in param_defs %}
+      {% set val = best[p.name] if best is mapping else best|attr(p.name) %}
+      {% if val is not none %}
+    <input type="hidden" name="{{ p.name }}" value="{{ val }}">
+      {% endif %}
+    {% endfor %}
+    {# Legacy: pass through preinfusion_pressure_pct if present (old campaigns that still have it) #}
+    {% if best is not mapping and best.preinfusion_pressure_pct is not none %}
     <input type="hidden" name="preinfusion_pressure_pct" value="{{ best.preinfusion_pressure_pct }}">
-    <input type="hidden" name="dose_in" value="{{ best.dose_in }}">
-    <input type="hidden" name="target_yield" value="{{ best.target_yield }}">
-    <input type="hidden" name="saturation" value="{{ best.saturation }}">
+    {% endif %}
 
     <!-- Taste score -->
     <div class="form-control mb-4" id="taste-group">
