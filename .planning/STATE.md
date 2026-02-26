@@ -22,11 +22,11 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 
 ## Current Position
 
-Phase: 23-v030-pre-release-fixes (Plan 1 of 3 complete)
-Status: In progress — plan 23-01 complete (history setup filter + recipe card icon fixes)
-Last activity: 2026-02-26 — Completed 23-01-PLAN.md (history filtering + info icon polish)
+Phase: 23-v030-pre-release-fixes (Plan 2 of 3 complete)
+Status: In progress — plan 23-02 complete (method-aware brew evaluation + welcome page)
+Last activity: 2026-02-26 — Completed 23-02-PLAN.md (brew method-awareness + onboarding welcome page)
 
-Progress: All 5 milestones shipped (46 plans across 22 phases) + phase 23 in progress (1/3 plans done)
+Progress: All 5 milestones shipped (46 plans across 22 phases) + phase 23 in progress (2/3 plans done)
 
 ## Performance Metrics
 
@@ -140,6 +140,12 @@ See: .planning/PROJECT.md (Key Decisions table — 22+ decisions tracked)
 - **TYPE_CHECKING guard for Bean/Session imports in optimizer.py:** Avoids circular import at module load time; type hints only, not runtime
 - **None return when no training data:** Even with matching similar_beans, if no actual DB measurements exist for those beans, returns None gracefully
 
+### Phase 23 Plan 02 Key Decisions
+- **`brew_method` defaults to `'espresso'` in templates:** Safe fallback for any legacy path that lacks `method` in context
+- **Cold-brew time in minutes (max 2880), others in seconds (max 120 espresso / 1800 other):** Minutes are natural for cold-brew steeping; displaying 7200 seconds would confuse users
+- **`/` shows welcome when bean count = 0, redirects when beans exist:** Onboarding for new users; zero extra click for returning users
+- **Root test split into two test functions:** New conditional behavior requires independent test coverage for each branch
+
 ### Phase 23 Plan 01 Key Decisions
 - **Setup filter queries active setups only:** `BrewSetup.is_retired == False` — retired setups hidden from history filter even if historical shots reference them
 - **param-info-icon uses primary amber (oklch 65% 0.122 54):** Matches `--color-primary`; 14px circular badge with italic bold "i" replaces near-invisible SVG
@@ -198,13 +204,12 @@ See: .planning/PROJECT.md (Key Decisions table — 22+ decisions tracked)
 
 ### Last Session
 - **Date:** 2026-02-26
-- **What happened:** Completed plan 23-01. Added brew setup filtering to history page (three-way filter: bean, setup, min taste). Replaced near-invisible SVG info icons on recipe cards with visible amber circular "i" badge (.param-info-icon). 408/408 tests passing.
-- **Where we left off:** Plan 23-01 complete. Plans 23-02 and 23-03 remaining in phase 23.
+- **What happened:** Completed plan 23-02. Made brew evaluation templates method-aware (terminology + time ranges per method). Created welcome onboarding page shown to users with empty databases. 409/408 tests passing (net +1 from splitting a test).
+- **Where we left off:** Plan 23-02 complete. Plan 23-03 remaining in phase 23.
 
 ### Next Steps
-1. Execute plan 23-02 (brew evaluation method-awareness — already committed separately)
-2. Execute plan 23-03 (remaining pre-release fixes)
-3. v0.3.0 release (git tag, Docker image, changelog)
+1. Execute plan 23-03 (remaining pre-release fixes)
+2. v0.3.0 release (git tag, Docker image, changelog)
 
 ---
 *State initialized: 2026-02-21*
