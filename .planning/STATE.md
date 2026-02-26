@@ -1,7 +1,7 @@
 # Project State: BeanBay
 
 **Last updated:** 2026-02-26
-**Current phase:** Phase 19 — Parameter Registry & Dynamic Search Space ✅ COMPLETE
+**Current phase:** Phase 20 — Espresso Parameter Evolution 🔄 In Progress
 
 ## Project Reference
 
@@ -32,8 +32,8 @@ Progress: [████████████████░░░░░░░
 ## Performance Metrics
 
 **Velocity:**
-  - Total plans completed: 44 (v1: 16, v0.1.0: 5, v0.1.1: 8, v0.2.0: 13, v0.3.0: 5 so far)
-  - Total phases completed: 19 complete
+  - Total plans completed: 45 (v1: 16, v0.1.0: 5, v0.1.1: 8, v0.2.0: 13, v0.3.0: 6 so far)
+  - Total phases completed: 19 complete, 20 in progress
   - All milestones shipped same day (Feb 22-23, 2026)
 
 ## Accumulated Context
@@ -189,4 +189,4 @@ See: .planning/PROJECT.md (Key Decisions table — 22+ decisions tracked)
 
 ---
 *State initialized: 2026-02-21*
-*Last updated: 2026-02-26 — Phase 19 COMPLETE (Parameter Registry & Dynamic Search Space — 3 plans, 337 tests passing)*
+*Last updated: 2026-02-26 — Phase 20 Plan 02 COMPLETE (Brewer Context Wiring + Campaign Outdated Flow — 405 tests passing)*
