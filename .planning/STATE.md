@@ -1,7 +1,7 @@
 # Project State: BeanBay
 
 **Last updated:** 2026-02-26
-**Current phase:** Phase 20 — Espresso Parameter Evolution 🔄 In Progress
+**Current phase:** Phase 21 — New Brew Methods (next up)
 
 ## Project Reference
 
@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-02-24)
 
 ## Current Position
 
-Phase: 20 — Espresso Parameter Evolution 🔄 In Progress
-Plan: 20-02 ✅ — 2/3 plans complete
-Status: Phase 20 in progress. Plans 01+02 complete. Next: Plan 03 (Brew UI capability-driven parameter display).
-Last activity: 2026-02-26 — Completed Phase 20 Plan 02 (Brewer Context Wiring + Campaign Outdated Detection). 405 tests passing.
+Phase: 20 — Espresso Parameter Evolution ✅ Complete
+Plan: 20-03 ✅ — 3/3 plans complete
+Status: Phase 20 complete. All 3 plans shipped. Next: Phase 21 (New Brew Methods).
+Last activity: 2026-02-26 — Completed Phase 20 Plan 03 (Brew UI capability-driven parameter display). 408 tests passing.
 
-Progress: [████████████████░░░░░░░░░░░░░░░░░░░░░░░░░] ~38% (16/~18 v0.3.0 plans)
+Progress: [████████████████████░░░░░░░░░░░░░░░░░░░░░] ~42% (17+/~18 v0.3.0 plans)
 
 ## Performance Metrics
 
@@ -40,6 +40,12 @@ Progress: [████████████████░░░░░░░
 
 ### Key Technical Decisions
 See: .planning/PROJECT.md (Key Decisions table — 22+ decisions tracked)
+
+### Phase 20 Plan 03 Key Decisions
+- **Hint cards server-rendered as hidden, JS reveals on DOMContentLoaded:** No flash of visible content before JS runs; `hidden` class removed only for params not yet in localStorage
+- **head_extra block added to base.html:** Cleanest way to pass bean-id and rec-params to hints.js without inline script globals
+- **New-badge uses data-param attrs on .recipe-param divs, injected by hints.js:** Recipe card (`_recipe_card.html`) is shared between best.html and recommend.html; hints.js only runs on recommend.html so badges are contextually correct
+- **Categorical params use badge badge-outline badge-sm:** Visual distinction from continuous (number+unit) params; replaces recipe-value-text class
 
 ### Phase 20 Plan 02 Key Decisions
 - **Two separate fingerprints:** `_param_set_fingerprint` (structural: params added/removed) vs `_bounds_fingerprint` (numeric range changes) — conflating them would miss structural changes or over-trigger rebuilds
@@ -180,13 +186,13 @@ See: .planning/PROJECT.md (Key Decisions table — 22+ decisions tracked)
 
 ### Last Session
 - **Date:** 2026-02-26
-- **What happened:** Completed Phase 20 Plan 02 — brewer context wired through all campaign creation paths, structural param_set_fingerprint + rebuild_declined columns added, outdated detection + rebuild/decline UX complete, history.py delete_batch now method-aware. 405/405 tests pass.
-- **Where we left off:** Phase 20 Plan 02 complete. Next: Phase 20 Plan 03 — Brew UI capability-driven parameter display.
+- **What happened:** Completed Phase 20 Plan 03 — dynamic hidden inputs in best.html, PARAM_HINTS dict + dismissible onboarding hints on recommend.html, new-badge via hints.js (localStorage per bean), categorical badge styling, data-param attrs on recipe card, head_extra block in base.html, 3 new tests. 408/408 tests pass.
+- **Where we left off:** Phase 20 complete (all 3 plans done). Next: Phase 21 — New Brew Methods.
 
 ### Next Steps
-1. Phase 20 Plan 03 — Brew UI capability-driven parameter display (param_defs already in templates)
-2. Phase 21 — New Brew Methods (parallel with Phase 20)
+1. Phase 21 — New Brew Methods (pour-over, French press, Aeropress, Moka pot, Chemex, cold brew)
+2. Phase 22 continues in parallel (already done — frontend modernization)
 
 ---
 *State initialized: 2026-02-21*
-*Last updated: 2026-02-26 — Phase 20 Plan 02 COMPLETE (Brewer Context Wiring + Campaign Outdated Flow — 405 tests passing)*
+*Last updated: 2026-02-26 — Phase 20 Plan 03 COMPLETE (Brew UI capability-driven parameter display — 408 tests passing)*
