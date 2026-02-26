@@ -66,10 +66,15 @@ def test_espresso_tier1_active_params():
 
 
 def test_espresso_legacy_params_identified():
-    """get_legacy_param_columns returns preinfusion_pressure_pct and saturation for espresso."""
+    """get_legacy_param_columns returns preinfusion_pressure_pct for espresso.
+
+    saturation is now an ACTIVE gated param (not legacy) since Phase 20 rework.
+    """
     legacy = get_legacy_param_columns("espresso")
     assert "preinfusion_pressure_pct" in legacy
-    assert "saturation" in legacy
+    assert "saturation" not in legacy, (
+        "saturation is now active (gated by flow_control_type), not legacy"
+    )
 
 
 def test_espresso_tier2_with_timed_preinfusion_brewer():

@@ -86,6 +86,7 @@ def make_brewer(**kwargs) -> SimpleNamespace:
         "pressure_control_type": "fixed",
         "temp_control_type": "pid",
         "flow_control_type": "none",
+        "has_bloom": False,
     }
     defaults.update(kwargs)
     return SimpleNamespace(**defaults)
@@ -232,13 +233,19 @@ class TestEspressoBackwardCompat:
         assert len(categorical) == 0
 
     def test_espresso_legacy_params_excluded_from_new_campaigns(self):
-        """preinfusion_pressure_pct and saturation must NOT appear in new espresso campaigns."""
+        """preinfusion_pressure_pct must NOT appear in new espresso campaigns.
+
+        saturation is now an active gated param (not legacy) — excluded here
+        because brewer=None means no flow_control capability.
+        """
         params = build_parameters_for_setup("espresso")
         names = [p.name for p in params]
         assert "preinfusion_pressure_pct" not in names, (
             "Legacy preinfusion_pressure_pct must not be in new campaigns"
         )
-        assert "saturation" not in names, "Legacy saturation must not be in new campaigns"
+        assert "saturation" not in names, (
+            "saturation excluded without brewer flow_control capability"
+        )
 
 
 # ===========================================================================
@@ -367,7 +374,161 @@ class TestCapabilityFiltering:
         assert "preinfusion_pressure_pct" not in names, (
             "Legacy param must not appear in new campaigns"
         )
-        assert "saturation" not in names, "Legacy param must not appear in new campaigns"
+        # saturation is now active but gated on flow_control_type — excluded for basic brewer
+        assert "saturation" not in names, (
+            "saturation excluded for basic brewer (no flow control capability)"
+        )
+
+    # ── Phase 20 new params ────────────────────────────────────────────────
+
+    def test_adjustable_pressure_preinfusion_includes_preinfusion_pressure(self):
+        """Brewer with preinfusion_type='adjustable_pressure' → preinfusion_pressure included."""
+        brewer = make_brewer(preinfusion_type="adjustable_pressure")
+        params = build_parameters_for_setup("espresso", brewer=brewer)
+        names = [p.name for p in params]
+        assert "preinfusion_pressure" in names
+
+    def test_timed_preinfusion_excludes_preinfusion_pressure(self):
+        """Brewer with preinfusion_type='timed' → preinfusion_pressure excluded (no pressure adjustment)."""
+        brewer = make_brewer(preinfusion_type="timed")
+        params = build_parameters_for_setup("espresso", brewer=brewer)
+        names = [p.name for p in params]
+        assert "preinfusion_pressure" not in names
+
+    def test_programmable_preinfusion_includes_preinfusion_pressure(self):
+        """Brewer with preinfusion_type='programmable' → preinfusion_pressure included."""
+        brewer = make_brewer(preinfusion_type="programmable")
+        params = build_parameters_for_setup("espresso", brewer=brewer)
+        names = [p.name for p in params]
+        assert "preinfusion_pressure" in names
+
+    def test_preinfusion_pressure_bounds(self):
+        """preinfusion_pressure has correct bounds (1.0, 6.0)."""
+        brewer = make_brewer(preinfusion_type="adjustable_pressure")
+        params = build_parameters_for_setup("espresso", brewer=brewer)
+        pi_pressure = next(p for p in params if p.name == "preinfusion_pressure")
+        assert isinstance(pi_pressure, NumericalContinuousParameter)
+        assert pi_pressure.bounds.lower == 1.0
+        assert pi_pressure.bounds.upper == 6.0
+
+    def test_flow_control_brewer_includes_saturation(self):
+        """Brewer with flow_control_type='manual_paddle' → saturation included."""
+        brewer = make_brewer(flow_control_type="manual_paddle")
+        params = build_parameters_for_setup("espresso", brewer=brewer)
+        names = [p.name for p in params]
+        assert "saturation" in names
+
+    def test_flow_control_manual_valve_includes_saturation(self):
+        """Brewer with flow_control_type='manual_valve' → saturation included."""
+        brewer = make_brewer(flow_control_type="manual_valve")
+        params = build_parameters_for_setup("espresso", brewer=brewer)
+        names = [p.name for p in params]
+        assert "saturation" in names
+
+    def test_no_flow_control_excludes_saturation(self):
+        """Brewer with flow_control_type='none' → saturation excluded."""
+        brewer = make_brewer(flow_control_type="none")
+        params = build_parameters_for_setup("espresso", brewer=brewer)
+        names = [p.name for p in params]
+        assert "saturation" not in names
+
+    def test_saturation_is_not_legacy(self):
+        """saturation must NOT be in the legacy params list (it is now an active gated param)."""
+        from app.services.parameter_registry import get_legacy_param_columns
+
+        legacy = get_legacy_param_columns("espresso")
+        assert "saturation" not in legacy
+
+    def test_get_param_columns_flow_control_includes_saturation(self):
+        """get_param_columns with flow_control brewer includes saturation."""
+        brewer = make_brewer(flow_control_type="programmable")
+        columns = get_param_columns("espresso", brewer=brewer)
+        assert "saturation" in columns
+
+    def test_has_bloom_brewer_includes_bloom_pause(self):
+        """Brewer with has_bloom=True → bloom_pause included."""
+        brewer = make_brewer(has_bloom=True)
+        params = build_parameters_for_setup("espresso", brewer=brewer)
+        names = [p.name for p in params]
+        assert "bloom_pause" in names
+
+    def test_no_bloom_brewer_excludes_bloom_pause(self):
+        """Brewer with has_bloom=False → bloom_pause excluded."""
+        brewer = make_brewer(has_bloom=False)
+        params = build_parameters_for_setup("espresso", brewer=brewer)
+        names = [p.name for p in params]
+        assert "bloom_pause" not in names
+
+    def test_bloom_pause_bounds(self):
+        """bloom_pause has correct bounds (0.0, 10.0)."""
+        brewer = make_brewer(has_bloom=True)
+        params = build_parameters_for_setup("espresso", brewer=brewer)
+        bloom = next(p for p in params if p.name == "bloom_pause")
+        assert isinstance(bloom, NumericalContinuousParameter)
+        assert bloom.bounds.lower == 0.0
+        assert bloom.bounds.upper == 10.0
+
+    def test_profiling_temp_control_includes_temp_profile(self):
+        """Brewer with temp_control_type='profiling' → temp_profile included."""
+        brewer = make_brewer(temp_control_type="profiling")
+        params = build_parameters_for_setup("espresso", brewer=brewer)
+        names = [p.name for p in params]
+        assert "temp_profile" in names
+
+    def test_pid_temp_control_excludes_temp_profile(self):
+        """Brewer with temp_control_type='pid' → temp_profile excluded."""
+        brewer = make_brewer(temp_control_type="pid")
+        params = build_parameters_for_setup("espresso", brewer=brewer)
+        names = [p.name for p in params]
+        assert "temp_profile" not in names
+
+    def test_temp_profile_values(self):
+        """temp_profile has correct categorical values."""
+        brewer = make_brewer(temp_control_type="profiling")
+        params = build_parameters_for_setup("espresso", brewer=brewer)
+        temp_profile = next(p for p in params if p.name == "temp_profile")
+        assert isinstance(temp_profile, CategoricalParameter)
+        assert set(temp_profile.values) == {"flat", "ramp_up", "ramp_down"}
+
+    def test_get_param_columns_no_brewer_excludes_all_gated(self):
+        """get_param_columns('espresso') with no brewer returns only Tier 1 (4 params)."""
+        columns = get_param_columns("espresso")
+        assert columns == ["grind_setting", "temperature", "dose_in", "target_yield"]
+        assert "saturation" not in columns
+        assert "bloom_pause" not in columns
+        assert "temp_profile" not in columns
+        assert "preinfusion_pressure" not in columns
+        assert "preinfusion_pressure_pct" not in columns
+
+    def test_fully_capable_brewer_includes_all_phase20_params(self):
+        """A brewer with all capabilities includes all Phase 20 params."""
+        brewer = make_brewer(
+            preinfusion_type="programmable",
+            pressure_control_type="programmable",
+            flow_control_type="programmable",
+            temp_control_type="profiling",
+            has_bloom=True,
+        )
+        params = build_parameters_for_setup("espresso", brewer=brewer)
+        names = [p.name for p in params]
+        for expected in [
+            "grind_setting",
+            "temperature",
+            "dose_in",
+            "target_yield",
+            "preinfusion_time",
+            "preinfusion_pressure",
+            "brew_pressure",
+            "pressure_profile",
+            "flow_rate",
+            "brew_mode",
+            "saturation",
+            "bloom_pause",
+            "temp_profile",
+        ]:
+            assert expected in names, f"Expected param {expected} missing with fully capable brewer"
+        # Legacy param must still be excluded
+        assert "preinfusion_pressure_pct" not in names
 
 
 # ===========================================================================
@@ -507,6 +668,35 @@ class TestRequiresCheck:
         brewer = SimpleNamespace()  # no preinfusion_type attribute
         cond = "brewer.preinfusion_type in (timed)"
         assert requires_check(cond, brewer) is False
+
+    def test_boolean_true_condition_true_value(self):
+        """brewer.has_bloom == True with has_bloom=True → True."""
+        brewer = make_brewer(has_bloom=True)
+        cond = "brewer.has_bloom == True"
+        assert requires_check(cond, brewer) is True
+
+    def test_boolean_true_condition_false_value(self):
+        """brewer.has_bloom == True with has_bloom=False → False."""
+        brewer = make_brewer(has_bloom=False)
+        cond = "brewer.has_bloom == True"
+        assert requires_check(cond, brewer) is False
+
+    def test_boolean_false_condition_false_value(self):
+        """brewer.has_bloom == False with has_bloom=False → True."""
+        brewer = make_brewer(has_bloom=False)
+        cond = "brewer.has_bloom == False"
+        assert requires_check(cond, brewer) is True
+
+    def test_boolean_false_condition_true_value(self):
+        """brewer.has_bloom == False with has_bloom=True → False."""
+        brewer = make_brewer(has_bloom=True)
+        cond = "brewer.has_bloom == False"
+        assert requires_check(cond, brewer) is False
+
+    def test_boolean_condition_none_brewer_returns_false(self):
+        """Boolean condition with brewer=None → False."""
+        cond = "brewer.has_bloom == True"
+        assert requires_check(cond, None) is False
 
 
 # ===========================================================================

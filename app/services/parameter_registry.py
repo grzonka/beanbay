@@ -22,13 +22,22 @@ Each parameter definition dict has the following keys:
 
 Phase 20 — Espresso parameter evolution:
   - preinfusion_pressure_pct: legacy=True (kept for backward compat; excluded from new campaigns)
-  - saturation: legacy=True (kept for backward compat; excluded from new campaigns)
+  - saturation: active boolean toggle gated on flow_control_type != 'none'
   - New espresso core: grind_setting, temperature, dose_in, target_yield
   - Tier 2: + preinfusion_time (gated on preinfusion_type != "none")
+           + preinfusion_pressure (gated on adjustable_pressure or programmable)
   - Tier 3: + brew_pressure (gated on pressure_control_type adjustable/electronic)
   - Tier 4: + pressure_profile (gated on manual_profiling/programmable pressure)
   - Tier 5: + flow_rate (gated on flow_control_type != "none")
-  - brew_mode: pressure_priority/flow_priority (gated on flow_control_type programmable)
+             + brew_mode (gated on programmable flow control)
+             + saturation (gated on flow_control_type != "none")
+  - bloom_pause: gated on brewer.has_bloom == True
+  - temp_profile: gated on temp_control_type in (profiling)
+
+Condition string formats supported by requires_check():
+  - ``brewer.{attr} in ({val1}, {val2}, ...)``  — membership test
+  - ``brewer.{attr} == True``                   — boolean True test
+  - ``brewer.{attr} == False``                  — boolean False test
 """
 
 from __future__ import annotations
@@ -125,6 +134,14 @@ PARAMETER_REGISTRY: dict[str, list[dict[str, Any]]] = {
             "requires": "brewer.preinfusion_type in (timed, adjustable_pressure, programmable)",
             "legacy": False,
         },
+        {
+            "name": "preinfusion_pressure",
+            "type": "continuous",
+            "bounds": (1.0, 6.0),
+            "rounding": 0.5,
+            "requires": "brewer.preinfusion_type in (adjustable_pressure, programmable)",
+            "legacy": False,
+        },
         # ── Tier 3: adjustable/electronic/programmable pressure ────────
         {
             "name": "brew_pressure",
@@ -163,6 +180,36 @@ PARAMETER_REGISTRY: dict[str, list[dict[str, Any]]] = {
             "requires": "brewer.flow_control_type in (programmable)",
             "legacy": False,
         },
+        # ── Saturation toggle: gated by flow control capability ────────
+        # Saturation toggle: perform reduced-flow pre-wetting. Gated by flow control capability.
+        {
+            "name": "saturation",
+            "type": "categorical",
+            "values": ["yes", "no"],
+            "encoding": "OHE",
+            "rounding": None,
+            "requires": "brewer.flow_control_type in (manual_paddle, manual_valve, programmable)",
+            "legacy": False,
+        },
+        # ── bloom_pause: bloom/soak gated on has_bloom capability ─────
+        {
+            "name": "bloom_pause",
+            "type": "continuous",
+            "bounds": (0.0, 10.0),
+            "rounding": 1.0,
+            "requires": "brewer.has_bloom == True",
+            "legacy": False,
+        },
+        # ── temp_profile: temperature profiling ───────────────────────
+        {
+            "name": "temp_profile",
+            "type": "categorical",
+            "values": ["flat", "ramp_up", "ramp_down"],
+            "encoding": "OHE",
+            "rounding": None,
+            "requires": "brewer.temp_control_type in (profiling)",
+            "legacy": False,
+        },
         # ── Legacy params: kept in registry but excluded from new campaigns
         # Existing serialized BayBE campaigns that include these in their
         # searchspace continue to work via Campaign.from_json().
@@ -171,15 +218,6 @@ PARAMETER_REGISTRY: dict[str, list[dict[str, Any]]] = {
             "type": "continuous",
             "bounds": (55.0, 100.0),
             "rounding": 5.0,
-            "requires": None,
-            "legacy": True,  # excluded from NEW campaigns; existing campaigns unaffected
-        },
-        {
-            "name": "saturation",
-            "type": "categorical",
-            "values": ["yes", "no"],
-            "encoding": "OHE",
-            "rounding": None,
             "requires": None,
             "legacy": True,  # excluded from NEW campaigns; existing campaigns unaffected
         },
@@ -422,7 +460,10 @@ PARAMETER_REGISTRY: dict[str, list[dict[str, Any]]] = {
 def requires_check(condition_str: str | None, brewer: Any) -> bool:
     """Evaluate a capability-gate condition string against a brewer instance.
 
-    Condition format:  ``brewer.{attr} in ({val1}, {val2}, ...)``
+    Supported condition formats:
+      - ``brewer.{attr} in ({val1}, {val2}, ...)``  — membership test
+      - ``brewer.{attr} == True``                   — boolean True test
+      - ``brewer.{attr} == False``                  — boolean False test
 
     Rules:
     - If condition_str is None → return True (always include the param)
@@ -443,15 +484,29 @@ def requires_check(condition_str: str | None, brewer: Any) -> bool:
     if brewer is None:
         return False  # No brewer context → exclude all gated params
 
-    # Parse: "brewer.{attr} in ({val1}, {val2}, ...)"
+    # Parse condition string
     try:
-        # Strip whitespace
         cond = condition_str.strip()
         # Must start with "brewer."
         if not cond.startswith("brewer."):
             return True  # Unknown format — include to be safe
 
-        # Split on " in "
+        # ── Boolean equality: "brewer.{attr} == True" / "brewer.{attr} == False" ──
+        if " == " in cond:
+            parts = cond.split(" == ", 1)
+            if len(parts) == 2:
+                attr_part = parts[0].strip()  # e.g. "brewer.has_bloom"
+                rhs = parts[1].strip()  # e.g. "True" or "False"
+                attr_name = attr_part[len("brewer.") :]
+                brewer_value = getattr(brewer, attr_name, None)
+                if rhs == "True":
+                    return bool(brewer_value) is True
+                if rhs == "False":
+                    return bool(brewer_value) is False
+            # Unknown equality form — include to be safe
+            return True
+
+        # ── Membership: "brewer.{attr} in ({val1}, {val2}, ...)" ──────────────────
         parts = cond.split(" in ", 1)
         if len(parts) != 2:
             return True
