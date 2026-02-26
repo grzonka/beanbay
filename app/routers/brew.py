@@ -210,6 +210,7 @@ async def brew_index(request: Request, db: Session = Depends(get_db)):
             "has_measurements": has_measurements,
             "beans": beans,
             "setups": setups,
+            "method": _get_method_from_setup(active_setup),
         },
     )
 

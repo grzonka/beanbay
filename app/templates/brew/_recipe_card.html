@@ -14,13 +14,21 @@
     </span>
   </div>
 
-  <div class="recipe-param" data-param="temperature">
-    <span class="recipe-label">Temp</span>
-    <span class="recipe-value">
-      {% if rec is mapping %}{{ rec.temperature }}{% else %}{{ rec.temperature }}{% endif %}
-      <span class="recipe-unit">°C</span>
-    </span>
-  </div>
+  {% if rec is mapping %}
+    {% if rec.temperature is defined and rec.temperature is not none %}
+    <div class="recipe-param" data-param="temperature">
+      <span class="recipe-label">Temp</span>
+      <span class="recipe-value">{{ rec.temperature }}<span class="recipe-unit">°C</span></span>
+    </div>
+    {% endif %}
+  {% else %}
+    {% if rec.temperature is not none %}
+    <div class="recipe-param" data-param="temperature">
+      <span class="recipe-label">Temp</span>
+      <span class="recipe-value">{{ rec.temperature }}<span class="recipe-unit">°C</span></span>
+    </div>
+    {% endif %}
+  {% endif %}
 
   {% if rec is mapping %}
     {# Dict (recommendation) — show preinfusion_time if present, else preinfusion_pressure_pct #}
@@ -70,6 +78,40 @@
     </span>
   </div>
 
+  {# Phase 21: steep_time for french-press, aeropress, cold-brew, etc. #}
+  {% if rec is mapping %}
+    {% if rec.steep_time is defined and rec.steep_time is not none %}
+    <div class="recipe-param" data-param="steep_time">
+      <span class="recipe-label">Steep</span>
+      <span class="recipe-value">{{ rec.steep_time }}<span class="recipe-unit">s</span></span>
+    </div>
+    {% endif %}
+  {% else %}
+    {% if rec.steep_time is not none %}
+    <div class="recipe-param" data-param="steep_time">
+      <span class="recipe-label">Steep</span>
+      <span class="recipe-value">{{ rec.steep_time }}<span class="recipe-unit">s</span></span>
+    </div>
+    {% endif %}
+  {% endif %}
+
+  {# Phase 21: bloom_weight for pour-over, etc. #}
+  {% if rec is mapping %}
+    {% if rec.bloom_weight is defined and rec.bloom_weight is not none %}
+    <div class="recipe-param" data-param="bloom_weight">
+      <span class="recipe-label">Bloom</span>
+      <span class="recipe-value">{{ rec.bloom_weight }}<span class="recipe-unit">g</span></span>
+    </div>
+    {% endif %}
+  {% else %}
+    {% if rec.bloom_weight is not none %}
+    <div class="recipe-param" data-param="bloom_weight">
+      <span class="recipe-label">Bloom</span>
+      <span class="recipe-value">{{ rec.bloom_weight }}<span class="recipe-unit">g</span></span>
+    </div>
+    {% endif %}
+  {% endif %}
+
   {% if rec is mapping %}
     {% if rec.target_yield is defined and rec.target_yield is not none %}
     <div class="recipe-param" data-param="target_yield">
@@ -87,6 +129,23 @@
     <div class="recipe-param" data-param="target_yield">
       <span class="recipe-label">Yield</span>
       <span class="recipe-value">{{ rec.target_yield }}<span class="recipe-unit">g</span></span>
+    </div>
+    {% endif %}
+  {% endif %}
+
+  {# Show brew_volume separately when target_yield is also present #}
+  {% if rec is mapping %}
+    {% if rec.target_yield is defined and rec.target_yield is not none and rec.brew_volume is defined and rec.brew_volume is not none %}
+    <div class="recipe-param" data-param="brew_volume">
+      <span class="recipe-label">Volume</span>
+      <span class="recipe-value">{{ rec.brew_volume }}<span class="recipe-unit">ml</span></span>
+    </div>
+    {% endif %}
+  {% else %}
+    {% if rec.target_yield is not none and rec.brew_volume is not none %}
+    <div class="recipe-param" data-param="brew_volume">
+      <span class="recipe-label">Volume</span>
+      <span class="recipe-value">{{ rec.brew_volume }}<span class="recipe-unit">ml</span></span>
     </div>
     {% endif %}
   {% endif %}

@@ -16,6 +16,9 @@
       <div class="text-sm font-semibold text-base-content/70 mb-1 uppercase tracking-wider">Setup</div>
       {% if active_setup %}
         <div class="text-base font-semibold mb-1">{{ active_setup.name }}</div>
+        {% if method and method != "espresso" %}
+        <span class="badge badge-outline badge-sm capitalize">{{ method }}</span>
+        {% endif %}
         <div class="text-sm text-base-content/70 mb-3">
           {% set parts = [] %}
           {% if active_setup.brewer %}{% set _ = parts.append(active_setup.brewer.name) %}{% endif %}
