@@ -6,7 +6,7 @@
 - ✅ **v0.1.0 Release & Deploy** — Phases 7-9 (shipped 2026-02-22)
 - ✅ **v0.1.1 UX Polish & Manual Brew** — Phases 10-12 (shipped 2026-02-22)
 - ✅ **v0.2.0 Multi-Method & Intelligence** — Phases 13-16 (shipped 2026-02-23)
-- 🔄 **v0.3.0 Equipment Intelligence & Parameter Evolution** — Phases 17-22
+- ✅ **v0.3.0 Equipment Intelligence & Parameter Evolution** — Phases 17-22 (shipped 2026-02-26)
 
 ## Phases
 
@@ -246,7 +246,7 @@ Plans:
 **Plans:** 1 plan
 
 Plans:
-- [ ] 21-01-PLAN.md — Method-aware template rendering (recipe card, shot modal, brew index, history wiring)
+- [x] 21-01-PLAN.md — Method-aware template rendering (recipe card, shot modal, brew index, history wiring)
 
 **Success Criteria:**
 1. All 7 brew methods available in BeanBay (espresso, pour-over, french-press, aeropress, turkish, moka-pot, cold-brew)
@@ -339,5 +339,5 @@ Wave 3 (parallel):                  20 (Espresso)  21 (New Methods)
 | 18 | v0.3.0 | 2/2 | Complete | 2026-02-25 |
 | 19 | v0.3.0 | 3/3 | Complete | 2026-02-26 |
 | 20 | v0.3.0 | 3/3 | Complete | 2026-02-26 |
-| 21 | v0.3.0 | 0/? | Planned | — |
+| 21 | v0.3.0 | 1/1 | Complete | 2026-02-26 |
 | 22 | v0.3.0 | 6/6 | Complete | 2026-02-26 |

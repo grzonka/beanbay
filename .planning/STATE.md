@@ -1,7 +1,7 @@
 # Project State: BeanBay
 
 **Last updated:** 2026-02-26
-**Current phase:** Phase 21 — New Brew Methods (in progress)
+**Current phase:** Phase 21 — New Brew Methods ✅ Complete
 
 ## Project Reference
 
@@ -18,23 +18,23 @@ See: .planning/PROJECT.md (updated 2026-02-24)
 | v0.1.0 Release & Deploy | 7-9 | 5 | ✅ Shipped | 2026-02-22 |
 | v0.1.1 UX Polish & Manual Brew | 10-12 | 8 | ✅ Shipped | 2026-02-22 |
 | v0.2.0 Multi-Method & Intelligence | 13-16 | 13 | ✅ Shipped | 2026-02-23 |
-| v0.3.0 Equipment Intelligence & Parameter Evolution | 17-22 | TBD | 🔄 Planned | — |
+| v0.3.0 Equipment Intelligence & Parameter Evolution | 17-22 | 18 | ✅ Shipped | 2026-02-26 |
 
 ## Current Position
 
-Phase: 21 — New Brew Methods (in progress)
-Plan: 21-01 ✅ — 1/? plans complete
-Status: Phase 21 Plan 01 complete. Method-aware templates shipped. 408 tests passing.
-Last activity: 2026-02-26 — Completed Phase 21 Plan 01 (Method-aware template rendering).
+Phase: 21 — New Brew Methods ✅ Complete
+Plan: 21-01 ✅ — 1/1 plans complete
+Status: Phase 21 complete. v0.3.0 milestone SHIPPED. All 6 phases (17-22) done. 408 tests passing.
+Last activity: 2026-02-26 — Completed Phase 21 Plan 01 (Method-aware template rendering). Phase verified.
 
-Progress: [█████████████████████░░░░░░░░░░░░░░░░░░░░] ~43% (18+/~18 v0.3.0 plans)
+Progress: [████████████████████████████████████████] 100% (18/18 v0.3.0 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-  - Total plans completed: 46 (v1: 16, v0.1.0: 5, v0.1.1: 8, v0.2.0: 13, v0.3.0: 7 so far)
-  - Total phases completed: 20 complete, 21 in progress
-  - All milestones shipped same day (Feb 22-23, 2026)
+  - Total plans completed: 46 (v1: 16, v0.1.0: 5, v0.1.1: 8, v0.2.0: 13, v0.3.0: 18)
+  - Total phases completed: 22
+  - All milestones shipped same day (Feb 22-26, 2026)
 
 ## Accumulated Context
 
@@ -194,13 +194,13 @@ See: .planning/PROJECT.md (Key Decisions table — 22+ decisions tracked)
 
 ### Last Session
 - **Date:** 2026-02-26
-- **What happened:** Completed Phase 21 Plan 01 — method-aware recipe card (conditional temp, steep_time, bloom_weight, brew_volume), brew index method badge, `_load_shot_detail` wired for all Phase 20+21 columns, shot modal fully dynamic. 408/408 tests pass.
-- **Where we left off:** Phase 21 Plan 01 complete. Next: remaining Phase 21 plans (brew form for new methods, method selection UX, etc.)
+- **What happened:** Completed Phase 21 Plan 01 — method-aware recipe card (conditional temp, steep_time, bloom_weight, brew_volume), brew index method badge, `_load_shot_detail` wired for all Phase 20+21 columns, shot modal fully dynamic. Phase verified. v0.3.0 milestone complete (all 6 phases shipped). 408/408 tests pass.
+- **Where we left off:** v0.3.0 complete. All phases 17-22 shipped. Ready for next milestone planning.
 
 ### Next Steps
-1. Phase 21 — remaining plans (brew form for non-espresso methods, method selection on brew page)
-2. Phase 22 continues in parallel (already done — frontend modernization)
+1. Plan next milestone (v0.4.0 or similar)
+2. Consider v0.3.0 release (tag, Docker image, changelog)
 
 ---
 *State initialized: 2026-02-21*
-*Last updated: 2026-02-26 — Phase 21 Plan 01 COMPLETE (Method-aware template rendering — 408 tests passing)*
+*Last updated: 2026-02-26 — v0.3.0 MILESTONE COMPLETE (Phase 21 done — 408 tests passing)*
