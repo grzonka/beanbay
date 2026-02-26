@@ -400,8 +400,9 @@ def test_delete_batch_removes_measurements(client, sample_bean, db_session):
 
 
 def test_delete_batch_rebuilds_campaign(client, sample_bean, db_session):
-    """POST /history/delete-batch calls rebuild_campaign for affected bean."""
+    """POST /history/delete-batch calls rebuild_campaign for affected bean with compound campaign key."""
     from app.main import app
+    from app.services.optimizer_key import make_campaign_key
 
     shot1 = _seed_shot(db_session, sample_bean.id, taste=8.0)
     _seed_shot(db_session, sample_bean.id, taste=7.0)  # one remains
@@ -418,7 +419,9 @@ def test_delete_batch_rebuilds_campaign(client, sample_bean, db_session):
     assert response.status_code == 303
     mock_optimizer.rebuild_campaign.assert_called_once()
     call_args = mock_optimizer.rebuild_campaign.call_args
-    assert str(sample_bean.id) == str(call_args[0][0])
+    # Measurements have no brew_setup (legacy) → key is {bean_id}__espresso__none
+    expected_key = make_campaign_key(str(sample_bean.id), "espresso", None)
+    assert str(call_args[0][0]) == expected_key
 
 
 def test_delete_batch_empty_ids_redirects(client, sample_bean, db_session):

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Campaign Update Available — BeanBay{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6 min-h-12">
+  <h1 class="text-xl font-bold">Campaign Update</h1>
+  <a href="/brew" class="btn btn-ghost btn-sm">← Back</a>
+</div>
+
+<div class="card bg-base-200 border border-base-300 mb-4">
+  <div class="card-body p-4">
+    <h2 class="card-title text-lg mb-2">New Parameters Available</h2>
+    <p class="text-base-content/70 mb-4">
+      Your brewer supports additional parameters that aren't in your current campaign.
+      Rebuilding will incorporate them into future recommendations.
+    </p>
+
+    {% if new_params %}
+    <div class="mb-4">
+      <div class="text-sm font-semibold text-base-content/60 mb-2">New parameters:</div>
+      <div class="flex flex-wrap gap-2">
+        {% for param in new_params %}
+        <span class="badge badge-outline badge-sm">{{ param | replace("_", " ") | title }}</span>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <p class="text-sm text-base-content/50">
+      Your existing brew history will be preserved. Shots that have values for the new parameters
+      will carry over; others will be used as-is.
+    </p>
+  </div>
+</div>
+
+<div class="flex flex-col gap-3">
+  <form method="post" action="/brew/rebuild-campaign">
+    <input type="hidden" name="campaign_key" value="{{ campaign_key }}">
+    <input type="hidden" name="method" value="{{ method }}">
+    <button type="submit" class="btn btn-primary w-full min-h-16 rounded-xl">
+      Rebuild Campaign
+    </button>
+  </form>
+
+  <form method="post" action="/brew/decline-rebuild">
+    <input type="hidden" name="campaign_key" value="{{ campaign_key }}">
+    <button type="submit" class="btn btn-ghost w-full min-h-12">
+      Skip for Now
+    </button>
+  </form>
+</div>
+{% endblock %}

@@ -331,21 +331,49 @@ async def delete_batch(request: Request, db: Session = Depends(get_db)):
         bean = db.query(Bean).filter(Bean.id == bean_id).first()
         remaining = db.query(Measurement).filter(Measurement.bean_id == bean_id).all()
         overrides = bean.parameter_overrides if bean else None
-        if remaining:
-            # TODO(Phase 20): make method-aware for non-espresso campaigns
-            param_columns = get_param_columns("espresso")
-            df = pd.DataFrame(
-                [
-                    {
-                        **{col: getattr(m, col) for col in param_columns},
-                        "taste": m.taste,
-                    }
-                    for m in remaining
-                ]
-            )
-            optimizer.rebuild_campaign(bean_id, df, overrides=overrides)
+
+        # Group remaining measurements by (method, setup_id) to rebuild per-campaign
+        from app.services.optimizer_key import make_campaign_key
+        from collections import defaultdict
+
+        campaigns_to_rebuild: dict[tuple, list] = defaultdict(list)
+        for m in remaining:
+            if m.brew_setup is not None and m.brew_setup.brew_method is not None:
+                method = m.brew_setup.brew_method.name.lower()
+                setup_id = str(m.brew_setup_id)
+                brewer = m.brew_setup.brewer
+            else:
+                method = "espresso"
+                setup_id = None
+                brewer = None
+            campaigns_to_rebuild[(method, setup_id, id(brewer))].append((m, brewer))
+
+        if campaigns_to_rebuild:
+            for (method, setup_id, _), measurements_and_brewers in campaigns_to_rebuild.items():
+                brewer = measurements_and_brewers[0][1]  # same brewer for all in group
+                param_columns = get_param_columns(method, brewer)
+                campaign_key = make_campaign_key(str(bean_id), method, setup_id)
+                df = pd.DataFrame(
+                    [
+                        {
+                            **{
+                                col: getattr(m, col)
+                                for col in param_columns
+                                if getattr(m, col) is not None
+                            },
+                            "taste": m.taste,
+                        }
+                        for m, _ in measurements_and_brewers
+                    ]
+                )
+                # Drop rows where any param column is missing
+                df = df.dropna(subset=param_columns)
+                optimizer.rebuild_campaign(
+                    campaign_key, df, overrides=overrides, method=method, brewer=brewer
+                )
         else:
-            # No remaining measurements — rebuild empty campaign
-            optimizer.rebuild_campaign(bean_id, pd.DataFrame(), overrides=overrides)
+            # No remaining measurements — rebuild empty Tier 1 campaign
+            campaign_key = make_campaign_key(str(bean_id), "espresso", None)
+            optimizer.rebuild_campaign(campaign_key, pd.DataFrame(), overrides=overrides)
 
     return RedirectResponse(url="/history", status_code=303)

@@ -234,19 +234,30 @@ async def trigger_recommend(request: Request, db: Session = Depends(get_db)):
     active_setup = _get_active_setup(request, db)
     campaign_key = _get_campaign_key(bean, active_setup)
     method = _get_method_from_setup(active_setup)
+    brewer = active_setup.brewer if active_setup else None
 
     optimizer = request.app.state.optimizer
+
+    # Check if campaign param set is outdated (brewer capabilities changed)
+    if optimizer.is_campaign_outdated(campaign_key, method, brewer):
+        if not optimizer.was_rebuild_declined(campaign_key):
+            return RedirectResponse(
+                url=f"/brew/campaign-outdated?campaign_key={campaign_key}&method={method}",
+                status_code=303,
+            )
+
     rec = await optimizer.recommend(
         campaign_key,
         overrides=bean.parameter_overrides,
         method=method,
         target_bean=bean,
         db=db,
+        brewer=brewer,
     )
 
     # Compute recommendation insights (explore vs exploit explanation + predicted taste)
     insights = optimizer.get_recommendation_insights(
-        campaign_key, rec, overrides=bean.parameter_overrides, method=method
+        campaign_key, rec, overrides=bean.parameter_overrides, method=method, brewer=brewer
     )
     rec["insights"] = insights
     rec["method"] = method
@@ -437,6 +448,8 @@ async def record_measurement(
         # to the campaign's actual searchspace columns.
         optimizer = request.app.state.optimizer
         campaign_key = make_campaign_key(str(bean.id), method, brew_setup_id)
+        active_setup_for_record = _get_active_setup(request, db)
+        brewer_for_record = active_setup_for_record.brewer if active_setup_for_record else None
         measurement_data = dict(params)
         measurement_data["taste"] = taste
         optimizer.add_measurement(
@@ -445,6 +458,7 @@ async def record_measurement(
             overrides=bean.parameter_overrides,
             method=method,
             target_bean_id=str(bean.id),
+            brewer=brewer_for_record,
         )
 
     # Clean up pending recommendation from DB
@@ -460,6 +474,10 @@ async def show_best(request: Request, db: Session = Depends(get_db)):
     if not bean:
         return RedirectResponse(url="/beans", status_code=303)
 
+    active_setup = _get_active_setup(request, db)
+    method = _get_method_from_setup(active_setup)
+    brewer = active_setup.brewer if active_setup else None
+
     best = _best_measurement(bean.id, db)
 
     ratio = None
@@ -467,6 +485,16 @@ async def show_best(request: Request, db: Session = Depends(get_db)):
     if best:
         ratio = _brew_ratio(best.dose_in, best.target_yield)
         best_session_id = str(uuid.uuid4())
+
+    # Get param_defs filtered by brewer capabilities for dynamic hidden input rendering
+    from app.services.parameter_registry import get_param_columns
+
+    active_param_names = get_param_columns(method, brewer)
+    param_defs = [
+        pdef
+        for pdef in PARAMETER_REGISTRY.get(method, PARAMETER_REGISTRY["espresso"])
+        if pdef["name"] in active_param_names
+    ]
 
     return templates.TemplateResponse(
         request,
@@ -476,6 +504,8 @@ async def show_best(request: Request, db: Session = Depends(get_db)):
             "best": best,
             "ratio": ratio,
             "best_session_id": best_session_id,
+            "param_defs": param_defs,
+            "method": method,
         },
     )
 
@@ -584,3 +614,88 @@ async def extend_ranges(
     db.commit()
 
     return JSONResponse(content={"status": "ok"})
+
+
+@router.get("/campaign-outdated", response_class=HTMLResponse)
+async def show_campaign_outdated(
+    request: Request,
+    campaign_key: str,
+    method: str = "espresso",
+    db: Session = Depends(get_db),
+):
+    """Show the campaign outdated prompt — brewer capabilities changed."""
+    bean = _require_active_bean(request, db)
+    if not bean:
+        return RedirectResponse(url="/beans", status_code=303)
+
+    active_setup = _get_active_setup(request, db)
+    brewer = active_setup.brewer if active_setup else None
+
+    # Compute which params are new (in current brewer set but not in current campaign)
+    from app.services.optimizer import _param_set_fingerprint
+    from app.services.parameter_registry import get_param_columns
+
+    current_params = set(get_param_columns(method, brewer))
+    # Load the stored fingerprint to derive which params are in the old campaign
+    # We show all params in the new set that weren't in Tier 1 (brewer=None)
+    tier1_params = set(get_param_columns(method, None))
+    new_params = sorted(current_params - tier1_params)
+
+    return templates.TemplateResponse(
+        request,
+        "brew/campaign_outdated.html",
+        {
+            "active_bean": bean,
+            "campaign_key": campaign_key,
+            "method": method,
+            "new_params": new_params,
+        },
+    )
+
+
+@router.post("/rebuild-campaign", response_class=HTMLResponse)
+async def rebuild_campaign_route(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    """Rebuild the campaign with the current brewer's full parameter set."""
+    bean = _require_active_bean(request, db)
+    if not bean:
+        return RedirectResponse(url="/beans", status_code=303)
+
+    form = await request.form()
+    campaign_key = str(form.get("campaign_key", ""))
+    method = str(form.get("method", "espresso"))
+
+    active_setup = _get_active_setup(request, db)
+    brewer = active_setup.brewer if active_setup else None
+
+    optimizer = request.app.state.optimizer
+    optimizer.accept_rebuild(
+        campaign_key,
+        method=method,
+        brewer=brewer,
+        overrides=bean.parameter_overrides,
+    )
+
+    # Redirect to trigger a fresh recommendation with the new params
+    return RedirectResponse(url="/brew/recommend", status_code=303)
+
+
+@router.post("/decline-rebuild", response_class=HTMLResponse)
+async def decline_rebuild_route(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    """Decline the campaign rebuild prompt — increment the decline counter."""
+    bean = _require_active_bean(request, db)
+    if not bean:
+        return RedirectResponse(url="/beans", status_code=303)
+
+    form = await request.form()
+    campaign_key = str(form.get("campaign_key", ""))
+
+    optimizer = request.app.state.optimizer
+    optimizer.decline_rebuild(campaign_key)
+
+    return RedirectResponse(url="/brew", status_code=303)
