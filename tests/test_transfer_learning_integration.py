@@ -24,9 +24,11 @@ def make_bean(db, name, process=None, variety=None):
 
 
 def make_brew_method(db, name):
-    method = BrewMethod(name=name)
-    db.add(method)
-    db.flush()
+    method = db.query(BrewMethod).filter(BrewMethod.name == name).first()
+    if not method:
+        method = BrewMethod(name=name)
+        db.add(method)
+        db.flush()
     return method
 
 

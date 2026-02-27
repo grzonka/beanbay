@@ -1,5 +1,6 @@
 """BeanBay — FastAPI application entry point."""
 
+import uuid
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -7,7 +8,7 @@ from fastapi import Depends, FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from sqlalchemy import func
+from sqlalchemy import func, text
 from sqlalchemy.orm import Session
 
 from app.config import settings
@@ -24,6 +25,45 @@ from app.services.optimizer import OptimizerService
 # Import models so they're registered with Base
 import app.models  # noqa: F401
 
+# Namespace UUID for deterministic brew method IDs (uuid5)
+_BEANBAY_NS = uuid.UUID("a1b2c3d4-e5f6-7890-abcd-ef1234567890")
+
+# Default brew methods — must match PARAMETER_REGISTRY keys
+# Espresso uses the legacy deterministic UUID from migration bf44156bfd41
+_DEFAULT_BREW_METHODS: list[tuple[str, str]] = [
+    ("00000000-0000-0000-0000-000000000001", "Espresso"),
+    (str(uuid.uuid5(_BEANBAY_NS, "pour-over")), "pour-over"),
+    (str(uuid.uuid5(_BEANBAY_NS, "french-press")), "french-press"),
+    (str(uuid.uuid5(_BEANBAY_NS, "aeropress")), "aeropress"),
+    (str(uuid.uuid5(_BEANBAY_NS, "turkish")), "turkish"),
+    (str(uuid.uuid5(_BEANBAY_NS, "moka-pot")), "moka-pot"),
+    (str(uuid.uuid5(_BEANBAY_NS, "cold-brew")), "cold-brew"),
+]
+
+
+def _seed_brew_methods(session_factory, logger) -> int:
+    """Insert default brew methods if they don't exist. Returns count of newly inserted rows."""
+    session = session_factory()
+    try:
+        inserted = 0
+        for method_id, method_name in _DEFAULT_BREW_METHODS:
+            exists = session.execute(
+                text("SELECT 1 FROM brew_methods WHERE name = :name"),
+                {"name": method_name},
+            ).fetchone()
+            if not exists:
+                session.execute(
+                    text("INSERT INTO brew_methods (id, name) VALUES (:id, :name)"),
+                    {"id": method_id, "name": method_name},
+                )
+                inserted += 1
+        if inserted:
+            session.commit()
+            logger.info("Seeded %d default brew method(s)", inserted)
+        return inserted
+    finally:
+        session.close()
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -37,6 +77,9 @@ async def lifespan(app: FastAPI):
 
     # Create tables if they don't exist (no-op if Alembic already ran)
     Base.metadata.create_all(bind=engine)
+
+    # Seed default brew methods (idempotent — skips rows that already exist)
+    _seed_brew_methods(SessionLocal, _log)
 
     # Rename legacy campaign files (bare bean_id → new key format) before DB migration
     campaigns_dir = settings.data_dir / "campaigns"

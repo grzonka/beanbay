@@ -36,13 +36,15 @@ def active_client(client, sample_bean):
 
 @pytest.fixture()
 def sample_brew_method(db_session):
-    """Create a brew method for setup tests."""
+    """Create (or reuse) the Espresso brew method for setup tests."""
     from app.models.brew_method import BrewMethod
 
-    method = BrewMethod(name="Espresso")
-    db_session.add(method)
-    db_session.commit()
-    db_session.refresh(method)
+    method = db_session.query(BrewMethod).filter(BrewMethod.name == "Espresso").first()
+    if not method:
+        method = BrewMethod(name="Espresso")
+        db_session.add(method)
+        db_session.commit()
+        db_session.refresh(method)
     return method
 
 
