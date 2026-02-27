@@ -14,10 +14,10 @@ Every coffee brew teaches the system something — the app must make it effortle
 
 ## Current State
 
-**Shipped:** v1 MVP, v0.1.0, v0.1.1 (all 2026-02-22)
-**Active milestone:** v0.2.0 — Multi-method brewing, equipment management, transfer learning
-**Codebase:** ~8,295 LOC (Python, HTML, CSS/JS), 130 tests passing
-**Stack:** FastAPI, Jinja2/htmx, SQLite, Chart.js, BayBE, Docker
+**Shipped:** v1 MVP, v0.1.0, v0.1.1 (2026-02-22), v0.2.0 (2026-02-23), v0.3.0 (2026-02-26)
+**Active milestone:** None — ready for next milestone planning
+**Codebase:** ~10K+ LOC (Python, HTML, CSS/JS), 408 tests passing
+**Stack:** FastAPI, Jinja2/htmx, SQLite, Chart.js, BayBE, Tailwind/daisyUI, Docker
 
 ## Requirements
 
@@ -43,32 +43,47 @@ Every coffee brew teaches the system something — the app must make it effortle
 - ✓ Manual brews feed into BayBE optimization via add_measurement — v0.1.1
 - ✓ Manual brews visually distinguishable in shot history (blue badge) — v0.1.1
 
-### Active (v0.2.0)
+### Active
 
-- **Multi-method brewing** — Support espresso, pour-over (V60 etc.), and other methods. Each method has its own parameter set (e.g., V60 adds bloom). Users configure brewer + paper + water + bean combinations.
-- **Equipment management** — Users create equipment items (grinders, brewers/machines, papers, water recipes) and assemble them into "brew setups." Equipment is context for optimization, not a BayBE variable. A campaign = bean + method + equipment combo.
-- **Grinder management** — Support multiple grinders with different dial types (stepped vs stepless). Grind setting is specific to the grinder context.
-- **Water tracking** — Named water recipes (e.g., "Volvic", "Third Wave Water") with optional mineral composition and notes for how it was made.
-- **Enhanced bean metadata** — Roast date, origin, process, variety (all optional). A "coffee" can have multiple bags (buying the same coffee twice). Optional cost per bag.
-- **Cross-brew intelligence via BayBE transfer learning** — When starting a new bean with known properties (process + variety), seed BayBE's first recommendation using transfer learning (TaskParameter) from history of similar beans, rather than random exploration.
+No active milestone. Ready for next milestone planning.
+
+### Completed (v0.3.0)
+
+- ✓ Campaign DB migration — Campaign JSON files and pending_recommendations.json moved into SQLite tables. Single DB file for all state. Atomic operations, easier backup/restore.
+- ✓ Brewer capability model — Brewers declare their capabilities (temperature control, pre-infusion type, pressure profiling, flow control) via structured flags. Capabilities drive parameter selection.
+- ✓ Parameter Registry — Data-driven `PARAMETER_REGISTRY` dict mapping method → parameter definitions with capability conditions. Dynamic search space construction for all 7 brew methods.
+- ✓ Espresso parameter evolution — `preinfusion_pct` → `preinfusion_pressure_pct`, `saturation` reworked as active boolean toggle. New capability-conditional parameters. Campaign outdated detection with rebuild prompt.
+- ✓ New brew methods — Added french-press, aeropress, turkish, moka-pot, cold-brew (5 new methods → 7 total). Method-aware templates and history.
+- ✓ Frontend modernization (Phase 1) — Tailwind CSS + daisyUI with custom espresso theme. Phone-first responsive. 408 tests passing.
+
+### Completed (v0.2.0)
+
+- ✓ Multi-method brewing — espresso + pour-over with method-specific parameters
+- ✓ Equipment management — grinders, brewers, papers, water recipes with retire/restore lifecycle
+- ✓ Brew setups — assemble equipment into named setups; campaign = bean + method + setup
+- ✓ Enhanced bean metadata — roast date, process, variety, bags model
+- ✓ Cross-brew transfer learning — BayBE TaskParameter for cold-start from similar beans
 
 ### Out of Scope (current milestone)
 
-- Multi-user accounts — v3 vision
-- Community/shared database — v3
+- Multi-user accounts — future milestone
+- Community/shared database — future milestone
 - Beanconqueror import — backlog (deferred from v0.2)
+- SvelteKit migration — Phase 2 frontend (when htmx is outgrown)
+- Capacitor native app — Phase 3 frontend (if needed)
 
 ## Context
 
 - **Shipped v1:** 6 phases, 16 plans, 108 tests, ~7,632 LOC across Python/HTML/CSS/JS
 - **Shipped v0.1.0:** 3 phases, 5 plans. Rebrand, CI/CD, Docker image, Unraid template.
 - **Shipped v0.1.1:** 3 phases, 8 plans, 130 tests, ~8,295 LOC. Responsive nav, taste UX, manual brew.
-- **v0.2.0 scope:** Multi-method brewing, equipment management (grinders, brewers, papers, water), enhanced bean metadata (bags, process, variety), cross-brew transfer learning via BayBE TaskParameter.
+- **Shipped v0.2.0:** 4 phases, 13 plans, 240 tests. Equipment management (grinders, brewers, papers, water), brew setups, multi-method (espresso + pour-over), enhanced bean metadata (bags, process, variety), cross-brew transfer learning via BayBE TaskParameter.
+- **Shipped v0.3.0:** 6 phases, 18 plans, 408 tests. Campaign DB migration, brewer capability model, parameter registry (7 brew methods), espresso parameter evolution, method-aware templates, Tailwind + daisyUI frontend.
 - **Hardware setup:** Sage Dual Boiler (Slayer mod) + DF83v grinder. Parameters tuned to this specific machine's ranges.
-- **BayBE:** Hybrid search space (5 continuous + 1 categorical), ~7.5KB campaign files. Three-phase optimization: random (0-4 shots) -> Learning (5-7) -> Bayesian optimization (8+).
+- **BayBE:** Hybrid search space (5+ continuous + categorical), campaigns stored in SQLite. Three-phase optimization: random (0-4 shots) -> Learning (5-7) -> Bayesian optimization (8+).
 - **Usage pattern:** Primarily phone at the espresso machine. Quick interactions most days, occasional deep tasting sessions on laptop.
-- **Deployment:** Unraid server via Docker. Single container, SQLite + BayBE JSON campaign files in persistent volume. Also available to any Docker user.
-- **Known tech debt:** v1 tech debt resolved in Phase 7. v0.1.1 incurred 3 minor cosmetic items (orphaned CSS rules, inline styles in drawer, undefined --text-xs var). See milestones/v0.1.1-MILESTONE-AUDIT.md.
+- **Deployment:** Unraid server via Docker. Single container, SQLite for all state (measurements, campaigns, equipment). Also available to any Docker user.
+- **Known tech debt:** Non-espresso brewer card shows "Espresso" label (bug B001). Pre-existing LSP type warnings on SQLAlchemy Column types (cosmetic, not functional).
 
 ## Constraints
 
@@ -103,6 +118,12 @@ Every coffee brew teaches the system something — the app must make it effortle
 | Equipment as context (v0.2) | Equipment defines experiment context; BayBE optimizes recipe variables within that context | Decided — comparison between setups at analytics level |
 | Transfer learning via TaskParameter (v0.2) | BayBE TaskParameter enables cross-bean cold-start seeding from similar beans | Validated — feasible with matching search spaces |
 | Bean bags model (v0.2) | A "coffee" can have multiple bags; same coffee bought twice shares identity | Decided — supports transfer learning similarity matching |
+| Capability-driven brewer model (v0.3) | Brewer declares capabilities (flags), not tiers. Tiers derived for UX only | Decided — drives dynamic parameter selection |
+| Parameter Registry (v0.3) | Data-driven dict replaces hardcoded `_build_parameters()` | Decided — adding new methods becomes trivial |
+| preinfusion_pct → preinfusion_time (v0.3) | Physical-unit seconds replaces opaque 55-100% percentage | Decided — linear migration for existing data |
+| saturation deprecated (v0.3) | Redundant with preinfusion_time (0 = no saturation) | Decided — column kept for history |
+| Campaign files → DB (v0.3) | JSON files on disk are fragile; SQLite enables atomic writes and single-file backup | Decided — highest priority architectural change |
+| htmx + Tailwind + daisyUI (v0.3) | Phase 1 frontend: low effort, big visual improvement; daisyUI has built-in coffee theme | Decided — SvelteKit deferred to Phase 2 |
 
 ---
-*Last updated: 2026-02-22 after v0.2.0 milestone kickoff*
+*Last updated: 2026-02-26 after v0.3.0 milestone archived*

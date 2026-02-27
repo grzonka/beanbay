@@ -1,81 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="espresso">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#1a1612">
+  <meta name="theme-color" content="#201117">
   <title>{% block title %}BeanBay{% endblock %}</title>
   <link rel="stylesheet" href="/static/css/main.css">
   <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
+  {% block head_extra %}{% endblock %}
 </head>
 <body>
-  <div class="app-layout">
-    <nav class="nav">
-      <div class="nav-inner">
-        <a href="/beans" class="nav-brand">BeanBay</a>
-        <button class="nav-hamburger" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
-          <span class="hamburger-icon"></span>
-        </button>
-      </div>
-    </nav>
+  <div class="drawer lg:drawer-open">
+    <input id="drawer-toggle" type="checkbox" class="drawer-toggle" />
 
-    <!-- Overlay backdrop -->
-    <div class="nav-overlay" id="nav-overlay"></div>
-
-    <!-- Drawer / Sidebar -->
-    <aside class="nav-drawer" id="nav-drawer">
-      <a href="/beans" class="nav-drawer-brand">BeanBay</a>
-      <a href="/brew" class="nav-drawer-link">Let's Brew</a>
-      <a href="/equipment" class="nav-drawer-link">Equipment</a>
-      <a href="/history" class="nav-drawer-link">History</a>
-      <a href="/insights" class="nav-drawer-link">Insights</a>
-      <a href="/analytics" class="nav-drawer-link">Analytics</a>
-      <hr class="nav-drawer-divider">
-      <div class="nav-drawer-bean" id="active-bean-indicator">
-        {% if active_bean %}
-          <div style="display:flex; align-items:center; gap:var(--spacing-sm);">
-            <a href="/beans/{{ active_bean.id }}" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0; flex:1; color:var(--text-secondary); text-decoration:none;">{{ active_bean.name }}</a>
-            <form method="post" action="/beans/deactivate" style="flex-shrink:0;">
-              <button type="submit" class="btn btn-secondary" style="padding:0.15rem 0.4rem; font-size:0.75rem; min-height:auto;">✕</button>
-            </form>
-          </div>
-        {% else %}
-          <span class="text-muted">No bean selected</span>
-        {% endif %}
+    <!-- Main content area -->
+    <div class="drawer-content flex flex-col">
+      <!-- Top navbar (mobile only — hidden on lg) -->
+      <div class="navbar bg-base-200 border-b border-base-300 sticky top-0 z-30 lg:hidden">
+        <div class="flex-none">
+          <label for="drawer-toggle" class="btn btn-ghost btn-square drawer-button" aria-label="Toggle navigation">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block h-5 w-5 stroke-current">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </label>
+        </div>
+        <div class="flex-1">
+          <a href="/" class="btn btn-ghost text-lg font-bold text-primary">BeanBay</a>
+        </div>
       </div>
-    </aside>
 
-    <main class="main">
-      <div class="container">
-        {% block content %}{% endblock %}
-      </div>
-    </main>
+      <!-- Page content -->
+      <main class="flex-1 p-4 pb-8">
+        <div class="mx-auto max-w-lg lg:max-w-4xl">
+          {% block content %}{% endblock %}
+        </div>
+      </main>
+    </div>
+
+    <!-- Sidebar / Drawer -->
+    <div class="drawer-side z-40">
+      <label for="drawer-toggle" aria-label="Close sidebar" class="drawer-overlay"></label>
+      <aside class="bg-base-200 min-h-full w-64 border-r border-base-300">
+        <!-- Brand -->
+        <a href="/" class="block px-6 pt-6 pb-4 text-lg font-bold text-primary no-underline">BeanBay</a>
+
+        <!-- Nav links -->
+        <ul class="menu px-4 gap-1">
+          <li><a href="/brew" class="text-base font-semibold min-h-12">Let's Brew</a></li>
+          <li><a href="/equipment" class="text-base font-semibold min-h-12">Equipment</a></li>
+          <li><a href="/history" class="text-base font-semibold min-h-12">History</a></li>
+          <li><a href="/insights" class="text-base font-semibold min-h-12">Insights</a></li>
+          <li><a href="/analytics" class="text-base font-semibold min-h-12">Analytics</a></li>
+        </ul>
+
+      </aside>
+    </div>
   </div>
-
-  <script>
-    (function() {
-      var toggle = document.getElementById('nav-toggle');
-      var drawer = document.getElementById('nav-drawer');
-      var overlay = document.getElementById('nav-overlay');
-      function open() {
-        drawer.classList.add('open');
-        overlay.classList.add('open');
-        toggle.setAttribute('aria-expanded', 'true');
-        document.body.style.overflow = 'hidden';
-      }
-      function close() {
-        drawer.classList.remove('open');
-        overlay.classList.remove('open');
-        toggle.setAttribute('aria-expanded', 'false');
-        document.body.style.overflow = '';
-      }
-      toggle.addEventListener('click', function() {
-        drawer.classList.contains('open') ? close() : open();
-      });
-      overlay.addEventListener('click', close);
-    })();
-  </script>
 
   {% block scripts %}{% endblock %}
 </body>

@@ -29,11 +29,7 @@ from sqlalchemy.orm import Session
 from app.models.bean import Bean
 from app.models.brew_setup import BrewSetup
 from app.models.measurement import Measurement
-from app.services.optimizer import (
-    _build_parameters,
-    _get_param_columns,
-    _resolve_bounds,
-)
+from app.services.parameter_registry import build_parameters_for_setup, get_param_columns
 from app.services.similarity import SimilarBean
 
 
@@ -50,13 +46,14 @@ def _collect_training_measurements(
     bean_id: str,
     method: str,
     db: Session,
+    brewer=None,
 ) -> pd.DataFrame:
     """Collect BayBE-relevant measurements for a bean + method as a DataFrame.
 
     Returns DataFrame with param columns + "taste" + "bean_task" = bean_id.
     Empty DataFrame if no measurements found.
     """
-    param_cols = _get_param_columns(method)
+    param_cols = get_param_columns(method, brewer)
 
     # Query measurements for this bean + method
     query = db.query(Measurement).filter(Measurement.bean_id == bean_id)
@@ -98,6 +95,7 @@ def build_transfer_campaign(
     method: str,
     overrides: dict | None,
     db: Session,
+    brewer=None,
 ) -> tuple[Campaign, TransferMetadata] | None:
     """Build a BayBE campaign seeded with transfer learning from similar beans.
 
@@ -107,6 +105,7 @@ def build_transfer_campaign(
         method: Brew method name.
         overrides: Per-bean parameter range overrides.
         db: SQLAlchemy session for querying training measurements.
+        brewer: Brewer ORM object for capability-gated parameter selection (optional).
 
     Returns:
         (Campaign, TransferMetadata) if transfer learning applies, None otherwise.
@@ -119,7 +118,7 @@ def build_transfer_campaign(
     contributing: list[dict] = []
 
     for similar in similar_beans:
-        df = _collect_training_measurements(similar.bean_id, method, db)
+        df = _collect_training_measurements(similar.bean_id, method, db, brewer=brewer)
         if not df.empty:
             training_frames.append(df)
             contributing.append(
@@ -148,8 +147,7 @@ def build_transfer_campaign(
             seen.add(tid)
 
     # Build parameters: TaskParameter first, then method-specific params
-    bounds = _resolve_bounds(overrides, method)
-    recipe_params = _build_parameters(bounds, method)
+    recipe_params = build_parameters_for_setup(method, brewer=brewer, overrides=overrides)
     task_param = TaskParameter(
         name="bean_task",
         values=unique_task_ids,
@@ -165,7 +163,7 @@ def build_transfer_campaign(
     campaign = Campaign(searchspace=searchspace, objective=objective, recommender=recommender)
 
     # Load training measurements
-    param_cols = _get_param_columns(method)
+    param_cols = get_param_columns(method, brewer)
     baybe_cols = ["bean_task"] + param_cols + ["taste"]
     available_cols = [c for c in baybe_cols if c in training_df.columns]
     campaign.add_measurements(training_df[available_cols])

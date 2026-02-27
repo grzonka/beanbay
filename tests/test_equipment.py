@@ -708,3 +708,168 @@ def test_brew_page_retired_setup_not_in_selector(client, sample_setup, db_sessio
     response = client.get("/brew")
     assert response.status_code == 200
     assert "My Espresso Setup" not in response.text
+
+
+# ── Brewer capability CRUD tests ──────────────────────────────────────────
+
+
+def test_create_brewer_with_capability_fields(client, db_session):
+    """POST /equipment/brewers with capability fields stores them in DB."""
+    response = client.post(
+        "/equipment/brewers",
+        data={
+            "name": "Decent DE1",
+            "temp_control_type": "profiling",
+            "temp_min": "85",
+            "temp_max": "96",
+            "temp_step": "0.5",
+            "preinfusion_type": "programmable",
+            "preinfusion_max_time": "60",
+            "pressure_control_type": "programmable",
+            "pressure_min": "2",
+            "pressure_max": "9",
+            "flow_control_type": "programmable",
+            "has_bloom": "true",
+            "stop_mode": "gravimetric",
+        },
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+
+    db_session.expire_all()
+    brewer = db_session.query(Brewer).filter(Brewer.name == "Decent DE1").first()
+    assert brewer is not None
+    assert brewer.temp_control_type == "profiling"
+    assert brewer.temp_min == 85.0
+    assert brewer.temp_max == 96.0
+    assert brewer.temp_step == 0.5
+    assert brewer.preinfusion_type == "programmable"
+    assert brewer.preinfusion_max_time == 60.0
+    assert brewer.pressure_control_type == "programmable"
+    assert brewer.pressure_min == 2.0
+    assert brewer.pressure_max == 9.0
+    assert brewer.flow_control_type == "programmable"
+    assert brewer.has_bloom is True
+    assert brewer.stop_mode == "gravimetric"
+
+
+def test_create_brewer_capability_defaults(client, db_session):
+    """POST /equipment/brewers with only name uses safe defaults for capability fields."""
+    response = client.post(
+        "/equipment/brewers",
+        data={"name": "Hario V60"},
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+
+    db_session.expire_all()
+    brewer = db_session.query(Brewer).filter(Brewer.name == "Hario V60").first()
+    assert brewer is not None
+    assert brewer.temp_control_type == "none"
+    assert brewer.preinfusion_type == "none"
+    assert brewer.pressure_control_type == "fixed"
+    assert brewer.flow_control_type == "none"
+    assert brewer.has_bloom is False
+    assert brewer.stop_mode == "manual"
+    assert brewer.temp_min is None
+    assert brewer.temp_max is None
+
+
+def test_edit_brewer_updates_capability_fields(client, sample_brewer, db_session):
+    """POST /equipment/brewers/{id} updates capability fields correctly."""
+    response = client.post(
+        f"/equipment/brewers/{sample_brewer.id}",
+        data={
+            "name": sample_brewer.name,
+            "temp_control_type": "pid",
+            "temp_min": "88",
+            "temp_max": "96",
+            "temp_step": "1",
+            "preinfusion_type": "timed",
+            "preinfusion_max_time": "10",
+            "pressure_control_type": "opv_adjustable",
+            "pressure_min": "",
+            "pressure_max": "",
+            "flow_control_type": "none",
+            "stop_mode": "volumetric",
+        },
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+
+    db_session.expire_all()
+    updated = db_session.query(Brewer).filter(Brewer.id == sample_brewer.id).first()
+    assert updated.temp_control_type == "pid"
+    assert updated.temp_min == 88.0
+    assert updated.temp_max == 96.0
+    assert updated.temp_step == 1.0
+    assert updated.preinfusion_type == "timed"
+    assert updated.preinfusion_max_time == 10.0
+    assert updated.pressure_control_type == "opv_adjustable"
+    assert updated.pressure_min is None
+    assert updated.pressure_max is None
+    assert updated.flow_control_type == "none"
+    assert updated.stop_mode == "volumetric"
+
+
+def test_edit_brewer_clears_optional_floats(client, sample_brewer, db_session):
+    """Submitting empty strings for float capability fields sets them to None."""
+    response = client.post(
+        f"/equipment/brewers/{sample_brewer.id}",
+        data={
+            "name": sample_brewer.name,
+            "temp_control_type": "none",
+            "temp_min": "",
+            "temp_max": "",
+            "temp_step": "",
+            "preinfusion_type": "none",
+            "preinfusion_max_time": "",
+            "pressure_control_type": "fixed",
+            "pressure_min": "",
+            "pressure_max": "",
+            "flow_control_type": "none",
+            "stop_mode": "manual",
+        },
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+
+    db_session.expire_all()
+    updated = db_session.query(Brewer).filter(Brewer.id == sample_brewer.id).first()
+    assert updated.temp_min is None
+    assert updated.temp_max is None
+    assert updated.temp_step is None
+    assert updated.preinfusion_max_time is None
+    assert updated.pressure_min is None
+    assert updated.pressure_max is None
+
+
+def test_brewer_card_shows_tier_badge(client, db_session):
+    """Equipment page renders a tier badge on the brewer card."""
+    # Create a T2 brewer (PID temp control)
+    brewer = Brewer(
+        name="Rancilio Silvia Pro X",
+        temp_control_type="pid",
+    )
+    db_session.add(brewer)
+    db_session.commit()
+
+    response = client.get("/equipment")
+    assert response.status_code == 200
+    assert "Rancilio Silvia Pro X" in response.text
+    assert "T2" in response.text  # tier badge
+
+
+def test_brewer_form_shows_capability_fields(client, sample_brewer):
+    """GET /equipment/brewers/{id}/edit returns form containing capability select fields."""
+    response = client.get(
+        f"/equipment/brewers/{sample_brewer.id}/edit",
+        headers={"HX-Request": "true"},
+    )
+    assert response.status_code == 200
+    assert "temp_control_type" in response.text
+    assert "preinfusion_type" in response.text
+    assert "pressure_control_type" in response.text
+    assert "flow_control_type" in response.text
+    assert "stop_mode" in response.text
+    assert "Advanced Capabilities" in response.text

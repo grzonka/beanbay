@@ -3,190 +3,165 @@
 {% block title %}Equipment — BeanBay{% endblock %}
 
 {% block content %}
-<div class="page-header">
-  <h1 class="page-title">Equipment</h1>
-  <label style="display:flex; align-items:center; gap:var(--spacing-sm); cursor:pointer; font-size:var(--text-sm); color:var(--text-secondary);">
+<div class="flex items-center justify-between mb-6 min-h-12">
+  <h1 class="text-xl font-bold">Equipment</h1>
+  <label class="flex items-center gap-2 cursor-pointer text-sm text-base-content/70">
     <input
       type="checkbox"
+      class="checkbox checkbox-sm"
       {% if show_retired %}checked{% endif %}
       onchange="window.location.href='/equipment' + (this.checked ? '?show_retired=true' : '')"
-      style="width:20px; height:20px; accent-color:var(--accent); cursor:pointer;"
     >
     Show retired
   </label>
 </div>
 
 <!-- ── Brew Setups ───────────────────────────────────────────── -->
-<button
-  class="collapsible-toggle"
-  onclick="this.nextElementSibling.classList.toggle('open'); this.setAttribute('aria-expanded', this.nextElementSibling.classList.contains('open'))"
-  aria-expanded="true"
->
-  <div class="equipment-section-title">
+<div class="collapse collapse-arrow bg-base-200 border border-base-300 mb-2">
+  <input type="checkbox" checked />
+  <div class="collapse-title font-semibold flex items-center gap-2">
     Brew Setups
-    <span class="badge badge-count">{{ setup_count }}</span>
+    <span class="badge badge-ghost">{{ setup_count }}</span>
   </div>
-  <span aria-hidden="true">&#9662;</span>
-</button>
-<div class="collapsible-content open" id="setup-section">
-  <div style="padding-top: var(--spacing-sm);">
-    <a
-      href="/equipment/setups/new"
-      class="btn btn-secondary btn-sm"
-      style="display:inline-block; margin-bottom: var(--spacing-sm);"
-    >
-      + Create New Setup
-    </a>
-    <div id="setup-list">
-      {% if setups %}
-        {% for setup in setups %}
-          {% include "equipment/_setup_card.html" %}
-        {% endfor %}
-      {% else %}
-        <div class="empty-state" style="padding: var(--spacing-lg) 0;" id="setup-empty">
-          <div class="empty-state-text">No setups yet — create your first one above.</div>
-        </div>
-      {% endif %}
+  <div class="collapse-content">
+    <div class="pt-2">
+      <a
+        href="/equipment/setups/new"
+        class="btn btn-ghost btn-sm mb-2"
+      >
+        + Create New Setup
+      </a>
+      <div id="setup-list">
+        {% if setups %}
+          {% for setup in setups %}
+            {% include "equipment/_setup_card.html" %}
+          {% endfor %}
+        {% else %}
+          <div class="text-center py-6 text-base-content/50" id="setup-empty">
+            No setups yet — create your first one above.
+          </div>
+        {% endif %}
+      </div>
     </div>
   </div>
 </div>
 
 <!-- ── Grinders ─────────────────────────────────────────────── -->
-<button
-  class="collapsible-toggle"
-  onclick="this.nextElementSibling.classList.toggle('open'); this.setAttribute('aria-expanded', this.nextElementSibling.classList.contains('open'))"
-  aria-expanded="false"
->
-  <div class="equipment-section-title">
+<div class="collapse collapse-arrow bg-base-200 border border-base-300 mb-2">
+  <input type="checkbox" />
+  <div class="collapse-title font-semibold flex items-center gap-2">
     Grinders
-    <span class="badge badge-count">{{ grinder_count }}</span>
+    <span class="badge badge-ghost">{{ grinder_count }}</span>
   </div>
-  <span aria-hidden="true">&#9662;</span>
-</button>
-<div class="collapsible-content" id="grinder-section">
-  <div style="padding-top: var(--spacing-sm);">
-    <button
-      class="btn btn-secondary btn-sm"
-      onclick="openEquipmentModal('grinder-add-modal')"
-      style="margin-bottom: var(--spacing-sm);"
-    >
-      + Add Grinder
-    </button>
-    <div id="grinder-list">
-      {% if grinders %}
-        {% for grinder in grinders %}
-          {% include "equipment/_grinder_card.html" %}
-        {% endfor %}
-      {% else %}
-        <div class="empty-state" style="padding: var(--spacing-lg) 0;" id="grinder-empty">
-          <div class="empty-state-text">No grinders yet — add your first one above.</div>
-        </div>
-      {% endif %}
+  <div class="collapse-content">
+    <div class="pt-2">
+      <button
+        class="btn btn-ghost btn-sm mb-2"
+        onclick="openEquipmentModal('grinder-add-modal')"
+      >
+        + Add Grinder
+      </button>
+      <div id="grinder-list">
+        {% if grinders %}
+          {% for grinder in grinders %}
+            {% include "equipment/_grinder_card.html" %}
+          {% endfor %}
+        {% else %}
+          <div class="text-center py-6 text-base-content/50" id="grinder-empty">
+            No grinders yet — add your first one above.
+          </div>
+        {% endif %}
+      </div>
     </div>
   </div>
 </div>
 
 <!-- ── Brewers ──────────────────────────────────────────────── -->
-<button
-  class="collapsible-toggle"
-  onclick="this.nextElementSibling.classList.toggle('open'); this.setAttribute('aria-expanded', this.nextElementSibling.classList.contains('open'))"
-  aria-expanded="false"
->
-  <div class="equipment-section-title">
+<div class="collapse collapse-arrow bg-base-200 border border-base-300 mb-2">
+  <input type="checkbox" />
+  <div class="collapse-title font-semibold flex items-center gap-2">
     Brewers
-    <span class="badge badge-count">{{ brewer_count }}</span>
+    <span class="badge badge-ghost">{{ brewer_count }}</span>
   </div>
-  <span aria-hidden="true">&#9662;</span>
-</button>
-<div class="collapsible-content" id="brewer-section">
-  <div style="padding-top: var(--spacing-sm);">
-    <button
-      class="btn btn-secondary btn-sm"
-      onclick="openEquipmentModal('brewer-add-modal')"
-      style="margin-bottom: var(--spacing-sm);"
-    >
-      + Add Brewer
-    </button>
-    <div id="brewer-list">
-      {% if brewers %}
-        {% for brewer in brewers %}
-          {% include "equipment/_brewer_card.html" %}
-        {% endfor %}
-      {% else %}
-        <div class="empty-state" style="padding: var(--spacing-lg) 0;" id="brewer-empty">
-          <div class="empty-state-text">No brewers yet — add your first one above.</div>
-        </div>
-      {% endif %}
+  <div class="collapse-content">
+    <div class="pt-2">
+      <button
+        class="btn btn-ghost btn-sm mb-2"
+        onclick="openEquipmentModal('brewer-add-modal')"
+      >
+        + Add Brewer
+      </button>
+      <div id="brewer-list">
+        {% if brewers %}
+          {% for brewer in brewers %}
+            {% include "equipment/_brewer_card.html" %}
+          {% endfor %}
+        {% else %}
+          <div class="text-center py-6 text-base-content/50" id="brewer-empty">
+            No brewers yet — add your first one above.
+          </div>
+        {% endif %}
+      </div>
     </div>
   </div>
 </div>
 
 <!-- ── Papers / Filters ─────────────────────────────────────── -->
-<button
-  class="collapsible-toggle"
-  onclick="this.nextElementSibling.classList.toggle('open'); this.setAttribute('aria-expanded', this.nextElementSibling.classList.contains('open'))"
-  aria-expanded="false"
->
-  <div class="equipment-section-title">
+<div class="collapse collapse-arrow bg-base-200 border border-base-300 mb-2">
+  <input type="checkbox" />
+  <div class="collapse-title font-semibold flex items-center gap-2">
     Papers &amp; Filters
-    <span class="badge badge-count">{{ paper_count }}</span>
+    <span class="badge badge-ghost">{{ paper_count }}</span>
   </div>
-  <span aria-hidden="true">&#9662;</span>
-</button>
-<div class="collapsible-content" id="paper-section">
-  <div style="padding-top: var(--spacing-sm);">
-    <button
-      class="btn btn-secondary btn-sm"
-      onclick="openEquipmentModal('paper-add-modal')"
-      style="margin-bottom: var(--spacing-sm);"
-    >
-      + Add Paper
-    </button>
-    <div id="paper-list">
-      {% if papers %}
-        {% for paper in papers %}
-          {% include "equipment/_paper_card.html" %}
-        {% endfor %}
-      {% else %}
-        <div class="empty-state" style="padding: var(--spacing-lg) 0;" id="paper-empty">
-          <div class="empty-state-text">No papers yet — add your first one above.</div>
-        </div>
-      {% endif %}
+  <div class="collapse-content">
+    <div class="pt-2">
+      <button
+        class="btn btn-ghost btn-sm mb-2"
+        onclick="openEquipmentModal('paper-add-modal')"
+      >
+        + Add Paper
+      </button>
+      <div id="paper-list">
+        {% if papers %}
+          {% for paper in papers %}
+            {% include "equipment/_paper_card.html" %}
+          {% endfor %}
+        {% else %}
+          <div class="text-center py-6 text-base-content/50" id="paper-empty">
+            No papers yet — add your first one above.
+          </div>
+        {% endif %}
+      </div>
     </div>
   </div>
 </div>
 
 <!-- ── Water Recipes ─────────────────────────────────────────── -->
-<button
-  class="collapsible-toggle"
-  onclick="this.nextElementSibling.classList.toggle('open'); this.setAttribute('aria-expanded', this.nextElementSibling.classList.contains('open'))"
-  aria-expanded="false"
->
-  <div class="equipment-section-title">
+<div class="collapse collapse-arrow bg-base-200 border border-base-300 mb-2">
+  <input type="checkbox" />
+  <div class="collapse-title font-semibold flex items-center gap-2">
     Water Recipes
-    <span class="badge badge-count">{{ water_recipe_count }}</span>
+    <span class="badge badge-ghost">{{ water_recipe_count }}</span>
   </div>
-  <span aria-hidden="true">&#9662;</span>
-</button>
-<div class="collapsible-content" id="water-section">
-  <div style="padding-top: var(--spacing-sm);">
-    <button
-      class="btn btn-secondary btn-sm"
-      onclick="openEquipmentModal('water-add-modal')"
-      style="margin-bottom: var(--spacing-sm);"
-    >
-      + Add Water Recipe
-    </button>
-    <div id="water-list">
-      {% if water_recipes %}
-        {% for recipe in water_recipes %}
-          {% include "equipment/_water_card.html" %}
-        {% endfor %}
-      {% else %}
-        <div class="empty-state" style="padding: var(--spacing-lg) 0;" id="water-empty">
-          <div class="empty-state-text">No water recipes yet — add your first one above.</div>
-        </div>
-      {% endif %}
+  <div class="collapse-content">
+    <div class="pt-2">
+      <button
+        class="btn btn-ghost btn-sm mb-2"
+        onclick="openEquipmentModal('water-add-modal')"
+      >
+        + Add Water Recipe
+      </button>
+      <div id="water-list">
+        {% if water_recipes %}
+          {% for recipe in water_recipes %}
+            {% include "equipment/_water_card.html" %}
+          {% endfor %}
+        {% else %}
+          <div class="text-center py-6 text-base-content/50" id="water-empty">
+            No water recipes yet — add your first one above.
+          </div>
+        {% endif %}
+      </div>
     </div>
   </div>
 </div>
@@ -194,88 +169,85 @@
 <!-- ════════════════════════════════════════════════════════════
      Grinder Add Modal
      ════════════════════════════════════════════════════════════ -->
-<div class="equipment-modal-overlay" id="grinder-add-modal" onclick="closeEquipmentModalOnOverlay(event, 'grinder-add-modal')">
-  <div class="equipment-modal-box">
-    <div class="equipment-modal-header">
-      <h2 class="equipment-modal-title">Add Grinder</h2>
-      <button class="equipment-modal-close" onclick="closeEquipmentModal('grinder-add-modal')" aria-label="Close">✕</button>
+<dialog id="grinder-add-modal" class="modal">
+  <div class="modal-box bg-base-200 border border-base-300 max-w-lg">
+    <div class="flex items-center justify-between mb-4 pb-2 border-b border-base-300">
+      <h2 class="text-lg font-bold">Add Grinder</h2>
+      <form method="dialog"><button class="btn btn-ghost btn-sm btn-square" aria-label="Close">&#10005;</button></form>
     </div>
     {% set grinder = None %}
     {% include "equipment/_grinder_form.html" %}
   </div>
-</div>
+  <form method="dialog" class="modal-backdrop"><button>close</button></form>
+</dialog>
 
 <!-- ════════════════════════════════════════════════════════════
      Brewer Add Modal
      ════════════════════════════════════════════════════════════ -->
-<div class="equipment-modal-overlay" id="brewer-add-modal" onclick="closeEquipmentModalOnOverlay(event, 'brewer-add-modal')">
-  <div class="equipment-modal-box">
-    <div class="equipment-modal-header">
-      <h2 class="equipment-modal-title">Add Brewer</h2>
-      <button class="equipment-modal-close" onclick="closeEquipmentModal('brewer-add-modal')" aria-label="Close">✕</button>
+<dialog id="brewer-add-modal" class="modal">
+  <div class="modal-box bg-base-200 border border-base-300 max-w-lg">
+    <div class="flex items-center justify-between mb-4 pb-2 border-b border-base-300">
+      <h2 class="text-lg font-bold">Add Brewer</h2>
+      <form method="dialog"><button class="btn btn-ghost btn-sm btn-square" aria-label="Close">&#10005;</button></form>
     </div>
     {% set brewer = None %}
     {% include "equipment/_brewer_form.html" %}
   </div>
-</div>
+  <form method="dialog" class="modal-backdrop"><button>close</button></form>
+</dialog>
 
 <!-- ════════════════════════════════════════════════════════════
      Paper Add Modal
      ════════════════════════════════════════════════════════════ -->
-<div class="equipment-modal-overlay" id="paper-add-modal" onclick="closeEquipmentModalOnOverlay(event, 'paper-add-modal')">
-  <div class="equipment-modal-box">
-    <div class="equipment-modal-header">
-      <h2 class="equipment-modal-title">Add Paper / Filter</h2>
-      <button class="equipment-modal-close" onclick="closeEquipmentModal('paper-add-modal')" aria-label="Close">✕</button>
+<dialog id="paper-add-modal" class="modal">
+  <div class="modal-box bg-base-200 border border-base-300 max-w-lg">
+    <div class="flex items-center justify-between mb-4 pb-2 border-b border-base-300">
+      <h2 class="text-lg font-bold">Add Paper / Filter</h2>
+      <form method="dialog"><button class="btn btn-ghost btn-sm btn-square" aria-label="Close">&#10005;</button></form>
     </div>
     {% set paper = None %}
     {% include "equipment/_paper_form.html" %}
   </div>
-</div>
+  <form method="dialog" class="modal-backdrop"><button>close</button></form>
+</dialog>
 
 <!-- ════════════════════════════════════════════════════════════
      Water Recipe Add Modal
      ════════════════════════════════════════════════════════════ -->
-<div class="equipment-modal-overlay" id="water-add-modal" onclick="closeEquipmentModalOnOverlay(event, 'water-add-modal')">
-  <div class="equipment-modal-box">
-    <div class="equipment-modal-header">
-      <h2 class="equipment-modal-title">Add Water Recipe</h2>
-      <button class="equipment-modal-close" onclick="closeEquipmentModal('water-add-modal')" aria-label="Close">✕</button>
+<dialog id="water-add-modal" class="modal">
+  <div class="modal-box bg-base-200 border border-base-300 max-w-lg">
+    <div class="flex items-center justify-between mb-4 pb-2 border-b border-base-300">
+      <h2 class="text-lg font-bold">Add Water Recipe</h2>
+      <form method="dialog"><button class="btn btn-ghost btn-sm btn-square" aria-label="Close">&#10005;</button></form>
     </div>
     {% set recipe = None %}
     {% include "equipment/_water_form.html" %}
   </div>
-</div>
+  <form method="dialog" class="modal-backdrop"><button>close</button></form>
+</dialog>
 
 <!-- ════════════════════════════════════════════════════════════
      Edit Modal (htmx-loaded content)
      ════════════════════════════════════════════════════════════ -->
-<div class="equipment-modal-overlay" id="equipment-edit-modal" onclick="closeEquipmentModalOnOverlay(event, 'equipment-edit-modal')">
-  <div class="equipment-modal-box">
+<dialog id="equipment-edit-modal" class="modal">
+  <div class="modal-box bg-base-200 border border-base-300 max-w-lg">
     <div id="equipment-modal-content">
       <!-- Loaded via htmx -->
     </div>
   </div>
-</div>
+  <form method="dialog" class="modal-backdrop"><button>close</button></form>
+</dialog>
 
 {% endblock %}
 
 {% block scripts %}
 <script>
   function openEquipmentModal(id) {
-    document.getElementById(id).classList.add('open');
-    document.body.style.overflow = 'hidden';
+    document.getElementById(id).showModal();
   }
 
   function closeEquipmentModal(id) {
-    document.getElementById(id).classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  function closeEquipmentModalOnOverlay(event, id) {
-    if (event.target === event.currentTarget) {
-      closeEquipmentModal(id);
-    }
+    document.getElementById(id).close();
   }
 
   function openEditModal(url) {
@@ -283,7 +255,7 @@
       .then(r => r.text())
       .then(html => {
         document.getElementById('equipment-modal-content').innerHTML = html;
-        openEquipmentModal('equipment-edit-modal');
+        document.getElementById('equipment-edit-modal').showModal();
       });
   }
 

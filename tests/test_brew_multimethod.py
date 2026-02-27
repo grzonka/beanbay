@@ -122,8 +122,8 @@ def test_is_legacy_key_new_format():
 
 
 def test_legacy_migration_renames_file(tmp_path):
-    """migrate_legacy_campaigns renames {uuid}.json to {uuid}__espresso__none.json."""
-    from app.services.optimizer import OptimizerService
+    """migrate_legacy_campaign_files renames {uuid}.json to {uuid}__espresso__none.json."""
+    from app.services.migration import migrate_legacy_campaign_files
 
     campaigns_dir = tmp_path / "campaigns"
     campaigns_dir.mkdir()
@@ -136,8 +136,7 @@ def test_legacy_migration_renames_file(tmp_path):
     # We don't actually load it, just rename it — write a placeholder
     old_json.write_text("{}")
 
-    optimizer = OptimizerService(campaigns_dir)
-    count = optimizer.migrate_legacy_campaigns()
+    count = migrate_legacy_campaign_files(campaigns_dir)
 
     assert count == 1
     # New file exists
@@ -148,8 +147,8 @@ def test_legacy_migration_renames_file(tmp_path):
 
 
 def test_legacy_migration_skips_existing(tmp_path):
-    """migrate_legacy_campaigns does not overwrite if new key file already exists."""
-    from app.services.optimizer import OptimizerService
+    """migrate_legacy_campaign_files does not overwrite if new key file already exists."""
+    from app.services.migration import migrate_legacy_campaign_files
 
     campaigns_dir = tmp_path / "campaigns"
     campaigns_dir.mkdir()
@@ -161,8 +160,7 @@ def test_legacy_migration_skips_existing(tmp_path):
     old_json.write_text('{"old": true}')
     new_json.write_text('{"new": true}')
 
-    optimizer = OptimizerService(campaigns_dir)
-    count = optimizer.migrate_legacy_campaigns()
+    count = migrate_legacy_campaign_files(campaigns_dir)
 
     # Should skip (new already exists)
     assert count == 0
@@ -176,11 +174,14 @@ def test_legacy_migration_skips_existing(tmp_path):
 # ---------------------------------------------------------------------------
 
 
-def test_optimizer_pour_over_campaign_has_bloom_param(tmp_campaigns_dir):
+def test_optimizer_pour_over_campaign_has_bloom_param(db_session):
     """OptimizerService pour-over campaign includes bloom_weight parameter."""
     from app.services.optimizer import OptimizerService
 
-    optimizer = OptimizerService(tmp_campaigns_dir)
+    def _factory():
+        return db_session
+
+    optimizer = OptimizerService(_factory)
     campaign_key = make_campaign_key("bean1", "pour-over", "setup1")
     campaign = optimizer.get_or_create_campaign(campaign_key, method="pour-over")
 
@@ -189,20 +190,31 @@ def test_optimizer_pour_over_campaign_has_bloom_param(tmp_campaigns_dir):
     assert "brew_volume" in param_names
     # Pour-over should NOT have espresso-only params
     assert "saturation" not in param_names
-    assert "preinfusion_pct" not in param_names
+    assert "preinfusion_pressure_pct" not in param_names
 
 
-def test_optimizer_espresso_campaign_has_saturation(tmp_campaigns_dir):
-    """OptimizerService espresso campaign includes saturation categorical parameter."""
+def test_optimizer_espresso_campaign_phase20_tier1(db_session):
+    """Phase 20: New espresso campaigns use Tier 1 params only (no legacy preinfusion_pressure_pct/saturation)."""
     from app.services.optimizer import OptimizerService
 
-    optimizer = OptimizerService(tmp_campaigns_dir)
+    def _factory():
+        return db_session
+
+    optimizer = OptimizerService(_factory)
     campaign_key = make_campaign_key("bean1", "espresso", None)
     campaign = optimizer.get_or_create_campaign(campaign_key, method="espresso")
 
     param_names = [p.name for p in campaign.searchspace.parameters]
-    assert "saturation" in param_names
-    assert "preinfusion_pct" in param_names
+    # Phase 20: legacy params excluded from new campaigns
+    assert "saturation" not in param_names, "Legacy saturation must not appear in new campaigns"
+    assert "preinfusion_pressure_pct" not in param_names, (
+        "Legacy preinfusion_pressure_pct must not appear in new campaigns"
+    )
+    # Tier 1 core params must be present
+    assert "grind_setting" in param_names
+    assert "temperature" in param_names
+    assert "dose_in" in param_names
+    assert "target_yield" in param_names
     # Espresso should NOT have pour-over-only params
     assert "bloom_weight" not in param_names
     assert "brew_volume" not in param_names
@@ -226,7 +238,7 @@ def _record_payload(rec_id: str, taste: float = 8.0, **kwargs) -> dict:
         "recommendation_id": rec_id,
         "grind_setting": "20.0",
         "temperature": "93.0",
-        "preinfusion_pct": "75.0",
+        "preinfusion_pressure_pct": "75.0",
         "dose_in": "19.0",
         "target_yield": "40.0",
         "saturation": "yes",
@@ -279,7 +291,7 @@ def test_method_context_in_history(active_client, sample_bean, sample_setup, db_
         recommendation_id=str(uuid.uuid4()),
         grind_setting=20.0,
         temperature=93.0,
-        preinfusion_pct=75.0,
+        preinfusion_pressure_pct=75.0,
         dose_in=19.0,
         target_yield=40.0,
         saturation="yes",

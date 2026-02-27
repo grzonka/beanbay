@@ -3,346 +3,248 @@
 {% block title %}Manual Brew — BeanBay{% endblock %}
 
 {% block content %}
-<div class="page-header">
-  <h1 class="page-title">Manual Brew</h1>
-  <a href="/brew" class="btn btn-secondary btn-sm">← Back</a>
+<div class="flex items-center justify-between mb-6 min-h-12">
+  <h1 class="text-xl font-bold">Manual Brew</h1>
+  <a href="/brew" class="btn btn-ghost btn-sm">← Back</a>
 </div>
 
-<div class="card mb-md">
-  <div class="card-subtitle mb-md">{{ active_bean.name }}</div>
+<div class="card bg-base-200 border border-base-300 mb-4">
+  <div class="card-body p-4">
+    <div class="text-sm text-base-content/50 mb-4">{{ active_bean.name }}</div>
 
-  <form method="post" action="/brew/record">
-    <!-- Hidden fields -->
-    <input type="hidden" name="recommendation_id" value="{{ manual_session_id }}">
-    <input type="hidden" name="is_manual" value="true">
-    <input type="hidden" id="is_manual_flag" value="true">
-    <input type="hidden" name="method" value="{{ method or 'espresso' }}">
-    <input type="hidden" name="brew_setup_id" value="{{ setup_id or '' }}">
+    <form method="post" action="/brew/record">
+      <!-- Hidden fields -->
+      <input type="hidden" name="recommendation_id" value="{{ manual_session_id }}">
+      <input type="hidden" name="is_manual" value="true">
+      <input type="hidden" id="is_manual_flag" value="true">
+      <input type="hidden" name="method" value="{{ method or 'espresso' }}">
+      <input type="hidden" name="brew_setup_id" value="{{ setup_id or '' }}">
 
-    <!-- ------------------------------------------------------------------ -->
-    <!-- Grind Setting -->
-    <!-- ------------------------------------------------------------------ -->
-    <div class="form-group">
-      <label class="form-label">
-        Grind Setting
-        <span class="param-unit">({{ bounds.grind_setting[0] }}–{{ bounds.grind_setting[1] }})</span>
-      </label>
-      <div class="param-input-row">
+      {# ------------------------------------------------------------------ #}
+      {# Generic parameter inputs — driven by param_defs from registry      #}
+      {# ------------------------------------------------------------------ #}
+
+      {# Unit labels per param #}
+      {% set units = {
+        'grind_setting': '',
+        'temperature': '°C',
+        'dose_in': 'g',
+        'target_yield': 'g',
+        'preinfusion_time': 's',
+        'preinfusion_pressure': 'bar',
+        'brew_pressure': 'bar',
+        'flow_rate': 'ml/s',
+        'bloom_weight': 'g',
+        'brew_volume': 'ml',
+        'steep_time': 's',
+        'bloom_pause': 's',
+      } %}
+
+      {# Human-readable labels — prefer server-side dict, fall back to local map #}
+      {% set _fallback_labels = {
+        'grind_setting': 'Grind Setting',
+        'temperature': 'Temperature',
+        'dose_in': 'Dose',
+        'target_yield': 'Target Yield',
+        'preinfusion_time': 'Pre-infusion Time',
+        'preinfusion_pressure': 'Pre-infusion Pressure',
+        'brew_pressure': 'Brew Pressure',
+        'pressure_profile': 'Pressure Profile',
+        'bloom_pause': 'Bloom Pause',
+        'flow_rate': 'Flow Rate',
+        'brew_mode': 'Brew Mode',
+        'bloom_weight': 'Bloom Water',
+        'brew_volume': 'Brew Volume',
+        'steep_time': 'Steep Time',
+        'temp_profile': 'Temperature Profile',
+      } %}
+      {% set labels = param_labels if param_labels is defined else _fallback_labels %}
+      {% set descs = param_descriptions if param_descriptions is defined else {} %}
+
+      {# Info icon for parameter tooltips #}
+      {% macro info_icon(param_name) %}
+        {% if param_name in descs %}
+          <span class="tooltip tooltip-right ml-1 cursor-help align-middle" data-tip="{{ descs[param_name] }}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="inline h-3.5 w-3.5 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"/>
+            </svg>
+          </span>
+        {% endif %}
+      {% endmacro %}
+
+      {% for pdef in param_defs %}
+        {% set pname = pdef.name %}
+        {% set plabel = labels[pname] if pname in labels else pname | replace('_', ' ') | title %}
+        {% set punit = units[pname] if pname in units else '' %}
+
+        {% if pdef.type == 'categorical' %}
+        <!-- {{ plabel }} (categorical) -->
+        <div class="form-control mb-4">
+          <label class="label">
+            <span class="label-text">{{ plabel }}{{ info_icon(pname) }}</span>
+          </label>
+          <select
+            name="{{ pname }}"
+            class="select select-bordered w-full"
+          >
+            {% for val in pdef.values %}
+            <option value="{{ val }}" {% if prefill[pname] == val %}selected{% endif %}>
+              {{ val | replace('_', ' ') | title }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        {% else %}
+        {# Continuous param — slider + number input #}
+        {% if pname in bounds %}
+        {% set pmin = bounds[pname][0] %}
+        {% set pmax = bounds[pname][1] %}
+        {% set pstep = pdef.rounding if pdef.rounding else 1.0 %}
+        {% set pval = prefill[pname] if pname in prefill else ((pmin + pmax) / 2) %}
+        <div class="form-control mb-4">
+          <label class="label">
+            <span class="label-text">{{ plabel }}{{ info_icon(pname) }}</span>
+            <span class="label-text-alt">{{ punit ~ ' ' if punit }}({{ pmin }}–{{ pmax }})</span>
+          </label>
+          <div class="param-input-row">
+            <input
+              type="range"
+              class="param-slider"
+              id="{{ pname }}_slider"
+              min="{{ pmin }}"
+              max="{{ pmax }}"
+              step="{{ pstep }}"
+              value="{{ pval }}"
+              oninput="document.getElementById('{{ pname }}').value = parseFloat(this.value).toFixed({{ 0 if pstep >= 1 else 1 }})"
+            >
+            <input
+              type="number"
+              class="param-number input input-bordered"
+              id="{{ pname }}"
+              name="{{ pname }}"
+              step="{{ pstep }}"
+              value="{{ pval }}"
+              data-min="{{ pmin }}"
+              data-max="{{ pmax }}"
+              data-param="{{ pname }}"
+              oninput="var s=document.getElementById('{{ pname }}_slider'); s.value=Math.max(s.min,Math.min(s.max,this.value))"
+            >
+          </div>
+        </div>
+        {% endif %}
+
+        {% endif %}
+      {% endfor %}
+
+      <!-- ------------------------------------------------------------------ -->
+      <!-- Taste score (inactive until touched) -->
+      <!-- ------------------------------------------------------------------ -->
+      <div class="form-control mb-4" id="taste-group">
+        <label class="label" for="taste">
+          <span class="label-text">Taste Score: <strong id="taste-display">—</strong> / 10</span>
+        </label>
         <input
           type="range"
-          class="param-slider"
-          id="grind_setting_slider"
-          min="{{ bounds.grind_setting[0] }}"
-          max="{{ bounds.grind_setting[1] }}"
+          id="taste"
+          name="taste"
+          class="score-slider"
+          min="1"
+          max="10"
           step="0.5"
-          value="{{ prefill.grind_setting }}"
-          oninput="document.getElementById('grind_setting').value = parseFloat(this.value).toFixed(1)"
+          value="7.0"
+          data-touched="false"
+          oninput="this.dataset.touched='true'; document.getElementById('taste-group').classList.add('touched'); document.getElementById('taste-display').textContent = this.value"
         >
+        <label class="label">
+          <span class="label-text-alt">1 = undrinkable · 10 = perfect</span>
+        </label>
+        <div class="taste-required-msg" id="taste-required-msg">Rate the brew before submitting</div>
+      </div>
+
+      <!-- ------------------------------------------------------------------ -->
+      <!-- Extraction time (optional) -->
+      <!-- ------------------------------------------------------------------ -->
+      {% set brew_method = method if method is defined else 'espresso' %}
+      <div class="form-control mb-4">
+        {% if brew_method == 'cold-brew' %}
+        <label class="label" for="extraction_time">
+          <span class="label-text">Brew Time (minutes, optional)</span>
+        </label>
         <input
           type="number"
-          class="param-number form-input"
-          id="grind_setting"
-          name="grind_setting"
-          step="0.5"
-          value="{{ prefill.grind_setting }}"
-          data-min="{{ bounds.grind_setting[0] }}"
-          data-max="{{ bounds.grind_setting[1] }}"
-          data-param="grind_setting"
-          oninput="var s=document.getElementById('grind_setting_slider'); s.value=Math.max(s.min,Math.min(s.max,this.value))"
-        >
-      </div>
-    </div>
-
-    <!-- ------------------------------------------------------------------ -->
-    <!-- Temperature -->
-    <!-- ------------------------------------------------------------------ -->
-    <div class="form-group">
-      <label class="form-label">
-        Temperature
-        <span class="param-unit">°C ({{ bounds.temperature[0] }}–{{ bounds.temperature[1] }})</span>
-      </label>
-      <div class="param-input-row">
-        <input
-          type="range"
-          class="param-slider"
-          id="temperature_slider"
-          min="{{ bounds.temperature[0] }}"
-          max="{{ bounds.temperature[1] }}"
+          id="extraction_time"
+          name="extraction_time"
+          class="input input-bordered w-full"
+          placeholder="e.g. 720"
+          min="60"
+          max="2880"
           step="1"
-          value="{{ prefill.temperature }}"
-          oninput="document.getElementById('temperature').value = parseFloat(this.value).toFixed(0)"
         >
+        {% elif brew_method == 'espresso' or not brew_method %}
+        <label class="label" for="extraction_time">
+          <span class="label-text">Extraction Time (seconds, optional)</span>
+        </label>
         <input
           type="number"
-          class="param-number form-input"
-          id="temperature"
-          name="temperature"
+          id="extraction_time"
+          name="extraction_time"
+          class="input input-bordered w-full"
+          placeholder="e.g. 28"
+          min="5"
+          max="120"
           step="1"
-          value="{{ prefill.temperature }}"
-          data-min="{{ bounds.temperature[0] }}"
-          data-max="{{ bounds.temperature[1] }}"
-          data-param="temperature"
-          oninput="var s=document.getElementById('temperature_slider'); s.value=Math.max(s.min,Math.min(s.max,this.value))"
         >
-      </div>
-    </div>
-
-    <!-- ------------------------------------------------------------------ -->
-    <!-- Pre-infusion % (espresso only) -->
-    <!-- ------------------------------------------------------------------ -->
-    {% if method != 'pour-over' %}
-    <div class="form-group">
-      <label class="form-label">
-        Pre-infusion %
-        <span class="param-unit">({{ bounds.preinfusion_pct[0] }}–{{ bounds.preinfusion_pct[1] }})</span>
-      </label>
-      <div class="param-input-row">
-        <input
-          type="range"
-          class="param-slider"
-          id="preinfusion_pct_slider"
-          min="{{ bounds.preinfusion_pct[0] }}"
-          max="{{ bounds.preinfusion_pct[1] }}"
-          step="5"
-          value="{{ prefill.preinfusion_pct }}"
-          oninput="document.getElementById('preinfusion_pct').value = parseFloat(this.value).toFixed(0)"
-        >
+        {% else %}
+        <label class="label" for="extraction_time">
+          <span class="label-text">Brew Time (seconds, optional)</span>
+        </label>
         <input
           type="number"
-          class="param-number form-input"
-          id="preinfusion_pct"
-          name="preinfusion_pct"
-          step="5"
-          value="{{ prefill.preinfusion_pct }}"
-          data-min="{{ bounds.preinfusion_pct[0] }}"
-          data-max="{{ bounds.preinfusion_pct[1] }}"
-          data-param="preinfusion_pct"
-          oninput="var s=document.getElementById('preinfusion_pct_slider'); s.value=Math.max(s.min,Math.min(s.max,this.value))"
-        >
-      </div>
-    </div>
-    {% endif %}
-
-    <!-- ------------------------------------------------------------------ -->
-    <!-- Dose In -->
-    <!-- ------------------------------------------------------------------ -->
-    <div class="form-group">
-      <label class="form-label">
-        Dose In
-        <span class="param-unit">g ({{ bounds.dose_in[0] }}–{{ bounds.dose_in[1] }})</span>
-      </label>
-      <div class="param-input-row">
-        <input
-          type="range"
-          class="param-slider"
-          id="dose_in_slider"
-          min="{{ bounds.dose_in[0] }}"
-          max="{{ bounds.dose_in[1] }}"
-          step="0.5"
-          value="{{ prefill.dose_in }}"
-          oninput="document.getElementById('dose_in').value = parseFloat(this.value).toFixed(1)"
-        >
-        <input
-          type="number"
-          class="param-number form-input"
-          id="dose_in"
-          name="dose_in"
-          step="0.5"
-          value="{{ prefill.dose_in }}"
-          data-min="{{ bounds.dose_in[0] }}"
-          data-max="{{ bounds.dose_in[1] }}"
-          data-param="dose_in"
-          oninput="var s=document.getElementById('dose_in_slider'); s.value=Math.max(s.min,Math.min(s.max,this.value))"
-        >
-      </div>
-    </div>
-
-    <!-- ------------------------------------------------------------------ -->
-    <!-- Target Yield (espresso) / Brew Volume (pour-over) -->
-    <!-- ------------------------------------------------------------------ -->
-    {% if method == 'pour-over' %}
-    <!-- Bloom Weight -->
-    <div class="form-group">
-      <label class="form-label">
-        Bloom Weight
-        <span class="param-unit">g ({{ bounds.bloom_weight[0] }}–{{ bounds.bloom_weight[1] }})</span>
-      </label>
-      <div class="param-input-row">
-        <input
-          type="range"
-          class="param-slider"
-          id="bloom_weight_slider"
-          min="{{ bounds.bloom_weight[0] }}"
-          max="{{ bounds.bloom_weight[1] }}"
+          id="extraction_time"
+          name="extraction_time"
+          class="input input-bordered w-full"
+          placeholder="e.g. 240"
+          min="5"
+          max="1800"
           step="1"
-          value="{{ prefill.bloom_weight }}"
-          oninput="document.getElementById('bloom_weight').value = parseFloat(this.value).toFixed(0)"
         >
-        <input
-          type="number"
-          class="param-number form-input"
-          id="bloom_weight"
-          name="bloom_weight"
-          step="1"
-          value="{{ prefill.bloom_weight }}"
-          data-min="{{ bounds.bloom_weight[0] }}"
-          data-max="{{ bounds.bloom_weight[1] }}"
-          data-param="bloom_weight"
-          oninput="var s=document.getElementById('bloom_weight_slider'); s.value=Math.max(s.min,Math.min(s.max,this.value))"
-        >
+        {% endif %}
       </div>
-    </div>
-    <!-- Brew Volume -->
-    <div class="form-group">
-      <label class="form-label">
-        Brew Volume
-        <span class="param-unit">ml ({{ bounds.brew_volume[0] }}–{{ bounds.brew_volume[1] }})</span>
-      </label>
-      <div class="param-input-row">
-        <input
-          type="range"
-          class="param-slider"
-          id="brew_volume_slider"
-          min="{{ bounds.brew_volume[0] }}"
-          max="{{ bounds.brew_volume[1] }}"
-          step="5"
-          value="{{ prefill.brew_volume }}"
-          oninput="document.getElementById('brew_volume').value = parseFloat(this.value).toFixed(0)"
-        >
-        <input
-          type="number"
-          class="param-number form-input"
-          id="brew_volume"
-          name="brew_volume"
-          step="5"
-          value="{{ prefill.brew_volume }}"
-          data-min="{{ bounds.brew_volume[0] }}"
-          data-max="{{ bounds.brew_volume[1] }}"
-          data-param="brew_volume"
-          oninput="var s=document.getElementById('brew_volume_slider'); s.value=Math.max(s.min,Math.min(s.max,this.value))"
-        >
+
+      <!-- ------------------------------------------------------------------ -->
+      <!-- Failed shot/brew toggle -->
+      <!-- ------------------------------------------------------------------ -->
+      <div class="form-control mb-4">
+        <label class="flex items-center gap-4 min-h-12 cursor-pointer">
+          <input
+            type="checkbox"
+            id="is_failed"
+            name="is_failed"
+            value="true"
+            class="checkbox checkbox-error"
+            onchange="toggleFailed(this)"
+          >
+          <span class="label-text">
+            {% if brew_method == 'espresso' or not brew_method %}
+            ⚠️ Failed shot (choked / gusher)
+            {% else %}
+            ⚠️ Failed brew
+            {% endif %}
+          </span>
+        </label>
+        <label class="label">
+          <span class="label-text-alt">Auto-sets taste to 1 — still teaches the optimizer what not to do.</span>
+        </label>
       </div>
-    </div>
-    {% else %}
-    <div class="form-group">
-      <label class="form-label">
-        Target Yield
-        <span class="param-unit">g ({{ bounds.target_yield[0] }}–{{ bounds.target_yield[1] }})</span>
-      </label>
-      <div class="param-input-row">
-        <input
-          type="range"
-          class="param-slider"
-          id="target_yield_slider"
-          min="{{ bounds.target_yield[0] }}"
-          max="{{ bounds.target_yield[1] }}"
-          step="1"
-          value="{{ prefill.target_yield }}"
-          oninput="document.getElementById('target_yield').value = parseFloat(this.value).toFixed(0)"
-        >
-        <input
-          type="number"
-          class="param-number form-input"
-          id="target_yield"
-          name="target_yield"
-          step="1"
-          value="{{ prefill.target_yield }}"
-          data-min="{{ bounds.target_yield[0] }}"
-          data-max="{{ bounds.target_yield[1] }}"
-          data-param="target_yield"
-          oninput="var s=document.getElementById('target_yield_slider'); s.value=Math.max(s.min,Math.min(s.max,this.value))"
-        >
-      </div>
-    </div>
-    {% endif %}
 
-    <!-- ------------------------------------------------------------------ -->
-    <!-- Saturation toggle (espresso only) -->
-    <!-- ------------------------------------------------------------------ -->
-    {% if method != 'pour-over' %}
-    <div class="form-group">
-      <label class="form-label">Saturation</label>
-      <label class="saturation-toggle">
-        <input type="hidden" name="saturation" value="no">
-        <input
-          type="checkbox"
-          name="saturation"
-          value="yes"
-          {% if prefill.saturation == "yes" %}checked{% endif %}
-        >
-        <span class="saturation-toggle-label">Full saturation (yes)</span>
-      </label>
-      <div class="form-hint">Checked = yes, unchecked = no</div>
-    </div>
-    {% endif %}
+      {% include "brew/_feedback_panel.html" %}
 
-    <!-- ------------------------------------------------------------------ -->
-    <!-- Taste score (inactive until touched) -->
-    <!-- ------------------------------------------------------------------ -->
-    <div class="form-group" id="taste-group">
-      <label class="form-label" for="taste">
-        Taste Score: <strong id="taste-display">—</strong> / 10
-      </label>
-      <input
-        type="range"
-        id="taste"
-        name="taste"
-        class="score-slider form-input"
-        min="1"
-        max="10"
-        step="0.5"
-        value="7.0"
-        data-touched="false"
-        oninput="this.dataset.touched='true'; document.getElementById('taste-group').classList.add('touched'); document.getElementById('taste-display').textContent = this.value"
-      >
-      <div class="form-hint">1 = undrinkable · 10 = perfect</div>
-      <div class="taste-required-msg" id="taste-required-msg">Rate the brew before submitting</div>
-    </div>
-
-    <!-- ------------------------------------------------------------------ -->
-    <!-- Extraction time (optional) -->
-    <!-- ------------------------------------------------------------------ -->
-    <div class="form-group">
-      <label class="form-label" for="extraction_time">
-        Extraction Time (seconds, optional)
-      </label>
-      <input
-        type="number"
-        id="extraction_time"
-        name="extraction_time"
-        class="form-input"
-        placeholder="e.g. 28"
-        min="5"
-        max="120"
-        step="1"
-      >
-    </div>
-
-    <!-- ------------------------------------------------------------------ -->
-    <!-- Failed shot toggle -->
-    <!-- ------------------------------------------------------------------ -->
-    <div class="form-group">
-      <label class="failed-toggle">
-        <input
-          type="checkbox"
-          id="is_failed"
-          name="is_failed"
-          value="true"
-          onchange="toggleFailed(this)"
-        >
-        <span class="failed-toggle-label">
-          ⚠️ Failed shot (choked / gusher)
-        </span>
-      </label>
-      <div class="form-hint">Auto-sets taste to 1 — still teaches the optimizer what not to do.</div>
-    </div>
-
-    {% include "brew/_feedback_panel.html" %}
-
-    <button type="submit" class="btn btn-primary btn-full">
-      Submit Manual Brew
-    </button>
-  </form>
+      <button type="submit" class="btn btn-primary w-full min-h-12">
+        Submit Manual Brew
+      </button>
+    </form>
+  </div>
 </div>
 {% endblock %}
 

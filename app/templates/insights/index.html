@@ -3,56 +3,86 @@
 {% block title %}Insights — BeanBay{% endblock %}
 
 {% block content %}
-<div class="page-header">
-  <h1 class="page-title">Insights</h1>
+<div class="flex items-center justify-between mb-6 min-h-12">
+  <h1 class="text-xl font-bold">Insights</h1>
 </div>
 
+<!-- Bean selector -->
+<div class="card bg-base-200 border border-base-300 mb-4">
+  <div class="card-body p-4">
+    <div class="text-sm font-semibold text-base-content/70 mb-1 uppercase tracking-wider">Bean</div>
+    <select class="select select-bordered w-full min-h-12"
+            onchange="window.location.href='/insights?bean_id=' + this.value">
+      <option value="" disabled {% if not active_bean %}selected{% endif %}>Pick a bean…</option>
+      {% for b in beans %}
+      <option value="{{ b.id }}" {% if active_bean and b.id == active_bean.id %}selected{% endif %}>{{ b.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+</div>
+
+{% if active_bean %}
+
 <!-- Bean + shot count header -->
-<div class="card mb-md">
-  <div class="card-header">
-    <div>
-      <div class="card-title">{{ active_bean.name }}</div>
-      <div class="card-meta">{{ shot_count }} shot{{ 's' if shot_count != 1 else '' }} recorded</div>
+<div class="card bg-base-200 border border-base-300 mb-4">
+  <div class="card-body p-4">
+    <div class="flex items-center justify-between">
+      <div>
+        <div class="font-semibold">{{ active_bean.name }}</div>
+        <div class="text-sm text-base-content/50">{{ shot_count }} shot{{ 's' if shot_count != 1 else '' }} recorded</div>
+      </div>
+      {% if best_taste %}
+      <div class="text-right">
+        <span class="text-xs text-base-content/40">Best</span>
+        <div class="text-2xl font-bold text-primary">{{ best_taste }}</div>
+      </div>
+      {% endif %}
     </div>
-    {% if best_taste %}
-    <div class="insight-best-taste">
-      <span class="text-muted text-sm">Best</span>
-      <span class="insight-best-value">{{ best_taste }}</span>
-    </div>
-    {% endif %}
   </div>
 </div>
 
 <!-- Convergence status -->
-<div class="card mb-md">
-  <h2 class="card-title mb-sm">Optimization Status</h2>
-  {% include "insights/_convergence_badge.html" %}
-  <div class="insight-phase-label mt-sm">
-    <span class="text-sm text-muted">Optimizer mode:</span>
-    <span class="insight-badge insight-badge-{{ optimizer_phase }}">
-      {{ "Random exploration" if optimizer_phase == "random" else ("Learning" if optimizer_phase == "bayesian_early" else "Bayesian optimization") }}
-    </span>
+<div class="card bg-base-200 border border-base-300 mb-4">
+  <div class="card-body p-4">
+    <h2 class="font-semibold mb-2">Optimization Status</h2>
+    {% include "insights/_convergence_badge.html" %}
+    <div class="flex items-center gap-2 mt-2">
+      <span class="text-sm text-base-content/40">Optimizer mode:</span>
+      <span class="badge {% if optimizer_phase == 'random' %}badge-info{% elif optimizer_phase == 'bayesian_early' %}badge-warning{% else %}badge-accent{% endif %}">
+        {{ "Random exploration" if optimizer_phase == "random" else ("Learning" if optimizer_phase == "bayesian_early" else "Bayesian optimization") }}
+      </span>
+    </div>
   </div>
 </div>
 
 <!-- Progress chart -->
-<div class="card mb-md">
-  <h2 class="card-title mb-md">Progress</h2>
-  {% include "insights/_progress_chart.html" %}
+<div class="card bg-base-200 border border-base-300 mb-4">
+  <div class="card-body p-4">
+    <h2 class="font-semibold mb-4">Progress</h2>
+    {% include "insights/_progress_chart.html" %}
+  </div>
 </div>
 
 <!-- Parameter exploration -->
-<div class="card mb-md">
-  <h2 class="card-title mb-md">Parameter Map</h2>
-  <p class="text-sm text-muted mb-md">Grind vs temperature — colored by taste score</p>
-  {% include "insights/_heatmap_chart.html" %}
+<div class="card bg-base-200 border border-base-300 mb-4">
+  <div class="card-body p-4">
+    <h2 class="font-semibold mb-4">Parameter Map</h2>
+    <p class="text-sm text-base-content/40 mb-4">Grind vs temperature — colored by taste score</p>
+    {% include "insights/_heatmap_chart.html" %}
+  </div>
 </div>
 
 <!-- Quick actions -->
-<div class="brew-actions">
-  <a href="/brew" class="btn btn-primary btn-full">Back to Brew</a>
+<div class="flex flex-col gap-4">
+  <a href="/brew" class="btn btn-primary w-full min-h-12">Back to Brew</a>
   {% if best_taste %}
-  <a href="/brew/best" class="btn btn-secondary btn-full">View Best Recipe</a>
+  <a href="/brew/best" class="btn btn-ghost w-full min-h-12 border border-base-300">View Best Recipe</a>
   {% endif %}
 </div>
+
+{% else %}
+<div class="text-center py-8 text-base-content/50">
+  <p class="text-sm">Select a bean above to see optimization insights.</p>
+</div>
+{% endif %}
 {% endblock %}

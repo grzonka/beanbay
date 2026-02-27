@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome to BeanBay{% endblock %}
+
+{% block content %}
+<div class="hero min-h-64 bg-base-200 border border-base-300 rounded-xl mb-6">
+  <div class="hero-content text-center py-8">
+    <div class="max-w-md">
+      <h1 class="text-4xl font-bold text-primary mb-2">☕ BeanBay</h1>
+      <p class="text-lg text-base-content/70 mb-4">Your personal coffee optimization companion</p>
+      <p class="text-base-content/60 text-sm leading-relaxed">
+        BeanBay helps you dial in your perfect coffee. Log your brews, rate the taste, and let
+        Bayesian optimization suggest better recipes — learning from every cup you make.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+  <div class="card bg-base-200 border border-base-300">
+    <div class="card-body p-4">
+      <div class="text-2xl mb-2">📋</div>
+      <h3 class="font-semibold text-base-content mb-1">Track Brews</h3>
+      <p class="text-sm text-base-content/60">Log every brew with recipe parameters and taste ratings — espresso, pour-over, french press, and more.</p>
+    </div>
+  </div>
+
+  <div class="card bg-base-200 border border-base-300">
+    <div class="card-body p-4">
+      <div class="text-2xl mb-2">🎯</div>
+      <h3 class="font-semibold text-base-content mb-1">Get Smarter Recipes</h3>
+      <p class="text-sm text-base-content/60">Bayesian optimization learns from your feedback to suggest better grind, temperature, dose, and more with every rating.</p>
+    </div>
+  </div>
+
+  <div class="card bg-base-200 border border-base-300">
+    <div class="card-body p-4">
+      <div class="text-2xl mb-2">⚗️</div>
+      <h3 class="font-semibold text-base-content mb-1">Multiple Methods</h3>
+      <p class="text-sm text-base-content/60">Espresso, pour-over, french press, AeroPress, moka pot, turkish, and cold brew — each with method-specific parameters.</p>
+    </div>
+  </div>
+
+  <div class="card bg-base-200 border border-base-300">
+    <div class="card-body p-4">
+      <div class="text-2xl mb-2">⚙️</div>
+      <h3 class="font-semibold text-base-content mb-1">Equipment Profiles</h3>
+      <p class="text-sm text-base-content/60">Set up your grinder, brewer, and water recipe. BeanBay tailors recommendations to your specific equipment's capabilities.</p>
+    </div>
+  </div>
+</div>
+
+<div class="flex flex-col sm:flex-row gap-3 items-center justify-center">
+  <a href="/beans" class="btn btn-primary btn-lg w-full sm:w-auto min-h-14">
+    Add Your First Bean →
+  </a>
+  <a href="/brew" class="btn btn-ghost w-full sm:w-auto min-h-12 text-base-content/50">
+    I already have beans
+  </a>
+</div>
+{% endblock %}

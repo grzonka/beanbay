@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard — BeanBay{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6 min-h-12">
+  <h1 class="text-xl font-bold">Dashboard</h1>
+</div>
+
+<p class="text-sm text-base-content/50 mb-4">
+  Your coffee experiment lab — track brews, optimize recipes with Bayesian learning, and dial in the perfect cup.
+</p>
+
+<!-- Stats grid -->
+<div class="card bg-base-200 border border-base-300 mb-4">
+  <div class="card-body p-4">
+    <div class="stats-grid">
+      <div class="text-center p-3 bg-base-300/50 rounded-lg">
+        <span class="block text-2xl font-bold">{{ stats.total_brews }}</span>
+        <span class="block text-xs text-base-content/60 uppercase tracking-wide">Total brews</span>
+      </div>
+      <div class="text-center p-3 bg-base-300/50 rounded-lg">
+        <span class="block text-2xl font-bold">{{ stats.total_beans }}</span>
+        <span class="block text-xs text-base-content/60 uppercase tracking-wide">Beans tracked</span>
+      </div>
+      <div class="text-center p-3 bg-base-300/50 rounded-lg">
+        <span class="block text-2xl font-bold">{{ stats.avg_taste if stats.avg_taste is not none else "—" }}</span>
+        <span class="block text-xs text-base-content/60 uppercase tracking-wide">Avg taste</span>
+      </div>
+      <div class="text-center p-3 bg-base-300/50 rounded-lg">
+        <span class="block text-2xl font-bold text-primary">{{ stats.best_taste if stats.best_taste is not none else "—" }}</span>
+        <span class="block text-xs text-base-content/60 uppercase tracking-wide">Best taste</span>
+        {% if stats.best_bean_name %}
+        <span class="block text-xs text-base-content/40 mt-0.5">{{ stats.best_bean_name }}</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Active bean card -->
+{% if active_bean %}
+<div class="card bg-base-200 border border-base-300 mb-4">
+  <div class="card-body p-4">
+    <div class="flex items-center justify-between">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="font-semibold">{{ active_bean.name }}</span>
+          <span class="badge badge-primary badge-sm">Active</span>
+        </div>
+        <div class="text-sm text-base-content/50 mt-0.5">
+          {{ active_bean_shots }} brew{{ 's' if active_bean_shots != 1 else '' }} recorded
+        </div>
+      </div>
+      {% if active_bean_best %}
+      <div class="text-right">
+        <span class="text-xs text-base-content/40">Best</span>
+        <div class="text-2xl font-bold text-primary">{{ active_bean_best }}</div>
+      </div>
+      {% endif %}
+    </div>
+    <div class="mt-3">
+      <a href="/brew" class="btn btn-primary w-full min-h-12">Let's Brew</a>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="card bg-base-200 border border-base-300 mb-4">
+  <div class="card-body p-4 text-center">
+    <p class="text-base-content/50 text-sm mb-3">No bean selected — pick one to start brewing</p>
+    <a href="/beans" class="btn btn-ghost btn-sm border border-base-300">Choose a Bean</a>
+  </div>
+</div>
+{% endif %}
+
+<!-- Recent brews -->
+{% if recent_brews %}
+<div class="card bg-base-200 border border-base-300 mb-4">
+  <div class="card-body p-4">
+    <h2 class="font-semibold mb-3">Recent Brews</h2>
+    <div class="flex flex-col gap-2">
+      {% for brew in recent_brews %}
+      <div class="flex items-center gap-3 py-2 border-b border-base-300/50 last:border-0">
+        <span class="text-lg font-bold {% if brew.is_failed %}text-error{% endif %} w-10 shrink-0">
+          {{ brew.taste }}
+        </span>
+        <div class="flex-1 min-w-0">
+          <div class="text-sm truncate">{{ brew.bean_name }}</div>
+          <div class="text-xs text-base-content/50">{{ brew.created_at.strftime('%b %d, %H:%M') }}</div>
+        </div>
+        <div class="flex items-center gap-1 shrink-0">
+          {% if brew.is_failed %}<span class="badge badge-error badge-sm">Failed</span>{% endif %}
+          {% if brew.brew_method and brew.brew_method != 'espresso' %}
+          <span class="badge badge-outline badge-sm">{{ brew.brew_method | capitalize }}</span>
+          {% endif %}
+          {% if brew.is_manual %}<span class="badge badge-ghost badge-sm">Manual</span>{% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="mt-3 text-right">
+      <a href="/history" class="text-sm text-primary hover:underline">View All History →</a>
+    </div>
+  </div>
+</div>
+{% elif stats.total_brews == 0 %}
+<div class="card bg-base-200 border border-base-300 mb-4">
+  <div class="card-body p-4 text-center">
+    <p class="text-base-content/50 text-sm mb-3">You have beans but no brews yet — time to start!</p>
+    <a href="/brew" class="btn btn-primary btn-sm">Start Brewing</a>
+  </div>
+</div>
+{% endif %}
+
+<!-- Quick actions -->
+<div class="flex flex-col gap-3">
+  <a href="/brew" class="btn btn-primary w-full min-h-14 rounded-xl text-base">Let's Brew</a>
+  <div class="grid grid-cols-2 gap-3">
+    <a href="/beans" class="btn btn-ghost min-h-12 border border-base-300">Beans</a>
+    <a href="/equipment" class="btn btn-ghost min-h-12 border border-base-300">Equipment</a>
+  </div>
+</div>
+{% endblock %}

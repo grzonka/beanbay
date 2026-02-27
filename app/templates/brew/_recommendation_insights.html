@@ -3,23 +3,29 @@
      - insights: dict with phase, phase_label, explanation, predicted_mean, predicted_std, predicted_range
 #}
 {% if insights %}
-<div class="recommendation-insights">
-  <div class="insight-phase">
-    <span class="insight-badge insight-badge-{{ insights.phase }}">
-      {{ insights.phase_label }}
-    </span>
-  </div>
+<div class="card bg-base-200 border border-base-300 mb-4">
+  <div class="card-body p-4">
+    <div class="mb-2">
+      {% if insights.phase == 'random' %}
+        <span class="badge bg-sky-900/50 text-sky-300">{{ insights.phase_label }}</span>
+      {% elif insights.phase == 'bayesian_early' %}
+        <span class="badge bg-emerald-900/50 text-emerald-300">{{ insights.phase_label }}</span>
+      {% else %}
+        <span class="badge bg-amber-900/50 text-amber-300">{{ insights.phase_label }}</span>
+      {% endif %}
+    </div>
 
-  <p class="insight-explanation">{{ insights.explanation }}</p>
+    <p class="text-sm text-base-content/70">{{ insights.explanation }}</p>
 
-  {% if insights.predicted_range %}
-  <div class="insight-prediction">
-    <span class="insight-prediction-label">Expected taste</span>
-    <span class="insight-prediction-value">
-      ~{{ insights.predicted_mean }}
-      <span class="insight-prediction-range">({{ insights.predicted_range }})</span>
-    </span>
+    {% if insights.predicted_range %}
+    <div class="flex items-center justify-between mt-3 pt-3 border-t border-base-300">
+      <span class="text-sm text-base-content/50">Expected taste</span>
+      <span class="text-sm font-semibold">
+        ~{{ insights.predicted_mean }}
+        <span class="text-base-content/40 font-normal">({{ insights.predicted_range }})</span>
+      </span>
+    </div>
+    {% endif %}
   </div>
-  {% endif %}
 </div>
 {% endif %}

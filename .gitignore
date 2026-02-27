@@ -19,5 +19,11 @@ my_espresso.py
 requirements.txt
 baybe-resources/
 
+# Tailwind CSS output (compiled from input.css)
+app/static/css/main.css
+
+# Local dev tools (downloaded binaries)
+tools/
+
 # OS
 .DS_Store

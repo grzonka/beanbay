@@ -3,215 +3,227 @@
 {% block title %}{{ bean.name }} — BeanBay{% endblock %}
 
 {% block content %}
-<div class="page-header">
-  <h1 class="page-title">{{ bean.name }}</h1>
-  {% if not (active_bean and active_bean.id == bean.id) %}
-    <form method="post" action="/beans/{{ bean.id }}/activate">
-      <button type="submit" class="btn btn-primary btn-sm">Set Active</button>
-    </form>
-  {% else %}
-    <span class="badge badge-active">Active</span>
-    <form method="post" action="/beans/deactivate" style="display:inline;">
-      <button type="submit" class="btn btn-secondary btn-sm">Deselect</button>
-    </form>
-  {% endif %}
+<div class="flex items-center justify-between mb-6 min-h-12">
+  <h1 class="text-xl font-bold">{{ bean.name }}</h1>
+  <div class="flex items-center gap-2">
+    {% if not (active_bean and active_bean.id == bean.id) %}
+      <form method="post" action="/beans/{{ bean.id }}/activate">
+        <button type="submit" class="btn btn-primary btn-sm">Set Active</button>
+      </form>
+    {% else %}
+      <span class="badge badge-primary">Active</span>
+      <form method="post" action="/beans/deactivate">
+        <button type="submit" class="btn btn-ghost btn-sm">Deselect</button>
+      </form>
+    {% endif %}
+  </div>
 </div>
 
 <!-- Bean info -->
-<div class="card mb-md">
-  <div class="card-meta mb-sm">
-    {{ bean.shot_count }} shot{{ "s" if bean.shot_count != 1 else "" }} recorded
-  </div>
-  <a href="/history?bean_id={{ bean.id }}" class="btn btn-secondary btn-sm mt-sm">View History</a>
+<div class="card bg-base-200 border border-base-300 mb-4">
+  <div class="card-body p-4">
+    <div class="text-sm text-base-content/50 mb-2">
+      {{ bean.shot_count }} shot{{ "s" if bean.shot_count != 1 else "" }} recorded
+    </div>
+    <a href="/history?bean_id={{ bean.id }}" class="btn btn-ghost btn-sm mt-2 mb-4">View History</a>
 
-  <form method="post" action="/beans/{{ bean.id }}">
-    <div class="form-group">
-      <label class="form-label" for="name">Name</label>
-      <input type="text" id="name" name="name" class="form-input" value="{{ bean.name }}" required>
-    </div>
-    <div class="form-group">
-      <label class="form-label" for="roaster">Roaster</label>
-      <input type="text" id="roaster" name="roaster" class="form-input" value="{{ bean.roaster or '' }}" placeholder="Optional">
-    </div>
-    <div class="form-group">
-      <label class="form-label" for="origin">Origin</label>
-      <input type="text" id="origin" name="origin" class="form-input" value="{{ bean.origin or '' }}" placeholder="Optional">
-    </div>
-    <div class="form-group">
-      <label class="form-label" for="roast_date">Roast Date</label>
-      <input type="date" id="roast_date" name="roast_date" class="form-input"
-             value="{{ bean.roast_date.isoformat() if bean.roast_date else '' }}">
-    </div>
-    <div class="form-group">
-      <label class="form-label" for="process">Process</label>
-      <select id="process" name="process" class="form-input">
-        <option value="">—</option>
-        <option value="washed" {% if bean.process == 'washed' %}selected{% endif %}>Washed</option>
-        <option value="natural" {% if bean.process == 'natural' %}selected{% endif %}>Natural</option>
-        <option value="honey" {% if bean.process == 'honey' %}selected{% endif %}>Honey</option>
-        <option value="anaerobic" {% if bean.process == 'anaerobic' %}selected{% endif %}>Anaerobic</option>
-        <option value="other" {% if bean.process == 'other' %}selected{% endif %}>Other</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label class="form-label" for="variety">Variety</label>
-      <input type="text" id="variety" name="variety" class="form-input"
-             value="{{ bean.variety or '' }}" placeholder="e.g. SL-28, Gesha, Bourbon">
-    </div>
-    <button type="submit" class="btn btn-secondary btn-full">Save Changes</button>
-  </form>
+    <form method="post" action="/beans/{{ bean.id }}">
+      <div class="form-control mb-4">
+        <label class="label" for="name"><span class="label-text">Name</span></label>
+        <input type="text" id="name" name="name" class="input input-bordered w-full" value="{{ bean.name }}" required>
+      </div>
+      <div class="form-control mb-4">
+        <label class="label" for="roaster"><span class="label-text">Roaster</span></label>
+        <input type="text" id="roaster" name="roaster" class="input input-bordered w-full" value="{{ bean.roaster or '' }}" placeholder="Optional">
+      </div>
+      <div class="form-control mb-4">
+        <label class="label" for="origin"><span class="label-text">Origin</span></label>
+        <input type="text" id="origin" name="origin" class="input input-bordered w-full" value="{{ bean.origin or '' }}" placeholder="Optional">
+      </div>
+      <div class="form-control mb-4">
+        <label class="label" for="roast_date"><span class="label-text">Roast Date</span></label>
+        <input type="date" id="roast_date" name="roast_date" class="input input-bordered w-full"
+               value="{{ bean.roast_date.isoformat() if bean.roast_date else '' }}">
+      </div>
+      <div class="form-control mb-4">
+        <label class="label" for="process"><span class="label-text">Process</span></label>
+        <select id="process" name="process" class="select select-bordered w-full">
+          <option value="">—</option>
+          <option value="washed" {% if bean.process == 'washed' %}selected{% endif %}>Washed</option>
+          <option value="natural" {% if bean.process == 'natural' %}selected{% endif %}>Natural</option>
+          <option value="honey" {% if bean.process == 'honey' %}selected{% endif %}>Honey</option>
+          <option value="anaerobic" {% if bean.process == 'anaerobic' %}selected{% endif %}>Anaerobic</option>
+          <option value="other" {% if bean.process == 'other' %}selected{% endif %}>Other</option>
+        </select>
+      </div>
+      <div class="form-control mb-4">
+        <label class="label" for="variety"><span class="label-text">Variety</span></label>
+        <input type="text" id="variety" name="variety" class="input input-bordered w-full"
+               value="{{ bean.variety or '' }}" placeholder="e.g. SL-28, Gesha, Bourbon">
+      </div>
+      <button type="submit" class="btn btn-ghost w-full min-h-12">Save Changes</button>
+    </form>
+  </div>
 </div>
 
 <!-- Bags -->
-<div class="card mb-md">
-  <h3 class="card-title" style="margin-bottom: var(--space-sm);">Bags</h3>
-  <p class="text-sm text-muted mb-md">Track purchases of this coffee. Same coffee, multiple bags.</p>
+<div class="card bg-base-200 border border-base-300 mb-4">
+  <div class="card-body p-4">
+    <h3 class="card-title text-base mb-2">Bags</h3>
+    <p class="text-sm text-base-content/40 mb-4">Track purchases of this coffee. Same coffee, multiple bags.</p>
 
-  {% if bean.bags %}
-    {% for bag in bean.bags %}
-      <div class="card mb-sm" style="background: var(--surface-elevated, var(--surface)); padding: var(--space-sm);">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div>
-            {% if bag.purchase_date %}
-              <span class="text-sm">{{ bag.purchase_date.strftime('%b %d, %Y') }}</span>
-            {% endif %}
-            {% if bag.cost %}
-              <span class="badge badge-count">{{ "%.2f"|format(bag.cost) }}</span>
-            {% endif %}
-            {% if bag.weight_grams %}
-              <span class="text-sm text-muted">{{ bag.weight_grams|int }}g</span>
+    {% if bean.bags %}
+      {% for bag in bean.bags %}
+        <div class="card bg-base-300 border border-base-300 mb-2">
+          <div class="card-body p-3">
+            <div class="flex justify-between items-center">
+              <div class="flex items-center gap-2 flex-wrap">
+                {% if bag.purchase_date %}
+                  <span class="text-sm">{{ bag.purchase_date.strftime('%b %d, %Y') }}</span>
+                {% endif %}
+                {% if bag.cost %}
+                  <span class="badge badge-ghost">{{ "%.2f"|format(bag.cost) }}</span>
+                {% endif %}
+                {% if bag.weight_grams %}
+                  <span class="text-sm text-base-content/40">{{ bag.weight_grams|int }}g</span>
+                {% endif %}
+              </div>
+              <form method="post" action="/beans/{{ bean.id }}/bags/{{ bag.id }}/delete">
+                <button type="submit" class="btn btn-ghost btn-xs btn-error"
+                        onclick="return confirm('Delete this bag?')">✕</button>
+              </form>
+            </div>
+            {% if bag.notes %}
+              <p class="text-sm text-base-content/40 mt-1">{{ bag.notes }}</p>
             {% endif %}
           </div>
-          <form method="post" action="/beans/{{ bean.id }}/bags/{{ bag.id }}/delete" style="margin: 0;">
-            <button type="submit" class="btn btn-sm" style="color: var(--danger, #c0392b); padding: 4px 8px;"
-                    onclick="return confirm('Delete this bag?')">✕</button>
-          </form>
         </div>
-        {% if bag.notes %}
-          <p class="text-sm text-muted" style="margin-top: var(--space-xs);">{{ bag.notes }}</p>
-        {% endif %}
-      </div>
-    {% endfor %}
-  {% else %}
-    <p class="text-sm text-muted">No bags recorded yet.</p>
-  {% endif %}
+      {% endfor %}
+    {% else %}
+      <p class="text-sm text-base-content/40">No bags recorded yet.</p>
+    {% endif %}
 
-  <button
-    type="button"
-    class="collapsible-toggle mt-sm"
-    onclick="this.nextElementSibling.classList.toggle('open'); this.setAttribute('aria-expanded', this.nextElementSibling.classList.contains('open'))"
-    aria-expanded="false"
-  >
-    Add Bag
-    <span aria-hidden="true">&#9662;</span>
-  </button>
+    <button
+      type="button"
+      class="btn btn-ghost btn-sm mt-2"
+      onclick="this.nextElementSibling.classList.toggle('open'); this.setAttribute('aria-expanded', this.nextElementSibling.classList.contains('open'))"
+      aria-expanded="false"
+    >
+      Add Bag
+      <span aria-hidden="true">&#9662;</span>
+    </button>
 
-  <div class="collapsible-content">
-    <form method="post" action="/beans/{{ bean.id }}/bags">
-      <div class="form-group">
-        <label class="form-label" for="purchase_date">Purchase Date</label>
-        <input type="date" id="purchase_date" name="purchase_date" class="form-input">
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="cost">Cost</label>
-        <input type="number" id="cost" name="cost" class="form-input" step="0.01" placeholder="Optional">
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="weight_grams">Weight (grams)</label>
-        <input type="number" id="weight_grams" name="weight_grams" class="form-input" step="1" placeholder="e.g. 250">
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="bag_notes">Notes</label>
-        <input type="text" id="bag_notes" name="notes" class="form-input" placeholder="Optional">
-      </div>
-      <button type="submit" class="btn btn-secondary btn-full">Add Bag</button>
-    </form>
+    <div class="collapsible-content">
+      <form method="post" action="/beans/{{ bean.id }}/bags">
+        <div class="form-control mb-4">
+          <label class="label" for="purchase_date"><span class="label-text">Purchase Date</span></label>
+          <input type="date" id="purchase_date" name="purchase_date" class="input input-bordered w-full">
+        </div>
+        <div class="form-control mb-4">
+          <label class="label" for="cost"><span class="label-text">Cost</span></label>
+          <input type="number" id="cost" name="cost" class="input input-bordered w-full" step="0.01" placeholder="Optional">
+        </div>
+        <div class="form-control mb-4">
+          <label class="label" for="weight_grams"><span class="label-text">Weight (grams)</span></label>
+          <input type="number" id="weight_grams" name="weight_grams" class="input input-bordered w-full" step="1" placeholder="e.g. 250">
+        </div>
+        <div class="form-control mb-4">
+          <label class="label" for="bag_notes"><span class="label-text">Notes</span></label>
+          <input type="text" id="bag_notes" name="notes" class="input input-bordered w-full" placeholder="Optional">
+        </div>
+        <button type="submit" class="btn btn-ghost w-full min-h-12">Add Bag</button>
+      </form>
+    </div>
   </div>
 </div>
 
 <!-- Parameter overrides -->
-<div class="card mb-md">
-  {% if error %}
-    <p class="text-sm mb-sm" style="color: var(--danger, #c0392b);">{{ error }}</p>
-  {% endif %}
-  <button
-    type="button"
-    class="collapsible-toggle"
-    onclick="this.nextElementSibling.classList.toggle('open'); this.setAttribute('aria-expanded', this.nextElementSibling.classList.contains('open'))"
-    aria-expanded="false"
-  >
-    Custom Ranges
-    <span aria-hidden="true">&#9662;</span>
-  </button>
+<div class="card bg-base-200 border border-base-300 mb-4">
+  <div class="card-body p-4">
+    {% if error %}
+      <p class="text-sm mb-2 text-error">{{ error }}</p>
+    {% endif %}
+    <button
+      type="button"
+      class="btn btn-ghost btn-sm"
+      onclick="this.nextElementSibling.classList.toggle('open'); this.setAttribute('aria-expanded', this.nextElementSibling.classList.contains('open'))"
+      aria-expanded="false"
+    >
+      Custom Ranges
+      <span aria-hidden="true">&#9662;</span>
+    </button>
 
-  <div class="collapsible-content">
-    <p class="text-sm text-muted mb-md">
-      Customize the optimization bounds for this bean. Leave blank to use defaults.
-    </p>
+    <div class="collapsible-content">
+      <p class="text-sm text-base-content/40 mb-4">
+        Customize the optimization bounds for this bean. Leave blank to use defaults.
+      </p>
 
-    <form method="post" action="/beans/{{ bean.id }}/overrides">
-      {% set overrides = bean.parameter_overrides or {} %}
+      <form method="post" action="/beans/{{ bean.id }}/overrides">
+        {% set overrides = bean.parameter_overrides or {} %}
 
-      {% for param, bounds in default_bounds.items() %}
-        {% set param_override = overrides.get(param, {}) if overrides else {} %}
-        {% set current_min = param_override.get('min', '') if param_override else '' %}
-        {% set current_max = param_override.get('max', '') if param_override else '' %}
+        {% for param, bounds in default_bounds.items() %}
+          {% set param_override = overrides.get(param, {}) if overrides else {} %}
+          {% set current_min = param_override.get('min', '') if param_override else '' %}
+          {% set current_max = param_override.get('max', '') if param_override else '' %}
 
-        <div class="range-row">
-          <span class="range-label">
-            {{ param | replace('_', ' ') | title }}
-            <span class="text-muted">(default: {{ bounds[0] }}–{{ bounds[1] }})</span>
-          </span>
-          <div class="form-group" style="margin-bottom: 0;">
-            <input
-              type="number"
-              name="{{ param }}_min"
-              class="form-input"
-              placeholder="{{ bounds[0] }}"
-              value="{{ current_min }}"
-              step="any"
-            >
-          </div>
-          <div class="form-group" style="margin-bottom: 0;">
-            <input
-              type="number"
-              name="{{ param }}_max"
-              class="form-input"
-              placeholder="{{ bounds[1] }}"
-              value="{{ current_max }}"
-              step="any"
-            >
-          </div>
-        </div>
-      {% endfor %}
+          <div class="grid grid-cols-2 gap-2 mb-2">
+            <span class="col-span-2 text-sm text-base-content/60 font-medium">
+              {{ param | replace('_', ' ') | title }}
+              <span class="text-base-content/40">(default: {{ bounds[0] }}–{{ bounds[1] }})</span>
+            </span>
+            <div class="form-control">
+              <input
+                type="number"
+                name="{{ param }}_min"
+                class="input input-bordered w-full"
+                placeholder="{{ bounds[0] }}"
+                value="{{ current_min }}"
+                step="any"
+              >
+            </div>
+            <div class="form-control">
+              <input
+                type="number"
+                name="{{ param }}_max"
+                class="input input-bordered w-full"
+                placeholder="{{ bounds[1] }}"
+                value="{{ current_max }}"
+                step="any"
+              >
+            </div>
+          </div><!-- /grid -->
+        {% endfor %}
 
-      <button type="submit" class="btn btn-secondary btn-full mt-md">Save Ranges</button>
-    </form>
+        <button type="submit" class="btn btn-ghost w-full min-h-12 mt-4">Save Ranges</button>
+      </form>
+    </div>
   </div>
 </div>
 
 <!-- Danger zone -->
-<div class="card">
-  <button
-    type="button"
-    class="collapsible-toggle"
-    onclick="this.nextElementSibling.classList.toggle('open')"
-  >
-    Danger Zone
-    <span aria-hidden="true">&#9662;</span>
-  </button>
+<div class="card bg-base-200 border border-base-300">
+  <div class="card-body p-4">
+    <button
+      type="button"
+      class="btn btn-ghost btn-sm"
+      onclick="this.nextElementSibling.classList.toggle('open')"
+    >
+      Danger Zone
+      <span aria-hidden="true">&#9662;</span>
+    </button>
 
-  <div class="collapsible-content">
-    <p class="text-sm text-muted mb-md">
-      Deleting this bean will remove all {{ bean.shot_count }} measurement{{ "s" if bean.shot_count != 1 else "" }} and the optimization campaign.
-    </p>
-    <form method="post" action="/beans/{{ bean.id }}/delete">
-      <button type="submit" class="btn btn-danger btn-full" onclick="return confirm('Delete {{ bean.name }} and all its data?')">
-        Delete Bean
-      </button>
-    </form>
+    <div class="collapsible-content">
+      <p class="text-sm text-base-content/40 mb-4">
+        Deleting this bean will remove all {{ bean.shot_count }} measurement{{ "s" if bean.shot_count != 1 else "" }} and the optimization campaign.
+      </p>
+      <form method="post" action="/beans/{{ bean.id }}/delete">
+        <button type="submit" class="btn btn-error w-full min-h-12" onclick="return confirm('Delete {{ bean.name }} and all its data?')">
+          Delete Bean
+        </button>
+      </form>
+    </div>
   </div>
 </div>
 
-<a href="/beans" class="btn btn-secondary btn-full mt-lg">Back to Beans</a>
+<a href="/beans" class="btn btn-ghost w-full min-h-12 mt-6">Back to Beans</a>
 {% endblock %}

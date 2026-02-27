@@ -3,109 +3,112 @@
 {% block title %}Brew — BeanBay{% endblock %}
 
 {% block content %}
-<div class="page-header">
-  <h1 class="page-title">Brew</h1>
+<div class="flex items-center justify-between mb-6 min-h-12">
+  <h1 class="text-xl font-bold">Brew</h1>
 </div>
 
 <!-- Two-panel selection: Setup + Bean -->
-<div style="display: flex; flex-direction: column; gap: var(--spacing-md); margin-bottom: var(--spacing-lg);">
+<div class="flex flex-col gap-4 mb-6">
 
   <!-- Setup selection panel -->
-  <div class="card" style="padding: var(--spacing-md);">
-    <div style="font-size: var(--text-sm); font-weight: 600; color: var(--text-secondary); margin-bottom: var(--spacing-xs); text-transform: uppercase; letter-spacing: 0.05em;">Setup</div>
-    {% if active_setup %}
-      <div style="font-size: var(--text-base); font-weight: 600; color: var(--text-primary); margin-bottom: var(--spacing-xs);">{{ active_setup.name }}</div>
-      <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--spacing-sm);">
-        {% set parts = [] %}
-        {% if active_setup.brewer %}{% set _ = parts.append(active_setup.brewer.name) %}{% endif %}
-        {% if active_setup.grinder %}{% set _ = parts.append(active_setup.grinder.name) %}{% endif %}
-        {% if active_setup.paper %}{% set _ = parts.append(active_setup.paper.name) %}{% endif %}
-        {% if active_setup.water_recipe %}{% set _ = parts.append(active_setup.water_recipe.name) %}{% endif %}
-        {{ parts | join(" · ") }}
-      </div>
-    {% else %}
-      <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--spacing-sm);">No setup selected</div>
-    {% endif %}
-    {% if setups %}
-      <form method="post" action="/brew/set-setup">
-        <div style="display: flex; gap: var(--spacing-sm); align-items: center;">
-          <select name="setup_id" class="form-input" onchange="this.form.submit()" style="flex: 1; min-height: 48px;">
+  <div class="card bg-base-200 border border-base-300">
+    <div class="card-body p-4">
+      <div class="text-sm font-semibold text-base-content/70 mb-1 uppercase tracking-wider">Setup</div>
+      {% if active_setup %}
+        <div class="text-base font-semibold mb-1">{{ active_setup.name }}</div>
+        {% if method and method != "espresso" %}
+        <span class="badge badge-outline badge-sm capitalize">{{ method }}</span>
+        {% endif %}
+        <div class="text-sm text-base-content/70 mb-3">
+          {% set parts = [] %}
+          {% if active_setup.brewer %}{% set _ = parts.append(active_setup.brewer.name) %}{% endif %}
+          {% if active_setup.grinder %}{% set _ = parts.append(active_setup.grinder.name) %}{% endif %}
+          {% if active_setup.paper %}{% set _ = parts.append(active_setup.paper.name) %}{% endif %}
+          {% if active_setup.water_recipe %}{% set _ = parts.append(active_setup.water_recipe.name) %}{% endif %}
+          {{ parts | join(" · ") }}
+        </div>
+      {% else %}
+        <div class="text-sm text-base-content/40 mb-3">No setup selected</div>
+      {% endif %}
+      {% if setups %}
+        <form method="post" action="/brew/set-setup">
+          <select name="setup_id" class="select select-bordered w-full min-h-12" onchange="this.form.submit()">
             <option value="" disabled {% if not active_setup %}selected{% endif %}>Pick a setup…</option>
             {% for s in setups %}
             <option value="{{ s.id }}" {% if active_setup and s.id == active_setup.id %}selected{% endif %}>{{ s.name }}</option>
             {% endfor %}
           </select>
-        </div>
-      </form>
-    {% else %}
-      <a href="/equipment" class="btn btn-secondary btn-sm" style="min-height: 48px; display: flex; align-items: center; justify-content: center;">Create a setup</a>
-    {% endif %}
+        </form>
+      {% else %}
+        <a href="/equipment" class="btn btn-ghost btn-sm min-h-12 flex items-center justify-center">Create a setup</a>
+      {% endif %}
+    </div>
   </div>
 
   <!-- Bean selection panel -->
-  <div class="card" style="padding: var(--spacing-md);">
-    <div style="font-size: var(--text-sm); font-weight: 600; color: var(--text-secondary); margin-bottom: var(--spacing-xs); text-transform: uppercase; letter-spacing: 0.05em;">Bean</div>
-    {% if active_bean %}
-      <div style="font-size: var(--text-base); font-weight: 600; color: var(--text-primary); margin-bottom: var(--spacing-xs);">{{ active_bean.name }}</div>
-      {% if active_bean.roaster %}
-        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--spacing-sm);">{{ active_bean.roaster }}</div>
+  <div class="card bg-base-200 border border-base-300">
+    <div class="card-body p-4">
+      <div class="text-sm font-semibold text-base-content/70 mb-1 uppercase tracking-wider">Bean</div>
+      {% if active_bean %}
+        <div class="text-base font-semibold mb-1">{{ active_bean.name }}</div>
+        {% if active_bean.roaster %}
+          <div class="text-sm text-base-content/70 mb-3">{{ active_bean.roaster }}</div>
+        {% endif %}
+      {% else %}
+        <div class="text-sm text-base-content/40 mb-3">No bean selected</div>
       {% endif %}
-    {% else %}
-      <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--spacing-sm);">No bean selected</div>
-    {% endif %}
-    {% if beans %}
-      <form method="post" action="/beans/set-active">
-        <div style="display: flex; gap: var(--spacing-sm); align-items: center;">
-          <select name="bean_id" class="form-input" onchange="this.form.submit()" style="flex: 1; min-height: 48px;">
+      {% if beans %}
+        <form method="post" action="/beans/set-active">
+          <select name="bean_id" class="select select-bordered w-full min-h-12" onchange="this.form.submit()">
             <option value="" disabled {% if not active_bean %}selected{% endif %}>Pick a bean…</option>
             {% for b in beans %}
             <option value="{{ b.id }}" {% if active_bean and b.id == active_bean.id %}selected{% endif %}>{{ b.name }}</option>
             {% endfor %}
           </select>
-        </div>
-      </form>
-    {% else %}
-      <a href="/beans" class="btn btn-secondary btn-sm" style="min-height: 48px; display: flex; align-items: center; justify-content: center;">Add a bean</a>
-    {% endif %}
+        </form>
+      {% else %}
+        <a href="/beans" class="btn btn-ghost btn-sm min-h-12 flex items-center justify-center">Add a bean</a>
+      {% endif %}
+    </div>
   </div>
 
 </div>
 
 {% if active_bean %}
-<div class="brew-actions">
+<div class="flex flex-col gap-4">
   <!-- Get Recommendation button -->
-  <form method="post" action="/brew/recommend" class="brew-action-form">
-    <button type="submit" class="btn btn-primary btn-full brew-action-btn">
+  <form method="post" action="/brew/recommend">
+    <button type="submit" class="btn btn-primary w-full text-xl min-h-16 rounded-xl">
       ☕ Get Recommendation
-      <span class="htmx-indicator spinner" style="margin-left: 8px;"></span>
+      <span class="htmx-indicator spinner ml-2"></span>
     </button>
   </form>
 
   {% if has_measurements %}
   <!-- Repeat Best button — only shown when shots have been recorded -->
-  <a href="/brew/best" class="btn btn-secondary btn-full brew-action-btn">
+  <a href="/brew/best" class="btn btn-ghost w-full text-xl min-h-16 rounded-xl border border-base-300">
     ⭐ Repeat Best
   </a>
   {% endif %}
 
   <!-- Manual Input button -->
-  <a href="/brew/manual" class="btn btn-secondary btn-full brew-action-btn">
+  <a href="/brew/manual" class="btn btn-ghost w-full text-xl min-h-16 rounded-xl border border-base-300">
     ✏️ Manual Input
   </a>
 </div>
 
 {% if not has_measurements %}
-<div class="empty-state" style="margin-top: 2rem;">
-  <div class="empty-state-title">Ready to dial in</div>
-  <div class="empty-state-text">
+<div class="text-center py-8 text-base-content/50 mt-8">
+  <div class="text-lg font-semibold text-base-content/70 mb-2">Ready to dial in</div>
+  <div>
     Get your first recommendation to start the optimization loop for <strong>{{ active_bean.name }}</strong>.
   </div>
 </div>
 {% endif %}
 
 {% else %}
-<div class="empty-state" style="margin-top: 1rem;">
-  <div class="empty-state-text">
+<div class="text-center py-8 text-base-content/50 mt-4">
+  <div>
     Pick a bean above to start brewing.
   </div>
 </div>

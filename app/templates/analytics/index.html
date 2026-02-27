@@ -3,34 +3,63 @@
 {% block title %}Analytics — BeanBay{% endblock %}
 
 {% block content %}
-<div class="page-header">
-  <h1 class="page-title">Analytics</h1>
+<div class="flex items-center justify-between mb-6 min-h-12">
+  <h1 class="text-xl font-bold">Analytics</h1>
 </div>
 
+{% if stats.total_shots == 0 and not selected_bean_id %}
+<div class="text-center py-8 text-base-content/50">
+  <div class="text-lg font-semibold text-base-content/70 mb-2">No shots yet</div>
+  <p class="text-sm mb-4">Pull some shots to see analytics.</p>
+  <a href="/brew" class="btn btn-primary">Start Brewing</a>
+</div>
+{% else %}
+
+<!-- Bean filter dropdown -->
+{% if beans %}
+<div class="mb-4">
+  <select class="select select-bordered w-full"
+    onchange="window.location.href='/analytics' + (this.value ? '?bean_id=' + encodeURIComponent(this.value) : '')">
+    <option value="" {% if not selected_bean_id %}selected{% endif %}>All beans</option>
+    {% for bean in beans %}
+    <option value="{{ bean.id }}" {% if selected_bean_id == bean.id %}selected{% endif %}>{{ bean.name }}</option>
+    {% endfor %}
+  </select>
+</div>
+{% endif %}
+
+<!-- Per-bean empty state -->
 {% if stats.total_shots == 0 %}
-<div class="empty-state">
-  <div class="empty-state-title">No shots yet</div>
-  <p class="empty-state-text">Pull some shots to see analytics.</p>
+<div class="text-center py-8 text-base-content/50">
+  <div class="text-lg font-semibold text-base-content/70 mb-2">No shots for this bean yet</div>
+  <p class="text-sm mb-4">Pull some shots to see analytics.</p>
   <a href="/brew" class="btn btn-primary">Start Brewing</a>
 </div>
 {% else %}
 
 <!-- Aggregate stats card -->
-<div class="card mb-md">
-  <h2 class="card-title mb-md">Brew Statistics</h2>
-  {% include "analytics/_stats_card.html" %}
+<div class="card bg-base-200 border border-base-300 mb-4">
+  <div class="card-body p-4">
+    <h2 class="font-semibold mb-4">Brew Statistics{% if selected_bean and selected_bean.name %} — {{ selected_bean.name }}{% endif %}</h2>
+    {% include "analytics/_stats_card.html" %}
+  </div>
 </div>
 
+{% if not selected_bean_id %}
 <!-- Cross-bean comparison -->
-<div class="card mb-md">
-  <h2 class="card-title mb-md">Best Recipes by Bean</h2>
-  {% include "analytics/_comparison_table.html" %}
+<div class="card bg-base-200 border border-base-300 mb-4">
+  <div class="card-body p-4">
+    <h2 class="font-semibold mb-4">Best Recipes by Bean</h2>
+    {% include "analytics/_comparison_table.html" %}
+  </div>
 </div>
+{% endif %}
 
+{% endif %}
 {% endif %}
 
 <!-- Back link -->
-<div class="brew-actions">
-  <a href="/brew" class="btn btn-secondary btn-full">Back to Brew</a>
+<div class="flex flex-col gap-4">
+  <a href="/brew" class="btn btn-ghost w-full min-h-12 border border-base-300">Back to Brew</a>
 </div>
 {% endblock %}

@@ -2,117 +2,206 @@
 
 {% block title %}Recommendation — BeanBay{% endblock %}
 
+{# Meta tags for hints.js: bean identity + present params for "new" badge logic #}
+{% block head_extra %}
+<meta name="bb-bean-id" content="{{ active_bean.id }}">
+<meta name="bb-rec-params" content="{{ param_defs | map(attribute='name') | list | tojson }}">
+{% endblock %}
+
 {% block content %}
-<div class="page-header">
-  <h1 class="page-title">This Shot</h1>
-  <a href="/brew" class="btn btn-secondary btn-sm">← Back</a>
+<div class="flex items-center justify-between mb-6 min-h-12">
+  <h1 class="text-xl font-bold">{% if method == 'espresso' or not method %}This Shot{% else %}This Brew{% endif %}</h1>
+  <a href="/brew" class="btn btn-ghost btn-sm">← Back</a>
 </div>
 
-<div class="card mb-md">
-  <div class="card-subtitle mb-md">{{ active_bean.name }} recommendation</div>
+<div class="card bg-base-200 border border-base-300 mb-4">
+  <div class="card-body p-4">
+    <div class="text-sm text-base-content/50 mb-4">{{ active_bean.name }} recommendation</div>
 
-  {% include "brew/_recipe_card.html" %}
+    {% include "brew/_recipe_card.html" %}
+  </div>
 </div>
+
+{# One-time parameter onboarding hints — shown on first encounter of each param, dismissed via localStorage #}
+{% if param_hints %}
+<div id="param-hints-container" class="mb-4">
+  {% for pdef in param_defs %}
+    {% if pdef.name in param_hints %}
+      {% if rec is mapping and rec[pdef.name] is defined and rec[pdef.name] is not none %}
+  <div
+    class="param-hint-card alert alert-info mb-2 hidden"
+    data-param="{{ pdef.name }}"
+    data-hint="{{ param_hints[pdef.name] }}"
+    id="hint-{{ pdef.name }}"
+  >
+    <span class="text-sm flex-1">
+      <strong class="font-semibold">{{ param_labels[pdef.name] if param_labels is defined and pdef.name in param_labels else pdef.name | replace("_", " ") | title }}:</strong>
+      {{ param_hints[pdef.name] }}
+    </span>
+    <button
+      type="button"
+      class="btn btn-ghost btn-xs"
+      onclick="window.paramHintManager && window.paramHintManager.dismiss('{{ pdef.name }}')"
+      aria-label="Dismiss hint"
+    >✕</button>
+  </div>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+</div>
+{% endif %}
 
 {% include "brew/_recommendation_insights.html" %}
 
 {% if transfer_metadata %}
-<div class="transfer-badge mb-md">
+<div class="flex items-center gap-2 flex-wrap mb-4">
   <span class="badge badge-info">✦ Seeded from {{ transfer_metadata.contributing_beans | length }} similar bean{% if transfer_metadata.contributing_beans | length != 1 %}s{% endif %}</span>
-  <div class="transfer-details">
-    {% for b in transfer_metadata.contributing_beans %}
-    <span class="transfer-bean-tag">{{ b.name }}</span>
-    {% endfor %}
-  </div>
+  {% for b in transfer_metadata.contributing_beans %}
+  <span class="badge badge-outline gap-1">{{ b.name }}</span>
+  {% endfor %}
 </div>
 {% endif %}
 
 <!-- Rate this shot -->
-<div class="card">
-  <h2 class="card-title mb-md">Rate This Shot</h2>
+<div class="card bg-base-200 border border-base-300">
+  <div class="card-body p-4">
+    {% set brew_method = method if method is defined else (rec.method if rec is mapping and rec.method is defined else 'espresso') %}
+    <h2 class="card-title mb-4">{% if brew_method == 'espresso' or not brew_method %}Rate This Shot{% else %}Rate This Brew{% endif %}</h2>
 
-  <form method="post" action="/brew/record">
-    <!-- Hidden recipe params -->
-    <input type="hidden" name="recommendation_id" value="{{ recommendation_id }}">
-    <input type="hidden" name="method" value="{{ rec.method or 'espresso' }}">
-    <input type="hidden" name="brew_setup_id" value="{{ rec.setup_id or '' }}">
-    <input type="hidden" name="grind_setting" value="{{ rec.grind_setting }}">
-    <input type="hidden" name="temperature" value="{{ rec.temperature }}">
-    {% if rec.method == 'pour-over' %}
-    <input type="hidden" name="bloom_weight" value="{{ rec.bloom_weight }}">
-    <input type="hidden" name="dose_in" value="{{ rec.dose_in }}">
-    <input type="hidden" name="brew_volume" value="{{ rec.brew_volume }}">
-    {% else %}
-    <input type="hidden" name="preinfusion_pct" value="{{ rec.preinfusion_pct }}">
-    <input type="hidden" name="dose_in" value="{{ rec.dose_in }}">
-    <input type="hidden" name="target_yield" value="{{ rec.target_yield }}">
-    <input type="hidden" name="saturation" value="{{ rec.saturation }}">
-    {% endif %}
+    <form method="post" action="/brew/record">
+      <!-- Hidden recipe params -->
+      <input type="hidden" name="recommendation_id" value="{{ recommendation_id }}">
+      <input type="hidden" name="method" value="{{ rec.method or 'espresso' }}">
+      <input type="hidden" name="brew_setup_id" value="{{ rec.setup_id or '' }}">
+      <input type="hidden" name="grind_setting" value="{{ rec.grind_setting }}">
+      <input type="hidden" name="temperature" value="{{ rec.temperature }}">
+      <input type="hidden" name="dose_in" value="{{ rec.dose_in }}">
+      {# Generic hidden inputs for all method-specific params present in recommendation #}
+      {% for pdef in param_defs %}
+        {% set pname = pdef.name %}
+        {% if pname not in ('grind_setting', 'temperature', 'dose_in') %}
+          {% if rec is mapping %}
+            {% if rec[pname] is defined and rec[pname] is not none %}
+      <input type="hidden" name="{{ pname }}" value="{{ rec[pname] }}">
+            {% endif %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+      {# Legacy params: pass through if present in recommendation (old campaigns) #}
+      {% if rec is mapping %}
+        {% if rec.preinfusion_pressure_pct is defined and rec.preinfusion_pressure_pct is not none %}
+      <input type="hidden" name="preinfusion_pressure_pct" value="{{ rec.preinfusion_pressure_pct }}">
+        {% endif %}
+        {% if rec.saturation is defined and rec.saturation is not none %}
+      <input type="hidden" name="saturation" value="{{ rec.saturation }}">
+        {% endif %}
+      {% endif %}
 
-    <!-- Taste score -->
-    <div class="form-group" id="taste-group">
-      <label class="form-label" for="taste">
-        Taste Score: <strong id="taste-display">—</strong> / 10
-      </label>
-      <input
-        type="range"
-        id="taste"
-        name="taste"
-        class="score-slider form-input"
-        min="1"
-        max="10"
-        step="0.5"
-        value="7.0"
-        data-touched="false"
-        oninput="this.dataset.touched='true'; document.getElementById('taste-group').classList.add('touched'); document.getElementById('taste-display').textContent = this.value"
-      >
-      <div class="form-hint">1 = undrinkable · 10 = perfect</div>
-      <div class="taste-required-msg" id="taste-required-msg">Rate the brew before submitting</div>
-    </div>
-
-    <!-- Extraction time (optional) -->
-    <div class="form-group">
-      <label class="form-label" for="extraction_time">
-        Extraction Time (seconds, optional)
-      </label>
-      <input
-        type="number"
-        id="extraction_time"
-        name="extraction_time"
-        class="form-input"
-        placeholder="e.g. 28"
-        min="5"
-        max="120"
-        step="1"
-      >
-    </div>
-
-    <!-- Failed shot toggle -->
-    <div class="form-group">
-      <label class="failed-toggle">
+      <!-- Taste score -->
+      <div class="form-control mb-4" id="taste-group">
+        <label class="label" for="taste">
+          <span class="label-text">Taste Score: <strong id="taste-display">—</strong> / 10</span>
+        </label>
         <input
-          type="checkbox"
-          id="is_failed"
-          name="is_failed"
-          value="true"
-          onchange="toggleFailed(this)"
+          type="range"
+          id="taste"
+          name="taste"
+          class="score-slider"
+          min="1"
+          max="10"
+          step="0.5"
+          value="7.0"
+          data-touched="false"
+          oninput="this.dataset.touched='true'; document.getElementById('taste-group').classList.add('touched'); document.getElementById('taste-display').textContent = this.value"
         >
-        <span class="failed-toggle-label">
-          ⚠️ Failed shot (choked / gusher)
-        </span>
-      </label>
-      <div class="form-hint">Auto-sets taste to 1 — still teaches the optimizer what not to do.</div>
-    </div>
+        <label class="label">
+          <span class="label-text-alt">1 = undrinkable · 10 = perfect</span>
+        </label>
+        <div class="taste-required-msg" id="taste-required-msg">Rate the brew before submitting</div>
+      </div>
 
-    {% include "brew/_feedback_panel.html" %}
+      <!-- Extraction time (optional) -->
+      <div class="form-control mb-4">
+        {% if brew_method == 'cold-brew' %}
+        <label class="label" for="extraction_time">
+          <span class="label-text">Brew Time (minutes, optional)</span>
+        </label>
+        <input
+          type="number"
+          id="extraction_time"
+          name="extraction_time"
+          class="input input-bordered w-full"
+          placeholder="e.g. 720"
+          min="60"
+          max="2880"
+          step="1"
+        >
+        {% elif brew_method == 'espresso' or not brew_method %}
+        <label class="label" for="extraction_time">
+          <span class="label-text">Extraction Time (seconds, optional)</span>
+        </label>
+        <input
+          type="number"
+          id="extraction_time"
+          name="extraction_time"
+          class="input input-bordered w-full"
+          placeholder="e.g. 28"
+          min="5"
+          max="120"
+          step="1"
+        >
+        {% else %}
+        <label class="label" for="extraction_time">
+          <span class="label-text">Brew Time (seconds, optional)</span>
+        </label>
+        <input
+          type="number"
+          id="extraction_time"
+          name="extraction_time"
+          class="input input-bordered w-full"
+          placeholder="e.g. 240"
+          min="5"
+          max="1800"
+          step="1"
+        >
+        {% endif %}
+      </div>
 
-    <button type="submit" class="btn btn-primary btn-full">
-      Submit Rating
-    </button>
-  </form>
+      <!-- Failed shot/brew toggle -->
+      <div class="form-control mb-4">
+        <label class="flex items-center gap-4 min-h-12 cursor-pointer">
+          <input
+            type="checkbox"
+            id="is_failed"
+            name="is_failed"
+            value="true"
+            class="checkbox checkbox-error"
+            onchange="toggleFailed(this)"
+          >
+          <span class="label-text">
+            {% if brew_method == 'espresso' or not brew_method %}
+            ⚠️ Failed shot (choked / gusher)
+            {% else %}
+            ⚠️ Failed brew
+            {% endif %}
+          </span>
+        </label>
+        <label class="label">
+          <span class="label-text-alt">Auto-sets taste to 1 — still teaches the optimizer what not to do.</span>
+        </label>
+      </div>
+
+      {% include "brew/_feedback_panel.html" %}
+
+      <button type="submit" class="btn btn-primary w-full min-h-12">
+        Submit Rating
+      </button>
+    </form>
+  </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script src="/static/js/tags.js"></script>
+<script src="/static/js/hints.js"></script>
 {% endblock %}

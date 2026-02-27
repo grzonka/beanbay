@@ -3,11 +3,12 @@
 {# Requires `brew_methods` variable for method checkboxes #}
 
 {% if brewer %}
-<form method="post" action="/equipment/brewers/{{ brewer.id }}">
+<form method="post" action="/equipment/brewers/{{ brewer.id }}" id="brewer-form">
 {% else %}
 <form
   method="post"
   action="/equipment/brewers"
+  id="brewer-form"
   hx-post="/equipment/brewers"
   hx-target="#brewer-list"
   hx-swap="afterbegin"
@@ -15,13 +16,13 @@
 >
 {% endif %}
 
-  <div class="form-group">
-    <label class="form-label" for="brewer-name">Name <span style="color:var(--danger)">*</span></label>
+  <div class="form-control mb-4">
+    <label class="label"><span class="label-text">Name <span class="text-error">*</span></span></label>
     <input
       type="text"
       id="brewer-name"
       name="name"
-      class="form-input"
+      class="input input-bordered w-full"
       placeholder="e.g. Hario V60"
       value="{{ brewer.name if brewer else '' }}"
       required
@@ -30,31 +31,193 @@
   </div>
 
   {% if brew_methods %}
-  <div class="form-group">
-    <label class="form-label">Brew Methods</label>
-    <div class="checkbox-group">
+  <div class="form-control mb-4">
+    <label class="label"><span class="label-text">Brew Methods</span></label>
+    <div class="flex flex-col gap-1">
       {% for method in brew_methods %}
-        <label class="checkbox-item">
+        <label class="flex items-center gap-2 min-h-12 cursor-pointer">
           <input
             type="checkbox"
             name="method_ids"
             value="{{ method.id }}"
+            class="checkbox checkbox-primary method-checkbox"
+            data-method-name="{{ method.name|lower }}"
             {% if brewer and method in brewer.methods %}checked{% endif %}
           >
-          <span class="checkbox-item-label">{{ method.name }}</span>
+          <span>{{ method.name }}</span>
         </label>
       {% endfor %}
     </div>
   </div>
   {% else %}
-    <p class="text-muted text-sm" style="margin-bottom: var(--spacing-md);">
+    <p class="text-base-content/50 text-sm mb-4">
       No brew methods available. Add brew methods via the database to assign them here.
     </p>
   {% endif %}
 
-  <div style="margin-top: var(--spacing-lg);">
-    <button type="submit" class="btn btn-primary btn-full">
-      {% if brewer %}Save Changes{% else %}Add Brewer{% endif %}
-    </button>
-  </div>
+  {# ── Capability fields (progressive disclosure) ────────────────────── #}
+  <details class="mb-4" id="capabilities-section">
+    <summary class="cursor-pointer font-semibold text-base-content/70 mb-2">
+      Advanced Capabilities
+      {% if brewer and derive_tier %}
+        <span class="badge badge-ghost ml-1" id="tier-badge">Tier {{ derive_tier(brewer) }}</span>
+      {% endif %}
+    </summary>
+
+    {# Temperature — shared across all methods (applies to kettles, machines, etc.) #}
+    <div class="form-control mb-4">
+      <label class="label"><span class="label-text">Temperature Control</span></label>
+      <select id="temp-control-type" name="temp_control_type" class="select select-bordered w-full">
+        <option value="none"     {% if brewer and brewer.temp_control_type == 'none'     %}selected{% endif %}>None (no user control)</option>
+        <option value="preset"   {% if brewer and brewer.temp_control_type == 'preset'   %}selected{% endif %}>Preset (fixed / steam wand)</option>
+        <option value="pid"      {% if brewer and brewer.temp_control_type == 'pid'      %}selected{% endif %}>PID (adjustable setpoint)</option>
+        <option value="profiling"{% if brewer and brewer.temp_control_type == 'profiling'%}selected{% endif %}>Profiling (ramp curves)</option>
+      </select>
+    </div>
+
+    <div class="flex gap-2 mb-4">
+      <div class="form-control flex-1">
+        <label class="label"><span class="label-text">Min Temp (°C)</span></label>
+        <input type="number" id="temp-min" name="temp_min" class="input input-bordered w-full"
+          step="0.5" placeholder="e.g. 85"
+          value="{{ brewer.temp_min if brewer and brewer.temp_min is not none else '' }}">
+      </div>
+      <div class="form-control flex-1">
+        <label class="label"><span class="label-text">Max Temp (°C)</span></label>
+        <input type="number" id="temp-max" name="temp_max" class="input input-bordered w-full"
+          step="0.5" placeholder="e.g. 96"
+          value="{{ brewer.temp_max if brewer and brewer.temp_max is not none else '' }}">
+      </div>
+      <div class="form-control flex-1">
+        <label class="label"><span class="label-text">Step (°C)</span></label>
+        <input type="number" id="temp-step" name="temp_step" class="input input-bordered w-full"
+          step="0.1" placeholder="e.g. 1"
+          value="{{ brewer.temp_step if brewer and brewer.temp_step is not none else '' }}">
+      </div>
+    </div>
+
+    {# ── Espresso-only capabilities ──────────────────────────────────── #}
+    {# Hidden when no espresso/moka-pot method is selected #}
+    <div id="espresso-capabilities">
+
+      {# Pre-infusion ────────────────────────────────────────────── #}
+      <div class="form-control mb-4">
+        <label class="label"><span class="label-text">Pre-infusion</span></label>
+        <select id="preinfusion-type" name="preinfusion_type" class="select select-bordered w-full">
+          <option value="none"                {% if brewer and brewer.preinfusion_type == 'none'                %}selected{% endif %}>None</option>
+          <option value="fixed"               {% if brewer and brewer.preinfusion_type == 'fixed'               %}selected{% endif %}>Fixed (always on)</option>
+          <option value="timed"               {% if brewer and brewer.preinfusion_type == 'timed'               %}selected{% endif %}>Timed (user sets duration)</option>
+          <option value="adjustable_pressure" {% if brewer and brewer.preinfusion_type == 'adjustable_pressure' %}selected{% endif %}>Adjustable pressure</option>
+          <option value="programmable"        {% if brewer and brewer.preinfusion_type == 'programmable'        %}selected{% endif %}>Programmable</option>
+          <option value="manual"              {% if brewer and brewer.preinfusion_type == 'manual'              %}selected{% endif %}>Manual</option>
+        </select>
+      </div>
+
+      <div class="form-control mb-4">
+        <label class="label"><span class="label-text">Max Pre-infusion Time (s)</span></label>
+        <input type="number" id="preinfusion-max-time" name="preinfusion_max_time" class="input input-bordered w-full"
+          step="1" min="0" placeholder="e.g. 30"
+          value="{{ brewer.preinfusion_max_time if brewer and brewer.preinfusion_max_time is not none else '' }}">
+      </div>
+
+      {# Pressure ────────────────────────────────────────────────── #}
+      <div class="form-control mb-4">
+        <label class="label"><span class="label-text">Pressure Control</span></label>
+        <select id="pressure-control-type" name="pressure_control_type" class="select select-bordered w-full">
+          <option value="fixed"            {% if brewer and brewer.pressure_control_type == 'fixed'            %}selected{% endif %}>Fixed (non-adjustable)</option>
+          <option value="opv_adjustable"   {% if brewer and brewer.pressure_control_type == 'opv_adjustable'   %}selected{% endif %}>OPV adjustable</option>
+          <option value="electronic"       {% if brewer and brewer.pressure_control_type == 'electronic'       %}selected{% endif %}>Electronic</option>
+          <option value="manual_profiling" {% if brewer and brewer.pressure_control_type == 'manual_profiling' %}selected{% endif %}>Manual profiling</option>
+          <option value="programmable"     {% if brewer and brewer.pressure_control_type == 'programmable'     %}selected{% endif %}>Programmable</option>
+        </select>
+      </div>
+
+      <div class="flex gap-2 mb-4">
+        <div class="form-control flex-1">
+          <label class="label"><span class="label-text">Min Pressure (bar)</span></label>
+          <input type="number" id="pressure-min" name="pressure_min" class="input input-bordered w-full"
+            step="0.5" placeholder="e.g. 6"
+            value="{{ brewer.pressure_min if brewer and brewer.pressure_min is not none else '' }}">
+        </div>
+        <div class="form-control flex-1">
+          <label class="label"><span class="label-text">Max Pressure (bar)</span></label>
+          <input type="number" id="pressure-max" name="pressure_max" class="input input-bordered w-full"
+            step="0.5" placeholder="e.g. 9"
+            value="{{ brewer.pressure_max if brewer and brewer.pressure_max is not none else '' }}">
+        </div>
+      </div>
+
+      {# Flow control ────────────────────────────────────────────── #}
+      <div class="form-control mb-4">
+        <label class="label"><span class="label-text">Flow Control</span></label>
+        <select id="flow-control-type" name="flow_control_type" class="select select-bordered w-full">
+          <option value="none"           {% if brewer and brewer.flow_control_type == 'none'           %}selected{% endif %}>None</option>
+          <option value="manual_paddle"  {% if brewer and brewer.flow_control_type == 'manual_paddle'  %}selected{% endif %}>Manual paddle</option>
+          <option value="manual_valve"   {% if brewer and brewer.flow_control_type == 'manual_valve'   %}selected{% endif %}>Manual valve</option>
+          <option value="programmable"   {% if brewer and brewer.flow_control_type == 'programmable'   %}selected{% endif %}>Programmable</option>
+        </select>
+      </div>
+
+      {# Bloom & Stop mode ───────────────────────────────────────── #}
+      <div class="form-control mb-4">
+        <label class="flex items-center gap-2 min-h-12 cursor-pointer">
+          <input type="checkbox" name="has_bloom" value="true"
+            class="checkbox checkbox-primary"
+            {% if brewer and brewer.has_bloom %}checked{% endif %}>
+          <span>Has bloom / bypass capability</span>
+        </label>
+      </div>
+
+      <div class="form-control mb-4">
+        <label class="label"><span class="label-text">Stop Mode</span></label>
+        <select id="stop-mode" name="stop_mode" class="select select-bordered w-full">
+          <option value="manual"      {% if brewer and brewer.stop_mode == 'manual'      %}selected{% endif %}>Manual</option>
+          <option value="timed"       {% if brewer and brewer.stop_mode == 'timed'       %}selected{% endif %}>Timed</option>
+          <option value="volumetric"  {% if brewer and brewer.stop_mode == 'volumetric'  %}selected{% endif %}>Volumetric</option>
+          <option value="gravimetric" {% if brewer and brewer.stop_mode == 'gravimetric' %}selected{% endif %}>Gravimetric (scale-based)</option>
+        </select>
+      </div>
+
+    </div>{# /espresso-capabilities #}
+
+  </details>
+
+  <button type="submit" class="btn btn-primary w-full min-h-12">
+    {% if brewer %}Save Changes{% else %}Add Brewer{% endif %}
+  </button>
 </form>
+
+<script>
+(function() {
+  // Method-aware capability visibility — only show espresso-specific
+  // capability fields (pre-infusion, pressure, flow control, bloom,
+  // stop mode) when "espresso" is selected.  Moka pots are pressurized
+  // but use fixed ~1.5 bar with no user-adjustable espresso features.
+  const ESPRESSO_METHODS = ['espresso'];
+  const form = document.getElementById('brewer-form');
+  if (!form) return;
+
+  const checkboxes = form.querySelectorAll('.method-checkbox');
+  const espressoCaps = document.getElementById('espresso-capabilities');
+  const tierBadge = document.getElementById('tier-badge');
+
+  function hasEspressoMethod() {
+    return Array.from(checkboxes).some(function(cb) {
+      return cb.checked && ESPRESSO_METHODS.indexOf(cb.dataset.methodName) !== -1;
+    });
+  }
+
+  function updateVisibility() {
+    var show = hasEspressoMethod();
+    if (espressoCaps) espressoCaps.style.display = show ? '' : 'none';
+    if (tierBadge) tierBadge.style.display = show ? '' : 'none';
+  }
+
+  checkboxes.forEach(function(cb) {
+    cb.addEventListener('change', updateVisibility);
+  });
+
+  // Run on load — hide if editing a non-espresso brewer
+  updateVisibility();
+})();
+</script>

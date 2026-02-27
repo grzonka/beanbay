@@ -2,37 +2,37 @@
 <div class="stats-grid">
 
   <!-- Row 1: Total shots / Total beans -->
-  <div class="stat-item">
-    <span class="stat-value">{{ stats.total_shots }}</span>
-    <span class="stat-label">Total shots</span>
+  <div class="text-center p-3 bg-base-300/50 rounded-lg">
+    <span class="block text-2xl font-bold">{{ stats.total_shots }}</span>
+    <span class="block text-xs text-base-content/60 uppercase tracking-wide">Total shots</span>
   </div>
-  <div class="stat-item">
-    <span class="stat-value">{{ stats.total_beans }}</span>
-    <span class="stat-label">Beans tracked</span>
+  <div class="text-center p-3 bg-base-300/50 rounded-lg">
+    <span class="block text-2xl font-bold">{{ stats.total_beans }}</span>
+    <span class="block text-xs text-base-content/60 uppercase tracking-wide">Beans tracked</span>
   </div>
 
   <!-- Row 2: Avg taste / Best taste -->
-  <div class="stat-item">
-    <span class="stat-value">{{ stats.avg_taste if stats.avg_taste is not none else "—" }}</span>
-    <span class="stat-label">Avg taste</span>
+  <div class="text-center p-3 bg-base-300/50 rounded-lg">
+    <span class="block text-2xl font-bold">{{ stats.avg_taste if stats.avg_taste is not none else "—" }}</span>
+    <span class="block text-xs text-base-content/60 uppercase tracking-wide">Avg taste</span>
   </div>
-  <div class="stat-item">
-    <span class="stat-value stat-highlight">{{ stats.best_taste if stats.best_taste is not none else "—" }}</span>
-    <span class="stat-label">Best taste</span>
+  <div class="text-center p-3 bg-base-300/50 rounded-lg">
+    <span class="block text-2xl font-bold text-primary">{{ stats.best_taste if stats.best_taste is not none else "—" }}</span>
+    <span class="block text-xs text-base-content/60 uppercase tracking-wide">Best taste</span>
     {% if stats.best_bean_name %}
-    <span class="stat-sublabel">{{ stats.best_bean_name }}</span>
+    <span class="block text-xs text-base-content/40 mt-0.5">{{ stats.best_bean_name }}</span>
     {% endif %}
   </div>
 
   <!-- Row 3: Failed shots / Improvement rate -->
-  <div class="stat-item">
-    <span class="stat-value">{{ stats.total_failed }}</span>
-    <span class="stat-label">Failed shots</span>
+  <div class="text-center p-3 bg-base-300/50 rounded-lg">
+    <span class="block text-2xl font-bold">{{ stats.total_failed }}</span>
+    <span class="block text-xs text-base-content/60 uppercase tracking-wide">Failed shots</span>
   </div>
-  <div class="stat-item">
-    <span class="stat-value">{{ stats.improvement_rate }}</span>
-    <span class="stat-label">Improvement</span>
-    <span class="stat-sublabel">first vs last 10</span>
+  <div class="text-center p-3 bg-base-300/50 rounded-lg">
+    <span class="block text-2xl font-bold">{{ stats.improvement_rate }}</span>
+    <span class="block text-xs text-base-content/60 uppercase tracking-wide">Improvement</span>
+    <span class="block text-xs text-base-content/40 mt-0.5">first vs last 10</span>
   </div>
 
 </div>

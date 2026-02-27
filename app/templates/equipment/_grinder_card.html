@@ -1,44 +1,46 @@
 {# Grinder card — used in equipment/index.html #}
-<div class="card grinder-card" style="{% if grinder.is_retired %}opacity: 0.6;{% endif %}">
-  <div class="card-header">
-    <div>
-      <div class="card-title">{{ grinder.name }}</div>
-      <div class="grinder-dial-info">
-        {% if grinder.dial_type == "stepped" %}
-          Stepped
-          {% if grinder.step_size is not none %}
-            · step {{ grinder.step_size }}
+<div class="card bg-base-200 border border-base-300 mb-2 grinder-card{% if grinder.is_retired %} opacity-60{% endif %}">
+  <div class="card-body p-4">
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="font-semibold">{{ grinder.name }}</h3>
+        <div class="text-sm text-base-content/70 mt-1">
+          {% if grinder.dial_type == "stepped" %}
+            Stepped
+            {% if grinder.step_size is not none %}
+              · step {{ grinder.step_size }}
+            {% endif %}
+            {% if grinder.min_value is not none and grinder.max_value is not none %}
+              · {{ grinder.min_value }}–{{ grinder.max_value }}
+            {% endif %}
+          {% else %}
+            Stepless
+            {% if grinder.min_value is not none and grinder.max_value is not none %}
+              · range {{ grinder.min_value }}–{{ grinder.max_value }}
+            {% endif %}
           {% endif %}
-          {% if grinder.min_value is not none and grinder.max_value is not none %}
-            · {{ grinder.min_value }}–{{ grinder.max_value }}
-          {% endif %}
-        {% else %}
-          Stepless
-          {% if grinder.min_value is not none and grinder.max_value is not none %}
-            · range {{ grinder.min_value }}–{{ grinder.max_value }}
-          {% endif %}
-        {% endif %}
+        </div>
       </div>
+      {% if grinder.is_retired %}
+        <span class="badge badge-ghost">Retired</span>
+      {% endif %}
     </div>
-    {% if grinder.is_retired %}
-      <span class="badge badge-retired">Retired</span>
-    {% endif %}
-  </div>
-  <div class="card-actions">
-    <button
-      class="btn btn-secondary btn-sm"
-      onclick="openEditModal('/equipment/grinders/{{ grinder.id }}/edit')"
-    >
-      Edit
-    </button>
-    {% if grinder.is_retired %}
-      <form method="post" action="/equipment/grinders/{{ grinder.id }}/restore" style="display:inline;">
-        <button type="submit" class="btn btn-primary btn-sm">Restore</button>
-      </form>
-    {% else %}
-      <form method="post" action="/equipment/grinders/{{ grinder.id }}/retire" style="display:inline;">
-        <button type="submit" class="btn btn-danger btn-sm">Retire</button>
-      </form>
-    {% endif %}
+    <div class="flex items-center justify-end gap-2 mt-2 pt-2 border-t border-base-300">
+      <button
+        class="btn btn-ghost btn-sm"
+        onclick="openEditModal('/equipment/grinders/{{ grinder.id }}/edit')"
+      >
+        Edit
+      </button>
+      {% if grinder.is_retired %}
+        <form method="post" action="/equipment/grinders/{{ grinder.id }}/restore" style="display:inline;">
+          <button type="submit" class="btn btn-primary btn-sm">Restore</button>
+        </form>
+      {% else %}
+        <form method="post" action="/equipment/grinders/{{ grinder.id }}/retire" style="display:inline;">
+          <button type="submit" class="btn btn-error btn-sm">Retire</button>
+        </form>
+      {% endif %}
+    </div>
   </div>
 </div>

@@ -10,7 +10,13 @@ from sqlalchemy.orm import Session, joinedload
 from app.database import get_db
 from app.models.brew_method import BrewMethod
 from app.models.brew_setup import BrewSetup
-from app.models.equipment import Brewer, Grinder, Paper, WaterRecipe
+from app.models.equipment import (
+    Brewer,
+    Grinder,
+    Paper,
+    WaterRecipe,
+)
+from app.utils.brewer_capabilities import derive_tier
 
 router = APIRouter(prefix="/equipment", tags=["equipment"])
 templates = Jinja2Templates(directory="app/templates")
@@ -97,6 +103,7 @@ async def equipment_index(
             "water_recipe_count": water_recipe_count,
             "setup_count": setup_count,
             "show_retired": show_retired,
+            "derive_tier": derive_tier,
         },
     )
 
@@ -187,13 +194,39 @@ async def update_grinder(
 async def create_brewer(
     request: Request,
     name: str = Form(...),
+    temp_control_type: str = Form("none"),
+    temp_min: str = Form(""),
+    temp_max: str = Form(""),
+    temp_step: str = Form(""),
+    preinfusion_type: str = Form("none"),
+    preinfusion_max_time: str = Form(""),
+    pressure_control_type: str = Form("fixed"),
+    pressure_min: str = Form(""),
+    pressure_max: str = Form(""),
+    flow_control_type: str = Form("none"),
+    has_bloom: bool = Form(False),
+    stop_mode: str = Form("manual"),
     db: Session = Depends(get_db),
 ):
-    """Create a new brewer with optional method associations."""
+    """Create a new brewer with optional method associations and capability fields."""
     form = await request.form()
     method_ids = form.getlist("method_ids")
 
-    brewer = Brewer(name=name.strip())
+    brewer = Brewer(
+        name=name.strip(),
+        temp_control_type=temp_control_type,
+        temp_min=_parse_float(temp_min),
+        temp_max=_parse_float(temp_max),
+        temp_step=_parse_float(temp_step),
+        preinfusion_type=preinfusion_type,
+        preinfusion_max_time=_parse_float(preinfusion_max_time),
+        pressure_control_type=pressure_control_type,
+        pressure_min=_parse_float(pressure_min),
+        pressure_max=_parse_float(pressure_max),
+        flow_control_type=flow_control_type,
+        has_bloom=has_bloom,
+        stop_mode=stop_mode,
+    )
     if method_ids:
         methods = db.query(BrewMethod).filter(BrewMethod.id.in_(method_ids)).all()
         brewer.methods = methods
@@ -206,7 +239,7 @@ async def create_brewer(
         return templates.TemplateResponse(
             request,
             "equipment/_brewer_card.html",
-            {"brewer": brewer},
+            {"brewer": brewer, "derive_tier": derive_tier},
         )
 
     return RedirectResponse(url="/equipment", status_code=303)
@@ -228,7 +261,7 @@ async def edit_brewer_form(
     return templates.TemplateResponse(
         request,
         "equipment/_brewer_form.html",
-        {"brewer": brewer, "brew_methods": brew_methods},
+        {"brewer": brewer, "brew_methods": brew_methods, "derive_tier": derive_tier},
     )
 
 
@@ -237,6 +270,18 @@ async def update_brewer(
     request: Request,
     brewer_id: str,
     name: str = Form(...),
+    temp_control_type: str = Form("none"),
+    temp_min: str = Form(""),
+    temp_max: str = Form(""),
+    temp_step: str = Form(""),
+    preinfusion_type: str = Form("none"),
+    preinfusion_max_time: str = Form(""),
+    pressure_control_type: str = Form("fixed"),
+    pressure_min: str = Form(""),
+    pressure_max: str = Form(""),
+    flow_control_type: str = Form("none"),
+    has_bloom: bool = Form(False),
+    stop_mode: str = Form("manual"),
     db: Session = Depends(get_db),
 ):
     """Update an existing brewer."""
@@ -251,6 +296,18 @@ async def update_brewer(
     brewer.methods = (
         db.query(BrewMethod).filter(BrewMethod.id.in_(method_ids)).all() if method_ids else []
     )
+    brewer.temp_control_type = temp_control_type
+    brewer.temp_min = _parse_float(temp_min)
+    brewer.temp_max = _parse_float(temp_max)
+    brewer.temp_step = _parse_float(temp_step)
+    brewer.preinfusion_type = preinfusion_type
+    brewer.preinfusion_max_time = _parse_float(preinfusion_max_time)
+    brewer.pressure_control_type = pressure_control_type
+    brewer.pressure_min = _parse_float(pressure_min)
+    brewer.pressure_max = _parse_float(pressure_max)
+    brewer.flow_control_type = flow_control_type
+    brewer.has_bloom = has_bloom
+    brewer.stop_mode = stop_mode
     db.commit()
 
     return RedirectResponse(url="/equipment", status_code=303)

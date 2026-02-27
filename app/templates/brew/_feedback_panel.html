@@ -2,8 +2,8 @@
    Include inside a <form> that POSTs to /brew/record.
    Collapsed by default — never blocks the quick taste-score path. #}
 
-<div class="feedback-panel">
-  <button type="button" class="collapsible-toggle"
+<div class="mt-4">
+  <button type="button" class="btn btn-ghost btn-sm w-full mb-2"
     onclick="this.nextElementSibling.classList.toggle('open'); this.setAttribute('aria-expanded', this.nextElementSibling.classList.contains('open'))"
     aria-expanded="false">
     More Feedback (optional)
@@ -12,34 +12,36 @@
 
   <div class="collapsible-content">
     <!-- Notes -->
-    <div class="form-group">
-      <label class="form-label" for="notes">Notes</label>
-      <textarea id="notes" name="notes" class="form-input feedback-notes"
+    <div class="form-control mb-4">
+      <label class="label" for="notes"><span class="label-text">Notes</span></label>
+      <textarea id="notes" name="notes" class="textarea textarea-bordered w-full min-h-16"
         placeholder="Tasting notes, observations..." rows="2"></textarea>
     </div>
 
     <!-- Flavor dimensions (6 sliders) -->
-    <div class="flavor-dimensions">
-      <p class="form-label mb-sm">Flavor Profile</p>
+    <div class="mt-2 mb-4">
+      <p class="label-text font-semibold mb-2">Flavor Profile</p>
       {% for dim in ["acidity", "sweetness", "body", "bitterness", "aroma", "intensity"] %}
       <div class="flavor-slider-row">
-        <label class="flavor-label" for="flavor-{{ dim }}">{{ dim | capitalize }}</label>
+        <label class="text-sm text-base-content/60 font-medium" for="flavor-{{ dim }}">{{ dim | capitalize }}</label>
         <input type="range" id="flavor-{{ dim }}" name="{{ dim }}"
           class="flavor-slider" min="1" max="5" step="1" value="3"
           data-touched="false"
           oninput="this.dataset.touched='true'; this.classList.add('touched'); document.getElementById('flavor-val-{{ dim }}').textContent=this.value">
-        <span class="flavor-value" id="flavor-val-{{ dim }}">-</span>
+        <span class="text-sm text-center font-semibold min-w-5" id="flavor-val-{{ dim }}">-</span>
       </div>
       {% endfor %}
-      <p class="form-hint">Slide to rate — untouched sliders won't be saved.</p>
+      <label class="label">
+        <span class="label-text-alt">Slide to rate — untouched sliders won't be saved.</span>
+      </label>
     </div>
 
     <!-- Flavor tags -->
-    <div class="form-group mt-md">
-      <label class="form-label">Flavor Tags (up to 10)</label>
-      <div class="tag-input-container" id="tag-container">
-        <div class="tag-list" id="tag-list"></div>
-        <input type="text" id="tag-input" class="form-input tag-text-input"
+    <div class="form-control mt-4">
+      <label class="label"><span class="label-text">Flavor Tags (up to 10)</span></label>
+      <div class="mt-1" id="tag-container">
+        <div class="flex flex-wrap gap-1 mb-1" id="tag-list"></div>
+        <input type="text" id="tag-input" class="input input-bordered w-full"
           placeholder="Type a flavor (e.g. chocolate, citrus)..."
           list="flavor-suggestions" autocomplete="off">
         <datalist id="flavor-suggestions">

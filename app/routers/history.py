@@ -1,4 +1,4 @@
-"""History routes — shot history list with bean and taste score filters."""
+"""History routes — shot history list with bean, setup and taste score filters."""
 
 import json
 from typing import Optional
@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session, joinedload
 
 from app.database import get_db
 from app.models.bean import Bean
+from app.models.brew_setup import BrewSetup
 from app.models.measurement import Measurement
 from app.routers.beans import _get_active_bean
 
@@ -23,7 +24,10 @@ def _is_htmx(request: Request) -> bool:
 
 
 def _build_shot_dicts(
-    db: Session, bean_id: Optional[str], min_taste: Optional[float]
+    db: Session,
+    bean_id: Optional[str],
+    min_taste: Optional[float],
+    setup_id: Optional[str] = None,
 ) -> list[dict]:
     """Query measurements with optional filters, return enriched dicts."""
     query = (
@@ -36,6 +40,8 @@ def _build_shot_dicts(
         query = query.filter(Measurement.bean_id == bean_id)
     if min_taste is not None:
         query = query.filter(Measurement.taste >= min_taste)
+    if setup_id:
+        query = query.filter(Measurement.brew_setup_id == setup_id)
 
     measurements = query.order_by(Measurement.created_at.desc()).all()
 
@@ -64,6 +70,11 @@ def _build_shot_dicts(
                 "brew_ratio": brew_ratio,
                 "flavor_tags": tags,
                 "brew_setup_name": m.brew_setup.name if m.brew_setup else None,
+                "brew_method": (
+                    m.brew_setup.brew_method.name
+                    if m.brew_setup and m.brew_setup.brew_method
+                    else "espresso"
+                ),
             }
         )
     return shots
@@ -92,10 +103,21 @@ def _load_shot_detail(shot_id: int, db: Session) -> dict:
         "taste": m.taste,
         "grind_setting": m.grind_setting,
         "temperature": m.temperature,
-        "preinfusion_pct": m.preinfusion_pct,
+        "preinfusion_pressure_pct": m.preinfusion_pressure_pct,
         "dose_in": m.dose_in,
         "target_yield": m.target_yield,
         "saturation": m.saturation,
+        "preinfusion_time": m.preinfusion_time,
+        "preinfusion_pressure": m.preinfusion_pressure,
+        "brew_pressure": m.brew_pressure,
+        "pressure_profile": m.pressure_profile,
+        "bloom_pause": m.bloom_pause,
+        "flow_rate": m.flow_rate,
+        "temp_profile": m.temp_profile,
+        "steep_time": m.steep_time,
+        "brew_volume": m.brew_volume,
+        "bloom_weight": m.bloom_weight,
+        "brew_mode": m.brew_mode,
         "extraction_time": m.extraction_time,
         "is_failed": m.is_failed,
         "is_manual": getattr(m, "is_manual", False) or False,
@@ -123,21 +145,27 @@ async def history_page(
     request: Request,
     bean_id: Optional[str] = None,
     min_taste: Optional[float] = None,
+    setup_id: Optional[str] = None,
     db: Session = Depends(get_db),
 ):
     """Full history page."""
     active_bean = _get_active_bean(request, db)
     beans = db.query(Bean).order_by(Bean.name).all()
-    shots = _build_shot_dicts(db, bean_id, min_taste)
+    setups = (
+        db.query(BrewSetup).filter(BrewSetup.is_retired.is_(False)).order_by(BrewSetup.name).all()
+    )
+    shots = _build_shot_dicts(db, bean_id, min_taste, setup_id)
 
     return templates.TemplateResponse(
         request,
         "history/index.html",
         {
             "beans": beans,
+            "setups": setups,
             "shots": shots,
             "active_bean": active_bean,
             "filter_bean_id": bean_id,
+            "filter_setup_id": setup_id,
             "filter_min_taste": int(min_taste)
             if min_taste and min_taste == int(min_taste)
             else min_taste,
@@ -150,10 +178,11 @@ async def history_shots_partial(
     request: Request,
     bean_id: Optional[str] = None,
     min_taste: Optional[float] = None,
+    setup_id: Optional[str] = None,
     db: Session = Depends(get_db),
 ):
     """htmx partial — filtered shot list only."""
-    shots = _build_shot_dicts(db, bean_id, min_taste)
+    shots = _build_shot_dicts(db, bean_id, min_taste, setup_id)
 
     return templates.TemplateResponse(
         request,
@@ -307,7 +336,7 @@ async def delete_batch(request: Request, db: Session = Depends(get_db)):
     """Delete selected measurements and rebuild BayBE campaigns for affected beans."""
     import pandas as pd
 
-    from app.services.optimizer import BAYBE_PARAM_COLUMNS
+    from app.services.parameter_registry import get_param_columns
 
     form = await request.form()
     shot_ids = form.getlist("shot_ids")
@@ -331,19 +360,49 @@ async def delete_batch(request: Request, db: Session = Depends(get_db)):
         bean = db.query(Bean).filter(Bean.id == bean_id).first()
         remaining = db.query(Measurement).filter(Measurement.bean_id == bean_id).all()
         overrides = bean.parameter_overrides if bean else None
-        if remaining:
-            df = pd.DataFrame(
-                [
-                    {
-                        **{col: getattr(m, col) for col in BAYBE_PARAM_COLUMNS},
-                        "taste": m.taste,
-                    }
-                    for m in remaining
-                ]
-            )
-            optimizer.rebuild_campaign(bean_id, df, overrides=overrides)
+
+        # Group remaining measurements by (method, setup_id) to rebuild per-campaign
+        from app.services.optimizer_key import make_campaign_key
+        from collections import defaultdict
+
+        campaigns_to_rebuild: dict[tuple, list] = defaultdict(list)
+        for m in remaining:
+            if m.brew_setup is not None and m.brew_setup.brew_method is not None:
+                method = m.brew_setup.brew_method.name.lower()
+                setup_id = str(m.brew_setup_id)
+                brewer = m.brew_setup.brewer
+            else:
+                method = "espresso"
+                setup_id = None
+                brewer = None
+            campaigns_to_rebuild[(method, setup_id, id(brewer))].append((m, brewer))
+
+        if campaigns_to_rebuild:
+            for (method, setup_id, _), measurements_and_brewers in campaigns_to_rebuild.items():
+                brewer = measurements_and_brewers[0][1]  # same brewer for all in group
+                param_columns = get_param_columns(method, brewer)
+                campaign_key = make_campaign_key(str(bean_id), method, setup_id)
+                df = pd.DataFrame(
+                    [
+                        {
+                            **{
+                                col: getattr(m, col)
+                                for col in param_columns
+                                if getattr(m, col) is not None
+                            },
+                            "taste": m.taste,
+                        }
+                        for m, _ in measurements_and_brewers
+                    ]
+                )
+                # Drop rows where any param column is missing
+                df = df.dropna(subset=param_columns)
+                optimizer.rebuild_campaign(
+                    campaign_key, df, overrides=overrides, method=method, brewer=brewer
+                )
         else:
-            # No remaining measurements — rebuild empty campaign
-            optimizer.rebuild_campaign(bean_id, pd.DataFrame(), overrides=overrides)
+            # No remaining measurements — rebuild empty Tier 1 campaign
+            campaign_key = make_campaign_key(str(bean_id), "espresso", None)
+            optimizer.rebuild_campaign(campaign_key, pd.DataFrame(), overrides=overrides)
 
     return RedirectResponse(url="/history", status_code=303)

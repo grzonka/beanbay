@@ -3,8 +3,8 @@
 {% block title %}{% if edit_mode %}Edit Setup{% else %}Create Setup{% endif %} — BeanBay{% endblock %}
 
 {% block content %}
-<div class="page-header">
-  <h1 class="page-title">{% if edit_mode %}Edit Setup{% else %}Create Setup{% endif %}</h1>
+<div class="flex items-center justify-between mb-6">
+  <h1 class="text-2xl font-bold">{% if edit_mode %}Edit Setup{% else %}Create Setup{% endif %}</h1>
   <a href="/equipment" class="btn btn-secondary btn-sm">Cancel</a>
 </div>
 
@@ -18,7 +18,7 @@
   <div class="wizard-step-connector"></div>
   <div class="wizard-step" data-step="3">4<span class="wizard-step-label">Water</span></div>
   <div class="wizard-step-connector"></div>
-  <div class="wizard-step" data-step="4">5<span class="wizard-step-label">Name</span></div>
+  <div class="wizard-step" data-step="4">5<span class="wizard-step-label">Confirm</span></div>
 </div>
 
 <form
@@ -29,7 +29,8 @@
 
   {# ── Step 1: Pick a Brewer ──────────────────────────────────── #}
   <div class="wizard-step-content active" id="step-0">
-    <h2 class="wizard-step-title">Pick a Brewer</h2>
+    <h2 class="text-xl font-semibold mb-4">Pick a Brewer</h2>
+    <div class="text-error text-sm mt-1 mb-3 hidden" id="step-0-error">Please select a brewer to continue.</div>
 
     {% if brewers %}
       <div class="wizard-options" role="radiogroup" aria-label="Choose a brewer">
@@ -45,9 +46,9 @@
             >
             <div class="wizard-option-name">{{ brewer.name }}</div>
             {% if brewer.methods %}
-              <div class="method-tags" style="margin-top: var(--spacing-xs);">
+              <div class="flex flex-wrap gap-1 mt-1">
                 {% for method in brewer.methods %}
-                  <span class="method-tag">{{ method.name }}</span>
+                  <span class="badge badge-ghost">{{ method.name }}</span>
                 {% endfor %}
               </div>
             {% else %}
@@ -57,9 +58,7 @@
         {% endfor %}
       </div>
     {% else %}
-      <div class="empty-state" style="padding: var(--spacing-lg) 0;">
-        <div class="empty-state-text">No brewers yet.</div>
-      </div>
+      <div class="py-6 text-center text-base-content/60">No brewers yet.</div>
     {% endif %}
 
     <a href="/equipment" class="wizard-add-link">+ Add a brewer first</a>
@@ -67,7 +66,8 @@
 
   {# ── Step 2: Pick a Grinder ─────────────────────────────────── #}
   <div class="wizard-step-content" id="step-1">
-    <h2 class="wizard-step-title">Pick a Grinder</h2>
+    <h2 class="text-xl font-semibold mb-4">Pick a Grinder</h2>
+    <div class="text-error text-sm mt-1 mb-3 hidden" id="step-1-error">Please select a grinder to continue.</div>
 
     {% if grinders %}
       <div class="wizard-options" role="radiogroup" aria-label="Choose a grinder">
@@ -96,9 +96,7 @@
         {% endfor %}
       </div>
     {% else %}
-      <div class="empty-state" style="padding: var(--spacing-lg) 0;">
-        <div class="empty-state-text">No grinders yet.</div>
-      </div>
+      <div class="py-6 text-center text-base-content/60">No grinders yet.</div>
     {% endif %}
 
     <a href="/equipment" class="wizard-add-link">+ Add a grinder first</a>
@@ -106,7 +104,7 @@
 
   {# ── Step 3: Pick a Paper / Filter (optional) ───────────────── #}
   <div class="wizard-step-content" id="step-2">
-    <h2 class="wizard-step-title">Pick a Filter <span class="wizard-optional-label">(optional)</span></h2>
+    <h2 class="text-xl font-semibold mb-4">Pick a Filter <span class="text-sm text-base-content/60 font-normal">(optional)</span></h2>
 
     <div class="wizard-options" role="radiogroup" aria-label="Choose a filter or skip">
       {# Skip option — always first #}
@@ -146,7 +144,8 @@
 
   {# ── Step 4: Pick a Water Recipe ────────────────────────────── #}
   <div class="wizard-step-content" id="step-3">
-    <h2 class="wizard-step-title">Pick a Water Recipe</h2>
+    <h2 class="text-xl font-semibold mb-4">Pick a Water Recipe</h2>
+    <div class="text-error text-sm mt-1 mb-3 hidden" id="step-3-error">Please select a water recipe to continue.</div>
 
     {% if water_recipes %}
       <div class="wizard-options" role="radiogroup" aria-label="Choose a water recipe">
@@ -170,89 +169,90 @@
             {% if recipe.ca is not none %}{% set _ = minerals.append("Ca: " ~ recipe.ca|int) %}{% endif %}
             {% if recipe.mg is not none %}{% set _ = minerals.append("Mg: " ~ recipe.mg|int) %}{% endif %}
             {% if minerals %}
-              <div class="wizard-option-meta" style="font-size: var(--text-xs);">{{ minerals | join(" · ") }}</div>
+              <div class="wizard-option-meta text-xs">{{ minerals | join(" · ") }}</div>
             {% endif %}
           </label>
         {% endfor %}
       </div>
     {% else %}
-      <div class="empty-state" style="padding: var(--spacing-lg) 0;">
-        <div class="empty-state-text">No water recipes yet.</div>
-      </div>
+      <div class="py-6 text-center text-base-content/60">No water recipes yet.</div>
     {% endif %}
 
     <a href="/equipment" class="wizard-add-link">+ Add a water recipe first</a>
   </div>
 
-  {# ── Step 5: Name Your Setup ─────────────────────────────────── #}
+  {# ── Step 5: Confirm Your Setup ──────────────────────────────── #}
   <div class="wizard-step-content" id="step-4">
-    <h2 class="wizard-step-title">Name Your Setup</h2>
+    <h2 class="text-xl font-semibold mb-1">Confirm Your Setup</h2>
+    <p class="text-base-content/60 text-sm mb-4">Review your selections and give this setup a name.</p>
 
-    <div class="form-group" style="margin-bottom: var(--spacing-lg);">
-      <label class="form-label" for="setup-name">Setup Name</label>
+    <div class="form-control mb-4">
+      <label class="label"><span class="label-text">Setup Name</span></label>
       <input
         type="text"
         id="setup-name"
         name="name"
-        class="form-input"
+        class="input input-bordered w-full text-base"
         placeholder="e.g. Morning V60"
         value="{% if edit_mode %}{{ setup.name or '' }}{% endif %}"
         required
         autocomplete="off"
-        style="font-size: var(--text-base); padding: var(--spacing-md);"
       >
-      <p class="form-hint">Give this combination a memorable name.</p>
+      <label class="label"><span class="label-text-alt text-base-content/60">Give this combination a memorable name.</span></label>
     </div>
+    <div class="text-error text-sm mb-3 hidden" id="step-4-error">Please give your setup a name.</div>
 
     {# Summary of selected components #}
-    <div class="setup-summary-preview card" id="setup-summary-preview" style="margin-bottom: var(--spacing-lg);">
-      <div class="card-title" style="margin-bottom: var(--spacing-sm);">Your Setup</div>
-      <div id="summary-brewer" class="setup-summary-row">
-        <span class="setup-summary-label">Brewer:</span>
-        <span class="setup-summary-value" id="summary-brewer-name">—</span>
-      </div>
-      <div id="summary-grinder" class="setup-summary-row">
-        <span class="setup-summary-label">Grinder:</span>
-        <span class="setup-summary-value" id="summary-grinder-name">—</span>
-      </div>
-      <div id="summary-paper" class="setup-summary-row">
-        <span class="setup-summary-label">Filter:</span>
-        <span class="setup-summary-value" id="summary-paper-name">None</span>
-      </div>
-      <div id="summary-water" class="setup-summary-row">
-        <span class="setup-summary-label">Water:</span>
-        <span class="setup-summary-value" id="summary-water-name">—</span>
+    <div class="card bg-base-200 border border-base-300 mb-6" id="setup-summary-preview">
+      <div class="card-body p-4">
+        <div class="font-semibold text-base mb-3">Setup Summary</div>
+        <div id="summary-brewer" class="flex justify-between py-1 border-b border-base-300">
+          <span class="text-base-content/60 text-sm">Brewer</span>
+          <span class="font-medium text-sm" id="summary-brewer-name">—</span>
+        </div>
+        <div id="summary-grinder" class="flex justify-between py-1 border-b border-base-300">
+          <span class="text-base-content/60 text-sm">Grinder</span>
+          <span class="font-medium text-sm" id="summary-grinder-name">—</span>
+        </div>
+        <div id="summary-paper" class="flex justify-between py-1 border-b border-base-300">
+          <span class="text-base-content/60 text-sm">Filter</span>
+          <span class="font-medium text-sm" id="summary-paper-name">None</span>
+        </div>
+        <div id="summary-water" class="flex justify-between py-1">
+          <span class="text-base-content/60 text-sm">Water</span>
+          <span class="font-medium text-sm" id="summary-water-name">—</span>
+        </div>
       </div>
     </div>
   </div>
 
   {# ── Navigation buttons ──────────────────────────────────────── #}
-  <div class="wizard-nav">
+  <div class="flex gap-3 mt-6">
     <button
       type="button"
       id="btn-back"
-      class="btn btn-secondary"
+      class="btn btn-secondary min-h-12 flex-1"
       onclick="wizardBack()"
-      style="display:none; min-height: 48px; flex: 1;"
+      style="display:none;"
     >
       ← Back
     </button>
     <button
       type="button"
       id="btn-next"
-      class="btn btn-primary"
+      class="btn btn-primary min-h-12 flex-1"
       onclick="wizardNext()"
-      style="min-height: 48px; flex: 1;"
     >
       Next →
     </button>
     <button
       type="submit"
       id="btn-submit"
-      class="btn btn-primary"
-      style="display:none; min-height: 48px; flex: 1;"
+      class="btn btn-primary min-h-12 flex-1"
+      style="display:none;"
+      onclick="this.classList.add('loading'); setTimeout(() => { this.disabled = true; }, 0);"
     >
-      {% if edit_mode %}Save Setup{% else %}Create Setup{% endif %}
+      {% if edit_mode %}Save Setup{% else %}Create Setup & Start Brewing →{% endif %}
     </button>
   </div>
 
@@ -265,19 +265,26 @@
   var totalSteps = 5;
   var currentStep = 0;
 
-  // Names map for summary (brewer/grinder/water) — built from server-rendered data
+  // Names map for summary (brewer/grinder/water/paper) — built from server-rendered data
+  // Using tojson filter to safely escape special characters (prevents XSS)
   var BREWERS = {
-    {% for brewer in brewers %}"{{ brewer.id }}": "{{ brewer.name }}"{% if not loop.last %},{% endif %}{% endfor %}
+    {% for brewer in brewers %}{{ brewer.id | tojson }}: {{ brewer.name | tojson }}{% if not loop.last %},{% endif %}{% endfor %}
   };
   var GRINDERS = {
-    {% for grinder in grinders %}"{{ grinder.id }}": "{{ grinder.name }}"{% if not loop.last %},{% endif %}{% endfor %}
+    {% for grinder in grinders %}{{ grinder.id | tojson }}: {{ grinder.name | tojson }}{% if not loop.last %},{% endif %}{% endfor %}
   };
   var PAPERS = {
-    {% for paper in papers %}"{{ paper.id }}": "{{ paper.name }}"{% if not loop.last %},{% endif %}{% endfor %}
+    {% for paper in papers %}{{ paper.id | tojson }}: {{ paper.name | tojson }}{% if not loop.last %},{% endif %}{% endfor %}
   };
   var WATER_RECIPES = {
-    {% for recipe in water_recipes %}"{{ recipe.id }}": "{{ recipe.name }}"{% if not loop.last %},{% endif %}{% endfor %}
+    {% for recipe in water_recipes %}{{ recipe.id | tojson }}: {{ recipe.name | tojson }}{% if not loop.last %},{% endif %}{% endfor %}
   };
+
+  function clearAllErrors() {
+    document.querySelectorAll('[id^="step-"][id$="-error"]').forEach(function(el) {
+      el.classList.add('hidden');
+    });
+  }
 
   function showStep(n) {
     document.querySelectorAll('.wizard-step-content').forEach(function(el, i) {
@@ -292,7 +299,7 @@
     document.getElementById('btn-next').style.display = n < totalSteps - 1 ? 'block' : 'none';
     document.getElementById('btn-submit').style.display = n === totalSteps - 1 ? 'block' : 'none';
 
-    // When entering step 5 (Name), auto-fill name and update summary
+    // When entering step 5 (Confirm), auto-fill name and update summary
     if (n === 4) {
       updateSummary();
       autoFillName();
@@ -305,26 +312,25 @@
   }
 
   function validateStep(n) {
-    if (n === 0) {
-      if (!getSelectedValue('brewer_id')) {
-        alert('Please select a brewer to continue.');
-        return false;
-      }
-    } else if (n === 1) {
-      if (!getSelectedValue('grinder_id')) {
-        alert('Please select a grinder to continue.');
-        return false;
-      }
-    } else if (n === 3) {
-      if (!getSelectedValue('water_recipe_id')) {
-        alert('Please select a water recipe to continue.');
-        return false;
-      }
-    } else if (n === 4) {
+    clearAllErrors();
+
+    if (n === 0 && !getSelectedValue('brewer_id')) {
+      document.getElementById('step-0-error').classList.remove('hidden');
+      return false;
+    }
+    if (n === 1 && !getSelectedValue('grinder_id')) {
+      document.getElementById('step-1-error').classList.remove('hidden');
+      return false;
+    }
+    if (n === 3 && !getSelectedValue('water_recipe_id')) {
+      document.getElementById('step-3-error').classList.remove('hidden');
+      return false;
+    }
+    if (n === 4) {
       var nameInput = document.getElementById('setup-name');
       if (!nameInput.value.trim()) {
+        document.getElementById('step-4-error').classList.remove('hidden');
         nameInput.focus();
-        alert('Please give your setup a name.');
         return false;
       }
     }
@@ -358,6 +364,11 @@
       nameInput.select();
     }
   }
+
+  // Clear errors when any selection changes
+  document.getElementById('wizard-form').addEventListener('change', function() {
+    clearAllErrors();
+  });
 
   window.wizardNext = function() {
     if (!validateStep(currentStep)) return;

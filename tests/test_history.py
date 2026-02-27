@@ -51,7 +51,7 @@ def _seed_shot(
         recommendation_id=str(uuid.uuid4()),
         grind_setting=20.0,
         temperature=93.0,
-        preinfusion_pct=75.0,
+        preinfusion_pressure_pct=75.0,
         dose_in=19.0,
         target_yield=40.0,
         saturation="yes",
@@ -196,7 +196,8 @@ def test_history_shots_partial_htmx(client, sample_bean, db_session):
     assert "<!DOCTYPE html>" not in response.text
     assert "BeanBay" not in response.text
     # But should include the shot row
-    assert "shot-row" in response.text
+    assert "shot-" in response.text  # shot rows have id="shot-{id}"
+    assert "cursor-pointer" in response.text
 
 
 # ---------------------------------------------------------------------------
@@ -340,7 +341,7 @@ def test_history_shows_manual_badge(client, sample_bean, db_session):
 
     response = client.get("/history")
     assert response.status_code == 200
-    assert "badge-manual" in response.text
+    assert "badge badge-ghost badge-sm" in response.text  # manual badge uses badge-ghost
     assert "Manual" in response.text
 
 
@@ -350,7 +351,7 @@ def test_history_manual_badge_not_shown_for_regular(client, sample_bean, db_sess
 
     response = client.get("/history")
     assert response.status_code == 200
-    assert "badge-manual" not in response.text
+    assert "Manual" not in response.text
 
 
 def test_shot_detail_shows_manual_badge(client, sample_bean, db_session):
@@ -359,7 +360,7 @@ def test_shot_detail_shows_manual_badge(client, sample_bean, db_session):
 
     response = client.get(f"/history/{shot.id}")
     assert response.status_code == 200
-    assert "badge-manual" in response.text
+    assert "badge badge-ghost" in response.text  # manual badge uses badge-ghost
     assert "Manual" in response.text
 
 
@@ -399,8 +400,9 @@ def test_delete_batch_removes_measurements(client, sample_bean, db_session):
 
 
 def test_delete_batch_rebuilds_campaign(client, sample_bean, db_session):
-    """POST /history/delete-batch calls rebuild_campaign for affected bean."""
+    """POST /history/delete-batch calls rebuild_campaign for affected bean with compound campaign key."""
     from app.main import app
+    from app.services.optimizer_key import make_campaign_key
 
     shot1 = _seed_shot(db_session, sample_bean.id, taste=8.0)
     _seed_shot(db_session, sample_bean.id, taste=7.0)  # one remains
@@ -417,7 +419,9 @@ def test_delete_batch_rebuilds_campaign(client, sample_bean, db_session):
     assert response.status_code == 303
     mock_optimizer.rebuild_campaign.assert_called_once()
     call_args = mock_optimizer.rebuild_campaign.call_args
-    assert str(sample_bean.id) == str(call_args[0][0])
+    # Measurements have no brew_setup (legacy) → key is {bean_id}__espresso__none
+    expected_key = make_campaign_key(str(sample_bean.id), "espresso", None)
+    assert str(call_args[0][0]) == expected_key
 
 
 def test_delete_batch_empty_ids_redirects(client, sample_bean, db_session):

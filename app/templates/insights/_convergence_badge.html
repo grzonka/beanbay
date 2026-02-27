@@ -2,10 +2,10 @@
    Context: convergence dict with status, label, description, color
 #}
 {% if convergence %}
-<div class="convergence-badge-container">
-  <span class="convergence-badge convergence-{{ convergence.color }}">
+<div class="flex flex-col gap-1">
+  <span class="badge badge-lg {% if convergence.color == 'muted' %}badge-ghost{% elif convergence.color == 'blue' %}badge-info{% elif convergence.color == 'amber' %}badge-warning{% elif convergence.color == 'green' %}badge-success{% endif %}">
     {{ convergence.label }}
   </span>
-  <p class="convergence-description">{{ convergence.description }}</p>
+  <p class="text-sm text-base-content/60">{{ convergence.description }}</p>
 </div>
 {% endif %}

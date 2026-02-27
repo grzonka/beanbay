@@ -7,6 +7,7 @@ import uuid
 from app.main import app
 from app.models.bean import Bean
 from app.models.measurement import Measurement
+from app.models.pending_recommendation import PendingRecommendation
 
 
 # ---------------------------------------------------------------------------
@@ -37,7 +38,7 @@ def _make_rec(rec_id: str | None = None) -> dict:
         "recommendation_id": rec_id or str(uuid.uuid4()),
         "grind_setting": 20.0,
         "temperature": 93.0,
-        "preinfusion_pct": 75.0,
+        "preinfusion_pressure_pct": 75.0,
         "dose_in": 19.0,
         "target_yield": 40.0,
         "saturation": "yes",
@@ -53,7 +54,7 @@ def _seed_measurement(
         recommendation_id=rec_id or str(uuid.uuid4()),
         grind_setting=20.0,
         temperature=93.0,
-        preinfusion_pct=75.0,
+        preinfusion_pressure_pct=75.0,
         dose_in=19.0,
         target_yield=40.0,
         saturation="yes",
@@ -161,22 +162,21 @@ def test_trigger_recommend_generates_and_redirects(active_client):
 # ---------------------------------------------------------------------------
 
 
-def test_show_recommendation_displays_params(active_client, sample_bean):
+def test_show_recommendation_displays_params(active_client, sample_bean, db_session):
     """GET /brew/recommend/{id} shows recipe params in large display."""
     rec_id = str(uuid.uuid4())
     rec = _make_rec(rec_id)
 
-    # Seed pending_recommendations in app state
-    if not hasattr(app.state, "pending_recommendations"):
-        app.state.pending_recommendations = {}
-    app.state.pending_recommendations[rec_id] = rec
+    # Seed pending recommendation in DB
+    db_session.add(PendingRecommendation(recommendation_id=rec_id, recommendation_data=rec))
+    db_session.commit()
 
     response = active_client.get(f"/brew/recommend/{rec_id}")
     assert response.status_code == 200
     # 6 params visible
     assert "20.0" in response.text  # grind_setting
     assert "93" in response.text  # temperature
-    assert "75" in response.text  # preinfusion_pct
+    assert "75" in response.text  # preinfusion_pressure_pct
     assert "19" in response.text  # dose_in
     assert "40" in response.text  # target_yield
     assert "yes" in response.text  # saturation
@@ -203,7 +203,7 @@ def _record_payload(
         "recommendation_id": rec_id,
         "grind_setting": "20.0",
         "temperature": "93.0",
-        "preinfusion_pct": "75.0",
+        "preinfusion_pressure_pct": "75.0",
         "dose_in": "19.0",
         "target_yield": "40.0",
         "saturation": "yes",
@@ -328,7 +328,7 @@ def test_show_best_excludes_failed_shots(active_client, sample_bean, db_session)
         recommendation_id=str(uuid.uuid4()),
         grind_setting=20.0,
         temperature=93.0,
-        preinfusion_pct=75.0,
+        preinfusion_pressure_pct=75.0,
         dose_in=19.0,
         target_yield=40.0,
         saturation="yes",
@@ -407,7 +407,7 @@ def test_show_best_brew_again_creates_new_measurement(active_client, sample_bean
         "recommendation_id": rec_id_1,
         "grind_setting": "20.0",
         "temperature": "93.0",
-        "preinfusion_pct": "75.0",
+        "preinfusion_pressure_pct": "75.0",
         "dose_in": "19.0",
         "target_yield": "40.0",
         "saturation": "yes",
@@ -532,7 +532,7 @@ def test_record_with_flavor_tags(active_client, sample_bean, db_session):
 # ---------------------------------------------------------------------------
 
 
-def test_recommendation_shows_insights(active_client, sample_bean):
+def test_recommendation_shows_insights(active_client, sample_bean, db_session):
     """GET /brew/recommend/{id} shows phase_label from insights in the response."""
     rec_id = str(uuid.uuid4())
     rec = _make_rec(rec_id)
@@ -546,9 +546,9 @@ def test_recommendation_shows_insights(active_client, sample_bean):
         "shot_count": 0,
     }
 
-    if not hasattr(app.state, "pending_recommendations"):
-        app.state.pending_recommendations = {}
-    app.state.pending_recommendations[rec_id] = rec
+    # Seed pending recommendation in DB
+    db_session.add(PendingRecommendation(recommendation_id=rec_id, recommendation_data=rec))
+    db_session.commit()
 
     response = active_client.get(f"/brew/recommend/{rec_id}")
     assert response.status_code == 200
@@ -556,7 +556,7 @@ def test_recommendation_shows_insights(active_client, sample_bean):
     assert "Exploring randomly" in response.text
 
 
-def test_recommendation_insights_no_prediction_first_shot(active_client, sample_bean):
+def test_recommendation_insights_no_prediction_first_shot(active_client, sample_bean, db_session):
     """First recommendation (random phase) shows no predicted_range in response."""
     rec_id = str(uuid.uuid4())
     rec = _make_rec(rec_id)
@@ -570,9 +570,9 @@ def test_recommendation_insights_no_prediction_first_shot(active_client, sample_
         "shot_count": 0,
     }
 
-    if not hasattr(app.state, "pending_recommendations"):
-        app.state.pending_recommendations = {}
-    app.state.pending_recommendations[rec_id] = rec
+    # Seed pending recommendation in DB
+    db_session.add(PendingRecommendation(recommendation_id=rec_id, recommendation_data=rec))
+    db_session.commit()
 
     response = active_client.get(f"/brew/recommend/{rec_id}")
     assert response.status_code == 200
@@ -723,7 +723,7 @@ def test_record_manual_brew_end_to_end(active_client, sample_bean, db_session):
         "is_manual": "true",
         "grind_setting": "20.0",
         "temperature": "93.0",
-        "preinfusion_pct": "75.0",
+        "preinfusion_pressure_pct": "75.0",
         "dose_in": "19.0",
         "target_yield": "40.0",
         "saturation": "yes",
@@ -817,11 +817,206 @@ def test_manual_form_has_range_data_attributes(active_client, sample_bean):
     # data-min and data-max should appear for each parameter number input
     assert 'data-min="15' in html or 'data-min="15.0' in html  # grind_setting default min
     assert 'data-max="25' in html or 'data-max="25.0' in html  # grind_setting default max
+    # Phase 20 Tier-1 active params (preinfusion_pressure_pct is legacy — excluded from new campaigns)
     assert 'data-param="grind_setting"' in html
     assert 'data-param="temperature"' in html
-    assert 'data-param="preinfusion_pct"' in html
     assert 'data-param="dose_in"' in html
     assert 'data-param="target_yield"' in html
     # Number inputs should NOT have min/max HTML attributes on param-number inputs
     # (sliders still have them; number inputs use data-min/data-max instead)
     assert 'id="is_manual_flag"' in html
+
+
+# ---------------------------------------------------------------------------
+# Brewer context wiring — brewer passed to optimizer, outdated detection
+# ---------------------------------------------------------------------------
+
+
+def test_trigger_recommend_passes_brewer_to_optimizer(active_client):
+    """POST /brew/recommend with no active setup passes brewer=None to optimizer."""
+    from unittest.mock import MagicMock
+
+    fake_rec = _make_rec()
+    fake_insights = {
+        "phase": "random",
+        "phase_label": "Random exploration",
+        "explanation": "Exploring.",
+        "predicted_mean": None,
+        "predicted_std": None,
+        "predicted_range": None,
+        "shot_count": 0,
+    }
+
+    mock_optimizer = MagicMock()
+    mock_optimizer.recommend = AsyncMock(return_value=fake_rec)
+    mock_optimizer.get_recommendation_insights = MagicMock(return_value=fake_insights)
+    mock_optimizer.get_transfer_metadata = MagicMock(return_value=None)
+    mock_optimizer.is_campaign_outdated = MagicMock(return_value=False)
+    mock_optimizer.was_rebuild_declined = MagicMock(return_value=False)
+    app.state.optimizer = mock_optimizer
+
+    # No active setup cookie → brewer=None
+    response = active_client.post("/brew/recommend", follow_redirects=False)
+    assert response.status_code == 303
+
+    # Verify brewer=None was passed to recommend
+    mock_optimizer.recommend.assert_awaited_once()
+    _, kwargs = mock_optimizer.recommend.call_args
+    assert "brewer" in kwargs
+    assert kwargs["brewer"] is None
+
+
+def test_trigger_recommend_outdated_campaign_redirects_to_prompt(active_client):
+    """POST /brew/recommend when campaign is outdated and not declined → redirect to prompt page."""
+    from unittest.mock import MagicMock
+
+    mock_optimizer = MagicMock()
+    mock_optimizer.is_campaign_outdated = MagicMock(return_value=True)
+    mock_optimizer.was_rebuild_declined = MagicMock(return_value=False)
+    # recommend should NOT be called
+    mock_optimizer.recommend = AsyncMock()
+    app.state.optimizer = mock_optimizer
+
+    response = active_client.post("/brew/recommend", follow_redirects=False)
+    assert response.status_code == 303
+    location = response.headers["location"]
+    assert "/brew/campaign-outdated" in location
+
+    # Verify recommend was never called
+    mock_optimizer.recommend.assert_not_awaited()
+
+
+def test_trigger_recommend_outdated_campaign_declined_proceeds_normally(active_client):
+    """POST /brew/recommend when campaign outdated but rebuild_declined >= 2 → proceeds normally."""
+    from unittest.mock import MagicMock
+
+    fake_rec = _make_rec()
+    fake_insights = {
+        "phase": "random",
+        "phase_label": "Random exploration",
+        "explanation": "Exploring.",
+        "predicted_mean": None,
+        "predicted_std": None,
+        "predicted_range": None,
+        "shot_count": 0,
+    }
+
+    mock_optimizer = MagicMock()
+    mock_optimizer.is_campaign_outdated = MagicMock(return_value=True)
+    mock_optimizer.was_rebuild_declined = MagicMock(return_value=True)  # permanently declined
+    mock_optimizer.recommend = AsyncMock(return_value=fake_rec)
+    mock_optimizer.get_recommendation_insights = MagicMock(return_value=fake_insights)
+    mock_optimizer.get_transfer_metadata = MagicMock(return_value=None)
+    app.state.optimizer = mock_optimizer
+
+    response = active_client.post("/brew/recommend", follow_redirects=False)
+    assert response.status_code == 303
+    location = response.headers["location"]
+    # Should redirect to recommendation page, NOT to campaign-outdated
+    assert "/brew/recommend/" in location
+    assert "campaign-outdated" not in location
+
+
+def test_campaign_outdated_page_renders(active_client):
+    """GET /brew/campaign-outdated renders with new_params list."""
+    response = active_client.get(
+        "/brew/campaign-outdated?campaign_key=abc__espresso__None&method=espresso"
+    )
+    assert response.status_code == 200
+    assert "Campaign Update" in response.text
+    assert "Rebuild Campaign" in response.text
+    assert "Skip for Now" in response.text
+
+
+def test_rebuild_campaign_route_calls_accept_rebuild_and_redirects(active_client):
+    """POST /brew/rebuild-campaign calls accept_rebuild and redirects to /brew/recommend."""
+    from unittest.mock import MagicMock
+
+    mock_optimizer = MagicMock()
+    mock_optimizer.accept_rebuild = MagicMock(return_value=None)
+    app.state.optimizer = mock_optimizer
+
+    response = active_client.post(
+        "/brew/rebuild-campaign",
+        data={"campaign_key": "abc__espresso__None", "method": "espresso"},
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+    assert response.headers["location"] == "/brew/recommend"
+
+    mock_optimizer.accept_rebuild.assert_called_once()
+    call_args = mock_optimizer.accept_rebuild.call_args
+    # campaign_key is passed as first positional arg
+    assert call_args[0][0] == "abc__espresso__None"
+
+
+def test_decline_rebuild_route_calls_decline_and_redirects(active_client):
+    """POST /brew/decline-rebuild calls decline_rebuild and redirects to /brew."""
+    from unittest.mock import MagicMock
+
+    mock_optimizer = MagicMock()
+    mock_optimizer.decline_rebuild = MagicMock(return_value=None)
+    app.state.optimizer = mock_optimizer
+
+    response = active_client.post(
+        "/brew/decline-rebuild",
+        data={"campaign_key": "abc__espresso__None"},
+        follow_redirects=False,
+    )
+    assert response.status_code == 303
+    assert response.headers["location"] == "/brew"
+
+    mock_optimizer.decline_rebuild.assert_called_once_with("abc__espresso__None")
+
+
+# ---------------------------------------------------------------------------
+# Phase 20 Plan 03 — param_hints and PARAM_HINTS coverage
+# ---------------------------------------------------------------------------
+
+
+def test_show_recommendation_context_includes_param_hints(active_client, sample_bean, db_session):
+    """GET /brew/recommend/{id} response includes param hint text for Phase 20 params."""
+    rec_id = str(uuid.uuid4())
+    rec = _make_rec(rec_id)
+
+    db_session.add(PendingRecommendation(recommendation_id=rec_id, recommendation_data=rec))
+    db_session.commit()
+
+    response = active_client.get(f"/brew/recommend/{rec_id}")
+    assert response.status_code == 200
+    # The route passes param_hints to the template; the template renders data-param-hint attrs
+    # on hint cards. Verify the hints container is rendered (even if no hints are visible
+    # without localStorage context, the container + data attrs are present).
+    assert "param-hints-container" in response.text
+
+
+def test_param_hints_dict_covers_phase20_params():
+    """PARAM_HINTS dict in brew.py contains entries for all Phase 20 espresso params."""
+    from app.routers.brew import PARAM_HINTS
+
+    phase20_params = [
+        "preinfusion_time",
+        "preinfusion_pressure",
+        "brew_pressure",
+        "pressure_profile",
+        "flow_rate",
+        "bloom_pause",
+        "temp_profile",
+        "brew_mode",
+        "saturation",
+    ]
+    for param in phase20_params:
+        assert param in PARAM_HINTS, f"PARAM_HINTS missing hint for '{param}'"
+        assert len(PARAM_HINTS[param]) > 10, f"Hint for '{param}' too short: {PARAM_HINTS[param]!r}"
+
+
+def test_show_best_context_includes_param_defs(active_client, sample_bean, db_session):
+    """GET /brew/best passes param_defs to template (dynamic hidden inputs)."""
+    _seed_measurement(db_session, sample_bean.id, taste=8.0)
+
+    response = active_client.get("/brew/best")
+    assert response.status_code == 200
+    # Dynamic loop produces hidden inputs driven by param_defs
+    assert 'name="grind_setting"' in response.text
+    assert 'name="temperature"' in response.text
+    assert 'name="dose_in"' in response.text

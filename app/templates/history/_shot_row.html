@@ -1,21 +1,23 @@
-<div class="shot-row card mb-sm" id="shot-{{ shot.id }}"
+<div class="card bg-base-200 border border-base-300 mb-2 cursor-pointer hover:bg-base-300 transition-colors" id="shot-{{ shot.id }}"
   hx-get="/history/{{ shot.id }}" hx-target="#shot-modal-container" hx-swap="innerHTML">
-  <input type="checkbox" class="delete-check" name="shot_ids" value="{{ shot.id }}" form="delete-form"
-    style="display: none;" onchange="updateDeleteCount()">
-  <div class="shot-row-header">
-    <span class="shot-date">{{ shot.created_at.strftime('%b %d, %H:%M') }}</span>
-    <span class="shot-meta">
-      {% if shot.is_manual %}<span class="badge badge-manual">Manual</span>{% endif %}
-      {% if shot.is_failed %}<span class="badge badge-failed">Failed</span>{% endif %}
-      {% if shot.brew_setup_name %}<span class="badge badge-secondary" style="font-size: var(--text-xs);">{{ shot.brew_setup_name }}</span>{% endif %}
-      {% if shot.notes %}<span class="shot-notes-icon" title="Has notes"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>{% endif %}
-    </span>
-  </div>
-  <div class="shot-row-body">
-    <span class="shot-taste {% if shot.is_failed %}text-danger{% endif %}">
-      {{ shot.taste }}/10
-    </span>
-    <span class="shot-grind text-secondary">Grind {{ shot.grind_setting }}</span>
-    <span class="shot-bean text-muted text-sm">{{ shot.bean_name }}</span>
+  <div class="card-body p-3">
+    <input type="checkbox" class="delete-check" name="shot_ids" value="{{ shot.id }}" form="delete-form"
+      style="display: none;" onchange="updateDeleteCount()">
+    <div class="flex items-center justify-between">
+      <span class="text-sm text-base-content/70">{{ shot.created_at.strftime('%b %d, %H:%M') }}</span>
+      <span class="flex items-center gap-1">
+        {% if shot.is_manual %}<span class="badge badge-ghost badge-sm">Manual</span>{% endif %}
+        {% if shot.is_failed %}<span class="badge badge-error badge-sm">Failed</span>{% endif %}
+        {% if shot.brew_setup_name %}<span class="badge badge-outline badge-sm">{{ shot.brew_setup_name }}</span>{% endif %}
+        {% if shot.notes %}<span class="text-base-content/40" title="Has notes"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>{% endif %}
+      </span>
+    </div>
+    <div class="flex items-center gap-4 mt-1">
+      <span class="text-lg font-bold {% if shot.is_failed %}text-error{% endif %}">
+        {{ shot.taste }}/10
+      </span>
+      <span class="text-sm text-base-content/70">Grind {{ shot.grind_setting }}</span>
+      <span class="text-sm text-base-content/40 truncate">{{ shot.bean_name }}</span>
+    </div>
   </div>
 </div>

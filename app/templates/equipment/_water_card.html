@@ -1,44 +1,44 @@
 {# Water recipe card — used in equipment/index.html #}
-<div class="card water-card" style="{% if recipe.is_retired %}opacity: 0.6;{% endif %}">
-  <div class="card-header">
-    <div>
-      <div class="card-title">{{ recipe.name }}</div>
-      {% if recipe.notes %}
-        <div class="card-subtitle text-muted">{{ recipe.notes }}</div>
-      {% endif %}
-      {% set minerals = [] %}
-      {% if recipe.gh is not none %}{% set _ = minerals.append("GH: " ~ recipe.gh|int) %}{% endif %}
-      {% if recipe.kh is not none %}{% set _ = minerals.append("KH: " ~ recipe.kh|int) %}{% endif %}
-      {% if recipe.ca is not none %}{% set _ = minerals.append("Ca: " ~ recipe.ca|int) %}{% endif %}
-      {% if recipe.mg is not none %}{% set _ = minerals.append("Mg: " ~ recipe.mg|int) %}{% endif %}
-      {% if recipe.na is not none %}{% set _ = minerals.append("Na: " ~ recipe.na|int) %}{% endif %}
-      {% if recipe.cl is not none %}{% set _ = minerals.append("Cl: " ~ recipe.cl|int) %}{% endif %}
-      {% if recipe.so4 is not none %}{% set _ = minerals.append("SO₄: " ~ recipe.so4|int) %}{% endif %}
-      {% if minerals %}
-        <div class="card-subtitle" style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: 2px;">
-          {{ minerals | join(" · ") }}
-        </div>
+<div class="card bg-base-200 border border-base-300 mb-2 water-card{% if recipe.is_retired %} opacity-60{% endif %}">
+  <div class="card-body p-4">
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="font-semibold">{{ recipe.name }}</h3>
+        {% if recipe.notes %}
+          <div class="text-sm text-base-content/70 mt-1">{{ recipe.notes }}</div>
+        {% endif %}
+        {% set minerals = [] %}
+        {% if recipe.gh is not none %}{% set _ = minerals.append("GH: " ~ recipe.gh|int) %}{% endif %}
+        {% if recipe.kh is not none %}{% set _ = minerals.append("KH: " ~ recipe.kh|int) %}{% endif %}
+        {% if recipe.ca is not none %}{% set _ = minerals.append("Ca: " ~ recipe.ca|int) %}{% endif %}
+        {% if recipe.mg is not none %}{% set _ = minerals.append("Mg: " ~ recipe.mg|int) %}{% endif %}
+        {% if recipe.na is not none %}{% set _ = minerals.append("Na: " ~ recipe.na|int) %}{% endif %}
+        {% if recipe.cl is not none %}{% set _ = minerals.append("Cl: " ~ recipe.cl|int) %}{% endif %}
+        {% if recipe.so4 is not none %}{% set _ = minerals.append("SO₄: " ~ recipe.so4|int) %}{% endif %}
+        {% if minerals %}
+          <div class="text-xs text-base-content/50 mt-1">{{ minerals | join(" · ") }}</div>
+        {% endif %}
+      </div>
+      {% if recipe.is_retired %}
+        <span class="badge badge-ghost">Retired</span>
       {% endif %}
     </div>
-    {% if recipe.is_retired %}
-      <span class="badge badge-retired">Retired</span>
-    {% endif %}
-  </div>
-  <div class="card-actions">
-    <button
-      class="btn btn-secondary btn-sm"
-      onclick="openEditModal('/equipment/water-recipes/{{ recipe.id }}/edit')"
-    >
-      Edit
-    </button>
-    {% if recipe.is_retired %}
-      <form method="post" action="/equipment/water-recipes/{{ recipe.id }}/restore" style="display:inline;">
-        <button type="submit" class="btn btn-primary btn-sm">Restore</button>
-      </form>
-    {% else %}
-      <form method="post" action="/equipment/water-recipes/{{ recipe.id }}/retire" style="display:inline;">
-        <button type="submit" class="btn btn-danger btn-sm">Retire</button>
-      </form>
-    {% endif %}
+    <div class="flex items-center justify-end gap-2 mt-2 pt-2 border-t border-base-300">
+      <button
+        class="btn btn-ghost btn-sm"
+        onclick="openEditModal('/equipment/water-recipes/{{ recipe.id }}/edit')"
+      >
+        Edit
+      </button>
+      {% if recipe.is_retired %}
+        <form method="post" action="/equipment/water-recipes/{{ recipe.id }}/restore" style="display:inline;">
+          <button type="submit" class="btn btn-primary btn-sm">Restore</button>
+        </form>
+      {% else %}
+        <form method="post" action="/equipment/water-recipes/{{ recipe.id }}/retire" style="display:inline;">
+          <button type="submit" class="btn btn-error btn-sm">Retire</button>
+        </form>
+      {% endif %}
+    </div>
   </div>
 </div>

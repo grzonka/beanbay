@@ -1,70 +1,68 @@
-<div class="modal-content">
-  <div class="modal-header">
-    <h2 class="card-title">Edit Shot</h2>
-    <button type="button" class="btn btn-secondary btn-sm modal-close"
+<div>
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-4 pb-2 border-b border-base-300">
+    <h2 class="text-lg font-bold">Edit Shot</h2>
+    <button type="button" class="btn btn-ghost btn-sm btn-square"
       onclick="document.getElementById('shot-modal').close()">✕</button>
   </div>
 
   <form hx-post="/history/{{ shot.id }}/edit" hx-target="#shot-modal-container" hx-swap="innerHTML">
-    <div class="modal-body">
-      <!-- Notes -->
-      <div class="form-group">
-        <label class="form-label" for="edit-notes">Notes</label>
-        <textarea id="edit-notes" name="notes" class="form-input feedback-notes"
-          placeholder="Tasting notes, observations..." rows="3">{{ shot.notes or '' }}</textarea>
-      </div>
-
-      <!-- Flavor dimensions (pre-populated) -->
-      <div class="flavor-dimensions">
-        <p class="form-label mb-sm">Flavor Profile</p>
-        {% for dim in ["acidity", "sweetness", "body", "bitterness", "aroma", "intensity"] %}
-        {% set current = shot[dim] %}
-        <div class="flavor-slider-row">
-          <label class="flavor-label" for="edit-{{ dim }}">{{ dim | capitalize }}</label>
-          <input type="range" id="edit-{{ dim }}" name="{{ dim }}"
-            class="flavor-slider {% if current is not none %}touched{% endif %}"
-            min="1" max="5" step="1"
-            value="{{ current if current is not none else 3 }}"
-            data-touched="{{ 'true' if current is not none else 'false' }}"
-            oninput="this.dataset.touched='true'; this.classList.add('touched'); document.getElementById('edit-val-{{ dim }}').textContent=this.value">
-          <span class="flavor-value" id="edit-val-{{ dim }}">{{ current | int if current is not none else '-' }}</span>
-        </div>
-        {% endfor %}
-        <p class="form-hint">Slide to rate — untouched sliders won't be saved.</p>
-      </div>
-
-      <!-- Flavor tags (pre-populated) -->
-      <div class="form-group mt-md">
-        <label class="form-label">Flavor Tags (up to 10)</label>
-        <div class="tag-input-container" id="edit-tag-container">
-          <div class="tag-list" id="edit-tag-list">
-            {% for tag in shot.flavor_tags_list %}
-            <span class="tag-chip" data-tag="{{ tag }}">{{ tag }} <button type="button" class="tag-chip-remove" onclick="removeEditTag(this)">✕</button></span>
-            {% endfor %}
-          </div>
-          <input type="text" id="edit-tag-input" class="form-input tag-text-input"
-            placeholder="Type a flavor..." list="flavor-suggestions" autocomplete="off">
-          <datalist id="flavor-suggestions">
-            {% for tag in ["chocolate", "caramel", "nutty", "fruity", "citrus", "berry", "floral", "honey", "vanilla", "spicy", "earthy", "smoky", "woody", "herbal", "tropical", "stone fruit", "dried fruit", "brown sugar", "toffee", "roasted", "bright", "clean", "complex", "balanced", "creamy", "syrupy", "winey", "tea-like", "malty", "cocoa"] %}
-            <option value="{{ tag }}">
-            {% endfor %}
-          </datalist>
-        </div>
-        <input type="hidden" name="flavor_tags" id="edit-flavor-tags-hidden"
-          value="{{ shot.flavor_tags_list | join(',') if shot.flavor_tags_list else '' }}">
-      </div>
+    <!-- Notes -->
+    <div class="form-control mb-4">
+      <label class="label" for="edit-notes"><span class="label-text">Notes</span></label>
+      <textarea id="edit-notes" name="notes" class="textarea textarea-bordered w-full"
+        placeholder="Tasting notes, observations..." rows="3">{{ shot.notes or '' }}</textarea>
     </div>
 
-    <div class="modal-footer">
-      <div style="display: flex; gap: var(--spacing-sm);">
-        <button type="button" class="btn btn-secondary" style="flex:1;"
-          hx-get="/history/{{ shot.id }}" hx-target="#shot-modal-container" hx-swap="innerHTML">
-          Cancel
-        </button>
-        <button type="submit" class="btn btn-primary" style="flex:1;">
-          Save
-        </button>
+    <!-- Flavor dimensions -->
+    <div class="mb-4">
+      <p class="text-sm font-semibold text-base-content/70 mb-2">Flavor Profile</p>
+      {% for dim in ["acidity", "sweetness", "body", "bitterness", "aroma", "intensity"] %}
+      {% set current = shot[dim] %}
+      <div class="flavor-slider-row">
+        <label class="text-sm text-base-content/70" for="edit-{{ dim }}">{{ dim | capitalize }}</label>
+        <input type="range" id="edit-{{ dim }}" name="{{ dim }}"
+          class="flavor-slider {% if current is not none %}touched{% endif %}"
+          min="1" max="5" step="1"
+          value="{{ current if current is not none else 3 }}"
+          data-touched="{{ 'true' if current is not none else 'false' }}"
+          oninput="this.dataset.touched='true'; this.classList.add('touched'); document.getElementById('edit-val-{{ dim }}').textContent=this.value">
+        <span class="text-sm font-semibold text-center" id="edit-val-{{ dim }}">{{ current | int if current is not none else '-' }}</span>
       </div>
+      {% endfor %}
+      <p class="text-xs text-base-content/40 mt-1">Slide to rate — untouched sliders won't be saved.</p>
+    </div>
+
+    <!-- Flavor tags -->
+    <div class="form-control mb-4">
+      <label class="label"><span class="label-text">Flavor Tags (up to 10)</span></label>
+      <div id="edit-tag-container">
+        <div class="flex flex-wrap gap-1 mb-2" id="edit-tag-list">
+          {% for tag in shot.flavor_tags_list %}
+          <span class="badge badge-outline gap-1" data-tag="{{ tag }}">{{ tag }} <button type="button" class="btn btn-ghost btn-xs px-0" onclick="removeEditTag(this)">✕</button></span>
+          {% endfor %}
+        </div>
+        <input type="text" id="edit-tag-input" class="input input-bordered w-full"
+          placeholder="Type a flavor..." list="flavor-suggestions" autocomplete="off">
+        <datalist id="flavor-suggestions">
+          {% for tag in ["chocolate", "caramel", "nutty", "fruity", "citrus", "berry", "floral", "honey", "vanilla", "spicy", "earthy", "smoky", "woody", "herbal", "tropical", "stone fruit", "dried fruit", "brown sugar", "toffee", "roasted", "bright", "clean", "complex", "balanced", "creamy", "syrupy", "winey", "tea-like", "malty", "cocoa"] %}
+          <option value="{{ tag }}">
+          {% endfor %}
+        </datalist>
+      </div>
+      <input type="hidden" name="flavor_tags" id="edit-flavor-tags-hidden"
+        value="{{ shot.flavor_tags_list | join(',') if shot.flavor_tags_list else '' }}">
+    </div>
+
+    <!-- Footer buttons -->
+    <div class="flex gap-2 mt-4 pt-2 border-t border-base-300">
+      <button type="button" class="btn btn-ghost flex-1 min-h-12"
+        hx-get="/history/{{ shot.id }}" hx-target="#shot-modal-container" hx-swap="innerHTML">
+        Cancel
+      </button>
+      <button type="submit" class="btn btn-primary flex-1 min-h-12">
+        Save
+      </button>
     </div>
   </form>
 </div>

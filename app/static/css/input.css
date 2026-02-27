@@ -1,0 +1,474 @@
+@import "tailwindcss";
+@plugin "./daisyui.mjs" {
+  themes: espresso --default;
+}
+
+/* ── Espresso theme — exact oklch conversions of original palette ── */
+@plugin "./daisyui-theme.mjs" {
+  name: espresso;
+  default: true;
+  color-scheme: dark;
+
+  /* Backgrounds — layered dark espresso browns
+     Lightness + hue exact from hex; chroma boosted 3x so warmth is
+     perceptible at low luminance (human eye needs it) */
+  --color-base-100: oklch(24% 0.030 67);    /* page background */
+  --color-base-200: oklch(30% 0.036 56);    /* sidebar / navbar */
+  --color-base-300: oklch(34% 0.036 62);    /* cards / panels */
+  --color-base-content: oklch(93% 0.022 77); /* #f0e6d8 — warm cream text */
+
+  /* Primary — amber-orange accent */
+  --color-primary: oklch(65% 0.122 54);     /* #c87941 */
+  --color-primary-content: oklch(20% 0.030 67);
+
+  /* Secondary — muted tan */
+  --color-secondary: oklch(72% 0.029 67);   /* #b0a090 */
+  --color-secondary-content: oklch(20% 0.030 67);
+
+  /* Accent — slightly brighter amber for hover states */
+  --color-accent: oklch(72% 0.13 56);
+  --color-accent-content: oklch(20% 0.030 67);
+
+  /* Neutral — input background brown */
+  --color-neutral: oklch(34% 0.042 54);     /* #3d3530 */
+  --color-neutral-content: oklch(72% 0.029 67);
+
+  /* Semantic */
+  --color-info: oklch(70% 0.1 220);
+  --color-info-content: oklch(15% 0.02 220);
+  --color-success: oklch(65% 0.12 150);
+  --color-success-content: oklch(15% 0.02 150);
+  --color-warning: oklch(80% 0.14 85);
+  --color-warning-content: oklch(15% 0.03 85);
+  --color-error: oklch(62% 0.2 25);
+  --color-error-content: oklch(15% 0.04 25);
+
+  /* Shape */
+  --radius-selector: 0.625rem;
+  --radius-field: 0.5rem;
+  --radius-box: 0.625rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+/* ── Custom components with no daisyUI equivalent ────────────── */
+@layer components {
+
+  /* Recipe parameter grid — 2-col grid for brew recipe display */
+  .recipe-params {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .recipe-param {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    background: oklch(20% 0.015 55);
+    border: 1px solid oklch(30% 0.02 55);
+    border-radius: 0.625rem;
+    padding: 1rem;
+    position: relative;
+  }
+
+  /* Recipe value — large readable numbers for arm's-length viewing */
+  .recipe-value {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  .recipe-unit {
+    font-size: 1rem;
+    font-weight: 400;
+    opacity: 0.7;
+    margin-left: 2px;
+  }
+
+  .recipe-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.7;
+  }
+
+  /* Brew ratio display */
+  .ratio {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: oklch(20% 0.015 55);
+    border: 1px solid oklch(30% 0.02 55);
+    border-radius: 0.625rem;
+    padding: 0.5rem 1rem;
+    margin-top: 0.5rem;
+  }
+
+  /* Flavor slider grid — 3-column: label | slider | value */
+  .flavor-slider-row {
+    display: grid;
+    grid-template-columns: 80px 1fr 30px;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 40px;
+  }
+
+  /* Flavor bar display (read-only in shot detail) */
+  .flavor-display-row {
+    display: grid;
+    grid-template-columns: 80px 1fr 30px;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .flavor-bar {
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .flavor-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s;
+  }
+
+  /* Score slider — custom webkit/moz thumb for taste rating */
+  .score-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    min-height: 8px;
+    padding: 0;
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+    background: oklch(26% 0.022 55);
+  }
+
+  .score-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    background: oklch(64% 0.13 55);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  }
+
+  .score-slider::-moz-range-thumb {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    background: oklch(64% 0.13 55);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    border: none;
+  }
+
+  /* Flavor slider — smaller thumb, untouched = faded */
+  .flavor-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    outline: none;
+    opacity: 0.4;
+    transition: opacity 0.2s;
+    background: oklch(26% 0.022 55);
+  }
+
+  .flavor-slider.touched { opacity: 1; }
+
+  .flavor-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    background: oklch(64% 0.13 55);
+  }
+
+  .flavor-slider::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    background: oklch(64% 0.13 55);
+    border: none;
+  }
+
+  /* Chart container — fixed height for Chart.js canvases */
+  .chart-container {
+    position: relative;
+    height: 280px;
+    width: 100%;
+  }
+
+  @media (min-width: 480px) {
+    .chart-container { height: 340px; }
+  }
+
+  /* Stats grid — 2-col for analytics stats */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  /* Mineral grid — 2-col mobile, 3-col 480px+ */
+  .mineral-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  @media (min-width: 480px) {
+    .mineral-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* Wizard steps indicator — horizontal step circles + connectors */
+  .wizard-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin: 1.5rem 0 2rem;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+
+  .wizard-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid oklch(30% 0.02 55);
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: default;
+    position: relative;
+    flex-shrink: 0;
+    justify-content: center;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+
+  .wizard-step.active {
+    border-color: oklch(72% 0.123 63);
+    color: #fff;
+  }
+
+  .wizard-step.done {
+    border-color: oklch(72% 0.123 63);
+  }
+
+  .wizard-step-label {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    font-weight: 500;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0.7;
+  }
+
+  .wizard-step-connector {
+    flex: 1;
+    height: 2px;
+    min-width: 12px;
+    max-width: 40px;
+    flex-shrink: 1;
+  }
+
+  /* Wizard option cards — radio-card selection pattern */
+  .wizard-option-card {
+    display: block;
+    padding: 1rem;
+    border: 2px solid oklch(30% 0.02 55);
+    border-radius: 0.625rem;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    min-height: 48px;
+    position: relative;
+  }
+
+  .wizard-option-card input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .wizard-option-card:hover {
+    border-color: oklch(72% 0.123 63);
+  }
+
+  .wizard-option-card.selected {
+    border-color: oklch(72% 0.123 63);
+  }
+
+  /* ── Wizard step content panels — only active step is visible ── */
+  /* Plan 23-03: root cause fix — all 5 steps were visible simultaneously */
+  .wizard-step-content {
+    display: none;
+  }
+
+  .wizard-step-content.active {
+    display: block;
+  }
+
+  /* Wizard options container — vertical stack of radio cards */
+  .wizard-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Wizard option card text elements */
+  .wizard-option-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .wizard-option-meta {
+    color: oklch(70% 0.02 55);
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+  }
+
+  /* "Add first" links at bottom of empty steps */
+  .wizard-add-link {
+    display: inline-block;
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    color: oklch(72% 0.123 63);
+  }
+
+  .wizard-add-link:hover {
+    text-decoration: underline;
+  }
+
+  /* Comparison list — bean comparison cards for analytics */
+  .comparison-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .comparison-bean {
+    border: 1px solid oklch(30% 0.02 55);
+    border-radius: 0.625rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* Recipe param grid — 3-col for comparison table */
+  .recipe-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  /* Taste-group untouched opacity pattern */
+  #taste-group {
+    opacity: 0.4;
+    transition: opacity 0.2s;
+  }
+  #taste-group.touched {
+    opacity: 1;
+  }
+
+  .taste-required-msg {
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: none;
+  }
+  .taste-required-msg.visible {
+    display: block;
+  }
+
+  /* Collapsible toggle — hidden by default, shown when .open added via JS */
+  .collapsible-content {
+    display: none;
+  }
+  .collapsible-content.open {
+    display: block;
+  }
+
+  /* Param input row — slider + number pairs for manual brew */
+  .param-input-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .param-slider {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .param-number {
+    width: 80px;
+    flex-shrink: 0;
+    text-align: center;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid oklch(30% 0.02 55);
+    border-radius: 0.375rem;
+    font-size: 1rem;
+  }
+
+  /* ── Param info icon — circular "i" badge positioned top-right of recipe card ── */
+  .param-info-corner {
+    position: absolute;
+    top: 0.625rem;
+    right: 0.625rem;
+  }
+
+  .param-info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: oklch(65% 0.122 54);
+    color: oklch(20% 0.030 67);
+    font-size: 9px;
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+}
+
+/* ── htmx loading indicator ──────────────────────────────────── */
+@layer utilities {
+  .htmx-indicator {
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .htmx-request .htmx-indicator,
+  .htmx-request.htmx-indicator {
+    opacity: 1;
+  }
+}

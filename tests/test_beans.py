@@ -17,14 +17,22 @@ def sample_bean(db_session):
     return bean
 
 
-# --- Root redirect ---
+# --- Root route ---
 
 
-def test_root_redirects_to_beans(client):
-    """GET / redirects to /beans."""
+def test_root_shows_welcome_when_empty(client):
+    """GET / shows welcome page when no beans exist."""
     response = client.get("/", follow_redirects=False)
-    assert response.status_code == 303
-    assert response.headers["location"] == "/beans"
+    assert response.status_code == 200
+    assert "BeanBay" in response.text
+    assert "Add Your First Bean" in response.text
+
+
+def test_root_shows_dashboard_when_beans_exist(client, sample_bean):
+    """GET / shows dashboard when beans exist (no longer redirects to /beans)."""
+    response = client.get("/", follow_redirects=False)
+    assert response.status_code == 200
+    assert "Dashboard" in response.text
 
 
 # --- Bean list ---
@@ -53,7 +61,7 @@ def test_list_beans_shows_shot_count(client, sample_bean, db_session):
         bean_id=sample_bean.id,
         grind_setting=20.0,
         temperature=93.0,
-        preinfusion_pct=75.0,
+        preinfusion_pressure_pct=75.0,
         dose_in=19.0,
         target_yield=40.0,
         saturation="yes",
@@ -170,8 +178,8 @@ def test_update_overrides(client, sample_bean, db_session):
             "grind_setting_max": "22.0",
             "temperature_min": "",
             "temperature_max": "",
-            "preinfusion_pct_min": "",
-            "preinfusion_pct_max": "",
+            "preinfusion_pressure_pct_min": "",
+            "preinfusion_pressure_pct_max": "",
             "dose_in_min": "",
             "dose_in_max": "",
             "target_yield_min": "",
@@ -203,8 +211,8 @@ def test_update_overrides_clears_when_all_default(client, sample_bean, db_sessio
             "grind_setting_max": "",
             "temperature_min": "",
             "temperature_max": "",
-            "preinfusion_pct_min": "",
-            "preinfusion_pct_max": "",
+            "preinfusion_pressure_pct_min": "",
+            "preinfusion_pressure_pct_max": "",
             "dose_in_min": "",
             "dose_in_max": "",
             "target_yield_min": "",
@@ -301,11 +309,6 @@ def test_deactivate_bean(client, sample_bean):
     set_cookie = response.headers.get("set-cookie", "")
     assert "active_bean_id" in set_cookie
     assert "Max-Age=0" in set_cookie
-
-    # After clearing the cookie manually, the page should show "No bean selected"
-    client.cookies.delete("active_bean_id")
-    response2 = client.get("/beans")
-    assert "No bean selected" in response2.text
 
 
 def test_deactivate_bean_detail_shows_button(client, sample_bean):

@@ -3,42 +3,51 @@
 {% block title %}Best Recipe — BeanBay{% endblock %}
 
 {% block content %}
-<div class="page-header">
-  <h1 class="page-title">Best Recipe</h1>
-  <a href="/brew" class="btn btn-secondary btn-sm">← Back</a>
+<div class="flex items-center justify-between mb-6 min-h-12">
+  <h1 class="text-xl font-bold">Best Recipe</h1>
+  <a href="/brew" class="btn btn-ghost btn-sm">← Back</a>
 </div>
 
 {% if best %}
-  <div class="card mb-md">
-    <div class="card-header mb-md">
-      <span class="card-title">{{ active_bean.name }}</span>
-      <span class="badge badge-active">⭐ {{ best.taste }}/10</span>
-    </div>
+  <div class="card bg-base-200 border border-base-300 mb-4">
+    <div class="card-body p-4">
+      <div class="flex items-center justify-between mb-4">
+        <span class="font-semibold">{{ active_bean.name }}</span>
+        <span class="badge badge-primary">⭐ {{ best.taste }}/10</span>
+      </div>
 
-    {% set rec = best %}
-    {% include "brew/_recipe_card.html" %}
+      {% set rec = best %}
+      {% include "brew/_recipe_card.html" %}
+    </div>
   </div>
 
-  <!-- Brew Again form — pre-fills recommendation endpoint with best params -->
+    <!-- Brew Again form — pre-fills recommendation endpoint with best params -->
   <form method="post" action="/brew/record" id="brew-again-form">
+    {% set brew_method = method if method is defined else 'espresso' %}
     <!-- Fresh UUID per visit — allows re-brewing best recipe multiple times -->
     <input type="hidden" name="recommendation_id" value="{{ best_session_id }}">
-    <input type="hidden" name="grind_setting" value="{{ best.grind_setting }}">
-    <input type="hidden" name="temperature" value="{{ best.temperature }}">
-    <input type="hidden" name="preinfusion_pct" value="{{ best.preinfusion_pct }}">
-    <input type="hidden" name="dose_in" value="{{ best.dose_in }}">
-    <input type="hidden" name="target_yield" value="{{ best.target_yield }}">
-    <input type="hidden" name="saturation" value="{{ best.saturation }}">
+    {# Dynamic hidden inputs — driven by param_defs so all Phase 20+ params are forwarded correctly #}
+    {% for p in param_defs %}
+      {% set val = best[p.name] if best is mapping else best|attr(p.name) %}
+      {% if val is not none %}
+    <input type="hidden" name="{{ p.name }}" value="{{ val }}">
+      {% endif %}
+    {% endfor %}
+    {# Legacy: pass through preinfusion_pressure_pct if present (old campaigns that still have it) #}
+    {% if best is not mapping and best.preinfusion_pressure_pct is not none %}
+    <input type="hidden" name="preinfusion_pressure_pct" value="{{ best.preinfusion_pressure_pct }}">
+    {% endif %}
 
-    <div class="form-group" id="taste-group">
-      <label class="form-label" for="taste">
-        Taste Score: <strong id="taste-display">—</strong> / 10
+    <!-- Taste score -->
+    <div class="form-control mb-4" id="taste-group">
+      <label class="label" for="taste">
+        <span class="label-text">Taste Score: <strong id="taste-display">—</strong> / 10</span>
       </label>
       <input
         type="range"
         id="taste"
         name="taste"
-        class="score-slider form-input"
+        class="score-slider"
         min="1"
         max="10"
         step="0.5"
@@ -46,52 +55,95 @@
         data-touched="false"
         oninput="this.dataset.touched='true'; document.getElementById('taste-group').classList.add('touched'); document.getElementById('taste-display').textContent = this.value"
       >
+      <label class="label">
+        <span class="label-text-alt">1 = undrinkable · 10 = perfect</span>
+      </label>
       <div class="taste-required-msg" id="taste-required-msg">Rate the brew before submitting</div>
     </div>
 
-    <div class="form-group">
-      <label class="form-label" for="extraction_time">
-        Extraction Time (seconds, optional)
+    <!-- Extraction time (optional) -->
+    <div class="form-control mb-4">
+      {% if brew_method == 'cold-brew' %}
+      <label class="label" for="extraction_time">
+        <span class="label-text">Brew Time (minutes, optional)</span>
       </label>
       <input
         type="number"
         id="extraction_time"
         name="extraction_time"
-        class="form-input"
+        class="input input-bordered w-full"
+        placeholder="e.g. 720"
+        min="60"
+        max="2880"
+        step="1"
+      >
+      {% elif brew_method == 'espresso' or not brew_method %}
+      <label class="label" for="extraction_time">
+        <span class="label-text">Extraction Time (seconds, optional)</span>
+      </label>
+      <input
+        type="number"
+        id="extraction_time"
+        name="extraction_time"
+        class="input input-bordered w-full"
         placeholder="e.g. 28"
         min="5"
         max="120"
         step="1"
       >
+      {% else %}
+      <label class="label" for="extraction_time">
+        <span class="label-text">Brew Time (seconds, optional)</span>
+      </label>
+      <input
+        type="number"
+        id="extraction_time"
+        name="extraction_time"
+        class="input input-bordered w-full"
+        placeholder="e.g. 240"
+        min="5"
+        max="1800"
+        step="1"
+      >
+      {% endif %}
     </div>
 
-    <div class="form-group">
-      <label class="failed-toggle">
+    <!-- Failed shot/brew toggle -->
+    <div class="form-control mb-4">
+      <label class="flex items-center gap-4 min-h-12 cursor-pointer">
         <input
           type="checkbox"
           id="is_failed"
           name="is_failed"
           value="true"
+          class="checkbox checkbox-error"
           onchange="toggleFailed(this)"
         >
-        <span class="failed-toggle-label">
-          ⚠️ Failed shot
+        <span class="label-text">
+          {% if brew_method == 'espresso' or not brew_method %}
+          ⚠️ Failed shot (choked / gusher)
+          {% else %}
+          ⚠️ Failed brew
+          {% endif %}
         </span>
+      </label>
+      <label class="label">
+        <span class="label-text-alt">Auto-sets taste to 1 — still teaches the optimizer what not to do.</span>
       </label>
     </div>
 
     {% include "brew/_feedback_panel.html" %}
 
-    <button type="submit" class="btn btn-primary btn-full">
+    <button type="submit" class="btn btn-primary w-full text-xl min-h-16 rounded-xl">
       ☕ Brew Again &amp; Rate
     </button>
   </form>
 
 {% else %}
-  <div class="empty-state">
-    <div class="empty-state-title">No shots yet</div>
-    <div class="empty-state-text">
-      Get a recommendation and rate your first shot to see the best recipe here.
+  <div class="text-center py-8 text-base-content/50">
+    <div class="text-lg font-semibold text-base-content/70 mb-2">No {% if method == 'espresso' or not method %}shots{% else %}brews{% endif %} yet</div>
+    <div class="mb-4">
+      Get a recommendation and rate your first {% if method == 'espresso' or not method %}shot{% else %}brew{% endif %} to see the best recipe here.
     </div>
     <a href="/brew" class="btn btn-primary">Get Recommendation</a>
   </div>

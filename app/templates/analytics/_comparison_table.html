@@ -1,47 +1,45 @@
 <!-- Cross-bean best recipe comparison — vertical list of bean cards -->
 {% if not comparison %}
-<p class="text-muted text-center mt-sm">No beans with shots yet.</p>
+<p class="text-center text-base-content/40 mt-2">No beans with shots yet.</p>
 {% else %}
 <div class="comparison-list">
   {% for bean in comparison %}
   <div class="comparison-bean">
 
     <!-- Bean header: name + taste score + shot count badge -->
-    <div class="comparison-bean-header">
-      <div>
-        <div class="comparison-bean-name">{{ bean.bean_name }}</div>
-      </div>
-      <div class="comparison-bean-right">
-        <span class="stat-value stat-highlight">{{ bean.taste }}</span>
-        <span class="badge badge-count comparison-shot-count">{{ bean.shot_count }} shot{{ 's' if bean.shot_count != 1 else '' }}</span>
+    <div class="flex items-center justify-between">
+      <div class="font-semibold">{{ bean.bean_name }}</div>
+      <div class="flex items-center gap-2">
+        <span class="text-xl font-bold text-primary">{{ bean.taste }}</span>
+        <span class="badge badge-ghost badge-sm">{{ bean.shot_count }} shot{{ 's' if bean.shot_count != 1 else '' }}</span>
       </div>
     </div>
 
     <!-- Recipe params: 3-column grid -->
     <div class="recipe-grid">
-      <div class="recipe-param-block">
-        <span class="recipe-param-label">Grind</span>
-        <span class="recipe-param-value">{{ bean.grind_setting }}</span>
+      <div class="text-center p-2 bg-base-300/30 rounded">
+        <span class="block text-xs text-base-content/60">Grind</span>
+        <span class="block font-semibold">{{ bean.grind_setting }}</span>
       </div>
-      <div class="recipe-param-block">
-        <span class="recipe-param-label">Temp</span>
-        <span class="recipe-param-value">{{ bean.temperature }}°</span>
+      <div class="text-center p-2 bg-base-300/30 rounded">
+        <span class="block text-xs text-base-content/60">Temp</span>
+        <span class="block font-semibold">{{ bean.temperature }}°</span>
       </div>
-      <div class="recipe-param-block">
-        <span class="recipe-param-label">Preinfusion</span>
-        <span class="recipe-param-value">{{ bean.preinfusion_pct }}%</span>
+      <div class="text-center p-2 bg-base-300/30 rounded">
+        <span class="block text-xs text-base-content/60">Preinfusion</span>
+        <span class="block font-semibold">{{ bean.preinfusion_pressure_pct }}%</span>
       </div>
-      <div class="recipe-param-block">
-        <span class="recipe-param-label">Dose</span>
-        <span class="recipe-param-value">{{ bean.dose_in }}g</span>
+      <div class="text-center p-2 bg-base-300/30 rounded">
+        <span class="block text-xs text-base-content/60">Dose</span>
+        <span class="block font-semibold">{{ bean.dose_in }}g</span>
       </div>
-      <div class="recipe-param-block">
-        <span class="recipe-param-label">Yield</span>
-        <span class="recipe-param-value">{{ bean.target_yield }}g</span>
+      <div class="text-center p-2 bg-base-300/30 rounded">
+        <span class="block text-xs text-base-content/60">Yield</span>
+        <span class="block font-semibold">{{ bean.target_yield }}g</span>
       </div>
-      <div class="recipe-param-block">
-        <span class="recipe-param-label">Saturation</span>
-        <span class="recipe-param-value">{{ bean.saturation }}</span>
+      <div class="text-center p-2 bg-base-300/30 rounded">
+        <span class="block text-xs text-base-content/60">Saturation</span>
+        <span class="block font-semibold">{{ bean.saturation }}</span>
       </div>
     </div>
 

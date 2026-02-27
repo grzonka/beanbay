@@ -3,8 +3,8 @@
 {% block title %}My Beans — BeanBay{% endblock %}
 
 {% block content %}
-<div class="page-header">
-  <h1 class="page-title">My Beans</h1>
+<div class="flex items-center justify-between mb-6 min-h-12">
+  <h1 class="text-xl font-bold">My Beans</h1>
 </div>
 
 <!-- Create bean form -->
@@ -13,77 +13,79 @@
   hx-target="#bean-list"
   hx-swap="afterbegin"
   hx-on::after-request="if(event.detail.successful) this.reset()"
-  class="card mb-lg"
+  class="card bg-base-200 border border-base-300 mb-6"
 >
-  <div class="form-group">
-    <label class="form-label" for="name">Bean name</label>
-    <input
-      type="text"
-      id="name"
-      name="name"
-      class="form-input"
-      placeholder="e.g. Ethiopia Yirgacheffe"
-      required
-      autocomplete="off"
-    >
-  </div>
-  <div class="form-group">
-    <label class="form-label" for="roaster">Roaster (optional)</label>
-    <input
-      type="text"
-      id="roaster"
-      name="roaster"
-      class="form-input"
-      placeholder="e.g. Onyx Coffee Lab"
-      autocomplete="off"
-    >
-  </div>
-  <div class="form-group">
-    <label class="form-label" for="origin">Origin (optional)</label>
-    <input
-      type="text"
-      id="origin"
-      name="origin"
-      class="form-input"
-      placeholder="e.g. Yirgacheffe, Ethiopia"
-      autocomplete="off"
-    >
-  </div>
-  <button
-    type="button"
-    class="collapsible-toggle"
-    onclick="this.nextElementSibling.classList.toggle('open'); this.setAttribute('aria-expanded', this.nextElementSibling.classList.contains('open'))"
-    aria-expanded="false"
-  >
-    More Details
-    <span aria-hidden="true">&#9662;</span>
-  </button>
-  <div class="collapsible-content">
-    <div class="form-group">
-      <label class="form-label" for="roast_date">Roast Date</label>
-      <input type="date" id="roast_date" name="roast_date" class="form-input">
+  <div class="card-body p-4">
+    <div class="form-control mb-4">
+      <label class="label" for="name"><span class="label-text">Bean name</span></label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        class="input input-bordered w-full"
+        placeholder="e.g. Ethiopia Yirgacheffe"
+        required
+        autocomplete="off"
+      >
     </div>
-    <div class="form-group">
-      <label class="form-label" for="process">Process</label>
-      <select id="process" name="process" class="form-input">
-        <option value="">—</option>
-        <option value="washed">Washed</option>
-        <option value="natural">Natural</option>
-        <option value="honey">Honey</option>
-        <option value="anaerobic">Anaerobic</option>
-        <option value="other">Other</option>
-      </select>
+    <div class="form-control mb-4">
+      <label class="label" for="roaster"><span class="label-text">Roaster (optional)</span></label>
+      <input
+        type="text"
+        id="roaster"
+        name="roaster"
+        class="input input-bordered w-full"
+        placeholder="e.g. Onyx Coffee Lab"
+        autocomplete="off"
+      >
     </div>
-    <div class="form-group">
-      <label class="form-label" for="variety">Variety</label>
-      <input type="text" id="variety" name="variety" class="form-input"
-             placeholder="e.g. SL-28, Gesha" autocomplete="off">
+    <div class="form-control mb-4">
+      <label class="label" for="origin"><span class="label-text">Origin (optional)</span></label>
+      <input
+        type="text"
+        id="origin"
+        name="origin"
+        class="input input-bordered w-full"
+        placeholder="e.g. Yirgacheffe, Ethiopia"
+        autocomplete="off"
+      >
     </div>
+    <button
+      type="button"
+      class="btn btn-ghost btn-sm mb-2"
+      onclick="this.nextElementSibling.classList.toggle('open'); this.setAttribute('aria-expanded', this.nextElementSibling.classList.contains('open'))"
+      aria-expanded="false"
+    >
+      More Details
+      <span aria-hidden="true">&#9662;</span>
+    </button>
+    <div class="collapsible-content">
+      <div class="form-control mb-4">
+        <label class="label" for="roast_date"><span class="label-text">Roast Date</span></label>
+        <input type="date" id="roast_date" name="roast_date" class="input input-bordered w-full">
+      </div>
+      <div class="form-control mb-4">
+        <label class="label" for="process"><span class="label-text">Process</span></label>
+        <select id="process" name="process" class="select select-bordered w-full">
+          <option value="">—</option>
+          <option value="washed">Washed</option>
+          <option value="natural">Natural</option>
+          <option value="honey">Honey</option>
+          <option value="anaerobic">Anaerobic</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-control mb-4">
+        <label class="label" for="variety"><span class="label-text">Variety</span></label>
+        <input type="text" id="variety" name="variety" class="input input-bordered w-full"
+               placeholder="e.g. SL-28, Gesha" autocomplete="off">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary w-full min-h-12">
+      Add Bean
+      <span class="htmx-indicator spinner ml-2"></span>
+    </button>
   </div>
-  <button type="submit" class="btn btn-primary btn-full">
-    Add Bean
-    <span class="htmx-indicator spinner" style="margin-left: 8px;"></span>
-  </button>
 </form>
 
 <!-- Bean list -->
@@ -93,9 +95,9 @@
       {% include "beans/_bean_card.html" %}
     {% endfor %}
   {% else %}
-    <div class="empty-state" id="empty-state">
-      <div class="empty-state-title">No beans yet</div>
-      <div class="empty-state-text">Add your first coffee bean above to start optimizing.</div>
+    <div class="text-center py-8 text-base-content/50" id="empty-state">
+      <div class="text-lg font-semibold text-base-content/70 mb-2">No beans yet</div>
+      <div>Add your first coffee bean above to start optimizing.</div>
     </div>
   {% endif %}
 </div>

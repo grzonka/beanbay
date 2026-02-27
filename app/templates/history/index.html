@@ -3,36 +3,29 @@
 {% block title %}Brew History — BeanBay{% endblock %}
 
 {% block content %}
-<div class="page-header">
-  <h1 class="page-title">Brew History</h1>
-  <button type="button" id="delete-mode-btn" class="btn btn-secondary btn-sm"
+<div class="flex items-center justify-between mb-6 min-h-12">
+  <h1 class="text-xl font-bold">Brew History</h1>
+  <button type="button" id="delete-mode-btn" class="btn btn-ghost btn-sm"
     onclick="toggleDeleteMode()">🗑️ Delete</button>
 </div>
 
 <!-- Delete form (hidden until delete mode active) -->
 <form id="delete-form" method="post" action="/history/delete-batch" style="display: none;">
-  <div id="delete-bar" class="delete-action-bar">
-    <span id="delete-count">0 selected</span>
-    <button type="submit" class="btn btn-danger btn-sm"
-      onclick="return confirm('Delete ' + document.querySelectorAll('.delete-check:checked').length + ' brew(s)?')">
-      Delete Selected
-    </button>
-    <button type="button" class="btn btn-secondary btn-sm" onclick="toggleDeleteMode()">Cancel</button>
+  <div id="delete-bar" class="flex items-center justify-between gap-2 p-3 mb-4 rounded-xl bg-error/10 border border-error/30">
+    <span id="delete-count" class="text-sm font-semibold">0 selected</span>
+    <div class="flex gap-2">
+      <button type="submit" class="btn btn-error btn-sm"
+        onclick="return confirm('Delete ' + document.querySelectorAll('.delete-check:checked').length + ' brew(s)?')">
+        Delete Selected
+      </button>
+      <button type="button" class="btn btn-ghost btn-sm" onclick="toggleDeleteMode()">Cancel</button>
+    </div>
   </div>
 </form>
 
 <!-- Filter panel -->
-<div class="filter-panel-wrapper card mb-md">
-  <button
-    type="button"
-    class="collapsible-toggle"
-    onclick="this.nextElementSibling.classList.toggle('open'); this.setAttribute('aria-expanded', this.nextElementSibling.classList.contains('open'))"
-    aria-expanded="false"
-  >
-    Filter
-    <span aria-hidden="true">&#9662;</span>
-  </button>
-  <div class="collapsible-content">
+<div class="card bg-base-200 border border-base-300 mb-4">
+  <div class="card-body p-4">
     {% include "history/_filter_panel.html" %}
   </div>
 </div>
@@ -42,9 +35,12 @@
   {% include "history/_shot_list.html" %}
 </div>
 
-<!-- Modal container for Plan 03 shot detail -->
-<dialog id="shot-modal" class="shot-modal">
-  <div id="shot-modal-container"></div>
+<!-- Modal container for shot detail -->
+<dialog id="shot-modal" class="modal">
+  <div class="modal-box bg-base-200 border border-base-300 max-w-lg">
+    <div id="shot-modal-container"></div>
+  </div>
+  <form method="dialog" class="modal-backdrop"><button>close</button></form>
 </dialog>
 {% endblock %}
 

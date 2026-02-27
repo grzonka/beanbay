@@ -14,13 +14,13 @@
 >
 {% endif %}
 
-  <div class="form-group">
-    <label class="form-label" for="paper-name">Name <span style="color:var(--danger)">*</span></label>
+  <div class="form-control mb-4">
+    <label class="label"><span class="label-text">Name <span class="text-error">*</span></span></label>
     <input
       type="text"
       id="paper-name"
       name="name"
-      class="form-input"
+      class="input input-bordered w-full"
       placeholder="e.g. Cafec Abaca T-90"
       value="{{ paper.name if paper else '' }}"
       required
@@ -28,20 +28,18 @@
     >
   </div>
 
-  <div class="form-group">
-    <label class="form-label" for="paper-description">Description</label>
+  <div class="form-control mb-4">
+    <label class="label"><span class="label-text">Description</span></label>
     <textarea
       id="paper-description"
       name="description"
-      class="form-input"
+      class="textarea textarea-bordered w-full"
       rows="2"
       placeholder="e.g. Cafec Abaca light roast filter, bleached"
     >{{ paper.description if paper and paper.description else '' }}</textarea>
   </div>
 
-  <div style="margin-top: var(--spacing-lg);">
-    <button type="submit" class="btn btn-primary btn-full">
-      {% if paper %}Save Changes{% else %}Add Paper{% endif %}
-    </button>
-  </div>
+  <button type="submit" class="btn btn-primary w-full min-h-12">
+    {% if paper %}Save Changes{% else %}Add Paper{% endif %}
+  </button>
 </form>

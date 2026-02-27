@@ -64,7 +64,7 @@ def _seed_shot(
         recommendation_id=str(uuid.uuid4()),
         grind_setting=20.0,
         temperature=93.0,
-        preinfusion_pct=75.0,
+        preinfusion_pressure_pct=75.0,
         dose_in=19.0,
         target_yield=40.0,
         saturation="yes",
@@ -83,10 +83,19 @@ def _seed_shot(
 
 
 def test_insights_requires_active_bean(client, mock_optimizer):
-    """GET /insights without active bean cookie -> redirect to /beans (303)."""
+    """GET /insights without active bean cookie -> renders page with picker (200)."""
     response = client.get("/insights", follow_redirects=False)
-    assert response.status_code == 303
-    assert response.headers["location"] == "/beans"
+    assert response.status_code == 200
+    assert "Pick a bean" in response.text
+    assert "Select a bean above to see optimization insights." in response.text
+
+
+def test_insights_bean_id_query_param(client, sample_bean, mock_optimizer):
+    """GET /insights?bean_id=<id> renders insights for that bean without needing a cookie."""
+    response = client.get(f"/insights?bean_id={sample_bean.id}", follow_redirects=False)
+    assert response.status_code == 200
+    assert "Test Ethiopian" in response.text
+    assert "0 shots" in response.text
 
 
 def test_insights_empty_bean(client, sample_bean, mock_optimizer):

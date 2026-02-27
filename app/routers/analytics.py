@@ -1,5 +1,7 @@
 """Analytics router — aggregate brew statistics and cross-bean recipe comparison."""
 
+from typing import Optional
+
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -19,9 +21,12 @@ templates = Jinja2Templates(directory="app/templates")
 # ---------------------------------------------------------------------------
 
 
-def _compute_stats(db: Session) -> dict:
-    """Compute aggregate statistics across all beans/measurements."""
-    all_measurements = db.query(Measurement).all()
+def _compute_stats(db: Session, bean_id: Optional[str] = None) -> dict:
+    """Compute aggregate statistics, optionally filtered to a single bean."""
+    query = db.query(Measurement)
+    if bean_id is not None:
+        query = query.filter(Measurement.bean_id == bean_id)
+    all_measurements = query.all()
     total_shots = len(all_measurements)
 
     if total_shots == 0:
@@ -39,8 +44,11 @@ def _compute_stats(db: Session) -> dict:
     failed = [m for m in all_measurements if m.is_failed]
 
     # Distinct beans that have at least 1 measurement
-    bean_ids_with_measurements = {m.bean_id for m in all_measurements}
-    total_beans = len(bean_ids_with_measurements)
+    if bean_id is not None:
+        total_beans = 1
+    else:
+        bean_ids_with_measurements = {m.bean_id for m in all_measurements}
+        total_beans = len(bean_ids_with_measurements)
 
     total_failed = len(failed)
 
@@ -55,9 +63,13 @@ def _compute_stats(db: Session) -> dict:
     if non_failed:
         best_m = max(non_failed, key=lambda m: m.taste)
         best_taste = best_m.taste
-        # Look up bean name
-        bean = db.query(Bean).filter(Bean.id == best_m.bean_id).first()
-        best_bean_name = bean.name if bean else "Unknown"
+        if bean_id is not None:
+            # Filtered view — look up the bean name once
+            bean = db.query(Bean).filter(Bean.id == bean_id).first()
+            best_bean_name = bean.name if bean else "Unknown"
+        else:
+            bean = db.query(Bean).filter(Bean.id == best_m.bean_id).first()
+            best_bean_name = bean.name if bean else "Unknown"
 
     # Improvement rate: compare avg taste of first 10 vs last 10 non-failed shots
     # sorted by creation time
@@ -113,7 +125,7 @@ def _compute_comparison(db: Session) -> list[dict]:
                 "taste": best.taste,
                 "grind_setting": best.grind_setting,
                 "temperature": best.temperature,
-                "preinfusion_pct": best.preinfusion_pct,
+                "preinfusion_pressure_pct": best.preinfusion_pressure_pct,
                 "dose_in": best.dose_in,
                 "target_yield": best.target_yield,
                 "saturation": best.saturation,
@@ -132,11 +144,26 @@ def _compute_comparison(db: Session) -> list[dict]:
 
 
 @router.get("", response_class=HTMLResponse)
-async def analytics_page(request: Request, db: Session = Depends(get_db)):
+async def analytics_page(
+    request: Request,
+    db: Session = Depends(get_db),
+    bean_id: Optional[str] = None,
+):
     """Analytics page — aggregate brew stats and cross-bean comparison."""
     active_bean = _get_active_bean(request, db)
-    stats = _compute_stats(db)
-    comparison = _compute_comparison(db)
+    beans = db.query(Bean).order_by(Bean.name).all()
+    stats = _compute_stats(db, bean_id=bean_id)
+
+    # Cross-bean comparison only makes sense in the "all beans" view
+    if bean_id:
+        comparison = []
+    else:
+        comparison = _compute_comparison(db)
+
+    # Resolve the selected bean object (for display name in header)
+    selected_bean = None
+    if bean_id:
+        selected_bean = db.query(Bean).filter(Bean.id == bean_id).first()
 
     return templates.TemplateResponse(
         request,
@@ -145,5 +172,8 @@ async def analytics_page(request: Request, db: Session = Depends(get_db)):
             "active_bean": active_bean,
             "stats": stats,
             "comparison": comparison,
+            "beans": beans,
+            "selected_bean_id": bean_id or "",
+            "selected_bean": selected_bean,
         },
     )

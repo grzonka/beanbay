@@ -1,9 +1,9 @@
-<div class="filter-panel">
-  <div class="form-group">
-    <label class="form-label" for="filter-bean">Bean</label>
-    <select id="filter-bean" name="bean_id" class="form-input"
+<div class="flex flex-col gap-4 sm:flex-row sm:gap-4 pt-2">
+  <div class="form-control flex-1">
+    <label class="label" for="filter-bean"><span class="label-text">Bean</span></label>
+    <select id="filter-bean" name="bean_id" class="select select-bordered w-full min-h-12"
       hx-get="/history/shots" hx-target="#shot-list" hx-swap="innerHTML"
-      hx-include="[name='min_taste']">
+      hx-include="[name='min_taste'],[name='setup_id']">
       <option value="">All beans</option>
       {% for bean in beans %}
       <option value="{{ bean.id }}" {{ 'selected' if filter_bean_id == bean.id else '' }}>
@@ -13,11 +13,25 @@
     </select>
   </div>
 
-  <div class="form-group">
-    <label class="form-label" for="filter-taste">Min Taste Score</label>
-    <select id="filter-taste" name="min_taste" class="form-input"
+  <div class="form-control flex-1">
+    <label class="label" for="filter-setup"><span class="label-text">Setup</span></label>
+    <select id="filter-setup" name="setup_id" class="select select-bordered w-full min-h-12"
       hx-get="/history/shots" hx-target="#shot-list" hx-swap="innerHTML"
-      hx-include="[name='bean_id']">
+      hx-include="[name='bean_id'],[name='min_taste']">
+      <option value="">All setups</option>
+      {% for setup in setups %}
+      <option value="{{ setup.id }}" {{ 'selected' if filter_setup_id == setup.id else '' }}>
+        {{ setup.name }}
+      </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="form-control flex-1">
+    <label class="label" for="filter-taste"><span class="label-text">Min Taste Score</span></label>
+    <select id="filter-taste" name="min_taste" class="select select-bordered w-full min-h-12"
+      hx-get="/history/shots" hx-target="#shot-list" hx-swap="innerHTML"
+      hx-include="[name='bean_id'],[name='setup_id']">
       <option value="">Any</option>
       {% for score in [5, 6, 7, 8, 9] %}
       <option value="{{ score }}" {{ 'selected' if filter_min_taste == score else '' }}>

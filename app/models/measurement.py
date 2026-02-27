@@ -11,13 +11,39 @@ class Measurement(Base):
     bean_id = Column(String, ForeignKey("beans.id"), nullable=False, index=True)
     recommendation_id = Column(String, nullable=True, unique=True)
 
-    # BayBE parameters
+    # BayBE parameters — core (always present)
     grind_setting = Column(Float, nullable=False)
-    temperature = Column(Float, nullable=False)
-    preinfusion_pct = Column(Float, nullable=False)
+    # temperature is nullable from Phase 21 onwards: cold-brew has no heated water
+    temperature = Column(Float, nullable=True)
     dose_in = Column(Float, nullable=False)
-    target_yield = Column(Float, nullable=False)
-    saturation = Column(String, nullable=False)
+
+    # Espresso-specific parameters (nullable for non-espresso methods)
+    preinfusion_pressure_pct = Column(
+        Float, nullable=True
+    )  # pump pressure % during pre-infusion (55-100%)
+    target_yield = Column(Float, nullable=True)
+    saturation = Column(String, nullable=True)
+
+    # Phase 20: Advanced espresso parameters (all nullable)
+    preinfusion_time = Column(Float, nullable=True)  # seconds — pre-infusion hold time
+    preinfusion_pressure = Column(Float, nullable=True)  # bar — pressure during pre-infusion
+    brew_pressure = Column(Float, nullable=True)  # bar — target brew pressure
+    pressure_profile = Column(
+        String, nullable=True
+    )  # categorical: flat/ramp_up/ramp_down/pre_infusion_ramp
+    bloom_pause = Column(Float, nullable=True)  # seconds — pour-over bloom pause
+    flow_rate = Column(Float, nullable=True)  # ml/s — flow rate
+    temp_profile = Column(String, nullable=True)  # categorical: flat/ramp_up/ramp_down
+
+    # Phase 21: Method-specific parameters (all nullable)
+    # steep_time: minutes steeping (french-press, aeropress, cold-brew)
+    steep_time = Column(Float, nullable=True)
+    # brew_volume: total water in ml (pour-over, french-press, aeropress, turkish, moka-pot)
+    brew_volume = Column(Float, nullable=True)
+    # bloom_weight: bloom water weight in g (pour-over)
+    bloom_weight = Column(Float, nullable=True)
+    # brew_mode: "standard"/"inverted" for aeropress (also used as general brew_mode)
+    brew_mode = Column(String, nullable=True)
 
     # Target (required)
     taste = Column(Float, nullable=False)

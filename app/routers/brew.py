@@ -13,7 +13,6 @@ Implements the core espresso optimization workflow:
 
 import json
 import uuid
-from pathlib import Path
 from typing import Optional
 
 from fastapi import APIRouter, Depends, Form, Request
@@ -21,69 +20,144 @@ from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
-from app.config import settings
 from app.database import get_db
 from app.models.bean import Bean
 from app.models.brew_setup import BrewSetup
 from app.models.measurement import Measurement
+from app.models.pending_recommendation import PendingRecommendation
 from app.routers.beans import _get_active_bean
 from app.services.optimizer import (
-    DEFAULT_BOUNDS,
     _resolve_bounds,
     _round_value,
+)
+from app.services.parameter_registry import (
+    PARAMETER_REGISTRY,
+    get_default_bounds,
+    get_param_columns,
 )
 from app.services.optimizer_key import make_campaign_key
 
 router = APIRouter(prefix="/brew", tags=["brew"])
 templates = Jinja2Templates(directory="app/templates")
 
+# Human-readable labels for parameter names.
+# Used by templates for clear, scannable parameter display.
+PARAM_LABELS: dict[str, str] = {
+    "grind_setting": "Grind Setting",
+    "temperature": "Temperature",
+    "dose_in": "Dose",
+    "target_yield": "Target Yield",
+    "preinfusion_time": "Pre-infusion Time",
+    "preinfusion_pressure": "Pre-infusion Pressure",
+    "brew_pressure": "Brew Pressure",
+    "pressure_profile": "Pressure Profile",
+    "flow_rate": "Flow Rate",
+    "bloom_pause": "Bloom Pause",
+    "temp_profile": "Temperature Profile",
+    "brew_mode": "Brew Mode",
+    "saturation": "Saturation",
+    "bloom_weight": "Bloom Water",
+    "brew_volume": "Brew Volume",
+    "steep_time": "Steep Time",
+    "preinfusion_pressure_pct": "Pre-infusion %",
+}
+
+# Short recipe-card labels (space-constrained display).
+PARAM_SHORT_LABELS: dict[str, str] = {
+    "grind_setting": "Grind",
+    "temperature": "Temp",
+    "dose_in": "Dose",
+    "target_yield": "Yield",
+    "preinfusion_time": "Pre-inf",
+    "preinfusion_pressure": "Pre-inf Press",
+    "brew_pressure": "Pressure",
+    "pressure_profile": "Profile",
+    "flow_rate": "Flow",
+    "bloom_pause": "Bloom Pause",
+    "temp_profile": "Temp Profile",
+    "brew_mode": "Mode",
+    "saturation": "Saturation",
+    "bloom_weight": "Bloom",
+    "brew_volume": "Volume",
+    "steep_time": "Steep",
+    "preinfusion_pressure_pct": "Pre-inf %",
+}
+
+# Descriptions explaining what each parameter controls and why it matters.
+# Shown via info-icon tooltips on recommendation and manual brew pages.
+PARAM_DESCRIPTIONS: dict[str, str] = {
+    "grind_setting": "How fine or coarse the coffee is ground. Finer grinds slow extraction and increase intensity.",
+    "temperature": "Water temperature in °C. Higher temps extract more, but can over-extract and add bitterness.",
+    "dose_in": "Weight of dry coffee grounds in grams.",
+    "target_yield": "Target weight of liquid espresso in the cup (grams).",
+    "preinfusion_time": "Seconds at low pressure before full extraction begins. Helps saturate the puck evenly.",
+    "preinfusion_pressure": "Pressure (bar) during the pre-infusion phase, before ramping to full brew pressure.",
+    "brew_pressure": "Main extraction pressure in bar. Standard espresso is ~9 bar.",
+    "pressure_profile": "How pressure changes over the shot — flat, ramping up, ramping down, or with a pre-infusion ramp.",
+    "flow_rate": "Water flow rate through the coffee in ml/s. Lower flow = longer contact time.",
+    "bloom_pause": "Seconds to pause after initial wetting, letting CO₂ escape from fresh grounds.",
+    "temp_profile": "How temperature changes during extraction — flat, ramping up, or declining.",
+    "brew_mode": "Whether the machine prioritizes holding target pressure or target flow rate.",
+    "saturation": "Pre-wet the puck at low flow before full extraction. Helps even out channeling.",
+    "bloom_weight": "Weight of water (grams) used for the initial bloom pour in pour-over.",
+    "brew_volume": "Total water volume in ml for the full brew.",
+    "steep_time": "Total immersion time in seconds before pressing or filtering.",
+    "preinfusion_pressure_pct": "Legacy pre-infusion intensity as a percentage of full pressure.",
+}
+
+# One-time onboarding hints shown on first encounter of each parameter.
+# Passed to recommend.html so data-param-hint attributes can be set server-side.
+# (Kept for backward compat — uses same descriptions as PARAM_DESCRIPTIONS)
+PARAM_HINTS: dict[str, str] = {k: v for k, v in PARAM_DESCRIPTIONS.items()}
+
+# All measurement columns that can be set from form data, keyed by param name.
+# This covers core params + all method-specific params across Phases 20 and 21.
+_MEASUREMENT_FLOAT_COLUMNS = {
+    "grind_setting",
+    "temperature",
+    "dose_in",
+    "target_yield",
+    "preinfusion_pressure_pct",
+    "preinfusion_time",
+    "preinfusion_pressure",
+    "brew_pressure",
+    "bloom_pause",
+    "flow_rate",
+    "bloom_weight",
+    "brew_volume",
+    "steep_time",
+}
+_MEASUREMENT_STR_COLUMNS = {
+    "saturation",
+    "pressure_profile",
+    "temp_profile",
+    "brew_mode",
+}
+
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
-_PENDING_FILE = "pending_recommendations.json"
+
+def _save_pending(db: Session, rec_id: str, rec: dict) -> None:
+    """Persist a pending recommendation to the DB."""
+    existing = db.query(PendingRecommendation).filter_by(recommendation_id=rec_id).first()
+    if existing is None:
+        db.add(PendingRecommendation(recommendation_id=rec_id, recommendation_data=rec))
+        db.commit()
 
 
-def _pending_path(data_dir: Path) -> Path:
-    """Return path to the pending recommendations JSON file."""
-    return data_dir / _PENDING_FILE
+def _load_pending(db: Session, rec_id: str) -> Optional[dict]:
+    """Load a single pending recommendation from the DB, or None if not found."""
+    row = db.query(PendingRecommendation).filter_by(recommendation_id=rec_id).first()
+    return row.recommendation_data if row is not None else None
 
 
-def _save_pending(data_dir: Path, rec_id: str, rec: dict) -> None:
-    """Persist a pending recommendation to disk."""
-    path = _pending_path(data_dir)
-    try:
-        data = json.loads(path.read_text()) if path.exists() else {}
-    except (json.JSONDecodeError, OSError):
-        data = {}
-    data[rec_id] = rec
-    path.write_text(json.dumps(data))
-
-
-def _load_pending(data_dir: Path, rec_id: str) -> Optional[dict]:
-    """Load a single pending recommendation from disk, or None if not found."""
-    path = _pending_path(data_dir)
-    if not path.exists():
-        return None
-    try:
-        data = json.loads(path.read_text())
-        return data.get(rec_id)
-    except (json.JSONDecodeError, OSError):
-        return None
-
-
-def _remove_pending(data_dir: Path, rec_id: str) -> None:
-    """Remove a pending recommendation from disk."""
-    path = _pending_path(data_dir)
-    if not path.exists():
-        return
-    try:
-        data = json.loads(path.read_text())
-        data.pop(rec_id, None)
-        path.write_text(json.dumps(data))
-    except (json.JSONDecodeError, OSError):
-        pass
+def _remove_pending(db: Session, rec_id: str) -> None:
+    """Remove a pending recommendation from the DB."""
+    db.query(PendingRecommendation).filter_by(recommendation_id=rec_id).delete()
+    db.commit()
 
 
 def _require_active_bean(request: Request, db: Session) -> Optional[Bean]:
@@ -140,6 +214,29 @@ def _get_campaign_key(bean: Bean, setup: Optional[BrewSetup]) -> str:
     return make_campaign_key(str(bean.id), method, setup_id)
 
 
+def _extract_params_from_form(method: str, form_data: dict) -> dict:
+    """Extract all parameter values from raw form data for the given method.
+
+    Returns a dict of {param_name: value} for all known measurement columns
+    that appear in the form data. Handles both float and string params.
+    Includes legacy params (preinfusion_pressure_pct, saturation) for backward compat
+    with old campaigns that still have them in their searchspace.
+    """
+    result = {}
+    for col in _MEASUREMENT_FLOAT_COLUMNS:
+        val = form_data.get(col)
+        if val is not None and val != "":
+            try:
+                result[col] = float(val)
+            except (ValueError, TypeError):
+                pass
+    for col in _MEASUREMENT_STR_COLUMNS:
+        val = form_data.get(col)
+        if val is not None and val != "":
+            result[col] = str(val)
+    return result
+
+
 # ---------------------------------------------------------------------------
 # Routes
 # ---------------------------------------------------------------------------
@@ -169,6 +266,7 @@ async def brew_index(request: Request, db: Session = Depends(get_db)):
             "has_measurements": has_measurements,
             "beans": beans,
             "setups": setups,
+            "method": _get_method_from_setup(active_setup),
         },
     )
 
@@ -207,19 +305,30 @@ async def trigger_recommend(request: Request, db: Session = Depends(get_db)):
     active_setup = _get_active_setup(request, db)
     campaign_key = _get_campaign_key(bean, active_setup)
     method = _get_method_from_setup(active_setup)
+    brewer = active_setup.brewer if active_setup else None
 
     optimizer = request.app.state.optimizer
+
+    # Check if campaign param set is outdated (brewer capabilities changed)
+    if optimizer.is_campaign_outdated(campaign_key, method, brewer):
+        if not optimizer.was_rebuild_declined(campaign_key):
+            return RedirectResponse(
+                url=f"/brew/campaign-outdated?campaign_key={campaign_key}&method={method}",
+                status_code=303,
+            )
+
     rec = await optimizer.recommend(
         campaign_key,
         overrides=bean.parameter_overrides,
         method=method,
         target_bean=bean,
         db=db,
+        brewer=brewer,
     )
 
     # Compute recommendation insights (explore vs exploit explanation + predicted taste)
     insights = optimizer.get_recommendation_insights(
-        campaign_key, rec, overrides=bean.parameter_overrides, method=method
+        campaign_key, rec, overrides=bean.parameter_overrides, method=method, brewer=brewer
     )
     rec["insights"] = insights
     rec["method"] = method
@@ -229,9 +338,9 @@ async def trigger_recommend(request: Request, db: Session = Depends(get_db)):
     transfer_metadata = optimizer.get_transfer_metadata(campaign_key)
     rec["transfer_metadata"] = transfer_metadata
 
-    # Store recommendation to disk (survives server restarts)
+    # Store recommendation to DB (survives server restarts)
     rec_id = rec["recommendation_id"]
-    _save_pending(settings.data_dir, rec_id, rec)
+    _save_pending(db, rec_id, rec)
 
     return RedirectResponse(url=f"/brew/recommend/{rec_id}", status_code=303)
 
@@ -247,20 +356,19 @@ async def show_recommendation(
     if not bean:
         return RedirectResponse(url="/beans", status_code=303)
 
-    pending = getattr(request.app.state, "pending_recommendations", {})
-    rec = pending.get(recommendation_id)
-
-    if not rec:
-        # Try file-based store (survives server restarts; also covers cold start)
-        rec = _load_pending(settings.data_dir, recommendation_id)
+    rec = _load_pending(db, recommendation_id)
 
     if not rec:
         # Recommendation not found or invalid ID → back to brew
         return RedirectResponse(url="/brew", status_code=303)
 
+    method = rec.get("method", "espresso")
     ratio = _brew_ratio(rec.get("dose_in", 0), rec.get("target_yield", 0))
     insights = rec.get("insights", {})
     transfer_metadata = rec.get("transfer_metadata")
+
+    # Pass param_defs for generic hidden input rendering in template
+    param_defs = PARAMETER_REGISTRY.get(method, PARAMETER_REGISTRY["espresso"])
 
     return templates.TemplateResponse(
         request,
@@ -272,6 +380,12 @@ async def show_recommendation(
             "ratio": ratio,
             "insights": insights,
             "transfer_metadata": transfer_metadata,
+            "param_defs": param_defs,
+            "param_hints": PARAM_HINTS,
+            "param_labels": PARAM_LABELS,
+            "param_short_labels": PARAM_SHORT_LABELS,
+            "param_descriptions": PARAM_DESCRIPTIONS,
+            "method": method,
         },
     )
 
@@ -279,59 +393,39 @@ async def show_recommendation(
 @router.post("/record", response_class=HTMLResponse)
 async def record_measurement(
     request: Request,
-    recommendation_id: str = Form(...),
-    grind_setting: float = Form(...),
-    temperature: float = Form(...),
-    preinfusion_pct: Optional[float] = Form(None),
-    dose_in: float = Form(...),
-    target_yield: Optional[float] = Form(None),
-    saturation: Optional[str] = Form(None),
-    bloom_weight: Optional[float] = Form(None),
-    brew_volume: Optional[float] = Form(None),
-    method: str = Form("espresso"),
-    brew_setup_id: Optional[str] = Form(None),
-    taste: float = Form(7.0),
-    extraction_time: Optional[float] = Form(None),
-    is_failed: Optional[str] = Form(None),
-    notes: Optional[str] = Form(None),
-    acidity: Optional[float] = Form(None),
-    sweetness: Optional[float] = Form(None),
-    body: Optional[float] = Form(None),
-    bitterness: Optional[float] = Form(None),
-    aroma: Optional[float] = Form(None),
-    intensity: Optional[float] = Form(None),
-    flavor_tags: Optional[str] = Form(None),
-    is_manual: Optional[str] = Form(None),
     db: Session = Depends(get_db),
 ):
-    """Record a measurement — saves to SQLite and BayBE campaign."""
+    """Record a measurement — saves to SQLite and BayBE campaign.
+
+    Reads all form data generically so it works for all 7 brew methods.
+    The set of recognized param columns covers core + all method-specific params.
+    """
     bean = _require_active_bean(request, db)
     if not bean:
         return RedirectResponse(url="/beans", status_code=303)
 
+    form = await request.form()
+    form_data = dict(form)
+
+    recommendation_id = form_data.get("recommendation_id", "")
+    method = str(form_data.get("method", "espresso"))
+    brew_setup_id = form_data.get("brew_setup_id") or None
+    is_manual = form_data.get("is_manual") == "true"
+    is_failed_raw = form_data.get("is_failed", "")
+    failed = is_failed_raw in ("true", "1", "on")
+
+    # Extract all recognized param values from form
+    params = _extract_params_from_form(method, form_data)
+
     # Validate manual brews against bean parameter bounds
-    if is_manual == "true":
+    if is_manual:
         bounds = _resolve_bounds(bean.parameter_overrides, method=method)
-        if method == "pour-over":
-            param_values = {
-                "grind_setting": grind_setting,
-                "temperature": temperature,
-                "bloom_weight": bloom_weight or 40.0,
-                "dose_in": dose_in,
-                "brew_volume": brew_volume or 250.0,
-            }
-        else:
-            param_values = {
-                "grind_setting": grind_setting,
-                "temperature": temperature,
-                "preinfusion_pct": preinfusion_pct or 75.0,
-                "dose_in": dose_in,
-                "target_yield": target_yield or 40.0,
-            }
         violations = []
-        for param, value in param_values.items():
+        for param, value in params.items():
             if param not in bounds:
                 continue
+            if isinstance(value, str):
+                continue  # skip categorical params
             lo, hi = bounds[param]
             if value < lo or value > hi:
                 violations.append({"param": param, "value": value, "min": lo, "max": hi})
@@ -341,26 +435,42 @@ async def record_measurement(
                 content={"error": "Parameters out of range", "violations": violations},
             )
 
-    # Auto-set taste to 1 for failed shots (choked / gusher)
-    failed = is_failed == "true" or is_failed == "1" or is_failed == "on"
+    # Taste
+    try:
+        taste = float(form_data.get("taste", 7.0))
+    except (ValueError, TypeError):
+        taste = 7.0
     if failed:
         taste = 1.0
-
-    # Clamp taste to valid range
     taste = max(1.0, min(10.0, taste))
 
     # Clamp flavor dimensions to 1-5 if provided
-    def _clamp_flavor(val: Optional[float]) -> Optional[float]:
-        if val is None:
+    def _clamp_flavor(key: str) -> Optional[float]:
+        val = form_data.get(key)
+        if val is None or val == "":
             return None
-        return max(1.0, min(5.0, val))
+        try:
+            return max(1.0, min(5.0, float(val)))
+        except (ValueError, TypeError):
+            return None
+
+    # Extraction time
+    try:
+        extraction_time_raw = form_data.get("extraction_time")
+        extraction_time = float(extraction_time_raw) if extraction_time_raw else None
+    except (ValueError, TypeError):
+        extraction_time = None
 
     # Convert comma-separated flavor_tags string to JSON list
     flavor_tags_json = None
+    flavor_tags = form_data.get("flavor_tags")
     if flavor_tags:
-        tags = [t.strip() for t in flavor_tags.split(",") if t.strip()][:10]
+        tags = [t.strip() for t in str(flavor_tags).split(",") if t.strip()][:10]
         if tags:
             flavor_tags_json = json.dumps(tags)
+
+    notes_raw = form_data.get("notes")
+    notes = notes_raw.strip() if notes_raw else None
 
     # Deduplication: skip if recommendation_id already recorded
     existing = (
@@ -370,65 +480,64 @@ async def record_measurement(
         measurement = Measurement(
             bean_id=bean.id,
             recommendation_id=recommendation_id,
-            grind_setting=grind_setting,
-            temperature=temperature,
-            preinfusion_pct=preinfusion_pct if method != "pour-over" else None,
-            dose_in=dose_in,
-            target_yield=target_yield if method != "pour-over" else None,
-            saturation=saturation if method != "pour-over" else None,
-            brew_setup_id=brew_setup_id if brew_setup_id else None,
+            # Core params (always present for any method)
+            grind_setting=params.get("grind_setting", 0.0),
+            # temperature is nullable: cold-brew has no heated water
+            temperature=params.get("temperature"),
+            dose_in=params.get("dose_in", 0.0),
+            # Espresso params
+            target_yield=params.get("target_yield"),
+            preinfusion_pressure_pct=params.get("preinfusion_pressure_pct"),
+            saturation=params.get("saturation"),
+            preinfusion_time=params.get("preinfusion_time"),
+            preinfusion_pressure=params.get("preinfusion_pressure"),
+            brew_pressure=params.get("brew_pressure"),
+            pressure_profile=params.get("pressure_profile"),
+            bloom_pause=params.get("bloom_pause"),
+            flow_rate=params.get("flow_rate"),
+            temp_profile=params.get("temp_profile"),
+            brew_mode=params.get("brew_mode"),
+            # New method params (Phase 21)
+            steep_time=params.get("steep_time"),
+            brew_volume=params.get("brew_volume"),
+            bloom_weight=params.get("bloom_weight"),
+            # Metadata
+            brew_setup_id=brew_setup_id,
             taste=taste,
-            extraction_time=extraction_time if extraction_time else None,
+            extraction_time=extraction_time,
             is_failed=failed,
-            is_manual=(is_manual == "true"),
-            notes=notes.strip() if notes else None,
-            acidity=_clamp_flavor(acidity),
-            sweetness=_clamp_flavor(sweetness),
-            body=_clamp_flavor(body),
-            bitterness=_clamp_flavor(bitterness),
-            aroma=_clamp_flavor(aroma),
-            intensity=_clamp_flavor(intensity),
+            is_manual=is_manual,
+            notes=notes,
+            acidity=_clamp_flavor("acidity"),
+            sweetness=_clamp_flavor("sweetness"),
+            body=_clamp_flavor("body"),
+            bitterness=_clamp_flavor("bitterness"),
+            aroma=_clamp_flavor("aroma"),
+            intensity=_clamp_flavor("intensity"),
             flavor_tags=flavor_tags_json,
         )
         db.add(measurement)
         db.commit()
 
-        # Also add to BayBE campaign
+        # Also add to BayBE campaign — pass all extracted params; add_measurement filters
+        # to the campaign's actual searchspace columns.
         optimizer = request.app.state.optimizer
-        campaign_key = make_campaign_key(
-            str(bean.id), method, brew_setup_id if brew_setup_id else None
-        )
-        if method == "pour-over":
-            measurement_data = {
-                "grind_setting": grind_setting,
-                "temperature": temperature,
-                "bloom_weight": bloom_weight or 40.0,
-                "dose_in": dose_in,
-                "brew_volume": brew_volume or 250.0,
-                "taste": taste,
-            }
-        else:
-            measurement_data = {
-                "grind_setting": grind_setting,
-                "temperature": temperature,
-                "preinfusion_pct": preinfusion_pct or 75.0,
-                "dose_in": dose_in,
-                "target_yield": target_yield or 40.0,
-                "saturation": saturation or "yes",
-                "taste": taste,
-            }
+        campaign_key = make_campaign_key(str(bean.id), method, brew_setup_id)
+        active_setup_for_record = _get_active_setup(request, db)
+        brewer_for_record = active_setup_for_record.brewer if active_setup_for_record else None
+        measurement_data = dict(params)
+        measurement_data["taste"] = taste
         optimizer.add_measurement(
             campaign_key,
             measurement_data,
             overrides=bean.parameter_overrides,
             method=method,
             target_bean_id=str(bean.id),
+            brewer=brewer_for_record,
         )
 
-    # Clean up pending recommendation (from both in-memory and file store)
-    pending = getattr(request.app.state, "pending_recommendations", {})
-    pending.pop(recommendation_id, None)
-    _remove_pending(settings.data_dir, recommendation_id)
+    # Clean up pending recommendation from DB
+    _remove_pending(db, recommendation_id)
 
     return RedirectResponse(url="/brew", status_code=303)
 
@@ -440,6 +549,10 @@ async def show_best(request: Request, db: Session = Depends(get_db)):
     if not bean:
         return RedirectResponse(url="/beans", status_code=303)
 
+    active_setup = _get_active_setup(request, db)
+    method = _get_method_from_setup(active_setup)
+    brewer = active_setup.brewer if active_setup else None
+
     best = _best_measurement(bean.id, db)
 
     ratio = None
@@ -447,6 +560,16 @@ async def show_best(request: Request, db: Session = Depends(get_db)):
     if best:
         ratio = _brew_ratio(best.dose_in, best.target_yield)
         best_session_id = str(uuid.uuid4())
+
+    # Get param_defs filtered by brewer capabilities for dynamic hidden input rendering
+    from app.services.parameter_registry import get_param_columns
+
+    active_param_names = get_param_columns(method, brewer)
+    param_defs = [
+        pdef
+        for pdef in PARAMETER_REGISTRY.get(method, PARAMETER_REGISTRY["espresso"])
+        if pdef["name"] in active_param_names
+    ]
 
     return templates.TemplateResponse(
         request,
@@ -456,6 +579,10 @@ async def show_best(request: Request, db: Session = Depends(get_db)):
             "best": best,
             "ratio": ratio,
             "best_session_id": best_session_id,
+            "param_defs": param_defs,
+            "param_short_labels": PARAM_SHORT_LABELS,
+            "param_descriptions": PARAM_DESCRIPTIONS,
+            "method": method,
         },
     )
 
@@ -469,50 +596,48 @@ async def manual_brew(request: Request, db: Session = Depends(get_db)):
 
     active_setup = _get_active_setup(request, db)
     method = _get_method_from_setup(active_setup)
+    brewer = active_setup.brewer if active_setup else None
     bounds = _resolve_bounds(bean.parameter_overrides, method=method)
     best = _best_measurement(bean.id, db)
 
+    # Get the active param columns for this method+brewer combo
+    active_param_names = get_param_columns(method, brewer)
+    # Full param_defs (for the template to render correct input types, steps, units)
+    param_defs = [
+        pdef
+        for pdef in PARAMETER_REGISTRY.get(method, PARAMETER_REGISTRY["espresso"])
+        if pdef["name"] in active_param_names
+    ]
+
     # Pre-fill values: use best measurement if available, else midpoint of bounds
-    if best and method == "pour-over":
-        prefill = {
-            "grind_setting": best.grind_setting,
-            "temperature": best.temperature,
-            "bloom_weight": 40.0,  # pour-over params not stored on old measurements
-            "dose_in": best.dose_in,
-            "brew_volume": 250.0,
-        }
-    elif best:
-        prefill = {
-            "grind_setting": best.grind_setting,
-            "temperature": best.temperature,
-            "preinfusion_pct": best.preinfusion_pct,
-            "dose_in": best.dose_in,
-            "target_yield": best.target_yield,
-            "saturation": best.saturation,
-        }
-    elif method == "pour-over":
-        prefill = {
-            param: _round_value((lo + hi) / 2, step)
-            for (param, (lo, hi)), step in zip(
-                bounds.items(),
-                [0.5, 1.0, 1.0, 0.5, 5.0],  # grind, temp, bloom, dose, volume
-            )
-        }
+    prefill: dict = {}
+    if best:
+        # Pull values from the best measurement for all active params
+        for pdef in param_defs:
+            name = pdef["name"]
+            val = getattr(best, name, None)
+            if val is not None:
+                prefill[name] = val
+        # Fill any missing active params with midpoints
+        for pdef in param_defs:
+            name = pdef["name"]
+            if name not in prefill:
+                if pdef["type"] == "continuous" and name in bounds:
+                    lo, hi = bounds[name]
+                    step = pdef.get("rounding") or 1.0
+                    prefill[name] = _round_value((lo + hi) / 2, step)
+                elif pdef["type"] == "categorical":
+                    prefill[name] = pdef["values"][0]
     else:
-        prefill = {
-            param: _round_value((lo + hi) / 2, step)
-            for (param, (lo, hi)), step in zip(
-                bounds.items(),
-                [
-                    0.5,  # grind_setting
-                    1.0,  # temperature
-                    5.0,  # preinfusion_pct
-                    0.5,  # dose_in
-                    1.0,  # target_yield
-                ],
-            )
-        }
-        prefill["saturation"] = "yes"
+        # No best measurement — use midpoints
+        for pdef in param_defs:
+            name = pdef["name"]
+            if pdef["type"] == "continuous" and name in bounds:
+                lo, hi = bounds[name]
+                step = pdef.get("rounding") or 1.0
+                prefill[name] = _round_value((lo + hi) / 2, step)
+            elif pdef["type"] == "categorical":
+                prefill[name] = pdef["values"][0]
 
     manual_session_id = str(uuid.uuid4())
     setup_id = str(active_setup.id) if active_setup else None
@@ -523,11 +648,15 @@ async def manual_brew(request: Request, db: Session = Depends(get_db)):
         {
             "active_bean": bean,
             "active_setup": active_setup,
+            "brewer": brewer,
             "method": method,
             "setup_id": setup_id,
             "bounds": bounds,
             "prefill": prefill,
             "manual_session_id": manual_session_id,
+            "param_defs": param_defs,
+            "param_labels": PARAM_LABELS,
+            "param_descriptions": PARAM_DESCRIPTIONS,
         },
     )
 
@@ -542,10 +671,14 @@ async def extend_ranges(
     if not bean:
         return RedirectResponse(url="/beans", status_code=303)
 
+    active_setup = _get_active_setup(request, db)
+    method = _get_method_from_setup(active_setup)
+
     form = await request.form()
     overrides = dict(bean.parameter_overrides or {})
 
-    for param in DEFAULT_BOUNDS:
+    # Extend any param whose min/max appears in the form, for the current method
+    for param in get_default_bounds(method):
         new_min = form.get(f"{param}_min")
         new_max = form.get(f"{param}_max")
         if new_min is not None or new_max is not None:
@@ -560,3 +693,87 @@ async def extend_ranges(
     db.commit()
 
     return JSONResponse(content={"status": "ok"})
+
+
+@router.get("/campaign-outdated", response_class=HTMLResponse)
+async def show_campaign_outdated(
+    request: Request,
+    campaign_key: str,
+    method: str = "espresso",
+    db: Session = Depends(get_db),
+):
+    """Show the campaign outdated prompt — brewer capabilities changed."""
+    bean = _require_active_bean(request, db)
+    if not bean:
+        return RedirectResponse(url="/beans", status_code=303)
+
+    active_setup = _get_active_setup(request, db)
+    brewer = active_setup.brewer if active_setup else None
+
+    # Compute which params are new (in current brewer set but not in current campaign)
+    from app.services.parameter_registry import get_param_columns
+
+    current_params = set(get_param_columns(method, brewer))
+    # Load the stored fingerprint to derive which params are in the old campaign
+    # We show all params in the new set that weren't in Tier 1 (brewer=None)
+    tier1_params = set(get_param_columns(method, None))
+    new_params = sorted(current_params - tier1_params)
+
+    return templates.TemplateResponse(
+        request,
+        "brew/campaign_outdated.html",
+        {
+            "active_bean": bean,
+            "campaign_key": campaign_key,
+            "method": method,
+            "new_params": new_params,
+        },
+    )
+
+
+@router.post("/rebuild-campaign", response_class=HTMLResponse)
+async def rebuild_campaign_route(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    """Rebuild the campaign with the current brewer's full parameter set."""
+    bean = _require_active_bean(request, db)
+    if not bean:
+        return RedirectResponse(url="/beans", status_code=303)
+
+    form = await request.form()
+    campaign_key = str(form.get("campaign_key", ""))
+    method = str(form.get("method", "espresso"))
+
+    active_setup = _get_active_setup(request, db)
+    brewer = active_setup.brewer if active_setup else None
+
+    optimizer = request.app.state.optimizer
+    optimizer.accept_rebuild(
+        campaign_key,
+        method=method,
+        brewer=brewer,
+        overrides=bean.parameter_overrides,
+    )
+
+    # Redirect to trigger a fresh recommendation with the new params
+    return RedirectResponse(url="/brew/recommend", status_code=303)
+
+
+@router.post("/decline-rebuild", response_class=HTMLResponse)
+async def decline_rebuild_route(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    """Decline the campaign rebuild prompt — increment the decline counter."""
+    bean = _require_active_bean(request, db)
+    if not bean:
+        return RedirectResponse(url="/beans", status_code=303)
+
+    form = await request.form()
+    campaign_key = str(form.get("campaign_key", ""))
+
+    optimizer = request.app.state.optimizer
+    optimizer.decline_rebuild(campaign_key)
+
+    return RedirectResponse(url="/brew", status_code=303)

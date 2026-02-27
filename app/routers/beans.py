@@ -13,7 +13,7 @@ from app.database import get_db
 from app.models.bag import Bag
 from app.models.bean import Bean
 from app.models.measurement import Measurement
-from app.services.optimizer import DEFAULT_BOUNDS
+from app.services.parameter_registry import get_default_bounds
 
 router = APIRouter(prefix="/beans", tags=["beans"])
 templates = Jinja2Templates(directory="app/templates")
@@ -151,7 +151,11 @@ async def bean_detail(request: Request, bean_id: str, db: Session = Depends(get_
     return templates.TemplateResponse(
         request,
         "beans/detail.html",
-        {"bean": bean_data, "active_bean": active_bean, "default_bounds": DEFAULT_BOUNDS},
+        {
+            "bean": bean_data,
+            "active_bean": active_bean,
+            "default_bounds": get_default_bounds("espresso"),
+        },
     )
 
 
@@ -200,7 +204,7 @@ async def update_overrides(
     overrides = {}
     invalid_params = []
 
-    for param, (default_min, default_max) in DEFAULT_BOUNDS.items():
+    for param, (default_min, default_max) in get_default_bounds("espresso").items():
         min_key = f"{param}_min"
         max_key = f"{param}_max"
         min_val = form.get(min_key, "").strip()
@@ -234,7 +238,7 @@ async def update_overrides(
             {
                 "bean": bean_data,
                 "active_bean": active_bean,
-                "default_bounds": DEFAULT_BOUNDS,
+                "default_bounds": get_default_bounds("espresso"),
                 "error": error_msg,
             },
             status_code=422,
