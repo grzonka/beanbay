@@ -1,0 +1,28 @@
+BeanBay
+Copyright 2026 Florian Grzonka
+
+This product includes software developed by third parties:
+
+- BayBE (https://github.com/emdgroup/baybe) — Apache-2.0
+  Copyright 2022-2025 Merck KGaA, Darmstadt, Germany
+
+- FastAPI (https://github.com/fastapi/fastapi) — MIT
+  Copyright Sebastian Ramirez
+
+- SQLAlchemy (https://github.com/sqlalchemy/sqlalchemy) — MIT
+  Copyright 2005-2025 SQLAlchemy Authors and Contributors
+
+- daisyUI (https://github.com/saadeghi/daisyui) — MIT
+  Copyright 2020 Pouya Saadeghi
+
+- Tailwind CSS (https://github.com/tailwindlabs/tailwindcss) — MIT
+  Copyright Tailwind Labs, Inc.
+
+- htmx (https://github.com/bigskysoftware/htmx) — BSD-2-Clause
+  Copyright 2020 Big Tree Technology LLC
+
+- Chart.js (https://github.com/chartjs/Chart.js) — MIT
+  Copyright 2014-2025 Chart.js Contributors
+
+- PyTorch (https://github.com/pytorch/pytorch) — BSD-3-Clause
+  Copyright 2016 Facebook, Inc.
