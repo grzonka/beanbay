@@ -71,6 +71,7 @@
     border: 1px solid oklch(30% 0.02 55);
     border-radius: 0.625rem;
     padding: 1rem;
+    position: relative;
   }
 
   /* Recipe value — large readable numbers for arm's-length viewing */
@@ -435,13 +436,19 @@
     font-size: 1rem;
   }
 
-  /* ── Param info icon — visible circular "i" badge for recipe tooltips ── */
+  /* ── Param info icon — circular "i" badge positioned top-right of recipe card ── */
+  .param-info-corner {
+    position: absolute;
+    top: 0.625rem;
+    right: 0.625rem;
+  }
+
   .param-info-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     background: oklch(65% 0.122 54);
     color: oklch(20% 0.030 67);
@@ -449,7 +456,6 @@
     font-weight: 700;
     font-style: italic;
     line-height: 1;
-    vertical-align: middle;
     flex-shrink: 0;
   }
 }

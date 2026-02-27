@@ -17,14 +17,12 @@
   {% set label = _labels.get(name, label_fallback) if _labels else label_fallback %}
   {% set desc = _descs.get(name, '') if _descs else '' %}
   <div class="recipe-param" data-param="{{ name }}">
-    <span class="recipe-label">
-      {{ label }}
-      {% if desc %}
-        <span class="tooltip tooltip-top ml-0.5 cursor-help align-middle" data-tip="{{ desc }}">
-          <span class="param-info-icon">i</span>
-        </span>
-      {% endif %}
-    </span>
+    {% if desc %}
+      <span class="param-info-corner cursor-help" title="{{ desc }}">
+        <span class="param-info-icon">i</span>
+      </span>
+    {% endif %}
+    <span class="recipe-label">{{ label }}</span>
     <span class="recipe-value">
       {% if is_badge %}
         <span class="badge badge-outline badge-sm">{{ value | replace("_", " ") }}</span>

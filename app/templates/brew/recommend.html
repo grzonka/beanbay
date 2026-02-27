@@ -10,7 +10,7 @@
 
 {% block content %}
 <div class="flex items-center justify-between mb-6 min-h-12">
-  <h1 class="text-xl font-bold">This Shot</h1>
+  <h1 class="text-xl font-bold">{% if method == 'espresso' or not method %}This Shot{% else %}This Brew{% endif %}</h1>
   <a href="/brew" class="btn btn-ghost btn-sm">← Back</a>
 </div>
 

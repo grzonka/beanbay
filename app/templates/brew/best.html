@@ -141,9 +141,9 @@
 
 {% else %}
   <div class="text-center py-8 text-base-content/50">
-    <div class="text-lg font-semibold text-base-content/70 mb-2">No shots yet</div>
+    <div class="text-lg font-semibold text-base-content/70 mb-2">No {% if method == 'espresso' or not method %}shots{% else %}brews{% endif %} yet</div>
     <div class="mb-4">
-      Get a recommendation and rate your first shot to see the best recipe here.
+      Get a recommendation and rate your first {% if method == 'espresso' or not method %}shot{% else %}brew{% endif %} to see the best recipe here.
     </div>
     <a href="/brew" class="btn btn-primary">Get Recommendation</a>
   </div>
