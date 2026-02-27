@@ -4,11 +4,13 @@
 
 **Self-hosted coffee optimization powered by Bayesian learning.**
 
-BeanBay is a phone-first web app for dialing in espresso recipes. It uses [BayBE](https://github.com/emdgroup/baybe) (Bayesian optimization) to learn from each brew and recommend better recipes over time. The loop: get a recommendation → brew → taste → rate → repeat. BayBE improves its suggestions with every shot.
+BeanBay is a phone-first web app for dialing in coffee recipes. It uses [BayBE](https://github.com/emdgroup/baybe) (Bayesian optimization) to learn from each brew and recommend better recipes over time. The loop: get a recommendation → brew → taste → rate → repeat. BayBE improves its suggestions with every shot.
 
-Runs as a single Docker container. No cloud, no accounts — just your espresso machine and a browser.
+Supports 7 brew methods — espresso, pour-over, french press, AeroPress, Turkish, moka pot, and cold brew — with equipment-aware parameters that adapt to your specific gear.
 
-**Stack:** FastAPI · Jinja2/htmx · SQLite · BayBE · Docker
+Runs as a single Docker container. No cloud, no accounts — just your setup and a browser.
+
+**Stack:** FastAPI · Jinja2/htmx · Tailwind CSS/daisyUI · SQLite · BayBE · Docker
 
 ---
 
@@ -30,7 +32,7 @@ The optimizer starts with random exploration to map the parameter space, then pr
   <img src="assets/1.png" width="250" alt="Navigation sidebar"/>
 </p>
 
-**Track your progress** with optimization status, score charts, and parameter maps. **Manage your equipment** — grinders, brewers, filters, water recipes — organized into brew setups. Supports both espresso and pour-over methods with transfer learning across similar beans.
+**Track your progress** with optimization status, score charts, and parameter maps. **Manage your equipment** — grinders, brewers, filters, water recipes — organized into brew setups that define which parameters the optimizer tunes. Transfer learning across similar beans gives smarter first recommendations.
 
 ---
 
