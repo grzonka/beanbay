@@ -47,7 +47,7 @@ def _build_shot_dicts(
 
     shots = []
     for m in measurements:
-        brew_ratio = round(m.target_yield / m.dose_in, 2) if m.dose_in else None
+        brew_ratio = round(m.target_yield / m.dose_in, 2) if m.dose_in and m.target_yield else None
         tags = []
         if m.flavor_tags:
             try:
