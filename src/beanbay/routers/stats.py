@@ -284,3 +284,172 @@ def get_bean_stats(session: SessionDep) -> BeanStatsRead:
         avg_bag_weight_g=round(bag_agg.avg_w, 2) if bag_agg.avg_w is not None else None,
         avg_bag_price=round(bag_agg.avg_p, 2) if bag_agg.avg_p is not None else None,
     )
+
+
+def _flavor_tag_counts(session, link_model, entity_conditions):
+    """Query top flavor tags through a M2M link table.
+
+    Parameters
+    ----------
+    session : Session
+        DB session.
+    link_model : type
+        The M2M link model (e.g. BrewTasteFlavorTagLink).
+    entity_conditions : list
+        WHERE conditions filtering which link table rows to include.
+
+    Returns
+    -------
+    list[FlavorTagCount]
+    """
+    rows = session.exec(
+        select(
+            FlavorTag.id,
+            FlavorTag.name,
+            sa_func.count().label("cnt"),
+        )
+        .join(link_model, link_model.flavor_tag_id == FlavorTag.id)
+        .where(*entity_conditions)
+        .group_by(FlavorTag.id, FlavorTag.name)
+        .order_by(sa_func.count().desc())
+    ).all()
+    return [
+        FlavorTagCount(flavor_tag_id=r[0], flavor_tag_name=r[1], count=r[2])
+        for r in rows
+    ]
+
+
+@router.get("/stats/taste", response_model=TasteStatsRead)
+def get_taste_stats(
+    session: SessionDep,
+    person_id: OptionalPersonIdDep,
+) -> TasteStatsRead:
+    """Aggregated sensory statistics.
+
+    Parameters
+    ----------
+    session : Session
+        Database session.
+    person_id : uuid.UUID | None
+        Optional person filter resolved by dependency.
+
+    Returns
+    -------
+    TasteStatsRead
+        Aggregated taste statistics for both brews and beans.
+    """
+    # --- Brew Taste ---
+    brew_conditions = [Brew.retired_at.is_(None)]  # type: ignore[union-attr]
+    if person_id is not None:
+        brew_conditions.append(Brew.person_id == person_id)
+
+    bt_agg = session.exec(
+        select(
+            sa_func.count().label("total"),
+            sa_func.avg(BrewTaste.score),
+            sa_func.avg(BrewTaste.acidity),
+            sa_func.avg(BrewTaste.sweetness),
+            sa_func.avg(BrewTaste.body),
+            sa_func.avg(BrewTaste.bitterness),
+            sa_func.avg(BrewTaste.balance),
+            sa_func.avg(BrewTaste.aftertaste),
+        )
+        .join(Brew, Brew.id == BrewTaste.brew_id)
+        .where(*brew_conditions)
+    ).one()
+
+    # Best brew taste score
+    best_bt = session.exec(
+        select(BrewTaste.score, BrewTaste.brew_id)
+        .join(Brew, Brew.id == BrewTaste.brew_id)
+        .where(*brew_conditions, BrewTaste.score.is_not(None))  # type: ignore[union-attr]
+        .order_by(BrewTaste.score.desc())  # type: ignore[union-attr]
+        .limit(1)
+    ).first()
+
+    # Brew taste flavor tags
+    bt_link_conditions = [
+        BrewTasteFlavorTagLink.brew_taste_id.in_(  # type: ignore[union-attr]
+            select(BrewTaste.id)
+            .join(Brew, Brew.id == BrewTaste.brew_id)
+            .where(*brew_conditions)
+        )
+    ]
+    bt_tags = _flavor_tag_counts(session, BrewTasteFlavorTagLink, bt_link_conditions)
+
+    brew_taste = BrewTasteStats(
+        total_rated=bt_agg[0] or 0,
+        avg_axes=BrewTasteAxisAverages(
+            score=_r(bt_agg[1]),
+            acidity=_r(bt_agg[2]),
+            sweetness=_r(bt_agg[3]),
+            body=_r(bt_agg[4]),
+            bitterness=_r(bt_agg[5]),
+            balance=_r(bt_agg[6]),
+            aftertaste=_r(bt_agg[7]),
+        ),
+        best_score=best_bt[0] if best_bt else None,
+        best_brew_id=best_bt[1] if best_bt else None,
+        top_flavor_tags=bt_tags,
+    )
+
+    # --- Bean Taste ---
+    bean_conditions = [Bean.retired_at.is_(None)]  # type: ignore[union-attr]
+    rating_conditions = [BeanRating.retired_at.is_(None)]  # type: ignore[union-attr]
+    if person_id is not None:
+        rating_conditions.append(BeanRating.person_id == person_id)
+
+    bnt_agg = session.exec(
+        select(
+            sa_func.count().label("total"),
+            sa_func.avg(BeanTaste.score),
+            sa_func.avg(BeanTaste.acidity),
+            sa_func.avg(BeanTaste.sweetness),
+            sa_func.avg(BeanTaste.body),
+            sa_func.avg(BeanTaste.complexity),
+            sa_func.avg(BeanTaste.aroma),
+            sa_func.avg(BeanTaste.clean_cup),
+        )
+        .join(BeanRating, BeanRating.id == BeanTaste.bean_rating_id)
+        .join(Bean, Bean.id == BeanRating.bean_id)
+        .where(*bean_conditions, *rating_conditions)
+    ).one()
+
+    # Best bean taste score → resolve bean_id through bean_rating
+    best_bnt = session.exec(
+        select(BeanTaste.score, BeanRating.bean_id)
+        .join(BeanRating, BeanRating.id == BeanTaste.bean_rating_id)
+        .join(Bean, Bean.id == BeanRating.bean_id)
+        .where(*bean_conditions, *rating_conditions, BeanTaste.score.is_not(None))  # type: ignore[union-attr]
+        .order_by(BeanTaste.score.desc())  # type: ignore[union-attr]
+        .limit(1)
+    ).first()
+
+    # Bean taste flavor tags
+    bnt_link_conditions = [
+        BeanTasteFlavorTagLink.bean_taste_id.in_(  # type: ignore[union-attr]
+            select(BeanTaste.id)
+            .join(BeanRating, BeanRating.id == BeanTaste.bean_rating_id)
+            .join(Bean, Bean.id == BeanRating.bean_id)
+            .where(*bean_conditions, *rating_conditions)
+        )
+    ]
+    bnt_tags = _flavor_tag_counts(session, BeanTasteFlavorTagLink, bnt_link_conditions)
+
+    bean_taste = BeanTasteStats(
+        total_rated=bnt_agg[0] or 0,
+        avg_axes=BeanTasteAxisAverages(
+            score=_r(bnt_agg[1]),
+            acidity=_r(bnt_agg[2]),
+            sweetness=_r(bnt_agg[3]),
+            body=_r(bnt_agg[4]),
+            complexity=_r(bnt_agg[5]),
+            aroma=_r(bnt_agg[6]),
+            clean_cup=_r(bnt_agg[7]),
+        ),
+        best_score=best_bnt[0] if best_bnt else None,
+        best_bean_id=best_bnt[1] if best_bnt else None,
+        top_flavor_tags=bnt_tags,
+    )
+
+    return TasteStatsRead(brew_taste=brew_taste, bean_taste=bean_taste)

@@ -304,3 +304,102 @@ class TestBeanStats:
         data = resp.json()
         assert data["total_beans"] == 0
         assert data["total_bags"] == 0
+
+
+# ======================================================================
+# GET /stats/taste
+# ======================================================================
+
+
+class TestTasteStats:
+    """Tests for GET /api/v1/stats/taste."""
+
+    def test_empty_state(self, client):
+        """No tastes → zero rated, None averages."""
+        resp = client.get(STATS_TASTE)
+        assert resp.status_code == 200
+        data = resp.json()
+        bt = data["brew_taste"]
+        assert bt["total_rated"] == 0
+        assert bt["best_score"] is None
+        assert bt["best_brew_id"] is None
+        assert bt["top_flavor_tags"] == []
+        for axis in ("score", "acidity", "sweetness", "body", "bitterness", "balance", "aftertaste"):
+            assert bt["avg_axes"][axis] is None
+
+        bnt = data["bean_taste"]
+        assert bnt["total_rated"] == 0
+        assert bnt["best_score"] is None
+        assert bnt["best_bean_id"] is None
+
+    def test_brew_taste_stats(self, client):
+        """Seed brew tastes and verify averages."""
+        person_id = _create_person(client)
+        bean_id = _create_bean(client)
+        bag_id = _create_bag(client, bean_id)
+        method_id = _create_brew_method(client)
+        setup_id = _create_brew_setup(client, method_id)
+        tag_id = _create_flavor_tag(client, "chocolate")
+
+        brew1_id = _create_brew(client, bag_id, setup_id, person_id, dose=18.0)
+        brew2_id = _create_brew(client, bag_id, setup_id, person_id, dose=20.0)
+
+        # Add taste to both brews (scores must be 0-10)
+        client.put(
+            f"{BREWS}/{brew1_id}/taste",
+            json={"score": 7.0, "acidity": 6.0, "flavor_tag_ids": [tag_id]},
+        )
+        client.put(
+            f"{BREWS}/{brew2_id}/taste",
+            json={"score": 9.0, "acidity": 8.0, "flavor_tag_ids": [tag_id]},
+        )
+
+        resp = client.get(STATS_TASTE, params={"person_id": person_id})
+        assert resp.status_code == 200
+        bt = resp.json()["brew_taste"]
+        assert bt["total_rated"] == 2
+        assert bt["avg_axes"]["score"] == 8.0
+        assert bt["avg_axes"]["acidity"] == 7.0
+        assert bt["best_score"] == 9.0
+        assert bt["best_brew_id"] == brew2_id
+        assert len(bt["top_flavor_tags"]) == 1
+        assert bt["top_flavor_tags"][0]["count"] == 2
+
+    def test_bean_taste_stats(self, client):
+        """Seed bean tastes and verify averages."""
+        person_id = _create_person(client)
+        bean_id = _create_bean(client)
+
+        # Create two ratings with tastes (scores 0-10, use PUT on /bean-ratings/{id}/taste)
+        r1 = client.post(
+            f"{BEANS}/{bean_id}/ratings",
+            json={"person_id": person_id},
+        )
+        assert r1.status_code == 201
+        rating1_id = r1.json()["id"]
+        resp = client.put(
+            f"{BEAN_RATINGS}/{rating1_id}/taste",
+            json={"score": 7.0, "complexity": 6.0},
+        )
+        assert resp.status_code in (200, 201)
+
+        r2 = client.post(
+            f"{BEANS}/{bean_id}/ratings",
+            json={"person_id": person_id},
+        )
+        assert r2.status_code == 201
+        rating2_id = r2.json()["id"]
+        resp = client.put(
+            f"{BEAN_RATINGS}/{rating2_id}/taste",
+            json={"score": 9.0, "complexity": 8.0},
+        )
+        assert resp.status_code in (200, 201)
+
+        resp = client.get(STATS_TASTE, params={"person_id": person_id})
+        assert resp.status_code == 200
+        bnt = resp.json()["bean_taste"]
+        assert bnt["total_rated"] == 2
+        assert bnt["avg_axes"]["score"] == 8.0
+        assert bnt["avg_axes"]["complexity"] == 7.0
+        assert bnt["best_score"] == 9.0
+        assert bnt["best_bean_id"] == bean_id
