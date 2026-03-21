@@ -2,7 +2,7 @@
 import { useState, type ReactNode } from 'react';
 import {
   Autocomplete, Chip, Dialog, DialogTitle, DialogContent, TextField,
-  createFilterOptions, type AutocompleteRenderGetTagProps,
+  createFilterOptions, type AutocompleteRenderGetTagProps, type FilterOptionsState,
 } from '@mui/material';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -83,7 +83,7 @@ export default function AutocompleteCreate<T extends OptionType>({
           }
         }}
         filterOptions={(opts, params) => {
-          const filtered = filter(opts, params);
+          const filtered = filter(opts as OptionType[], params as FilterOptionsState<OptionType>) as T[];
           if (renderCreateForm && params.inputValue !== '' && !opts.some((o) => o.name === params.inputValue)) {
             filtered.push({ id: '', name: `+ Create "${params.inputValue}"`, inputValue: params.inputValue } as T);
           }

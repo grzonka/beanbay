@@ -29,3 +29,4 @@ tools/
 .DS_Store
 src/beanbay/_version.py
 beanbay.db*
+.superpowers/
