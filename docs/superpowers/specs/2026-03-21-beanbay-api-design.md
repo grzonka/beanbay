@@ -348,10 +348,13 @@ are a sub-collection of Water, managed via delete-all-and-reinsert on Water upda
 | person_id | FK -> Person | who brewed |
 | grind_setting | float? | canonical numeric (null if preground) |
 | temperature | float? | celsius (null for cold-brew) |
+| pressure | float? | bar (null for brewers without adjustable pressure) |
+| flow_rate | float? | ml/s (null for brewers without flow control) |
 | dose | float | grams |
 | yield_amount | float? | grams |
 | pre_infusion_time | float? | seconds |
 | total_time | float? | seconds |
+| stop_mode_id | FK -> StopMode? | which stop mode was used for this brew |
 | is_failed | bool | default=False |
 | notes | str? | |
 | brewed_at | datetime | when the brew happened |
@@ -388,7 +391,7 @@ to build a synced slider + per-ring input widget entirely from API data.
 |---|---|---|
 | id | UUID4 PK | |
 | brew_id | FK -> Brew, unique | |
-| score | float? | 0-10 |
+| score | float? | 0-10, overall assessment — **the BayBE optimization objective** |
 | acidity | float? | 0-10 |
 | sweetness | float? | 0-10 |
 | body | float? | 0-10 |
@@ -398,6 +401,10 @@ to build a synced slider + per-ring input widget entirely from API data.
 | notes | str? | |
 | created_at | datetime | |
 | updated_at | datetime | |
+
+`score` is the overall taste assessment and serves as the primary scalar objective
+for BayBE optimization. Sub-dimensions (acidity, sweetness, etc.) are informational
+and help the user understand *why* a brew scored the way it did.
 
 No `retired_at` — taste records have no independent lifecycle; they are created/
 deleted alongside their parent Brew.
@@ -481,6 +488,24 @@ Brewer --N:M--> BrewMethod    (via brewer_methods)
 Brewer --N:M--> StopMode      (via brewer_stop_modes)
 ```
 
+### 2.10 Future BayBE Integration Notes
+
+BayBE (Bayesian optimization) integration is out of scope for this phase, but the
+data model is designed to support it without schema changes:
+
+- **Campaign key:** `(brew_setup_id, bean_id)` — the natural compound key for an
+  optimization campaign. A future `Campaign` table will FK to both.
+- **Search space:** Grinder `grind_range` + brewer capability bounds (`temp_min/max`,
+  `pressure_min/max`, etc.) provide all parameter ranges BayBE needs.
+- **Observations:** Brew records (grind_setting, temperature, pressure, flow_rate,
+  dose, yield_amount, pre_infusion_time, total_time) + `BrewTaste.score` as the
+  objective. All stored as canonical floats — no conversion needed for BayBE.
+- **Tier gating:** `derive_tier()` determines which parameters to include in the
+  search space per brewer.
+
+No additional models or columns will be needed for BayBE — only a Campaign/
+PendingRecommendation table and a service layer on top of existing data.
+
 ---
 
 ## 3. API Design
@@ -528,9 +553,17 @@ matching to power frontend autocomplete.
 | DELETE | `/beans/{id}` | soft-delete |
 | GET | `/beans/{bean_id}/bags` | list bags for a bean |
 | POST | `/beans/{bean_id}/bags` | create bag |
+| GET | `/bags` | top-level list, filterable by bean_id/is_preground/opened_after |
 | GET | `/bags/{id}` | detail (top-level for direct access) |
 | PATCH | `/bags/{id}` | update |
 | DELETE | `/bags/{id}` | soft-delete |
+
+`BeanRead` in list responses includes `latest_score: float | None` (the most recent
+rating score across all people) so the frontend can show ratings in bean list views
+without extra calls.
+
+`GET /bags` enables a "pantry" view showing all active bags across all beans,
+sortable by roast_date or opened_at. Also useful for the brew form's bag picker.
 
 ### 3.4 Equipment
 
@@ -553,7 +586,7 @@ boundary (same layer as unit conversion). No separate convert endpoint.
 |---|---|---|
 | GET | `/brewers` | list |
 | POST | `/brewers` | create, body includes method_ids, stop_mode_ids |
-| GET | `/brewers/{id}` | detail, includes computed `tier` |
+| GET | `/brewers/{id}` | detail, includes computed `tier`, nested `methods` and `stop_modes` |
 | PATCH | `/brewers/{id}` | update |
 | DELETE | `/brewers/{id}` | soft-delete |
 
@@ -591,7 +624,7 @@ Water create/update example:
 
 | Method | Path | Notes |
 |---|---|---|
-| GET | `/brew-setups` | list, filterable by method/grinder/brewer |
+| GET | `/brew-setups` | list, filterable by method/grinder/brewer/has_grinder |
 | POST | `/brew-setups` | create |
 | GET | `/brew-setups/{id}` | detail with nested equipment names |
 | PATCH | `/brew-setups/{id}` | update |
@@ -603,16 +636,30 @@ Water create/update example:
 |---|---|---|
 | GET | `/brews` | list, filterable by person/bean/bag/setup/date range |
 | POST | `/brews` | create, body includes optional nested `taste` object |
-| GET | `/brews/{id}` | detail with nested taste, setup, bag->bean |
+| GET | `/brews/{id}` | detail with full nested data |
 | PATCH | `/brews/{id}` | update brew fields |
 | DELETE | `/brews/{id}` | soft-delete |
 | PUT | `/brews/{id}/taste` | create or replace taste assessment |
 | PATCH | `/brews/{id}/taste` | partial update taste |
+| DELETE | `/brews/{id}/taste` | remove taste assessment (204) |
 
 Brew responses include both `grind_setting` (canonical float) and
 `grind_setting_display` (human-readable notation). Brew create/update accepts
 either — see Section 2.6 for details. Conversion uses the brew-setup's grinder
 ring config.
+
+**List vs detail nesting:**
+
+- `GET /brews` (list) uses `BrewListRead`: includes `bag.bean.name`,
+  `brew_setup.brew_method.name`, `person.name`, `taste.score`,
+  `grind_setting_display`. Enough for a list view without extra calls.
+- `GET /brews/{id}` (detail) uses `BrewRead`: full nested setup with equipment,
+  full bag with bean, full taste with flavor tags, all parameters.
+
+**Filtering for BayBE campaigns:** `GET /brews` supports AND-composed filters.
+`?brew_setup_id=X&bean_id=Y` returns all brews for that setup + bean combination
+across all bags. The `bean_id` filter resolves through `Bag.bean_id`, so the
+caller does not need to enumerate individual bag IDs.
 
 ### 3.7 Bean Ratings
 
@@ -624,6 +671,7 @@ ring config.
 | DELETE | `/bean-ratings/{id}` | soft-delete |
 | PUT | `/bean-ratings/{id}/taste` | create or replace taste |
 | PATCH | `/bean-ratings/{id}/taste` | partial update taste |
+| DELETE | `/bean-ratings/{id}/taste` | remove taste assessment (204) |
 
 BeanRatings are append-only by design (new rating = new row). No PATCH on BeanRating
 itself — to "update" a rating, create a new one. DELETE (soft-delete) is available
@@ -658,7 +706,8 @@ library handles conversion at the serialization boundary. Grinder display
 conversion (float <-> notation) runs at the same layer.
 
 **Fields subject to unit conversion:**
-- Brew: `dose` (g/oz), `yield_amount` (g/oz), `temperature` (C/F)
+- Brew: `dose` (g/oz), `yield_amount` (g/oz), `temperature` (C/F),
+  `pressure` (bar/psi), `flow_rate` (ml/s, fl oz/s)
 - Bag: `weight` (g/oz)
 - Brewer: `temp_min`, `temp_max`, `temp_step` (C/F), `pressure_min`, `pressure_max`
   (bar/psi), `saturation_flow_rate` (ml/s, fl oz/s)
@@ -878,3 +927,12 @@ Package manager: uv (per project conventions).
 | `PaginatedResponse` uses `pydantic.BaseModel` | SQLModel metaclass has issues with Generic types |
 | Bag field named `weight` (not `size_grams`) | Unit-agnostic naming; `?units` controls the value |
 | `Bag.price` has no currency | Always user's local currency; no conversion needed |
+| Brew has pressure + flow_rate fields | Nullable; needed for BayBE optimization on Tier 4-5 brewers |
+| Brew has stop_mode_id | Records which stop mode was used; BayBE covariate |
+| BrewTaste.score is the BayBE objective | Overall assessment; sub-dimensions are informational |
+| Top-level `GET /bags` endpoint | Enables pantry view and bag picker without N+1 |
+| BeanRead includes latest_score in lists | Avoids extra calls for bean list with ratings |
+| BrewListRead vs BrewRead schemas | List includes summary nesting; detail includes full nesting |
+| AND-composed brew filters support BayBE campaigns | `?brew_setup_id=X&bean_id=Y` across all bags |
+| Stats/dashboard endpoint deferred | Frontend computes from raw data initially; add when needed |
+| No inline lookup creation on BeanCreate | Frontend uses separate POST to create new lookups; simpler API |
