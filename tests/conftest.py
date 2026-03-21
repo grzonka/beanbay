@@ -2,6 +2,7 @@ import pytest
 from sqlalchemy import event
 from sqlmodel import Session, SQLModel, create_engine
 
+import beanbay.models  # noqa: F401 — register all models with metadata
 from beanbay.database import get_session
 from beanbay.main import app
 
