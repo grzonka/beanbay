@@ -6,7 +6,12 @@ from beanbay.models.bean import (  # noqa: F401
     BeanProcessLink,
     BeanVarietyLink,
 )
-from beanbay.models.brew import BrewSetup  # noqa: F401
+from beanbay.models.brew import (  # noqa: F401
+    Brew,
+    BrewSetup,
+    BrewTaste,
+    BrewTasteFlavorTagLink,
+)
 from beanbay.models.equipment import (  # noqa: F401
     Brewer,
     BrewerMethodLink,
@@ -17,6 +22,11 @@ from beanbay.models.equipment import (  # noqa: F401
     WaterMineral,
 )
 from beanbay.models.person import Person  # noqa: F401
+from beanbay.models.rating import (  # noqa: F401
+    BeanRating,
+    BeanTaste,
+    BeanTasteFlavorTagLink,
+)
 from beanbay.models.tag import (  # noqa: F401
     BeanVariety,
     BrewMethod,

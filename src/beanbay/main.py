@@ -13,8 +13,10 @@ from beanbay.routers.lookup import (
 )
 from beanbay.routers.beans import router as beans_router
 from beanbay.routers.brew_setups import router as brew_setups_router
+from beanbay.routers.brews import router as brews_router
 from beanbay.routers.equipment import router as equipment_router
 from beanbay.routers.people import router as people_router
+from beanbay.routers.ratings import router as ratings_router
 
 
 @asynccontextmanager
@@ -55,6 +57,9 @@ app.include_router(beans_router, prefix="/api/v1")
 
 # Brew Setups router
 app.include_router(brew_setups_router, prefix="/api/v1")
+
+# Ratings router
+app.include_router(ratings_router, prefix="/api/v1")
 
 
 @app.get("/health")
