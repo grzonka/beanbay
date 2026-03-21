@@ -58,6 +58,9 @@ app.include_router(beans_router, prefix="/api/v1")
 # Brew Setups router
 app.include_router(brew_setups_router, prefix="/api/v1")
 
+# Brews router
+app.include_router(brews_router, prefix="/api/v1")
+
 # Ratings router
 app.include_router(ratings_router, prefix="/api/v1")
 
