@@ -335,7 +335,8 @@ Recharts `RadarChart` for taste profiles. Adapts axes to context:
 ### Bags (`/bags`, inline on bean detail)
 
 **List page:**
-- DataGrid: bean name, roast date, weight, price, vendor, opened/frozen status
+- DataGrid columns from `BagRead`: roast_date, weight, price, is_preground, opened_at, frozen_at. Note: `BagRead` has `bean_id` but not `bean_name` — the list needs a client-side lookup join (fetch beans once, map by ID) or a backend enhancement to denormalize `bean_name` into `BagRead`.
+- Filters: `bean_id`, `is_preground`, `opened_after`, `include_retired` (matching API query params)
 
 **Form fields:**
 - `weight` (required, grams), `roast_date`, `opened_at`, `bought_at`, `best_date`, `price`, `vendor` (AutocompleteCreate), `storage_type` (AutocompleteCreate), `is_preground` (toggle), `frozen_at`, `thawed_at`, `notes`
@@ -343,7 +344,7 @@ Recharts `RadarChart` for taste profiles. Adapts axes to context:
 ### Brews (`/brews`, `/brews/new`, `/brews/:brewId`)
 
 **List page:**
-- DataGrid: bean name, brew method, dose, yield, grind setting, taste score, brewed_at, is_failed badge
+- DataGrid columns from `BrewListRead`: bean_name, brew_method_name, person_name, dose, grind_setting_display, temperature, score, brewed_at, is_failed badge
 - Filters: `bag_id`, `bean_id`, `brew_setup_id`, `person_id`, `brewed_after`, `brewed_before`, `include_retired` (all matching API query params)
 
 **Wizard — 3 steps:**
@@ -361,7 +362,7 @@ Recharts `RadarChart` for taste profiles. Adapts axes to context:
 
 **Grinders (`/equipment/grinders`):**
 - DataGrid: name, dial type
-- Form: `name` (required, unique), `dial_type` (select: stepless/stepped), `display_format`, `rings` (dynamic list of `RingConfig`: min, max, step)
+- Form: `name` (required, unique), `dial_type` (select: stepless/stepped), `display_format`, `rings` (dynamic list of `RingConfig`: label, min, max, step)
 
 **Brewers (`/equipment/brewers`):**
 - DataGrid: name, brew methods, capabilities summary
@@ -383,7 +384,7 @@ Recharts `RadarChart` for taste profiles. Adapts axes to context:
 ### Cuppings (`/cuppings`, `/cuppings/:cuppingId`)
 
 **List page:**
-- DataGrid: bean name (via bag), person, total score, cupped_at
+- DataGrid columns from `CuppingRead`: total_score, cupped_at. Note: `CuppingRead` has `bag_id` and `person_id` but no denormalized names — needs client-side lookup join (fetch bags+beans+people, map by ID) or backend enhancement.
 
 **Form fields:**
 - `bag` (AutocompleteCreate, required), `person` (AutocompleteCreate, required), `cupped_at` (datetime)
