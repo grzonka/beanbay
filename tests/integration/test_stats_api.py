@@ -457,3 +457,80 @@ class TestEquipmentStats:
         assert data["top_setups"][0]["brew_count"] == 3
         assert data["most_used_method"] is not None
         assert data["most_used_method"]["brew_count"] == 3
+
+
+# ======================================================================
+# GET /stats/cuppings
+# ======================================================================
+
+
+class TestCuppingStats:
+    """Tests for GET /api/v1/stats/cuppings."""
+
+    def test_empty_state(self, client):
+        """No cuppings → zero counts, None scores."""
+        resp = client.get(STATS_CUPPINGS)
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["total"] == 0
+        assert data["avg_total_score"] is None
+        assert data["best_total_score"] is None
+        assert data["best_cupping_id"] is None
+        assert data["top_flavor_tags"] == []
+
+    def test_with_cuppings(self, client):
+        """Seed cuppings and verify scores."""
+        person_id = _create_person(client)
+        bean_id = _create_bean(client)
+        bag_id = _create_bag(client, bean_id)
+        tag_id = _create_flavor_tag(client)
+
+        c1 = client.post(CUPPINGS, json={
+            "bag_id": bag_id,
+            "person_id": person_id,
+            "cupped_at": _now_iso(),
+            "total_score": 80.0,
+            "flavor_tag_ids": [tag_id],
+        })
+        assert c1.status_code == 201
+
+        c2 = client.post(CUPPINGS, json={
+            "bag_id": bag_id,
+            "person_id": person_id,
+            "cupped_at": _now_iso(),
+            "total_score": 90.0,
+            "flavor_tag_ids": [tag_id],
+        })
+        assert c2.status_code == 201
+        c2_id = c2.json()["id"]
+
+        resp = client.get(STATS_CUPPINGS, params={"person_id": person_id})
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["total"] == 2
+        assert data["avg_total_score"] == 85.0
+        assert data["best_total_score"] == 90.0
+        assert data["best_cupping_id"] == c2_id
+        assert len(data["top_flavor_tags"]) == 1
+        assert data["top_flavor_tags"][0]["count"] == 2
+
+    def test_person_filter(self, client):
+        """Cuppings only count for the specified person."""
+        person_a = _create_person(client)
+        person_b = _create_person(client)
+        bean_id = _create_bean(client)
+        bag_id = _create_bag(client, bean_id)
+
+        client.post(CUPPINGS, json={
+            "bag_id": bag_id, "person_id": person_a,
+            "cupped_at": _now_iso(), "total_score": 80.0,
+        })
+        client.post(CUPPINGS, json={
+            "bag_id": bag_id, "person_id": person_b,
+            "cupped_at": _now_iso(), "total_score": 90.0,
+        })
+
+        resp = client.get(STATS_CUPPINGS, params={"person_id": person_a})
+        assert resp.status_code == 200
+        assert resp.json()["total"] == 1
+        assert resp.json()["avg_total_score"] == 80.0

@@ -549,3 +549,60 @@ def get_equipment_stats(session: SessionDep) -> EquipmentStatsRead:
             id=method_row[0], name=method_row[1], brew_count=method_row[2]
         ) if method_row else None,
     )
+
+
+@router.get("/stats/cuppings", response_model=CuppingStatsRead)
+def get_cupping_stats(
+    session: SessionDep,
+    person_id: OptionalPersonIdDep,
+) -> CuppingStatsRead:
+    """Aggregated cupping session statistics.
+
+    Parameters
+    ----------
+    session : Session
+        Database session.
+    person_id : uuid.UUID | None
+        Optional person filter resolved by dependency.
+
+    Returns
+    -------
+    CuppingStatsRead
+        Aggregated cupping statistics including counts, score averages, and top flavor tags.
+    """
+    conditions = [Cupping.retired_at.is_(None)]  # type: ignore[union-attr]
+    if person_id is not None:
+        conditions.append(Cupping.person_id == person_id)
+
+    agg = session.exec(
+        select(
+            sa_func.count().label("total"),
+            sa_func.avg(Cupping.total_score).label("avg_score"),
+        ).where(*conditions)
+    ).one()
+
+    total = agg[0] or 0
+
+    # Best cupping
+    best = session.exec(
+        select(Cupping.total_score, Cupping.id)
+        .where(*conditions, Cupping.total_score.is_not(None))  # type: ignore[union-attr]
+        .order_by(Cupping.total_score.desc())  # type: ignore[union-attr]
+        .limit(1)
+    ).first()
+
+    # Flavor tags
+    tag_conditions = [
+        CuppingFlavorTagLink.cupping_id.in_(  # type: ignore[union-attr]
+            select(Cupping.id).where(*conditions)
+        )
+    ]
+    tags = _flavor_tag_counts(session, CuppingFlavorTagLink, tag_conditions)
+
+    return CuppingStatsRead(
+        total=total,
+        avg_total_score=_r(agg[1]),
+        best_total_score=best[0] if best else None,
+        best_cupping_id=best[1] if best else None,
+        top_flavor_tags=tags,
+    )
