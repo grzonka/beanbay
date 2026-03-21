@@ -1,6 +1,6 @@
-import { Routes, Route } from 'react-router';
+import { Routes, Route, Link } from 'react-router';
 import { lazy, Suspense } from 'react';
-import { CircularProgress, Box } from '@mui/material';
+import { CircularProgress, Box, Typography, Button } from '@mui/material';
 import AppLayout from '@/layouts/AppLayout';
 
 const DashboardPage = lazy(() => import('@/features/dashboard/DashboardPage'));
@@ -27,6 +27,16 @@ const Loading = () => (
   </Box>
 );
 
+function NotFoundPage() {
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: 2 }}>
+      <Typography variant="h3">404</Typography>
+      <Typography color="text.secondary">Page not found</Typography>
+      <Button component={Link} to="/" variant="contained">Go to Dashboard</Button>
+    </Box>
+  );
+}
+
 export default function App() {
   return (
     <Suspense fallback={<Loading />}>
@@ -49,6 +59,7 @@ export default function App() {
           <Route path="bean-ratings/:ratingId" element={<RatingDetailPage />} />
           <Route path="people" element={<PeoplePage />} />
           <Route path="settings/lookups" element={<LookupsPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </Suspense>

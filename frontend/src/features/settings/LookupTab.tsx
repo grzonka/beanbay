@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { type GridColDef } from '@mui/x-data-grid';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Stack, TextField } from '@mui/material';
+import { Add as AddIcon, Edit as EditIcon, Archive as ArchiveIcon } from '@mui/icons-material';
 import DataTable from '@/components/DataTable';
 import ConfirmDialog from '@/components/ConfirmDialog';
 import { usePaginationParams } from '@/utils/pagination';
@@ -65,6 +65,26 @@ export default function LookupTab({ hooks, columns, fields, entityName }: Lookup
     }
   };
 
+  const columnsWithActions: GridColDef[] = [
+    ...columns,
+    {
+      field: 'actions',
+      headerName: '',
+      width: 100,
+      sortable: false,
+      renderCell: (params) => (
+        <Stack direction="row" spacing={0.5}>
+          <IconButton size="small" aria-label="Edit" onClick={(e) => { e.stopPropagation(); setEditItem(params.row as LookupItem); setFormOpen(true); }}>
+            <EditIcon fontSize="small" />
+          </IconButton>
+          <IconButton size="small" aria-label="Retire" onClick={(e) => { e.stopPropagation(); setDeleteTarget(params.row as LookupItem); }}>
+            <ArchiveIcon fontSize="small" />
+          </IconButton>
+        </Stack>
+      ),
+    },
+  ];
+
   return (
     <>
       <Button variant="outlined" startIcon={<AddIcon />}
@@ -72,7 +92,7 @@ export default function LookupTab({ hooks, columns, fields, entityName }: Lookup
         Add {entityName}
       </Button>
       <DataTable<LookupItem>
-        columns={columns} rows={data?.items ?? []} total={data?.total ?? 0} loading={isLoading}
+        columns={columnsWithActions} rows={data?.items ?? []} total={data?.total ?? 0} loading={isLoading}
         paginationModel={paginationModel} onPaginationModelChange={onPaginationModelChange}
         sortModel={sortModel} onSortModelChange={onSortModelChange}
         search={params.q} onSearchChange={setSearch}

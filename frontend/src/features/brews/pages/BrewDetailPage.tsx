@@ -639,7 +639,9 @@ export default function BrewDetailPage() {
     return <Typography>Brew not found.</Typography>;
   }
 
-  const brewLabel = `Brew #${brew.id.slice(0, 8)}`;
+  const brewLabel = brew.bag?.bean_name
+    ? `${brew.bag.bean_name} — ${new Date(brew.brewed_at).toLocaleDateString()}`
+    : new Date(brew.brewed_at).toLocaleDateString();
 
   return (
     <>

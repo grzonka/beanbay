@@ -66,7 +66,9 @@ export default function CuppingDetailPage() {
   }
 
   const radarData = cuppingToRadar(cupping);
-  const cuppingLabel = `Cupping #${cupping.id.slice(0, 8)}`;
+  const cuppingLabel = cupping.cupped_at
+    ? `${cupping.person_name} — ${new Date(cupping.cupped_at).toLocaleDateString()}`
+    : `Cupping by ${cupping.person_name}`;
 
   return (
     <>
