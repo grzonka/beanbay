@@ -106,3 +106,20 @@ class TestCuppingCRUD:
         resp = client.delete(f"/api/v1/cuppings/{cupping['id']}")
         assert resp.status_code == 200
         assert resp.json()["is_retired"] is True
+
+    def test_cannot_delete_bag_with_active_cupping(self, client):
+        bag_id = _setup_bag(client)
+        person_id = _setup_person(client)
+        client.post("/api/v1/cuppings", json={
+            "bag_id": bag_id, "person_id": person_id,
+            "cupped_at": "2026-03-21T10:00:00",
+        })
+        # Get bean_id from bag
+        bags_resp = client.get("/api/v1/bags")
+        bean_id = None
+        for b in bags_resp.json()["items"]:
+            if b["id"] == bag_id:
+                bean_id = b["bean_id"]
+                break
+        resp = client.delete(f"/api/v1/bags/{bag_id}")
+        assert resp.status_code == 409

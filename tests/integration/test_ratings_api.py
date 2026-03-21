@@ -329,3 +329,29 @@ class TestRatingIncludesPersonName:
         resp = client.get(f"{BEAN_RATINGS}/{rating['id']}")
         assert resp.status_code == 200
         assert resp.json()["person_name"] == "NamedRater9"
+
+
+class TestBeanTasteAxisRework:
+    """Verify BeanTaste uses the new axis set (complexity, clean_cup)."""
+
+    def test_taste_has_new_axes(self, client):
+        """Create a rating with taste including complexity and clean_cup axes."""
+        person_id = _create_person(client, "AxisRater")
+        bean_id = _create_bean(client, "AxisBean")
+
+        taste_data = {
+            "score": 8.0,
+            "acidity": 6.0,
+            "sweetness": 7.0,
+            "body": 7.5,
+            "aroma": 6.5,
+            "complexity": 7.5,
+            "clean_cup": 8.0,
+        }
+        body = _create_rating(client, bean_id, person_id, taste=taste_data)
+
+        taste = body["taste"]
+        assert taste["complexity"] == 7.5
+        assert taste["clean_cup"] == 8.0
+        assert "bitterness" not in taste
+        assert "intensity" not in taste

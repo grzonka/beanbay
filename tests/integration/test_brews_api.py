@@ -528,3 +528,37 @@ class TestBrewCRUD:
         list_resp2 = client.get(BREWS, params={"include_retired": True})
         all_ids = [i["id"] for i in list_resp2.json()["items"]]
         assert brew_id in all_ids
+
+
+class TestBrewTasteAxisRework:
+    """Verify BrewTaste uses the new axis set (balance, aftertaste)."""
+
+    def test_taste_has_new_axes(self, client):
+        """Create a brew with taste including balance and aftertaste axes."""
+        ids = _setup_brew_prereqs(client)
+
+        resp = client.post(
+            BREWS,
+            json={
+                "bag_id": ids["bag_id"],
+                "brew_setup_id": ids["brew_setup_id"],
+                "person_id": ids["person_id"],
+                "dose": 18.0,
+                "brewed_at": _now_iso(),
+                "taste": {
+                    "score": 8.0,
+                    "acidity": 6.0,
+                    "sweetness": 7.0,
+                    "bitterness": 5.0,
+                    "body": 7.5,
+                    "balance": 7.5,
+                    "aftertaste": 8.0,
+                },
+            },
+        )
+        assert resp.status_code == 201
+        taste = resp.json()["taste"]
+        assert taste["balance"] == 7.5
+        assert taste["aftertaste"] == 8.0
+        assert "aroma" not in taste
+        assert "intensity" not in taste

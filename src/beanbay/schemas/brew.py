@@ -9,7 +9,7 @@ from datetime import datetime
 from typing import Any
 
 from pydantic import model_validator
-from sqlmodel import SQLModel
+from sqlmodel import Field, SQLModel
 
 from beanbay.schemas.tag import FlavorTagRead
 
@@ -220,13 +220,13 @@ class BrewTasteBase(SQLModel):
         Free-text tasting notes.
     """
 
-    score: float | None = None
-    acidity: float | None = None
-    sweetness: float | None = None
-    body: float | None = None
-    bitterness: float | None = None
-    balance: float | None = None
-    aftertaste: float | None = None
+    score: float | None = Field(default=None, ge=0, le=10)
+    acidity: float | None = Field(default=None, ge=0, le=10)
+    sweetness: float | None = Field(default=None, ge=0, le=10)
+    body: float | None = Field(default=None, ge=0, le=10)
+    bitterness: float | None = Field(default=None, ge=0, le=10)
+    balance: float | None = Field(default=None, ge=0, le=10)
+    aftertaste: float | None = Field(default=None, ge=0, le=10)
     notes: str | None = None
 
 
@@ -270,13 +270,13 @@ class BrewTasteUpdate(SQLModel):
         Updated flavor tag IDs; ``None`` means don't touch.
     """
 
-    score: float | None = None
-    acidity: float | None = None
-    sweetness: float | None = None
-    body: float | None = None
-    bitterness: float | None = None
-    balance: float | None = None
-    aftertaste: float | None = None
+    score: float | None = Field(default=None, ge=0, le=10)
+    acidity: float | None = Field(default=None, ge=0, le=10)
+    sweetness: float | None = Field(default=None, ge=0, le=10)
+    body: float | None = Field(default=None, ge=0, le=10)
+    bitterness: float | None = Field(default=None, ge=0, le=10)
+    balance: float | None = Field(default=None, ge=0, le=10)
+    aftertaste: float | None = Field(default=None, ge=0, le=10)
     notes: str | None = None
     flavor_tag_ids: list[uuid.UUID] | None = None
 

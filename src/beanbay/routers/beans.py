@@ -19,6 +19,7 @@ from beanbay.models.bean import (
     BeanProcessLink,
     BeanVarietyLink,
 )
+from beanbay.models.cupping import Cupping
 from beanbay.models.tag import (
     BeanVariety,
     FlavorTag,
@@ -844,6 +845,18 @@ def delete_bag(
     db_bag = session.get(Bag, bag_id)
     if db_bag is None:
         raise HTTPException(status_code=404, detail="Bag not found.")
+
+    # Block if active cuppings exist
+    cupping_count: int = session.exec(
+        select(func.count())
+        .select_from(Cupping)
+        .where(Cupping.bag_id == bag_id, Cupping.retired_at.is_(None))  # type: ignore[union-attr]
+    ).one()  # type: ignore[arg-type]
+    if cupping_count > 0:
+        raise HTTPException(
+            status_code=409,
+            detail=f"Cannot retire this bag: {cupping_count} active cupping(s).",
+        )
 
     db_bag.retired_at = datetime.now(timezone.utc)
     session.add(db_bag)

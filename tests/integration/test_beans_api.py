@@ -449,6 +449,9 @@ class TestBeanEnrichment:
             },
         )
         assert resp.status_code == 201
+        origins = resp.json()["origins"]
+        assert len(origins) == 1
+        assert origins[0]["percentage"] == 60.0
 
     def test_bean_origin_plain_ids_still_works(self, client):
         """Create a bean with plain origin_ids (backwards compat)."""

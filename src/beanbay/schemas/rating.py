@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Any
 
 from pydantic import model_validator
-from sqlmodel import SQLModel
+from sqlmodel import Field, SQLModel
 
 from beanbay.schemas.tag import FlavorTagRead
 
@@ -38,13 +38,13 @@ class BeanTasteBase(SQLModel):
         Free-text tasting notes.
     """
 
-    score: float | None = None
-    acidity: float | None = None
-    sweetness: float | None = None
-    body: float | None = None
-    complexity: float | None = None
-    aroma: float | None = None
-    clean_cup: float | None = None
+    score: float | None = Field(default=None, ge=0, le=10)
+    acidity: float | None = Field(default=None, ge=0, le=10)
+    sweetness: float | None = Field(default=None, ge=0, le=10)
+    body: float | None = Field(default=None, ge=0, le=10)
+    complexity: float | None = Field(default=None, ge=0, le=10)
+    aroma: float | None = Field(default=None, ge=0, le=10)
+    clean_cup: float | None = Field(default=None, ge=0, le=10)
     notes: str | None = None
 
 
@@ -87,13 +87,13 @@ class BeanTasteUpdate(SQLModel):
         Flavor tag IDs to replace the M2M list.
     """
 
-    score: float | None = None
-    acidity: float | None = None
-    sweetness: float | None = None
-    body: float | None = None
-    complexity: float | None = None
-    aroma: float | None = None
-    clean_cup: float | None = None
+    score: float | None = Field(default=None, ge=0, le=10)
+    acidity: float | None = Field(default=None, ge=0, le=10)
+    sweetness: float | None = Field(default=None, ge=0, le=10)
+    body: float | None = Field(default=None, ge=0, le=10)
+    complexity: float | None = Field(default=None, ge=0, le=10)
+    aroma: float | None = Field(default=None, ge=0, le=10)
+    clean_cup: float | None = Field(default=None, ge=0, le=10)
     notes: str | None = None
     flavor_tag_ids: list[uuid.UUID] | None = None
 
