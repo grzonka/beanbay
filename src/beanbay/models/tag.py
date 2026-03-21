@@ -11,6 +11,7 @@ from sqlalchemy import func
 from sqlmodel import Field, SQLModel
 
 from beanbay.models.base import uuid4_default
+from beanbay.models.enums import CoffeeSpecies, ProcessCategory
 
 
 class FlavorTag(SQLModel, table=True):
@@ -48,6 +49,10 @@ class Origin(SQLModel, table=True):
         Primary key.
     name : str
         Unique origin name.
+    country : str | None
+        Country of origin.
+    region : str | None
+        Growing region within the country.
     created_at : datetime
         Row creation timestamp (server default).
     retired_at : datetime | None
@@ -58,6 +63,8 @@ class Origin(SQLModel, table=True):
 
     id: uuid.UUID = Field(default_factory=uuid4_default, primary_key=True)
     name: str = Field(index=True, unique=True)
+    country: str | None = None
+    region: str | None = None
     created_at: datetime = Field(
         default=None,
         sa_column_kwargs={"server_default": func.now()},
@@ -100,6 +107,8 @@ class ProcessMethod(SQLModel, table=True):
         Primary key.
     name : str
         Unique process method name.
+    category : ProcessCategory | None
+        Broad processing category (washed, natural, honey, etc.).
     created_at : datetime
         Row creation timestamp (server default).
     retired_at : datetime | None
@@ -110,6 +119,7 @@ class ProcessMethod(SQLModel, table=True):
 
     id: uuid.UUID = Field(default_factory=uuid4_default, primary_key=True)
     name: str = Field(index=True, unique=True)
+    category: ProcessCategory | None = None
     created_at: datetime = Field(
         default=None,
         sa_column_kwargs={"server_default": func.now()},
@@ -126,6 +136,8 @@ class BeanVariety(SQLModel, table=True):
         Primary key.
     name : str
         Unique variety name.
+    species : CoffeeSpecies | None
+        Biological species (arabica, robusta, liberica).
     created_at : datetime
         Row creation timestamp (server default).
     retired_at : datetime | None
@@ -136,6 +148,7 @@ class BeanVariety(SQLModel, table=True):
 
     id: uuid.UUID = Field(default_factory=uuid4_default, primary_key=True)
     name: str = Field(index=True, unique=True)
+    species: CoffeeSpecies | None = None
     created_at: datetime = Field(
         default=None,
         sa_column_kwargs={"server_default": func.now()},

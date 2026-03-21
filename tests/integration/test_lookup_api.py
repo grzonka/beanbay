@@ -181,3 +181,78 @@ class TestOriginSmoke:
         resp = client.get(ORIGIN_BASE)
         assert resp.status_code == 200
         assert resp.json()["total"] >= 1
+
+
+# ======================================================================
+# Origin — enrichment tests
+# ======================================================================
+
+
+class TestOriginEnrichment:
+    """Tests for enriched Origin fields (country, region)."""
+
+    def test_create_origin_with_country_region(self, client):
+        """POST /origins with country and region stores and returns them."""
+        resp = client.post(
+            "/api/v1/origins",
+            json={"name": "Yirgacheffe", "country": "Ethiopia", "region": "Sidamo"},
+        )
+        assert resp.status_code == 201
+        data = resp.json()
+        assert data["country"] == "Ethiopia"
+        assert data["region"] == "Sidamo"
+
+    def test_create_origin_minimal(self, client):
+        """POST /origins without country/region defaults them to None."""
+        resp = client.post("/api/v1/origins", json={"name": "Brazil"})
+        assert resp.status_code == 201
+        assert resp.json()["country"] is None
+        assert resp.json()["region"] is None
+
+
+# ======================================================================
+# ProcessMethod — enrichment tests
+# ======================================================================
+
+
+class TestProcessMethodEnrichment:
+    """Tests for enriched ProcessMethod fields (category)."""
+
+    def test_create_process_with_category(self, client):
+        """POST /process-methods with category stores and returns it."""
+        resp = client.post(
+            "/api/v1/process-methods",
+            json={"name": "Fully Washed", "category": "washed"},
+        )
+        assert resp.status_code == 201
+        assert resp.json()["category"] == "washed"
+
+    def test_create_process_minimal(self, client):
+        """POST /process-methods without category defaults it to None."""
+        resp = client.post("/api/v1/process-methods", json={"name": "Experimental X"})
+        assert resp.status_code == 201
+        assert resp.json()["category"] is None
+
+
+# ======================================================================
+# BeanVariety — enrichment tests
+# ======================================================================
+
+
+class TestBeanVarietyEnrichment:
+    """Tests for enriched BeanVariety fields (species)."""
+
+    def test_create_variety_with_species(self, client):
+        """POST /bean-varieties with species stores and returns it."""
+        resp = client.post(
+            "/api/v1/bean-varieties",
+            json={"name": "Gesha", "species": "arabica"},
+        )
+        assert resp.status_code == 201
+        assert resp.json()["species"] == "arabica"
+
+    def test_create_variety_minimal(self, client):
+        """POST /bean-varieties without species defaults it to None."""
+        resp = client.post("/api/v1/bean-varieties", json={"name": "Robusta X"})
+        assert resp.status_code == 201
+        assert resp.json()["species"] is None

@@ -7,6 +7,8 @@ from typing import Any
 from pydantic import model_validator
 from sqlmodel import SQLModel
 
+from beanbay.models.enums import CoffeeSpecies, ProcessCategory
+
 
 # ---------------------------------------------------------------------------
 # Helper: shared Read-schema validator
@@ -106,6 +108,8 @@ class OriginBase(SQLModel):
     """Shared fields for Origin schemas."""
 
     name: str
+    country: str | None = None
+    region: str | None = None
 
 
 class OriginCreate(OriginBase):
@@ -118,6 +122,8 @@ class OriginUpdate(SQLModel):
     """Schema for partially updating an Origin."""
 
     name: str | None = None
+    country: str | None = None
+    region: str | None = None
 
 
 class OriginRead(OriginBase):
@@ -210,6 +216,7 @@ class ProcessMethodBase(SQLModel):
     """Shared fields for ProcessMethod schemas."""
 
     name: str
+    category: ProcessCategory | None = None
 
 
 class ProcessMethodCreate(ProcessMethodBase):
@@ -222,6 +229,7 @@ class ProcessMethodUpdate(SQLModel):
     """Schema for partially updating a ProcessMethod."""
 
     name: str | None = None
+    category: ProcessCategory | None = None
 
 
 class ProcessMethodRead(ProcessMethodBase):
@@ -262,6 +270,7 @@ class BeanVarietyBase(SQLModel):
     """Shared fields for BeanVariety schemas."""
 
     name: str
+    species: CoffeeSpecies | None = None
 
 
 class BeanVarietyCreate(BeanVarietyBase):
@@ -274,6 +283,7 @@ class BeanVarietyUpdate(SQLModel):
     """Schema for partially updating a BeanVariety."""
 
     name: str | None = None
+    species: CoffeeSpecies | None = None
 
 
 class BeanVarietyRead(BeanVarietyBase):

@@ -453,6 +453,7 @@ origin_router = create_lookup_router(
     read_schema=OriginRead,
     prefix="origins",
     tag="Origins",
+    sortable_fields=["name", "country", "created_at"],
     dependency_checks=[
         (
             "beans",
