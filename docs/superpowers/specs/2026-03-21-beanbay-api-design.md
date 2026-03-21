@@ -558,10 +558,6 @@ matching to power frontend autocomplete.
 | PATCH | `/bags/{id}` | update |
 | DELETE | `/bags/{id}` | soft-delete |
 
-`BeanRead` in list responses includes `latest_score: float | None` (the most recent
-rating score across all people) so the frontend can show ratings in bean list views
-without extra calls.
-
 `GET /bags` enables a "pantry" view showing all active bags across all beans,
 sortable by roast_date or opened_at. Also useful for the brew form's bag picker.
 
@@ -634,7 +630,7 @@ Water create/update example:
 
 | Method | Path | Notes |
 |---|---|---|
-| GET | `/brews` | list, filterable by person/bean/bag/setup/date range |
+| GET | `/brews` | list, filterable by person_id/bean_id/bag_id/brew_setup_id/date range |
 | POST | `/brews` | create, body includes optional nested `taste` object |
 | GET | `/brews/{id}` | detail with full nested data |
 | PATCH | `/brews/{id}` | update brew fields |
@@ -665,7 +661,7 @@ caller does not need to enumerate individual bag IDs.
 
 | Method | Path | Notes |
 |---|---|---|
-| GET | `/beans/{bean_id}/ratings` | all ratings for a bean, ordered by rated_at desc |
+| GET | `/beans/{bean_id}/ratings` | filterable by `?person_id=`, ordered by rated_at desc |
 | POST | `/beans/{bean_id}/ratings` | new rating (append-only, creates new entry) |
 | GET | `/bean-ratings/{id}` | detail with nested taste |
 | DELETE | `/bean-ratings/{id}` | soft-delete |
@@ -931,7 +927,8 @@ Package manager: uv (per project conventions).
 | Brew has stop_mode_id | Records which stop mode was used; BayBE covariate |
 | BrewTaste.score is the BayBE objective | Overall assessment; sub-dimensions are informational |
 | Top-level `GET /bags` endpoint | Enables pantry view and bag picker without N+1 |
-| BeanRead includes latest_score in lists | Avoids extra calls for bean list with ratings |
+| No latest_score on BeanRead list | Per-user context needed; detail view shows per-person ratings |
+| Explicit person_id filter (no implicit default) | No person_id = all people; avoids hidden behavior |
 | BrewListRead vs BrewRead schemas | List includes summary nesting; detail includes full nesting |
 | AND-composed brew filters support BayBE campaigns | `?brew_setup_id=X&bean_id=Y` across all bags |
 | Stats/dashboard endpoint deferred | Frontend computes from raw data initially; add when needed |
