@@ -229,3 +229,78 @@ class TestBrewStats:
 
         resp = client.get(STATS_BREWS, params={"person_id": person_id})
         assert resp.status_code == 404
+
+
+# ======================================================================
+# GET /stats/beans
+# ======================================================================
+
+
+class TestBeanStats:
+    """Tests for GET /api/v1/stats/beans."""
+
+    def test_empty_state(self, client):
+        """No beans → zero counts, empty breakdowns."""
+        resp = client.get(STATS_BEANS)
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["total_beans"] == 0
+        assert data["beans_active"] == 0
+        assert data["total_bags"] == 0
+        assert data["bags_active"] == 0
+        assert data["bags_unopened"] == 0
+        assert data["avg_bag_weight_g"] is None
+        assert data["avg_bag_price"] is None
+        assert data["mix_type_breakdown"] == {}
+        assert data["use_type_breakdown"] == {}
+        assert data["top_roasters"] == []
+        assert data["top_origins"] == []
+
+    def test_with_beans_and_bags(self, client):
+        """Seed beans and bags, verify all counts."""
+        roaster_id = _create_roaster(client)
+        origin_id = _create_origin(client)
+
+        bean_id = _create_bean(
+            client,
+            roaster_id=roaster_id,
+            origin_ids=[origin_id],
+            bean_mix_type="single_origin",
+            bean_use_type="filter",
+        )
+        _create_bag(client, bean_id, price=15.0)
+        _create_bag(client, bean_id, price=25.0, opened_at="2026-01-01")
+
+        resp = client.get(STATS_BEANS)
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["total_beans"] == 1
+        assert data["beans_active"] == 1
+        assert data["total_bags"] == 2
+        assert data["bags_active"] == 2
+        assert data["bags_unopened"] == 1  # one has opened_at
+        assert data["avg_bag_weight_g"] == 250.0
+        assert data["avg_bag_price"] == 20.0
+        assert data["mix_type_breakdown"]["single_origin"] == 1
+        assert data["use_type_breakdown"]["filter"] == 1
+        assert len(data["top_roasters"]) == 1
+        assert data["top_roasters"][0]["count"] == 1
+        assert len(data["top_origins"]) == 1
+
+    def test_excludes_retired(self, client):
+        """Retired beans/bags are excluded from counts."""
+        bean_id = _create_bean(client)
+        bag_id = _create_bag(client, bean_id)
+
+        # Retire the bag
+        resp = client.delete(f"/api/v1/bags/{bag_id}")
+        assert resp.status_code == 200
+        # Retire the bean
+        resp = client.delete(f"/api/v1/beans/{bean_id}")
+        assert resp.status_code == 200
+
+        resp = client.get(STATS_BEANS)
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["total_beans"] == 0
+        assert data["total_bags"] == 0
