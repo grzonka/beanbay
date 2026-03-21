@@ -50,4 +50,6 @@ from beanbay.models.tag import (  # noqa: F401
     ProcessMethod,
     Roaster,
     StopMode,
+    StorageType,
+    Vendor,
 )

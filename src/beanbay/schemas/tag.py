@@ -407,3 +407,125 @@ class StopModeRead(StopModeBase):
     def compute_is_retired(cls, data: dict | object) -> dict:
         """Compute ``is_retired`` from ``retired_at``."""
         return _compute_is_retired(cls, data)
+
+
+# ===================================================================
+# Vendor
+# ===================================================================
+
+
+class VendorBase(SQLModel):
+    """Shared fields for Vendor schemas."""
+
+    name: str
+    url: str | None = None
+    location: str | None = None
+    notes: str | None = None
+
+
+class VendorCreate(VendorBase):
+    """Schema for creating a Vendor."""
+
+    pass
+
+
+class VendorUpdate(SQLModel):
+    """Schema for partially updating a Vendor."""
+
+    name: str | None = None
+    url: str | None = None
+    location: str | None = None
+    notes: str | None = None
+
+
+class VendorRead(VendorBase):
+    """Schema returned when reading a Vendor.
+
+    Attributes
+    ----------
+    id : uuid.UUID
+        Primary key.
+    name : str
+        Vendor name.
+    url : str | None
+        Shop website URL.
+    location : str | None
+        City, address, etc.
+    notes : str | None
+        Free-text notes.
+    created_at : datetime
+        Creation timestamp.
+    updated_at : datetime
+        Last-modified timestamp.
+    retired_at : datetime | None
+        Soft-delete timestamp.
+    is_retired : bool
+        Computed from ``retired_at``.
+    """
+
+    id: uuid.UUID
+    created_at: datetime
+    updated_at: datetime
+    retired_at: datetime | None
+    is_retired: bool
+
+    @model_validator(mode="before")
+    @classmethod
+    def compute_is_retired(cls, data: dict | object) -> dict:
+        """Compute ``is_retired`` from ``retired_at``."""
+        return _compute_is_retired(cls, data)
+
+
+# ===================================================================
+# StorageType
+# ===================================================================
+
+
+class StorageTypeBase(SQLModel):
+    """Shared fields for StorageType schemas."""
+
+    name: str
+
+
+class StorageTypeCreate(StorageTypeBase):
+    """Schema for creating a StorageType."""
+
+    pass
+
+
+class StorageTypeUpdate(SQLModel):
+    """Schema for partially updating a StorageType."""
+
+    name: str | None = None
+
+
+class StorageTypeRead(StorageTypeBase):
+    """Schema returned when reading a StorageType.
+
+    Attributes
+    ----------
+    id : uuid.UUID
+        Primary key.
+    name : str
+        Storage type name.
+    created_at : datetime
+        Creation timestamp.
+    updated_at : datetime
+        Last-modified timestamp.
+    retired_at : datetime | None
+        Soft-delete timestamp.
+    is_retired : bool
+        Computed from ``retired_at``.
+    """
+
+    id: uuid.UUID
+    created_at: datetime
+    updated_at: datetime
+    retired_at: datetime | None
+    is_retired: bool
+
+    @model_validator(mode="before")
+    @classmethod
+    def compute_is_retired(cls, data: dict | object) -> dict:
+        """Compute ``is_retired`` from ``retired_at``."""
+        return _compute_is_retired(cls, data)

@@ -27,6 +27,8 @@ from beanbay.models.tag import (
     ProcessMethod,
     Roaster,
     StopMode,
+    StorageType,
+    Vendor,
 )
 from beanbay.schemas.common import PaginatedResponse
 from beanbay.schemas.tag import (
@@ -51,6 +53,12 @@ from beanbay.schemas.tag import (
     StopModeCreate,
     StopModeRead,
     StopModeUpdate,
+    StorageTypeCreate,
+    StorageTypeRead,
+    StorageTypeUpdate,
+    VendorCreate,
+    VendorRead,
+    VendorUpdate,
 )
 
 # Type alias for dependency-check callables used by the router factory.
@@ -529,4 +537,25 @@ stop_mode_router = create_lookup_router(
         ),
         ("brews", _fk_active_count(Brew, "stop_mode_id")),
     ],
+)
+
+vendor_router = create_lookup_router(
+    model_class=Vendor,
+    create_schema=VendorCreate,
+    update_schema=VendorUpdate,
+    read_schema=VendorRead,
+    prefix="vendors",
+    tag="Vendors",
+    sortable_fields=["name", "location", "created_at"],
+    dependency_checks=[],  # Will add bag check in later task
+)
+
+storage_type_router = create_lookup_router(
+    model_class=StorageType,
+    create_schema=StorageTypeCreate,
+    update_schema=StorageTypeUpdate,
+    read_schema=StorageTypeRead,
+    prefix="storage-types",
+    tag="Storage Types",
+    dependency_checks=[],  # Will add bag check in later task
 )

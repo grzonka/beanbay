@@ -12,6 +12,8 @@ from beanbay.routers.lookup import (
     process_method_router,
     roaster_router,
     stop_mode_router,
+    storage_type_router,
+    vendor_router,
 )
 from beanbay.routers.beans import router as beans_router
 from beanbay.routers.brew_setups import router as brew_setups_router
@@ -56,6 +58,7 @@ _routers = [
     flavor_tag_router, origin_router, roaster_router,
     process_method_router, bean_variety_router,
     brew_method_router, stop_mode_router,
+    vendor_router, storage_type_router,
     people_router, equipment_router, beans_router,
     brew_setups_router, brews_router, ratings_router,
 ]

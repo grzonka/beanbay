@@ -193,3 +193,76 @@ class StopMode(SQLModel, table=True):
         sa_column_kwargs={"server_default": func.now()},
     )
     retired_at: datetime | None = None
+
+
+class Vendor(SQLModel, table=True):
+    """A vendor / shop where beans are purchased.
+
+    Attributes
+    ----------
+    id : uuid.UUID
+        Primary key.
+    name : str
+        Unique vendor name.
+    url : str | None
+        Shop website URL.
+    location : str | None
+        City, address, etc.
+    notes : str | None
+        Free-text notes.
+    created_at : datetime
+        Row creation timestamp (server default).
+    updated_at : datetime
+        Last-modified timestamp (server default, auto-updated).
+    retired_at : datetime | None
+        Soft-delete timestamp; ``None`` while active.
+    """
+
+    __tablename__ = "vendors"  # type: ignore[assignment]
+
+    id: uuid.UUID = Field(default_factory=uuid4_default, primary_key=True)
+    name: str = Field(index=True, unique=True)
+    url: str | None = None
+    location: str | None = None
+    notes: str | None = None
+    created_at: datetime = Field(
+        default=None,
+        sa_column_kwargs={"server_default": func.now()},
+    )
+    updated_at: datetime = Field(
+        default=None,
+        sa_column_kwargs={"server_default": func.now(), "onupdate": func.now()},
+    )
+    retired_at: datetime | None = None
+
+
+class StorageType(SQLModel, table=True):
+    """A frozen storage type (e.g. 'Vacuum Sealed', 'Zip Lock').
+
+    Attributes
+    ----------
+    id : uuid.UUID
+        Primary key.
+    name : str
+        Unique storage type name.
+    created_at : datetime
+        Row creation timestamp (server default).
+    updated_at : datetime
+        Last-modified timestamp (server default, auto-updated).
+    retired_at : datetime | None
+        Soft-delete timestamp; ``None`` while active.
+    """
+
+    __tablename__ = "storage_types"  # type: ignore[assignment]
+
+    id: uuid.UUID = Field(default_factory=uuid4_default, primary_key=True)
+    name: str = Field(index=True, unique=True)
+    created_at: datetime = Field(
+        default=None,
+        sa_column_kwargs={"server_default": func.now()},
+    )
+    updated_at: datetime = Field(
+        default=None,
+        sa_column_kwargs={"server_default": func.now(), "onupdate": func.now()},
+    )
+    retired_at: datetime | None = None
