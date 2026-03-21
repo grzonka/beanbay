@@ -82,8 +82,8 @@ frontend/
     │   │   ├── components/        # CuppingForm, CuppingScoreCard
     │   │   └── hooks.ts
     │   ├── ratings/
-    │   │   ├── pages/             # RatingsListPage, RatingDetailPage
-    │   │   ├── components/        # RatingForm, BeanTasteForm
+    │   │   ├── pages/             # RatingDetailPage
+    │   │   ├── components/        # RatingForm, BeanTasteForm (used inline on BeanDetailPage)
     │   │   └── hooks.ts
     │   ├── people/
     │   │   ├── pages/
@@ -115,8 +115,7 @@ All routes derived from the OpenAPI spec at `http://localhost:8000/openapi.json`
 /brew-setups                   → BrewSetupsPage
 /cuppings                      → CuppingsListPage
 /cuppings/:cuppingId           → CuppingDetailPage
-/ratings                       → RatingsListPage
-/ratings/:ratingId             → RatingDetailPage (taste inline)
+/bean-ratings/:ratingId        → RatingDetailPage (taste inline)
 /people                        → PeoplePage
 /settings/lookups              → LookupsPage (tabbed)
 ```
@@ -145,7 +144,6 @@ EQUIPMENT
 
 EVALUATION
   Cuppings               /cuppings
-  Ratings                /ratings
 
 MANAGE
   People                 /people
@@ -239,9 +237,10 @@ export const useDeleteBean = () =>
 
 ### Pagination
 
-- State stored in URL search params (`?page=1&limit=25&sort=created_at&dir=desc`) via React Router `useSearchParams`
+- State stored in URL search params (`?offset=0&limit=25&sort_by=created_at&sort_dir=desc`) via React Router `useSearchParams`
+- Matches the backend's `offset`/`limit` pagination model (not page-based). DataGrid's page index is derived: `page = offset / limit`.
 - DataGrid pagination/sorting wired to URL params — bookmarkable, back-button friendly
-- Shared `usePaginationParams()` hook in `utils/pagination.ts`
+- Shared `usePaginationParams()` hook in `utils/pagination.ts` handles DataGrid page ↔ API offset conversion
 
 ### Type Generation
 
@@ -331,7 +330,7 @@ Recharts `RadarChart` for taste profiles. Adapts axes to context:
 
 **Bean form fields:**
 - `name` (required), `roaster` (AutocompleteCreate), `roast_degree` (slider 0-10), `bean_mix_type` (select: single_origin/blend/unknown), `bean_use_type` (select: filter/espresso/omni), `decaf` (toggle), `url`, `ean`, `notes`
-- M2M: `origins` (AutocompleteCreate multi, with percentage input for blends), `processes` (AutocompleteCreate multi), `varieties` (AutocompleteCreate multi), `flavor_tags` (FlavorTagSelect)
+- M2M: `origins` (AutocompleteCreate multi, using `OriginWithPercentage` format — `origin_id` + optional `percentage` for blends), `processes` (AutocompleteCreate multi), `varieties` (AutocompleteCreate multi), `flavor_tags` (FlavorTagSelect)
 
 ### Bags (`/bags`, inline on bean detail)
 
@@ -345,7 +344,7 @@ Recharts `RadarChart` for taste profiles. Adapts axes to context:
 
 **List page:**
 - DataGrid: bean name, brew method, dose, yield, grind setting, taste score, brewed_at, is_failed badge
-- Filters: bag, brew method, person, `include_retired`
+- Filters: `bag_id`, `bean_id`, `brew_setup_id`, `person_id`, `brewed_after`, `brewed_before`, `include_retired` (all matching API query params)
 
 **Wizard — 3 steps:**
 
@@ -389,7 +388,7 @@ Recharts `RadarChart` for taste profiles. Adapts axes to context:
 **Form fields:**
 - `bag` (AutocompleteCreate, required), `person` (AutocompleteCreate, required), `cupped_at` (datetime)
 - 10 SCAA score sliders (0-9): dry_fragrance, wet_aroma, brightness, flavor, body, finish, sweetness, clean_cup, complexity, uniformity
-- `cuppers_correction` (number, can be negative), `total_score` (auto-calculated or manual override)
+- `cuppers_correction` (number, can be negative), `total_score` (0-100 SCAA scale; auto-calculated as sum of 10 axes × multiplier + cuppers_correction, with manual override option)
 - `notes`, `flavor_tags` (FlavorTagSelect)
 
 **Detail page:**
@@ -397,23 +396,24 @@ Recharts `RadarChart` for taste profiles. Adapts axes to context:
 - TasteRadar (SCAA axes)
 - Flavor tag chips
 
-### Ratings (`/ratings`, `/ratings/:ratingId`)
+### Ratings (inline on bean detail + `/bean-ratings/:ratingId`)
 
-**List page:**
-- DataGrid: bean name, person, rated_at, taste score
+Ratings have no standalone list endpoint — they are scoped to a bean via `GET /api/v1/beans/{bean_id}/ratings`. Shown inline on the BeanDetailPage as a DataGrid (bean name, person, rated_at, taste score).
 
 **Create form (append-only, no edit on rating):**
-- `bean` picker (required), `person` picker (required)
+- Created via `POST /api/v1/beans/{bean_id}/ratings` from the BeanDetailPage
+- `person` picker (required)
 - Inline taste: score (0-10), acidity/sweetness/body/complexity/aroma/clean_cup sliders (0-10), notes, FlavorTagSelect
 
-**Detail page:**
+**Detail page (`/bean-ratings/:ratingId`):**
 - TasteRadar + flavor tag chips
-- Taste sub-resource is editable (PATCH)
+- Taste sub-resource is editable (PATCH via `/bean-ratings/{rating_id}/taste`)
 
 ### People (`/people`)
 
 - DataGrid: name, is_default badge
-- Form: `name` (required), `is_default` toggle
+- **Create form:** `name` (required) only — `is_default` is not accepted on `PersonCreate`
+- **Edit form:** `name`, `is_default` toggle — `is_default` is only available on `PersonUpdate`
 - Backend auto-unsets previous default when setting a new one
 
 ### Lookups (`/settings/lookups`)
