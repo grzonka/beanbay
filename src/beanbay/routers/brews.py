@@ -9,11 +9,11 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query
 from sqlalchemy import func
-from sqlmodel import Session, select
+from sqlmodel import select
 
-from beanbay.database import get_session
+from beanbay.dependencies import SessionDep
 from beanbay.models.bean import Bag, Bean
 from beanbay.models.brew import Brew, BrewSetup, BrewTaste, BrewTasteFlavorTagLink
 from beanbay.models.equipment import Grinder
@@ -150,7 +150,7 @@ def _resolve_grind_setting(
 
 
 def _set_taste_tags(
-    session: Session,
+    session: SessionDep,
     taste: BrewTaste,
     flavor_tag_ids: list[uuid.UUID],
 ) -> None:
@@ -158,7 +158,7 @@ def _set_taste_tags(
 
     Parameters
     ----------
-    session : Session
+    session : SessionDep
         Database session.
     taste : BrewTaste
         The taste to update.
@@ -194,7 +194,7 @@ def _set_taste_tags(
 
 
 def _create_taste(
-    session: Session,
+    session: SessionDep,
     brew: Brew,
     taste_data: BrewTasteCreate,
 ) -> BrewTaste:
@@ -202,7 +202,7 @@ def _create_taste(
 
     Parameters
     ----------
-    session : Session
+    session : SessionDep
         Database session.
     brew : Brew
         The parent brew.
@@ -367,6 +367,7 @@ def _brew_to_read(brew: Brew) -> dict[str, Any]:
 
 @router.get("/brews", response_model=PaginatedResponse[BrewListRead])
 def list_brews(
+    *,
     person_id: uuid.UUID | None = Query(None, description="Filter by person"),
     bean_id: uuid.UUID | None = Query(None, description="Filter by bean (resolves through bag)"),
     bag_id: uuid.UUID | None = Query(None, description="Filter by bag"),
@@ -378,8 +379,8 @@ def list_brews(
     offset: int = Query(0, ge=0),
     sort_by: str = Query("brewed_at", description="Field to sort by"),
     sort_dir: str = Query("desc", description="Sort direction: asc or desc"),
-    session: Session = Depends(get_session),
-) -> dict[str, Any]:
+    session: SessionDep,
+) -> PaginatedResponse[BrewListRead]:
     """List brews with filtering, pagination, and sorting."""
     _validate_sort(sort_by, sort_dir, BREW_SORT_FIELDS)
 
@@ -426,14 +427,14 @@ def list_brews(
 
     brews = session.exec(stmt).all()
     items = [_brew_to_list_read(b, b.brew_setup) for b in brews]
-    return {"items": items, "total": total, "limit": limit, "offset": offset}
+    return PaginatedResponse(items=items, total=total, limit=limit, offset=offset)
 
 
 @router.post("/brews", response_model=BrewRead, status_code=201)
 def create_brew(
     payload: BrewCreate,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BrewRead:
     """Create a new brew with optional inline taste."""
     # Validate FK references
     bag = session.get(Bag, payload.bag_id)
@@ -484,27 +485,27 @@ def create_brew(
 
     session.commit()
     session.refresh(db_brew)
-    return _brew_to_read(db_brew)
+    return _brew_to_read(db_brew)  # type: ignore[return-value]
 
 
 @router.get("/brews/{brew_id}", response_model=BrewRead)
 def get_brew(
     brew_id: uuid.UUID,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BrewRead:
     """Get a single brew by ID with full nesting."""
     db_brew = session.get(Brew, brew_id)
     if db_brew is None:
         raise HTTPException(status_code=404, detail="Brew not found.")
-    return _brew_to_read(db_brew)
+    return _brew_to_read(db_brew)  # type: ignore[return-value]
 
 
 @router.patch("/brews/{brew_id}", response_model=BrewRead)
 def update_brew(
     brew_id: uuid.UUID,
     payload: BrewUpdate,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BrewRead:
     """Partially update a brew."""
     db_brew = session.get(Brew, brew_id)
     if db_brew is None:
@@ -543,14 +544,14 @@ def update_brew(
     session.add(db_brew)
     session.commit()
     session.refresh(db_brew)
-    return _brew_to_read(db_brew)
+    return _brew_to_read(db_brew)  # type: ignore[return-value]
 
 
 @router.delete("/brews/{brew_id}", response_model=BrewRead)
 def delete_brew(
     brew_id: uuid.UUID,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BrewRead:
     """Soft-delete a brew."""
     db_brew = session.get(Brew, brew_id)
     if db_brew is None:
@@ -560,7 +561,7 @@ def delete_brew(
     session.add(db_brew)
     session.commit()
     session.refresh(db_brew)
-    return _brew_to_read(db_brew)
+    return _brew_to_read(db_brew)  # type: ignore[return-value]
 
 
 # ======================================================================
@@ -572,8 +573,8 @@ def delete_brew(
 def put_taste(
     brew_id: uuid.UUID,
     payload: BrewTasteCreate,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BrewTasteRead:
     """Create or replace the taste for a brew."""
     db_brew = session.get(Brew, brew_id)
     if db_brew is None:
@@ -596,15 +597,15 @@ def put_taste(
     db_taste = _create_taste(session, db_brew, payload)
     session.commit()
     session.refresh(db_taste)
-    return db_taste
+    return db_taste  # type: ignore[return-value]
 
 
 @router.patch("/brews/{brew_id}/taste", response_model=BrewTasteRead)
 def patch_taste(
     brew_id: uuid.UUID,
     payload: BrewTasteUpdate,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BrewTasteRead:
     """Partially update the taste for a brew."""
     db_brew = session.get(Brew, brew_id)
     if db_brew is None:
@@ -628,13 +629,13 @@ def patch_taste(
 
     session.commit()
     session.refresh(db_taste)
-    return db_taste
+    return db_taste  # type: ignore[return-value]
 
 
 @router.delete("/brews/{brew_id}/taste", status_code=204)
 def delete_taste(
     brew_id: uuid.UUID,
-    session: Session = Depends(get_session),
+    session: SessionDep,
 ) -> None:
     """Remove the taste from a brew."""
     db_brew = session.get(Brew, brew_id)

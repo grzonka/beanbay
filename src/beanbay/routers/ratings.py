@@ -6,13 +6,12 @@ Taste is a 1:1 sub-resource managed via PUT/PATCH/DELETE.
 
 import uuid
 from datetime import datetime, timezone
-from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Response
+from fastapi import APIRouter, HTTPException, Query, Response
 from sqlalchemy import func
-from sqlmodel import Session, select
+from sqlmodel import select
 
-from beanbay.database import get_session
+from beanbay.dependencies import SessionDep
 from beanbay.models.bean import Bean
 from beanbay.models.person import Person
 from beanbay.models.rating import (
@@ -39,7 +38,7 @@ router = APIRouter(tags=["Ratings"])
 
 
 def _set_taste_flavor_tags(
-    session: Session,
+    session: SessionDep,
     taste: BeanTaste,
     flavor_tag_ids: list[uuid.UUID],
 ) -> None:
@@ -47,7 +46,7 @@ def _set_taste_flavor_tags(
 
     Parameters
     ----------
-    session : Session
+    session : SessionDep
         Database session.
     taste : BeanTaste
         The taste to update.
@@ -85,7 +84,7 @@ def _set_taste_flavor_tags(
 
 
 def _create_taste(
-    session: Session,
+    session: SessionDep,
     rating_id: uuid.UUID,
     taste_data: BeanTasteCreate,
 ) -> BeanTaste:
@@ -93,7 +92,7 @@ def _create_taste(
 
     Parameters
     ----------
-    session : Session
+    session : SessionDep
         Database session.
     rating_id : uuid.UUID
         Parent rating's primary key.
@@ -136,12 +135,13 @@ def _create_taste(
 )
 def list_bean_ratings(
     bean_id: uuid.UUID,
+    *,
     person_id: uuid.UUID | None = Query(None, description="Filter by person"),
     include_retired: bool = Query(False, description="Include soft-deleted items"),
     limit: int = Query(50, ge=1, le=200),
     offset: int = Query(0, ge=0),
-    session: Session = Depends(get_session),
-) -> dict[str, Any]:
+    session: SessionDep,
+) -> PaginatedResponse[BeanRatingRead]:
     """List ratings for a bean, ordered by rated_at desc.
 
     Parameters
@@ -156,12 +156,12 @@ def list_bean_ratings(
         Maximum items per page (1--200).
     offset : int
         Number of items to skip.
-    session : Session
+    session : SessionDep
         Database session (injected).
 
     Returns
     -------
-    dict[str, Any]
+    PaginatedResponse[BeanRatingRead]
         Paginated response with ``items``, ``total``, ``limit``, ``offset``.
     """
     # Verify bean exists
@@ -190,12 +190,12 @@ def list_bean_ratings(
     stmt = stmt.offset(offset).limit(limit)
     items = session.exec(stmt).all()
 
-    return {
-        "items": items,
-        "total": total,
-        "limit": limit,
-        "offset": offset,
-    }
+    return PaginatedResponse(
+        items=items,
+        total=total,
+        limit=limit,
+        offset=offset,
+    )
 
 
 # ======================================================================
@@ -211,8 +211,8 @@ def list_bean_ratings(
 def create_bean_rating(
     bean_id: uuid.UUID,
     payload: BeanRatingCreate,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BeanRatingRead:
     """Create a new rating for a bean.
 
     Multiple ratings for the same bean+person are allowed (append-only).
@@ -223,12 +223,12 @@ def create_bean_rating(
         The bean's primary key (from path).
     payload : BeanRatingCreate
         Rating data including optional inline taste.
-    session : Session
+    session : SessionDep
         Database session (injected).
 
     Returns
     -------
-    Any
+    BeanRatingRead
         The created rating.
     """
     # Verify bean exists
@@ -257,7 +257,7 @@ def create_bean_rating(
 
     session.commit()
     session.refresh(db_rating)
-    return db_rating
+    return db_rating  # type: ignore[return-value]
 
 
 # ======================================================================
@@ -268,26 +268,26 @@ def create_bean_rating(
 @router.get("/bean-ratings/{rating_id}", response_model=BeanRatingRead)
 def get_bean_rating(
     rating_id: uuid.UUID,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BeanRatingRead:
     """Get a single bean rating by ID with nested taste.
 
     Parameters
     ----------
     rating_id : uuid.UUID
         The rating's primary key.
-    session : Session
+    session : SessionDep
         Database session (injected).
 
     Returns
     -------
-    Any
+    BeanRatingRead
         The rating with nested taste.
     """
     db_rating = session.get(BeanRating, rating_id)
     if db_rating is None:
         raise HTTPException(status_code=404, detail="BeanRating not found.")
-    return db_rating
+    return db_rating  # type: ignore[return-value]
 
 
 # ======================================================================
@@ -298,20 +298,20 @@ def get_bean_rating(
 @router.delete("/bean-ratings/{rating_id}", response_model=BeanRatingRead)
 def delete_bean_rating(
     rating_id: uuid.UUID,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BeanRatingRead:
     """Soft-delete a bean rating.
 
     Parameters
     ----------
     rating_id : uuid.UUID
         The rating's primary key.
-    session : Session
+    session : SessionDep
         Database session (injected).
 
     Returns
     -------
-    Any
+    BeanRatingRead
         The soft-deleted rating.
     """
     db_rating = session.get(BeanRating, rating_id)
@@ -322,7 +322,7 @@ def delete_bean_rating(
     session.add(db_rating)
     session.commit()
     session.refresh(db_rating)
-    return db_rating
+    return db_rating  # type: ignore[return-value]
 
 
 # ======================================================================
@@ -337,8 +337,8 @@ def delete_bean_rating(
 def put_bean_rating_taste(
     rating_id: uuid.UUID,
     payload: BeanTasteCreate,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BeanTasteRead:
     """Create or replace the taste for a bean rating.
 
     If a taste already exists, it is deleted and replaced with the new one.
@@ -349,12 +349,12 @@ def put_bean_rating_taste(
         The rating's primary key.
     payload : BeanTasteCreate
         Taste data.
-    session : Session
+    session : SessionDep
         Database session (injected).
 
     Returns
     -------
-    Any
+    BeanTasteRead
         The created or replaced taste.
     """
     db_rating = session.get(BeanRating, rating_id)
@@ -380,7 +380,7 @@ def put_bean_rating_taste(
     db_taste = _create_taste(session, rating_id, payload)
     session.commit()
     session.refresh(db_taste)
-    return db_taste
+    return db_taste  # type: ignore[return-value]
 
 
 # ======================================================================
@@ -395,8 +395,8 @@ def put_bean_rating_taste(
 def patch_bean_rating_taste(
     rating_id: uuid.UUID,
     payload: BeanTasteUpdate,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BeanTasteRead:
     """Partially update the taste for a bean rating.
 
     Parameters
@@ -405,12 +405,12 @@ def patch_bean_rating_taste(
         The rating's primary key.
     payload : BeanTasteUpdate
         Fields to update.
-    session : Session
+    session : SessionDep
         Database session (injected).
 
     Returns
     -------
-    Any
+    BeanTasteRead
         The updated taste.
     """
     db_rating = session.get(BeanRating, rating_id)
@@ -440,7 +440,7 @@ def patch_bean_rating_taste(
 
     session.commit()
     session.refresh(db_taste)
-    return db_taste
+    return db_taste  # type: ignore[return-value]
 
 
 # ======================================================================
@@ -454,7 +454,7 @@ def patch_bean_rating_taste(
 )
 def delete_bean_rating_taste(
     rating_id: uuid.UUID,
-    session: Session = Depends(get_session),
+    session: SessionDep,
 ) -> Response:
     """Remove the taste from a bean rating.
 
@@ -462,7 +462,7 @@ def delete_bean_rating_taste(
     ----------
     rating_id : uuid.UUID
         The rating's primary key.
-    session : Session
+    session : SessionDep
         Database session (injected).
 
     Returns

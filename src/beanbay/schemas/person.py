@@ -61,19 +61,19 @@ class PersonRead(PersonBase):
 
     @model_validator(mode="before")
     @classmethod
-    def compute_is_retired(cls, data: Any) -> Any:
+    def compute_is_retired(cls, data: dict | object) -> dict:
         """Inject ``is_retired`` bool derived from ``retired_at``.
 
         Parameters
         ----------
         cls : type
             The model class (unused but required by pydantic).
-        data : Any
+        data : dict | object
             Raw input -- either a dict or an ORM model instance.
 
         Returns
         -------
-        Any
+        dict
             A dict with ``is_retired`` populated.
         """
         if isinstance(data, dict):

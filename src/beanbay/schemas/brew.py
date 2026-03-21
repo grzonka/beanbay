@@ -139,19 +139,19 @@ class BrewSetupRead(BrewSetupBase):
 
     @model_validator(mode="before")
     @classmethod
-    def compute_brew_setup_fields(cls, data: Any) -> Any:
+    def compute_brew_setup_fields(cls, data: dict | object) -> dict:
         """Compute ``is_retired`` and extract nested equipment names.
 
         Parameters
         ----------
         cls : type
             The model class (unused but required by pydantic).
-        data : Any
+        data : dict | object
             Raw input -- either a dict or an ORM model instance.
 
         Returns
         -------
-        Any
+        dict
             A dict with computed fields populated.
         """
         if not isinstance(data, dict):
@@ -306,19 +306,19 @@ class BrewTasteRead(BrewTasteBase):
 
     @model_validator(mode="before")
     @classmethod
-    def extract_taste_fields(cls, data: Any) -> Any:
+    def extract_taste_fields(cls, data: dict | object) -> dict:
         """Extract fields from ORM model if needed.
 
         Parameters
         ----------
         cls : type
             The model class (unused but required by pydantic).
-        data : Any
+        data : dict | object
             Raw input -- either a dict or an ORM model instance.
 
         Returns
         -------
-        Any
+        dict
             A dict with all fields populated.
         """
         if isinstance(data, dict):
@@ -601,19 +601,19 @@ class BrewRead(SQLModel):
 
     @model_validator(mode="before")
     @classmethod
-    def compute_brew_fields(cls, data: Any) -> Any:
+    def compute_brew_fields(cls, data: dict | object) -> dict:
         """Compute ``is_retired`` and extract nested relationships.
 
         Parameters
         ----------
         cls : type
             The model class (unused but required by pydantic).
-        data : Any
+        data : dict | object
             Raw input -- either a dict or an ORM model instance.
 
         Returns
         -------
-        Any
+        dict
             A dict with computed fields populated.
         """
         if isinstance(data, dict):

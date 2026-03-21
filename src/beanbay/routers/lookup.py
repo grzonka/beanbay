@@ -5,11 +5,11 @@ from collections.abc import Callable
 from datetime import datetime, timezone
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query
 from sqlalchemy import func
 from sqlmodel import Session, select
 
-from beanbay.database import get_session
+from beanbay.dependencies import SessionDep
 from beanbay.models.bean import (
     Bean,
     BeanOriginLink,
@@ -242,14 +242,15 @@ def create_lookup_router(
     # ------------------------------------------------------------------
     @router.get("", response_model=PaginatedResponse[read_schema])
     def list_items(
+        *,
         q: str | None = Query(None, description="Case-insensitive name search"),
         include_retired: bool = Query(False, description="Include soft-deleted items"),
         limit: int = Query(50, ge=1, le=200),
         offset: int = Query(0, ge=0),
         sort_by: str = Query("name", description="Field to sort by"),
         sort_dir: str = Query("asc", description="Sort direction: asc or desc"),
-        session: Session = Depends(get_session),
-    ) -> dict[str, Any]:
+        session: SessionDep,
+    ) -> PaginatedResponse:  # type: ignore[type-arg]
         """List lookup items with optional search, pagination, and sorting."""
         if sort_by not in sortable_fields:
             raise HTTPException(
@@ -291,12 +292,12 @@ def create_lookup_router(
 
         items = session.exec(stmt).all()
 
-        return {
-            "items": items,
-            "total": total,
-            "limit": limit,
-            "offset": offset,
-        }
+        return PaginatedResponse(
+            items=items,
+            total=total,
+            limit=limit,
+            offset=offset,
+        )
 
     # ------------------------------------------------------------------
     # POST /  — create
@@ -304,7 +305,7 @@ def create_lookup_router(
     @router.post("", response_model=read_schema, status_code=201)
     def create_item(
         payload: create_schema,  # type: ignore[valid-type]
-        session: Session = Depends(get_session),
+        session: SessionDep,
     ) -> Any:
         """Create a new lookup item."""
         # Check uniqueness
@@ -329,7 +330,7 @@ def create_lookup_router(
     @router.get("/{item_id}", response_model=read_schema)
     def get_item(
         item_id: uuid.UUID,
-        session: Session = Depends(get_session),
+        session: SessionDep,
     ) -> Any:
         """Get a single lookup item by ID."""
         db_item = session.get(model_class, item_id)
@@ -344,7 +345,7 @@ def create_lookup_router(
     def update_item(
         item_id: uuid.UUID,
         payload: update_schema,  # type: ignore[valid-type]
-        session: Session = Depends(get_session),
+        session: SessionDep,
     ) -> Any:
         """Partially update a lookup item."""
         db_item = session.get(model_class, item_id)
@@ -379,7 +380,7 @@ def create_lookup_router(
     @router.delete("/{item_id}", response_model=read_schema)
     def delete_item(
         item_id: uuid.UUID,
-        session: Session = Depends(get_session),
+        session: SessionDep,
     ) -> Any:
         """Soft-delete a lookup item by setting ``retired_at``."""
         db_item = session.get(model_class, item_id)

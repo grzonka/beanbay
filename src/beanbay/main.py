@@ -52,38 +52,18 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="BeanBay", lifespan=lifespan)
 
-# Lookup-table routers
-for _router in (
-    flavor_tag_router,
-    origin_router,
-    roaster_router,
-    process_method_router,
-    bean_variety_router,
-    brew_method_router,
-    stop_mode_router,
-):
+_routers = [
+    flavor_tag_router, origin_router, roaster_router,
+    process_method_router, bean_variety_router,
+    brew_method_router, stop_mode_router,
+    people_router, equipment_router, beans_router,
+    brew_setups_router, brews_router, ratings_router,
+]
+for _router in _routers:
     app.include_router(_router, prefix="/api/v1")
-
-# People router
-app.include_router(people_router, prefix="/api/v1")
-
-# Equipment router
-app.include_router(equipment_router, prefix="/api/v1")
-
-# Beans router
-app.include_router(beans_router, prefix="/api/v1")
-
-# Brew Setups router
-app.include_router(brew_setups_router, prefix="/api/v1")
-
-# Brews router
-app.include_router(brews_router, prefix="/api/v1")
-
-# Ratings router
-app.include_router(ratings_router, prefix="/api/v1")
 
 
 @app.get("/health")
-def health():
+def health() -> dict[str, str]:
     """Return a simple health check response."""
     return {"status": "ok"}

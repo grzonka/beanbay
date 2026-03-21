@@ -31,7 +31,7 @@ class BeanTasteFlavorTagLink(SQLModel, table=True):
         Foreign key to the flavor tag.
     """
 
-    __tablename__ = "bean_taste_flavor_tags"
+    __tablename__ = "bean_taste_flavor_tags"  # type: ignore[assignment]
 
     bean_taste_id: uuid.UUID = Field(
         foreign_key="bean_tastes.id", primary_key=True
@@ -67,7 +67,7 @@ class BeanRating(SQLModel, table=True):
         Soft-delete timestamp; ``None`` while active.
     """
 
-    __tablename__ = "bean_ratings"
+    __tablename__ = "bean_ratings"  # type: ignore[assignment]
 
     id: uuid.UUID = Field(default_factory=uuid4_default, primary_key=True)
     bean_id: uuid.UUID = Field(foreign_key="beans.id", index=True)
@@ -127,7 +127,7 @@ class BeanTaste(SQLModel, table=True):
         Last-modified timestamp (server default, auto-updated).
     """
 
-    __tablename__ = "bean_tastes"
+    __tablename__ = "bean_tastes"  # type: ignore[assignment]
 
     id: uuid.UUID = Field(default_factory=uuid4_default, primary_key=True)
     bean_rating_id: uuid.UUID = Field(

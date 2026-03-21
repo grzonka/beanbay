@@ -82,7 +82,7 @@ class BrewerMethodLink(SQLModel, table=True):
         Foreign key to the brew method.
     """
 
-    __tablename__ = "brewer_methods"
+    __tablename__ = "brewer_methods"  # type: ignore[assignment]
 
     brewer_id: uuid.UUID = Field(
         foreign_key="brewers.id", primary_key=True
@@ -103,7 +103,7 @@ class BrewerStopModeLink(SQLModel, table=True):
         Foreign key to the stop mode.
     """
 
-    __tablename__ = "brewer_stop_modes"
+    __tablename__ = "brewer_stop_modes"  # type: ignore[assignment]
 
     brewer_id: uuid.UUID = Field(
         foreign_key="brewers.id", primary_key=True
@@ -142,7 +142,7 @@ class Grinder(SQLModel, table=True):
         Soft-delete timestamp; ``None`` while active.
     """
 
-    __tablename__ = "grinders"
+    __tablename__ = "grinders"  # type: ignore[assignment]
 
     id: uuid.UUID = Field(default_factory=uuid4_default, primary_key=True)
     name: str = Field(index=True, unique=True)
@@ -210,7 +210,7 @@ class Brewer(SQLModel, table=True):
         Soft-delete timestamp; ``None`` while active.
     """
 
-    __tablename__ = "brewers"
+    __tablename__ = "brewers"  # type: ignore[assignment]
 
     id: uuid.UUID = Field(default_factory=uuid4_default, primary_key=True)
     name: str = Field(index=True, unique=True)
@@ -283,7 +283,7 @@ class Paper(SQLModel, table=True):
         Soft-delete timestamp; ``None`` while active.
     """
 
-    __tablename__ = "papers"
+    __tablename__ = "papers"  # type: ignore[assignment]
 
     id: uuid.UUID = Field(default_factory=uuid4_default, primary_key=True)
     name: str = Field(index=True, unique=True)
@@ -325,7 +325,7 @@ class Water(SQLModel, table=True):
         Soft-delete timestamp; ``None`` while active.
     """
 
-    __tablename__ = "waters"
+    __tablename__ = "waters"  # type: ignore[assignment]
 
     id: uuid.UUID = Field(default_factory=uuid4_default, primary_key=True)
     name: str = Field(index=True, unique=True)
@@ -362,7 +362,7 @@ class WaterMineral(SQLModel, table=True):
         Concentration in parts per million.
     """
 
-    __tablename__ = "water_minerals"
+    __tablename__ = "water_minerals"  # type: ignore[assignment]
     __table_args__ = (
         UniqueConstraint("water_id", "mineral_name", name="uq_water_mineral"),
     )

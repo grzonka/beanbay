@@ -9,11 +9,11 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query
 from sqlalchemy import func
 from sqlmodel import Session, select
 
-from beanbay.database import get_session
+from beanbay.dependencies import SessionDep
 from beanbay.models.equipment import (
     Brewer,
     BrewerMethodLink,
@@ -104,14 +104,15 @@ GRINDER_SORT_FIELDS = ["name", "created_at", "updated_at"]
 
 @router.get("/grinders", response_model=PaginatedResponse[GrinderRead])
 def list_grinders(
+    *,
     q: str | None = Query(None, description="Case-insensitive name search"),
     include_retired: bool = Query(False, description="Include soft-deleted items"),
     limit: int = Query(50, ge=1, le=200),
     offset: int = Query(0, ge=0),
     sort_by: str = Query("name", description="Field to sort by"),
     sort_dir: str = Query("asc", description="Sort direction: asc or desc"),
-    session: Session = Depends(get_session),
-) -> dict[str, Any]:
+    session: SessionDep,
+) -> PaginatedResponse[GrinderRead]:
     """List grinders with optional search, pagination, and sorting."""
     _validate_sort(sort_by, sort_dir, GRINDER_SORT_FIELDS)
 
@@ -135,14 +136,14 @@ def list_grinders(
     stmt = stmt.offset(offset).limit(limit)
 
     items = session.exec(stmt).all()
-    return {"items": items, "total": total, "limit": limit, "offset": offset}
+    return PaginatedResponse(items=items, total=total, limit=limit, offset=offset)
 
 
 @router.post("/grinders", response_model=GrinderRead, status_code=201)
 def create_grinder(
     payload: GrinderCreate,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> GrinderRead:
     """Create a new grinder."""
     existing = session.exec(
         select(Grinder).where(Grinder.name == payload.name)
@@ -163,27 +164,27 @@ def create_grinder(
     session.add(db_grinder)
     session.commit()
     session.refresh(db_grinder)
-    return db_grinder
+    return db_grinder  # type: ignore[return-value]
 
 
 @router.get("/grinders/{grinder_id}", response_model=GrinderRead)
 def get_grinder(
     grinder_id: uuid.UUID,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> GrinderRead:
     """Get a single grinder by ID."""
     db_grinder = session.get(Grinder, grinder_id)
     if db_grinder is None:
         raise HTTPException(status_code=404, detail="Grinder not found.")
-    return db_grinder
+    return db_grinder  # type: ignore[return-value]
 
 
 @router.patch("/grinders/{grinder_id}", response_model=GrinderRead)
 def update_grinder(
     grinder_id: uuid.UUID,
     payload: GrinderUpdate,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> GrinderRead:
     """Partially update a grinder."""
     db_grinder = session.get(Grinder, grinder_id)
     if db_grinder is None:
@@ -219,14 +220,14 @@ def update_grinder(
     session.add(db_grinder)
     session.commit()
     session.refresh(db_grinder)
-    return db_grinder
+    return db_grinder  # type: ignore[return-value]
 
 
 @router.delete("/grinders/{grinder_id}", response_model=GrinderRead)
 def delete_grinder(
     grinder_id: uuid.UUID,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> GrinderRead:
     """Soft-delete a grinder."""
     db_grinder = session.get(Grinder, grinder_id)
     if db_grinder is None:
@@ -236,7 +237,7 @@ def delete_grinder(
     session.add(db_grinder)
     session.commit()
     session.refresh(db_grinder)
-    return db_grinder
+    return db_grinder  # type: ignore[return-value]
 
 
 # ======================================================================
@@ -310,14 +311,15 @@ def _set_brewer_m2m(
 
 @router.get("/brewers", response_model=PaginatedResponse[BrewerRead])
 def list_brewers(
+    *,
     q: str | None = Query(None, description="Case-insensitive name search"),
     include_retired: bool = Query(False, description="Include soft-deleted items"),
     limit: int = Query(50, ge=1, le=200),
     offset: int = Query(0, ge=0),
     sort_by: str = Query("name", description="Field to sort by"),
     sort_dir: str = Query("asc", description="Sort direction: asc or desc"),
-    session: Session = Depends(get_session),
-) -> dict[str, Any]:
+    session: SessionDep,
+) -> PaginatedResponse[BrewerRead]:
     """List brewers with optional search, pagination, and sorting."""
     _validate_sort(sort_by, sort_dir, BREWER_SORT_FIELDS)
 
@@ -341,14 +343,14 @@ def list_brewers(
     stmt = stmt.offset(offset).limit(limit)
 
     items = session.exec(stmt).all()
-    return {"items": items, "total": total, "limit": limit, "offset": offset}
+    return PaginatedResponse(items=items, total=total, limit=limit, offset=offset)
 
 
 @router.post("/brewers", response_model=BrewerRead, status_code=201)
 def create_brewer(
     payload: BrewerCreate,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BrewerRead:
     """Create a new brewer with optional M2M methods and stop modes."""
     existing = session.exec(
         select(Brewer).where(Brewer.name == payload.name)
@@ -382,27 +384,27 @@ def create_brewer(
 
     session.commit()
     session.refresh(db_brewer)
-    return db_brewer
+    return db_brewer  # type: ignore[return-value]
 
 
 @router.get("/brewers/{brewer_id}", response_model=BrewerRead)
 def get_brewer(
     brewer_id: uuid.UUID,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BrewerRead:
     """Get a single brewer by ID."""
     db_brewer = session.get(Brewer, brewer_id)
     if db_brewer is None:
         raise HTTPException(status_code=404, detail="Brewer not found.")
-    return db_brewer
+    return db_brewer  # type: ignore[return-value]
 
 
 @router.patch("/brewers/{brewer_id}", response_model=BrewerRead)
 def update_brewer(
     brewer_id: uuid.UUID,
     payload: BrewerUpdate,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BrewerRead:
     """Partially update a brewer, optionally replacing M2M relations."""
     db_brewer = session.get(Brewer, brewer_id)
     if db_brewer is None:
@@ -444,14 +446,14 @@ def update_brewer(
 
     session.commit()
     session.refresh(db_brewer)
-    return db_brewer
+    return db_brewer  # type: ignore[return-value]
 
 
 @router.delete("/brewers/{brewer_id}", response_model=BrewerRead)
 def delete_brewer(
     brewer_id: uuid.UUID,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BrewerRead:
     """Soft-delete a brewer."""
     db_brewer = session.get(Brewer, brewer_id)
     if db_brewer is None:
@@ -461,7 +463,7 @@ def delete_brewer(
     session.add(db_brewer)
     session.commit()
     session.refresh(db_brewer)
-    return db_brewer
+    return db_brewer  # type: ignore[return-value]
 
 
 # ======================================================================
@@ -473,14 +475,15 @@ PAPER_SORT_FIELDS = ["name", "created_at", "updated_at"]
 
 @router.get("/papers", response_model=PaginatedResponse[PaperRead])
 def list_papers(
+    *,
     q: str | None = Query(None, description="Case-insensitive name search"),
     include_retired: bool = Query(False, description="Include soft-deleted items"),
     limit: int = Query(50, ge=1, le=200),
     offset: int = Query(0, ge=0),
     sort_by: str = Query("name", description="Field to sort by"),
     sort_dir: str = Query("asc", description="Sort direction: asc or desc"),
-    session: Session = Depends(get_session),
-) -> dict[str, Any]:
+    session: SessionDep,
+) -> PaginatedResponse[PaperRead]:
     """List papers with optional search, pagination, and sorting."""
     _validate_sort(sort_by, sort_dir, PAPER_SORT_FIELDS)
 
@@ -504,14 +507,14 @@ def list_papers(
     stmt = stmt.offset(offset).limit(limit)
 
     items = session.exec(stmt).all()
-    return {"items": items, "total": total, "limit": limit, "offset": offset}
+    return PaginatedResponse(items=items, total=total, limit=limit, offset=offset)
 
 
 @router.post("/papers", response_model=PaperRead, status_code=201)
 def create_paper(
     payload: PaperCreate,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> PaperRead:
     """Create a new paper."""
     existing = session.exec(
         select(Paper).where(Paper.name == payload.name)
@@ -526,27 +529,27 @@ def create_paper(
     session.add(db_paper)
     session.commit()
     session.refresh(db_paper)
-    return db_paper
+    return db_paper  # type: ignore[return-value]
 
 
 @router.get("/papers/{paper_id}", response_model=PaperRead)
 def get_paper(
     paper_id: uuid.UUID,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> PaperRead:
     """Get a single paper by ID."""
     db_paper = session.get(Paper, paper_id)
     if db_paper is None:
         raise HTTPException(status_code=404, detail="Paper not found.")
-    return db_paper
+    return db_paper  # type: ignore[return-value]
 
 
 @router.patch("/papers/{paper_id}", response_model=PaperRead)
 def update_paper(
     paper_id: uuid.UUID,
     payload: PaperUpdate,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> PaperRead:
     """Partially update a paper."""
     db_paper = session.get(Paper, paper_id)
     if db_paper is None:
@@ -571,14 +574,14 @@ def update_paper(
     session.add(db_paper)
     session.commit()
     session.refresh(db_paper)
-    return db_paper
+    return db_paper  # type: ignore[return-value]
 
 
 @router.delete("/papers/{paper_id}", response_model=PaperRead)
 def delete_paper(
     paper_id: uuid.UUID,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> PaperRead:
     """Soft-delete a paper."""
     db_paper = session.get(Paper, paper_id)
     if db_paper is None:
@@ -588,7 +591,7 @@ def delete_paper(
     session.add(db_paper)
     session.commit()
     session.refresh(db_paper)
-    return db_paper
+    return db_paper  # type: ignore[return-value]
 
 
 # ======================================================================
@@ -634,14 +637,15 @@ def _set_water_minerals(
 
 @router.get("/waters", response_model=PaginatedResponse[WaterRead])
 def list_waters(
+    *,
     q: str | None = Query(None, description="Case-insensitive name search"),
     include_retired: bool = Query(False, description="Include soft-deleted items"),
     limit: int = Query(50, ge=1, le=200),
     offset: int = Query(0, ge=0),
     sort_by: str = Query("name", description="Field to sort by"),
     sort_dir: str = Query("asc", description="Sort direction: asc or desc"),
-    session: Session = Depends(get_session),
-) -> dict[str, Any]:
+    session: SessionDep,
+) -> PaginatedResponse[WaterRead]:
     """List waters with optional search, pagination, and sorting."""
     _validate_sort(sort_by, sort_dir, WATER_SORT_FIELDS)
 
@@ -665,14 +669,14 @@ def list_waters(
     stmt = stmt.offset(offset).limit(limit)
 
     items = session.exec(stmt).all()
-    return {"items": items, "total": total, "limit": limit, "offset": offset}
+    return PaginatedResponse(items=items, total=total, limit=limit, offset=offset)
 
 
 @router.post("/waters", response_model=WaterRead, status_code=201)
 def create_water(
     payload: WaterCreate,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> WaterRead:
     """Create a new water with optional inline minerals."""
     existing = session.exec(
         select(Water).where(Water.name == payload.name)
@@ -692,27 +696,27 @@ def create_water(
 
     session.commit()
     session.refresh(db_water)
-    return db_water
+    return db_water  # type: ignore[return-value]
 
 
 @router.get("/waters/{water_id}", response_model=WaterRead)
 def get_water(
     water_id: uuid.UUID,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> WaterRead:
     """Get a single water by ID."""
     db_water = session.get(Water, water_id)
     if db_water is None:
         raise HTTPException(status_code=404, detail="Water not found.")
-    return db_water
+    return db_water  # type: ignore[return-value]
 
 
 @router.patch("/waters/{water_id}", response_model=WaterRead)
 def update_water(
     water_id: uuid.UUID,
     payload: WaterUpdate,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> WaterRead:
     """Partially update a water, optionally replacing minerals."""
     db_water = session.get(Water, water_id)
     if db_water is None:
@@ -747,14 +751,14 @@ def update_water(
 
     session.commit()
     session.refresh(db_water)
-    return db_water
+    return db_water  # type: ignore[return-value]
 
 
 @router.delete("/waters/{water_id}", response_model=WaterRead)
 def delete_water(
     water_id: uuid.UUID,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> WaterRead:
     """Soft-delete a water."""
     db_water = session.get(Water, water_id)
     if db_water is None:
@@ -764,4 +768,4 @@ def delete_water(
     session.add(db_water)
     session.commit()
     session.refresh(db_water)
-    return db_water
+    return db_water  # type: ignore[return-value]

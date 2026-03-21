@@ -6,13 +6,12 @@ with filtering by brew_method_id, grinder_id, brewer_id, and has_grinder.
 
 import uuid
 from datetime import datetime, timezone
-from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query
 from sqlalchemy import func
 from sqlmodel import Session, select
 
-from beanbay.database import get_session
+from beanbay.dependencies import SessionDep
 from beanbay.models.brew import BrewSetup
 from beanbay.models.equipment import Brewer, Grinder, Paper, Water
 from beanbay.models.tag import BrewMethod
@@ -133,6 +132,7 @@ def _validate_brew_setup_fks(
 
 @router.get("/brew-setups", response_model=PaginatedResponse[BrewSetupRead])
 def list_brew_setups(
+    *,
     brew_method_id: uuid.UUID | None = Query(None, description="Filter by brew method"),
     grinder_id: uuid.UUID | None = Query(None, description="Filter by grinder"),
     brewer_id: uuid.UUID | None = Query(None, description="Filter by brewer"),
@@ -142,8 +142,8 @@ def list_brew_setups(
     offset: int = Query(0, ge=0),
     sort_by: str = Query("created_at", description="Field to sort by"),
     sort_dir: str = Query("asc", description="Sort direction: asc or desc"),
-    session: Session = Depends(get_session),
-) -> dict[str, Any]:
+    session: SessionDep,
+) -> PaginatedResponse[BrewSetupRead]:
     """List brew setups with filtering, pagination, and sorting."""
     _validate_sort(sort_by, sort_dir, BREW_SETUP_SORT_FIELDS)
 
@@ -182,14 +182,14 @@ def list_brew_setups(
     stmt = stmt.offset(offset).limit(limit)
 
     items = session.exec(stmt).all()
-    return {"items": items, "total": total, "limit": limit, "offset": offset}
+    return PaginatedResponse(items=items, total=total, limit=limit, offset=offset)
 
 
 @router.post("/brew-setups", response_model=BrewSetupRead, status_code=201)
 def create_brew_setup(
     payload: BrewSetupCreate,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BrewSetupRead:
     """Create a new brew setup."""
     _validate_brew_setup_fks(
         session,
@@ -211,27 +211,27 @@ def create_brew_setup(
     session.add(db_setup)
     session.commit()
     session.refresh(db_setup)
-    return db_setup
+    return db_setup  # type: ignore[return-value]
 
 
 @router.get("/brew-setups/{setup_id}", response_model=BrewSetupRead)
 def get_brew_setup(
     setup_id: uuid.UUID,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BrewSetupRead:
     """Get a single brew setup by ID."""
     db_setup = session.get(BrewSetup, setup_id)
     if db_setup is None:
         raise HTTPException(status_code=404, detail="BrewSetup not found.")
-    return db_setup
+    return db_setup  # type: ignore[return-value]
 
 
 @router.patch("/brew-setups/{setup_id}", response_model=BrewSetupRead)
 def update_brew_setup(
     setup_id: uuid.UUID,
     payload: BrewSetupUpdate,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BrewSetupRead:
     """Partially update a brew setup."""
     db_setup = session.get(BrewSetup, setup_id)
     if db_setup is None:
@@ -253,14 +253,14 @@ def update_brew_setup(
     session.add(db_setup)
     session.commit()
     session.refresh(db_setup)
-    return db_setup
+    return db_setup  # type: ignore[return-value]
 
 
 @router.delete("/brew-setups/{setup_id}", response_model=BrewSetupRead)
 def delete_brew_setup(
     setup_id: uuid.UUID,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BrewSetupRead:
     """Soft-delete a brew setup."""
     db_setup = session.get(BrewSetup, setup_id)
     if db_setup is None:
@@ -270,4 +270,4 @@ def delete_brew_setup(
     session.add(db_setup)
     session.commit()
     session.refresh(db_setup)
-    return db_setup
+    return db_setup  # type: ignore[return-value]

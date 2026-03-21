@@ -13,19 +13,19 @@ from sqlmodel import SQLModel
 # ---------------------------------------------------------------------------
 
 
-def _compute_is_retired(cls: type, data: Any) -> Any:
+def _compute_is_retired(cls: type, data: dict | object) -> dict:
     """Inject ``is_retired`` bool derived from ``retired_at``.
 
     Parameters
     ----------
     cls : type
         The model class (unused but required by pydantic).
-    data : Any
+    data : dict | object
         Raw input — either a dict or an ORM model instance.
 
     Returns
     -------
-    Any
+    dict
         A dict with ``is_retired`` populated.
     """
     if isinstance(data, dict):
@@ -86,7 +86,7 @@ class FlavorTagRead(FlavorTagBase):
 
     @model_validator(mode="before")
     @classmethod
-    def compute_is_retired(cls, data: Any) -> Any:
+    def compute_is_retired(cls, data: dict | object) -> dict:
         """Compute ``is_retired`` from ``retired_at``."""
         return _compute_is_retired(cls, data)
 
@@ -138,7 +138,7 @@ class OriginRead(OriginBase):
 
     @model_validator(mode="before")
     @classmethod
-    def compute_is_retired(cls, data: Any) -> Any:
+    def compute_is_retired(cls, data: dict | object) -> dict:
         """Compute ``is_retired`` from ``retired_at``."""
         return _compute_is_retired(cls, data)
 
@@ -190,7 +190,7 @@ class RoasterRead(RoasterBase):
 
     @model_validator(mode="before")
     @classmethod
-    def compute_is_retired(cls, data: Any) -> Any:
+    def compute_is_retired(cls, data: dict | object) -> dict:
         """Compute ``is_retired`` from ``retired_at``."""
         return _compute_is_retired(cls, data)
 
@@ -242,7 +242,7 @@ class ProcessMethodRead(ProcessMethodBase):
 
     @model_validator(mode="before")
     @classmethod
-    def compute_is_retired(cls, data: Any) -> Any:
+    def compute_is_retired(cls, data: dict | object) -> dict:
         """Compute ``is_retired`` from ``retired_at``."""
         return _compute_is_retired(cls, data)
 
@@ -294,7 +294,7 @@ class BeanVarietyRead(BeanVarietyBase):
 
     @model_validator(mode="before")
     @classmethod
-    def compute_is_retired(cls, data: Any) -> Any:
+    def compute_is_retired(cls, data: dict | object) -> dict:
         """Compute ``is_retired`` from ``retired_at``."""
         return _compute_is_retired(cls, data)
 
@@ -346,7 +346,7 @@ class BrewMethodRead(BrewMethodBase):
 
     @model_validator(mode="before")
     @classmethod
-    def compute_is_retired(cls, data: Any) -> Any:
+    def compute_is_retired(cls, data: dict | object) -> dict:
         """Compute ``is_retired`` from ``retired_at``."""
         return _compute_is_retired(cls, data)
 
@@ -398,6 +398,6 @@ class StopModeRead(StopModeBase):
 
     @model_validator(mode="before")
     @classmethod
-    def compute_is_retired(cls, data: Any) -> Any:
+    def compute_is_retired(cls, data: dict | object) -> dict:
         """Compute ``is_retired`` from ``retired_at``."""
         return _compute_is_retired(cls, data)

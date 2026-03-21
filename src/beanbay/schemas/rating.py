@@ -123,19 +123,19 @@ class BeanTasteRead(BeanTasteBase):
 
     @model_validator(mode="before")
     @classmethod
-    def extract_orm_fields(cls, data: Any) -> Any:
+    def extract_orm_fields(cls, data: dict | object) -> dict:
         """Extract fields from ORM model instance if needed.
 
         Parameters
         ----------
         cls : type
             The model class (unused but required by pydantic).
-        data : Any
+        data : dict | object
             Raw input -- either a dict or an ORM model instance.
 
         Returns
         -------
-        Any
+        dict
             A dict with all fields populated.
         """
         if isinstance(data, dict):
@@ -221,19 +221,19 @@ class BeanRatingRead(SQLModel):
 
     @model_validator(mode="before")
     @classmethod
-    def compute_is_retired_and_person_name(cls, data: Any) -> Any:
+    def compute_is_retired_and_person_name(cls, data: dict | object) -> dict:
         """Inject ``is_retired`` and ``person_name`` from ORM data.
 
         Parameters
         ----------
         cls : type
             The model class (unused but required by pydantic).
-        data : Any
+        data : dict | object
             Raw input -- either a dict or an ORM model instance.
 
         Returns
         -------
-        Any
+        dict
             A dict with ``is_retired`` and ``person_name`` populated.
         """
         if isinstance(data, dict):

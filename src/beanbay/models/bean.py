@@ -34,7 +34,7 @@ class BeanOriginLink(SQLModel, table=True):
         Foreign key to the origin.
     """
 
-    __tablename__ = "bean_origins"
+    __tablename__ = "bean_origins"  # type: ignore[assignment]
 
     bean_id: uuid.UUID = Field(
         foreign_key="beans.id", primary_key=True
@@ -55,7 +55,7 @@ class BeanProcessLink(SQLModel, table=True):
         Foreign key to the process method.
     """
 
-    __tablename__ = "bean_processes"
+    __tablename__ = "bean_processes"  # type: ignore[assignment]
 
     bean_id: uuid.UUID = Field(
         foreign_key="beans.id", primary_key=True
@@ -76,7 +76,7 @@ class BeanVarietyLink(SQLModel, table=True):
         Foreign key to the bean variety.
     """
 
-    __tablename__ = "bean_variety_link"
+    __tablename__ = "bean_variety_link"  # type: ignore[assignment]
 
     bean_id: uuid.UUID = Field(
         foreign_key="beans.id", primary_key=True
@@ -112,7 +112,7 @@ class Bean(SQLModel, table=True):
         Soft-delete timestamp; ``None`` while active.
     """
 
-    __tablename__ = "beans"
+    __tablename__ = "beans"  # type: ignore[assignment]
 
     id: uuid.UUID = Field(default_factory=uuid4_default, primary_key=True)
     name: str = Field(index=True)
@@ -179,7 +179,7 @@ class Bag(SQLModel, table=True):
         Soft-delete timestamp; ``None`` while active.
     """
 
-    __tablename__ = "bags"
+    __tablename__ = "bags"  # type: ignore[assignment]
 
     id: uuid.UUID = Field(default_factory=uuid4_default, primary_key=True)
     bean_id: uuid.UUID = Field(foreign_key="beans.id")

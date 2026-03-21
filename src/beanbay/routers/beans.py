@@ -6,13 +6,11 @@ top-level ``/bags`` endpoints for cross-bean queries.
 
 import uuid
 from datetime import date, datetime, timezone
-from typing import Any
-
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query
 from sqlalchemy import func
 from sqlmodel import Session, select
 
-from beanbay.database import get_session
+from beanbay.dependencies import SessionDep
 from beanbay.models.bean import (
     Bag,
     Bean,
@@ -165,6 +163,7 @@ def _set_bean_m2m(
 # ------------------------------------------------------------------
 @router.get("/beans", response_model=PaginatedResponse[BeanRead])
 def list_beans(
+    *,
     q: str | None = Query(None, description="Case-insensitive name search"),
     roaster_id: uuid.UUID | None = Query(None, description="Filter by roaster"),
     origin_id: uuid.UUID | None = Query(None, description="Filter by origin"),
@@ -179,8 +178,8 @@ def list_beans(
     offset: int = Query(0, ge=0),
     sort_by: str = Query("name", description="Field to sort by"),
     sort_dir: str = Query("asc", description="Sort direction: asc or desc"),
-    session: Session = Depends(get_session),
-) -> dict[str, Any]:
+    session: SessionDep,
+) -> PaginatedResponse[BeanRead]:
     """List beans with optional filtering, pagination, and sorting.
 
     Parameters
@@ -205,12 +204,12 @@ def list_beans(
         Column to sort by.
     sort_dir : str
         ``"asc"`` or ``"desc"``.
-    session : Session
+    session : SessionDep
         Database session (injected).
 
     Returns
     -------
-    dict[str, Any]
+    PaginatedResponse[BeanRead]
         Paginated response with ``items``, ``total``, ``limit``, ``offset``.
     """
     _validate_sort(sort_by, sort_dir, BEAN_SORTABLE)
@@ -265,12 +264,12 @@ def list_beans(
     stmt = stmt.offset(offset).limit(limit)
     items = session.exec(stmt).all()
 
-    return {
-        "items": items,
-        "total": total,
-        "limit": limit,
-        "offset": offset,
-    }
+    return PaginatedResponse(
+        items=items,
+        total=total,
+        limit=limit,
+        offset=offset,
+    )
 
 
 # ------------------------------------------------------------------
@@ -279,20 +278,20 @@ def list_beans(
 @router.post("/beans", response_model=BeanRead, status_code=201)
 def create_bean(
     payload: BeanCreate,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BeanRead:
     """Create a new bean with optional M2M relationships.
 
     Parameters
     ----------
     payload : BeanCreate
         Bean data including optional M2M IDs.
-    session : Session
+    session : SessionDep
         Database session (injected).
 
     Returns
     -------
-    Any
+    BeanRead
         The created bean.
     """
     # Validate roaster if provided
@@ -321,7 +320,7 @@ def create_bean(
 
     session.commit()
     session.refresh(db_bean)
-    return db_bean
+    return db_bean  # type: ignore[return-value]
 
 
 # ------------------------------------------------------------------
@@ -330,26 +329,26 @@ def create_bean(
 @router.get("/beans/{bean_id}", response_model=BeanRead)
 def get_bean(
     bean_id: uuid.UUID,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BeanRead:
     """Get a single bean by ID with nested relationships.
 
     Parameters
     ----------
     bean_id : uuid.UUID
         The bean's primary key.
-    session : Session
+    session : SessionDep
         Database session (injected).
 
     Returns
     -------
-    Any
+    BeanRead
         The bean with nested relationships.
     """
     db_bean = session.get(Bean, bean_id)
     if db_bean is None:
         raise HTTPException(status_code=404, detail="Bean not found.")
-    return db_bean
+    return db_bean  # type: ignore[return-value]
 
 
 # ------------------------------------------------------------------
@@ -359,8 +358,8 @@ def get_bean(
 def update_bean(
     bean_id: uuid.UUID,
     payload: BeanUpdate,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BeanRead:
     """Partially update a bean, including M2M lists.
 
     Parameters
@@ -369,12 +368,12 @@ def update_bean(
         The bean's primary key.
     payload : BeanUpdate
         Fields to update.
-    session : Session
+    session : SessionDep
         Database session (injected).
 
     Returns
     -------
-    Any
+    BeanRead
         The updated bean.
     """
     db_bean = session.get(Bean, bean_id)
@@ -413,7 +412,7 @@ def update_bean(
 
     session.commit()
     session.refresh(db_bean)
-    return db_bean
+    return db_bean  # type: ignore[return-value]
 
 
 # ------------------------------------------------------------------
@@ -422,8 +421,8 @@ def update_bean(
 @router.delete("/beans/{bean_id}", response_model=BeanRead)
 def delete_bean(
     bean_id: uuid.UUID,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BeanRead:
     """Soft-delete a bean.
 
     Blocked with 409 Conflict if the bean has active (non-retired) bags.
@@ -432,12 +431,12 @@ def delete_bean(
     ----------
     bean_id : uuid.UUID
         The bean's primary key.
-    session : Session
+    session : SessionDep
         Database session (injected).
 
     Returns
     -------
-    Any
+    BeanRead
         The soft-deleted bean.
     """
     db_bean = session.get(Bean, bean_id)
@@ -464,7 +463,7 @@ def delete_bean(
     session.add(db_bean)
     session.commit()
     session.refresh(db_bean)
-    return db_bean
+    return db_bean  # type: ignore[return-value]
 
 
 # ======================================================================
@@ -480,13 +479,14 @@ def delete_bean(
 )
 def list_bean_bags(
     bean_id: uuid.UUID,
+    *,
     include_retired: bool = Query(False, description="Include soft-deleted items"),
     limit: int = Query(50, ge=1, le=200),
     offset: int = Query(0, ge=0),
     sort_by: str = Query("created_at", description="Field to sort by"),
     sort_dir: str = Query("asc", description="Sort direction: asc or desc"),
-    session: Session = Depends(get_session),
-) -> dict[str, Any]:
+    session: SessionDep,
+) -> PaginatedResponse[BagRead]:
     """List bags belonging to a specific bean.
 
     Parameters
@@ -503,12 +503,12 @@ def list_bean_bags(
         Column to sort by.
     sort_dir : str
         ``"asc"`` or ``"desc"``.
-    session : Session
+    session : SessionDep
         Database session (injected).
 
     Returns
     -------
-    dict[str, Any]
+    PaginatedResponse[BagRead]
         Paginated response with ``items``, ``total``, ``limit``, ``offset``.
     """
     _validate_sort(sort_by, sort_dir, BAG_SORTABLE)
@@ -537,12 +537,12 @@ def list_bean_bags(
     stmt = stmt.offset(offset).limit(limit)
     items = session.exec(stmt).all()
 
-    return {
-        "items": items,
-        "total": total,
-        "limit": limit,
-        "offset": offset,
-    }
+    return PaginatedResponse(
+        items=items,
+        total=total,
+        limit=limit,
+        offset=offset,
+    )
 
 
 # ------------------------------------------------------------------
@@ -554,8 +554,8 @@ def list_bean_bags(
 def create_bag_for_bean(
     bean_id: uuid.UUID,
     payload: BagCreate,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BagRead:
     """Create a new bag under the given bean.
 
     Parameters
@@ -564,12 +564,12 @@ def create_bag_for_bean(
         The parent bean's primary key.
     payload : BagCreate
         Bag data.
-    session : Session
+    session : SessionDep
         Database session (injected).
 
     Returns
     -------
-    Any
+    BagRead
         The created bag.
     """
     db_bean = session.get(Bean, bean_id)
@@ -588,7 +588,7 @@ def create_bag_for_bean(
     session.add(db_bag)
     session.commit()
     session.refresh(db_bag)
-    return db_bag
+    return db_bag  # type: ignore[return-value]
 
 
 # ======================================================================
@@ -601,6 +601,7 @@ def create_bag_for_bean(
 # ------------------------------------------------------------------
 @router.get("/bags", response_model=PaginatedResponse[BagRead])
 def list_bags(
+    *,
     bean_id: uuid.UUID | None = Query(None, description="Filter by bean"),
     is_preground: bool | None = Query(
         None, description="Filter by pre-ground status"
@@ -613,8 +614,8 @@ def list_bags(
     offset: int = Query(0, ge=0),
     sort_by: str = Query("created_at", description="Field to sort by"),
     sort_dir: str = Query("asc", description="Sort direction: asc or desc"),
-    session: Session = Depends(get_session),
-) -> dict[str, Any]:
+    session: SessionDep,
+) -> PaginatedResponse[BagRead]:
     """List all bags with optional filtering, pagination, and sorting.
 
     Parameters
@@ -635,12 +636,12 @@ def list_bags(
         Column to sort by.
     sort_dir : str
         ``"asc"`` or ``"desc"``.
-    session : Session
+    session : SessionDep
         Database session (injected).
 
     Returns
     -------
-    dict[str, Any]
+    PaginatedResponse[BagRead]
         Paginated response with ``items``, ``total``, ``limit``, ``offset``.
     """
     _validate_sort(sort_by, sort_dir, BAG_SORTABLE)
@@ -674,12 +675,12 @@ def list_bags(
     stmt = stmt.offset(offset).limit(limit)
     items = session.exec(stmt).all()
 
-    return {
-        "items": items,
-        "total": total,
-        "limit": limit,
-        "offset": offset,
-    }
+    return PaginatedResponse(
+        items=items,
+        total=total,
+        limit=limit,
+        offset=offset,
+    )
 
 
 # ------------------------------------------------------------------
@@ -688,26 +689,26 @@ def list_bags(
 @router.get("/bags/{bag_id}", response_model=BagRead)
 def get_bag(
     bag_id: uuid.UUID,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BagRead:
     """Get a single bag by ID.
 
     Parameters
     ----------
     bag_id : uuid.UUID
         The bag's primary key.
-    session : Session
+    session : SessionDep
         Database session (injected).
 
     Returns
     -------
-    Any
+    BagRead
         The bag.
     """
     db_bag = session.get(Bag, bag_id)
     if db_bag is None:
         raise HTTPException(status_code=404, detail="Bag not found.")
-    return db_bag
+    return db_bag  # type: ignore[return-value]
 
 
 # ------------------------------------------------------------------
@@ -717,8 +718,8 @@ def get_bag(
 def update_bag(
     bag_id: uuid.UUID,
     payload: BagUpdate,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BagRead:
     """Partially update a bag.
 
     Parameters
@@ -727,12 +728,12 @@ def update_bag(
         The bag's primary key.
     payload : BagUpdate
         Fields to update.
-    session : Session
+    session : SessionDep
         Database session (injected).
 
     Returns
     -------
-    Any
+    BagRead
         The updated bag.
     """
     db_bag = session.get(Bag, bag_id)
@@ -744,7 +745,7 @@ def update_bag(
     session.add(db_bag)
     session.commit()
     session.refresh(db_bag)
-    return db_bag
+    return db_bag  # type: ignore[return-value]
 
 
 # ------------------------------------------------------------------
@@ -753,20 +754,20 @@ def update_bag(
 @router.delete("/bags/{bag_id}", response_model=BagRead)
 def delete_bag(
     bag_id: uuid.UUID,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> BagRead:
     """Soft-delete a bag by setting ``retired_at``.
 
     Parameters
     ----------
     bag_id : uuid.UUID
         The bag's primary key.
-    session : Session
+    session : SessionDep
         Database session (injected).
 
     Returns
     -------
-    Any
+    BagRead
         The soft-deleted bag.
     """
     db_bag = session.get(Bag, bag_id)
@@ -777,4 +778,4 @@ def delete_bag(
     session.add(db_bag)
     session.commit()
     session.refresh(db_bag)
-    return db_bag
+    return db_bag  # type: ignore[return-value]

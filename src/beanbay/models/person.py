@@ -33,7 +33,7 @@ class Person(SQLModel, table=True):
         Soft-delete timestamp; ``None`` while active.
     """
 
-    __tablename__ = "people"
+    __tablename__ = "people"  # type: ignore[assignment]
 
     id: uuid.UUID = Field(default_factory=uuid4_default, primary_key=True)
     name: str = Field(index=True, unique=True)

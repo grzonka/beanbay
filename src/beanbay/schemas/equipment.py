@@ -159,19 +159,19 @@ class GrinderRead(GrinderBase):
 
     @model_validator(mode="before")
     @classmethod
-    def compute_grinder_fields(cls, data: Any) -> Any:
+    def compute_grinder_fields(cls, data: dict | object) -> dict:
         """Parse ``ring_sizes_json`` into ``rings`` and ``grind_range``.
 
         Parameters
         ----------
         cls : type
             The model class (unused but required by pydantic).
-        data : Any
+        data : dict | object
             Raw input -- either a dict or an ORM model instance.
 
         Returns
         -------
-        Any
+        dict
             A dict with computed fields populated.
         """
         if not isinstance(data, dict):
@@ -392,19 +392,19 @@ class BrewerRead(BrewerBase):
 
     @model_validator(mode="before")
     @classmethod
-    def compute_brewer_fields(cls, data: Any) -> Any:
+    def compute_brewer_fields(cls, data: dict | object) -> dict:
         """Compute ``is_retired`` and ``tier`` from brewer data.
 
         Parameters
         ----------
         cls : type
             The model class (unused but required by pydantic).
-        data : Any
+        data : dict | object
             Raw input -- either a dict or an ORM model instance.
 
         Returns
         -------
-        Any
+        dict
             A dict with computed fields populated.
         """
         if not isinstance(data, dict):
@@ -521,19 +521,19 @@ class PaperRead(PaperBase):
 
     @model_validator(mode="before")
     @classmethod
-    def compute_is_retired(cls, data: Any) -> Any:
+    def compute_is_retired(cls, data: dict | object) -> dict:
         """Compute ``is_retired`` from ``retired_at``.
 
         Parameters
         ----------
         cls : type
             The model class (unused but required by pydantic).
-        data : Any
+        data : dict | object
             Raw input -- either a dict or an ORM model instance.
 
         Returns
         -------
-        Any
+        dict
             A dict with ``is_retired`` populated.
         """
         if not isinstance(data, dict):
@@ -660,19 +660,19 @@ class WaterRead(WaterBase):
 
     @model_validator(mode="before")
     @classmethod
-    def compute_water_fields(cls, data: Any) -> Any:
+    def compute_water_fields(cls, data: dict | object) -> dict:
         """Compute ``is_retired`` and ensure minerals default.
 
         Parameters
         ----------
         cls : type
             The model class (unused but required by pydantic).
-        data : Any
+        data : dict | object
             Raw input -- either a dict or an ORM model instance.
 
         Returns
         -------
-        Any
+        dict
             A dict with computed fields populated.
         """
         if not isinstance(data, dict):

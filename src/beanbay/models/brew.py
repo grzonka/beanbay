@@ -41,7 +41,7 @@ class BrewTasteFlavorTagLink(SQLModel, table=True):
         Foreign key to the flavor tag.
     """
 
-    __tablename__ = "brew_taste_flavor_tags"
+    __tablename__ = "brew_taste_flavor_tags"  # type: ignore[assignment]
 
     brew_taste_id: uuid.UUID = Field(
         foreign_key="brew_tastes.id", primary_key=True
@@ -83,7 +83,7 @@ class BrewSetup(SQLModel, table=True):
         Soft-delete timestamp; ``None`` while active.
     """
 
-    __tablename__ = "brew_setups"
+    __tablename__ = "brew_setups"  # type: ignore[assignment]
 
     id: uuid.UUID = Field(default_factory=uuid4_default, primary_key=True)
     name: str | None = Field(default=None, index=True)
@@ -162,7 +162,7 @@ class Brew(SQLModel, table=True):
         Soft-delete timestamp; ``None`` while active.
     """
 
-    __tablename__ = "brews"
+    __tablename__ = "brews"  # type: ignore[assignment]
 
     id: uuid.UUID = Field(default_factory=uuid4_default, primary_key=True)
 
@@ -243,7 +243,7 @@ class BrewTaste(SQLModel, table=True):
         Last-modified timestamp (server default, auto-updated).
     """
 
-    __tablename__ = "brew_tastes"
+    __tablename__ = "brew_tastes"  # type: ignore[assignment]
     __table_args__ = (
         UniqueConstraint("brew_id", name="uq_brew_taste_brew_id"),
     )

@@ -7,13 +7,12 @@ default is automatically unset in the same transaction.
 
 import uuid
 from datetime import datetime, timezone
-from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query
 from sqlalchemy import func
-from sqlmodel import Session, select
+from sqlmodel import select
 
-from beanbay.database import get_session
+from beanbay.dependencies import SessionDep
 from beanbay.models.person import Person
 from beanbay.schemas.common import PaginatedResponse
 from beanbay.schemas.person import PersonCreate, PersonRead, PersonUpdate
@@ -28,14 +27,15 @@ router = APIRouter(prefix="/people", tags=["People"])
 # ------------------------------------------------------------------
 @router.get("", response_model=PaginatedResponse[PersonRead])
 def list_people(
+    *,
     q: str | None = Query(None, description="Case-insensitive name search"),
     include_retired: bool = Query(False, description="Include soft-deleted items"),
     limit: int = Query(50, ge=1, le=200),
     offset: int = Query(0, ge=0),
     sort_by: str = Query("name", description="Field to sort by"),
     sort_dir: str = Query("asc", description="Sort direction: asc or desc"),
-    session: Session = Depends(get_session),
-) -> dict[str, Any]:
+    session: SessionDep,
+) -> PaginatedResponse[PersonRead]:
     """List people with optional search, pagination, and sorting.
 
     Parameters
@@ -52,12 +52,12 @@ def list_people(
         Column to sort by.
     sort_dir : str
         ``"asc"`` or ``"desc"``.
-    session : Session
+    session : SessionDep
         Database session (injected).
 
     Returns
     -------
-    dict[str, Any]
+    PaginatedResponse[PersonRead]
         Paginated response with ``items``, ``total``, ``limit``, ``offset``.
     """
     if sort_by not in SORTABLE_FIELDS:
@@ -96,12 +96,12 @@ def list_people(
     stmt = stmt.offset(offset).limit(limit)
     items = session.exec(stmt).all()
 
-    return {
-        "items": items,
-        "total": total,
-        "limit": limit,
-        "offset": offset,
-    }
+    return PaginatedResponse(
+        items=items,
+        total=total,
+        limit=limit,
+        offset=offset,
+    )
 
 
 # ------------------------------------------------------------------
@@ -110,20 +110,20 @@ def list_people(
 @router.post("", response_model=PersonRead, status_code=201)
 def create_person(
     payload: PersonCreate,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> PersonRead:
     """Create a new person.
 
     Parameters
     ----------
     payload : PersonCreate
         The person data.
-    session : Session
+    session : SessionDep
         Database session (injected).
 
     Returns
     -------
-    Any
+    PersonRead
         The created person.
     """
     existing = session.exec(
@@ -139,7 +139,7 @@ def create_person(
     session.add(db_person)
     session.commit()
     session.refresh(db_person)
-    return db_person
+    return db_person  # type: ignore[return-value]
 
 
 # ------------------------------------------------------------------
@@ -148,26 +148,26 @@ def create_person(
 @router.get("/{person_id}", response_model=PersonRead)
 def get_person(
     person_id: uuid.UUID,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> PersonRead:
     """Get a single person by ID.
 
     Parameters
     ----------
     person_id : uuid.UUID
         The person's primary key.
-    session : Session
+    session : SessionDep
         Database session (injected).
 
     Returns
     -------
-    Any
+    PersonRead
         The person.
     """
     db_person = session.get(Person, person_id)
     if db_person is None:
         raise HTTPException(status_code=404, detail="Person not found.")
-    return db_person
+    return db_person  # type: ignore[return-value]
 
 
 # ------------------------------------------------------------------
@@ -177,8 +177,8 @@ def get_person(
 def update_person(
     person_id: uuid.UUID,
     payload: PersonUpdate,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> PersonRead:
     """Partially update a person.
 
     When ``is_default`` is set to ``True``, the previous default person
@@ -190,12 +190,12 @@ def update_person(
         The person's primary key.
     payload : PersonUpdate
         Fields to update.
-    session : Session
+    session : SessionDep
         Database session (injected).
 
     Returns
     -------
-    Any
+    PersonRead
         The updated person.
     """
     db_person = session.get(Person, person_id)
@@ -234,7 +234,7 @@ def update_person(
     session.add(db_person)
     session.commit()
     session.refresh(db_person)
-    return db_person
+    return db_person  # type: ignore[return-value]
 
 
 # ------------------------------------------------------------------
@@ -243,20 +243,20 @@ def update_person(
 @router.delete("/{person_id}", response_model=PersonRead)
 def delete_person(
     person_id: uuid.UUID,
-    session: Session = Depends(get_session),
-) -> Any:
+    session: SessionDep,
+) -> PersonRead:
     """Soft-delete a person by setting ``retired_at``.
 
     Parameters
     ----------
     person_id : uuid.UUID
         The person's primary key.
-    session : Session
+    session : SessionDep
         Database session (injected).
 
     Returns
     -------
-    Any
+    PersonRead
         The soft-deleted person.
     """
     db_person = session.get(Person, person_id)
@@ -267,4 +267,4 @@ def delete_person(
     session.add(db_person)
     session.commit()
     session.refresh(db_person)
-    return db_person
+    return db_person  # type: ignore[return-value]

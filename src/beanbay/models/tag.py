@@ -28,7 +28,7 @@ class FlavorTag(SQLModel, table=True):
         Soft-delete timestamp; ``None`` while active.
     """
 
-    __tablename__ = "flavor_tags"
+    __tablename__ = "flavor_tags"  # type: ignore[assignment]
 
     id: uuid.UUID = Field(default_factory=uuid4_default, primary_key=True)
     name: str = Field(index=True, unique=True)
@@ -54,7 +54,7 @@ class Origin(SQLModel, table=True):
         Soft-delete timestamp; ``None`` while active.
     """
 
-    __tablename__ = "origins"
+    __tablename__ = "origins"  # type: ignore[assignment]
 
     id: uuid.UUID = Field(default_factory=uuid4_default, primary_key=True)
     name: str = Field(index=True, unique=True)
@@ -80,7 +80,7 @@ class Roaster(SQLModel, table=True):
         Soft-delete timestamp; ``None`` while active.
     """
 
-    __tablename__ = "roasters"
+    __tablename__ = "roasters"  # type: ignore[assignment]
 
     id: uuid.UUID = Field(default_factory=uuid4_default, primary_key=True)
     name: str = Field(index=True, unique=True)
@@ -106,7 +106,7 @@ class ProcessMethod(SQLModel, table=True):
         Soft-delete timestamp; ``None`` while active.
     """
 
-    __tablename__ = "process_methods"
+    __tablename__ = "process_methods"  # type: ignore[assignment]
 
     id: uuid.UUID = Field(default_factory=uuid4_default, primary_key=True)
     name: str = Field(index=True, unique=True)
@@ -132,7 +132,7 @@ class BeanVariety(SQLModel, table=True):
         Soft-delete timestamp; ``None`` while active.
     """
 
-    __tablename__ = "bean_varieties"
+    __tablename__ = "bean_varieties"  # type: ignore[assignment]
 
     id: uuid.UUID = Field(default_factory=uuid4_default, primary_key=True)
     name: str = Field(index=True, unique=True)
@@ -158,7 +158,7 @@ class BrewMethod(SQLModel, table=True):
         Soft-delete timestamp; ``None`` while active.
     """
 
-    __tablename__ = "brew_methods"
+    __tablename__ = "brew_methods"  # type: ignore[assignment]
 
     id: uuid.UUID = Field(default_factory=uuid4_default, primary_key=True)
     name: str = Field(index=True, unique=True)
@@ -184,7 +184,7 @@ class StopMode(SQLModel, table=True):
         Soft-delete timestamp; ``None`` while active.
     """
 
-    __tablename__ = "stop_modes"
+    __tablename__ = "stop_modes"  # type: ignore[assignment]
 
     id: uuid.UUID = Field(default_factory=uuid4_default, primary_key=True)
     name: str = Field(index=True, unique=True)
