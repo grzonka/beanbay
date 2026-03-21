@@ -12,6 +12,7 @@ from beanbay.routers.lookup import (
     stop_mode_router,
 )
 from beanbay.routers.beans import router as beans_router
+from beanbay.routers.brew_setups import router as brew_setups_router
 from beanbay.routers.equipment import router as equipment_router
 from beanbay.routers.people import router as people_router
 
@@ -51,6 +52,9 @@ app.include_router(equipment_router, prefix="/api/v1")
 
 # Beans router
 app.include_router(beans_router, prefix="/api/v1")
+
+# Brew Setups router
+app.include_router(brew_setups_router, prefix="/api/v1")
 
 
 @app.get("/health")

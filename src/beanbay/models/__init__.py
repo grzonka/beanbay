@@ -6,6 +6,7 @@ from beanbay.models.bean import (  # noqa: F401
     BeanProcessLink,
     BeanVarietyLink,
 )
+from beanbay.models.brew import BrewSetup  # noqa: F401
 from beanbay.models.equipment import (  # noqa: F401
     Brewer,
     BrewerMethodLink,
