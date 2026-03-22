@@ -126,6 +126,8 @@ class CuppingUpdate(SQLModel):
         Updated flavor tag IDs; ``None`` means don't touch.
     """
 
+    bag_id: uuid.UUID | None = None
+    person_id: uuid.UUID | None = None
     cupped_at: datetime | None = None
     dry_fragrance: float | None = Field(default=None, ge=0, le=9)
     wet_aroma: float | None = Field(default=None, ge=0, le=9)

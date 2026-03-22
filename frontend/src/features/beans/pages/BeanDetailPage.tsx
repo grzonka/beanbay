@@ -11,7 +11,10 @@ import DataTable from '@/components/DataTable';
 import ConfirmDialog from '@/components/ConfirmDialog';
 import { usePaginationParams } from '@/utils/pagination';
 import { useNotification } from '@/components/NotificationProvider';
-import { fmtDate } from '@/utils/date';
+import { fmtDate, fmtDateTime } from '@/utils/date';
+import { useQuery } from '@tanstack/react-query';
+import apiClient from '@/api/client';
+import { useNavigate } from 'react-router';
 import {
   useBean, useDeleteBean, useBags, useDeleteBag, useUpdateBag, useBeanRatings,
   type Bean, type Bag, type BeanRating,
@@ -263,6 +266,64 @@ function RatingsSection({ beanId }: { beanId: string }) {
   );
 }
 
+interface CuppingSummary {
+  id: string;
+  person_name: string;
+  total_score: number | null;
+  cupped_at: string;
+}
+
+const cuppingColumns: GridColDef<CuppingSummary>[] = [
+  { field: 'person_name', headerName: 'Person', flex: 1 },
+  {
+    field: 'total_score', headerName: 'Score', width: 100,
+    renderCell: (p) => p.value != null ? (p.value as number).toFixed(1) : '—',
+  },
+  { field: 'cupped_at', headerName: 'Cupped At', width: 130, renderCell: (p) => fmtDate(p.value as string) },
+];
+
+function CuppingsSection({ beanId, bags }: { beanId: string; bags: Bag[] }) {
+  const navigate = useNavigate();
+  const bagIds = bags.map((b) => b.id);
+
+  const { data, isLoading } = useQuery<CuppingSummary[]>({
+    queryKey: ['beans', beanId, 'cuppings'],
+    queryFn: async () => {
+      if (bagIds.length === 0) return [];
+      // Fetch cuppings for each bag in parallel
+      const results = await Promise.all(
+        bagIds.map((bagId) =>
+          apiClient.get('/cuppings', { params: { bag_id: bagId, limit: 100 } }).then((r) => r.data.items)
+        )
+      );
+      return results.flat();
+    },
+    enabled: bagIds.length > 0,
+  });
+
+  const cuppings = data ?? [];
+
+  return (
+    <Box>
+      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+        <Typography variant="h6">Cuppings</Typography>
+      </Stack>
+      <DataTable<CuppingSummary>
+        columns={cuppingColumns}
+        rows={cuppings}
+        total={cuppings.length}
+        loading={isLoading}
+        paginationModel={{ page: 0, pageSize: 25 }}
+        onPaginationModelChange={() => {}}
+        sortModel={[]}
+        onSortModelChange={() => {}}
+        detailPath={(row) => `/cuppings/${row.id}`}
+        emptyTitle="No cuppings yet"
+      />
+    </Box>
+  );
+}
+
 export default function BeanDetailPage() {
   const { beanId } = useParams<{ beanId: string }>();
   const deleteBean = useDeleteBean();
@@ -328,6 +389,10 @@ export default function BeanDetailPage() {
       <Divider sx={{ mb: 3 }} />
 
       <RatingsSection beanId={bean.id} />
+
+      <Divider sx={{ mb: 3 }} />
+
+      <CuppingsSection beanId={bean.id} bags={bean.bags ?? []} />
 
       <BeanFormDialog
         open={formOpen}
