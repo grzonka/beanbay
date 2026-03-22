@@ -6,7 +6,7 @@ import PageHeader from '@/components/PageHeader';
 import DataTable from '@/components/DataTable';
 import ConfirmDialog from '@/components/ConfirmDialog';
 import { usePaginationParams } from '@/utils/pagination';
-import { useBrewSetups, useDeleteBrewSetup, type BrewSetup } from './hooks';
+import { useBrewSetups, useUpdateBrewSetup, useDeleteBrewSetup, type BrewSetup } from './hooks';
 import BrewSetupFormDialog from './BrewSetupFormDialog';
 import { useNotification } from '@/components/NotificationProvider';
 
