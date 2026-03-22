@@ -64,7 +64,7 @@ export default function GrinderFormDialog({ open, onClose, grinder }: GrinderFor
     const body = {
       name,
       dial_type: dialType,
-      display_format: displayFormat || null,
+      display_format: displayFormat || 'decimal',
       rings,
     };
     if (isEdit) {

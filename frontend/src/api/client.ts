@@ -9,11 +9,21 @@ export const API_ERROR_EVENT = 'beanbay:api-error';
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    const message =
-      error.response?.data?.detail ??
-      (typeof error.response?.data === 'string' ? error.response.data : null) ??
-      error.message ??
-      'Something went wrong';
+    const detail = error.response?.data?.detail;
+    let message: string;
+    if (typeof detail === 'string') {
+      message = detail;
+    } else if (Array.isArray(detail)) {
+      // FastAPI 422 validation errors: [{type, loc, msg, input}, ...]
+      message = detail.map((e: { msg: string; loc: (string | number)[] }) =>
+        `${e.loc.slice(1).join('.')}: ${e.msg}`
+      ).join('; ');
+    } else {
+      message =
+        (typeof error.response?.data === 'string' ? error.response.data : null) ??
+        error.message ??
+        'Something went wrong';
+    }
 
     window.dispatchEvent(
       new CustomEvent(API_ERROR_EVENT, {
