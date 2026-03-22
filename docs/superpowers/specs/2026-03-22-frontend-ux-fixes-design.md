@@ -128,7 +128,7 @@ DataTable search only fires on Enter key or input blur. Users expect live filter
 
 - Add `lodash.debounce` (or `lodash-es`) as a dependency: `bun add lodash-es && bun add -D @types/lodash-es`
 - Create a debounced version of `onSearchChange` using `useMemo(() => debounce(onSearchChange, 300), [onSearchChange])`
-- Wire the debounced function to the TextField `onChange` directly — no local state, Enter handler, or blur handler needed
+- Keep `searchInput` local state for the controlled TextField (so keystrokes appear immediately), but debounce the `onSearchChange` callback. Remove the Enter key and blur handlers.
 - Clean up the debounced function on unmount via `useEffect` cleanup
 - The URL params update after the 300ms debounce, triggering the API refetch via TanStack Query
 
