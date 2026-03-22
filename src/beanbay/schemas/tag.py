@@ -68,6 +68,7 @@ class FlavorTagUpdate(SQLModel):
     """Schema for partially updating a FlavorTag."""
 
     name: str | None = None
+    retired_at: datetime | None = None
 
 
 class FlavorTagRead(FlavorTagBase):
@@ -124,6 +125,7 @@ class OriginUpdate(SQLModel):
     name: str | None = None
     country: str | None = None
     region: str | None = None
+    retired_at: datetime | None = None
 
 
 class OriginRead(OriginBase):
@@ -179,6 +181,7 @@ class RoasterUpdate(SQLModel):
     """Schema for partially updating a Roaster."""
 
     name: str | None = None
+    retired_at: datetime | None = None
 
 
 class RoasterRead(RoasterBase):
@@ -233,6 +236,7 @@ class ProcessMethodUpdate(SQLModel):
 
     name: str | None = None
     category: ProcessCategory | None = None
+    retired_at: datetime | None = None
 
 
 class ProcessMethodRead(ProcessMethodBase):
@@ -287,6 +291,7 @@ class BeanVarietyUpdate(SQLModel):
 
     name: str | None = None
     species: CoffeeSpecies | None = None
+    retired_at: datetime | None = None
 
 
 class BeanVarietyRead(BeanVarietyBase):
@@ -339,6 +344,7 @@ class BrewMethodUpdate(SQLModel):
     """Schema for partially updating a BrewMethod."""
 
     name: str | None = None
+    retired_at: datetime | None = None
 
 
 class BrewMethodRead(BrewMethodBase):
@@ -391,6 +397,7 @@ class StopModeUpdate(SQLModel):
     """Schema for partially updating a StopMode."""
 
     name: str | None = None
+    retired_at: datetime | None = None
 
 
 class StopModeRead(StopModeBase):
@@ -449,6 +456,7 @@ class VendorUpdate(SQLModel):
     url: str | None = None
     location: str | None = None
     notes: str | None = None
+    retired_at: datetime | None = None
 
 
 class VendorRead(VendorBase):
@@ -510,6 +518,7 @@ class StorageTypeUpdate(SQLModel):
     """Schema for partially updating a StorageType."""
 
     name: str | None = None
+    retired_at: datetime | None = None
 
 
 class StorageTypeRead(StorageTypeBase):

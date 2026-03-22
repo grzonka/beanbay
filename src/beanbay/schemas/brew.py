@@ -80,6 +80,7 @@ class BrewSetupUpdate(SQLModel):
     brewer_id: uuid.UUID | None = None
     paper_id: uuid.UUID | None = None
     water_id: uuid.UUID | None = None
+    retired_at: datetime | None = None
 
 
 class BrewSetupRead(BrewSetupBase):
@@ -466,6 +467,7 @@ class BrewUpdate(SQLModel):
     is_failed: bool | None = None
     notes: str | None = None
     brewed_at: datetime | None = None
+    retired_at: datetime | None = None
 
 
 class BrewListRead(SQLModel):

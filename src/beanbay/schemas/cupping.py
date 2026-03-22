@@ -140,6 +140,7 @@ class CuppingUpdate(SQLModel):
     cuppers_correction: float | None = None
     total_score: float | None = Field(default=None, ge=0, le=100)
     notes: str | None = None
+    retired_at: datetime | None = None
 
     flavor_tag_ids: list[uuid.UUID] | None = None
 

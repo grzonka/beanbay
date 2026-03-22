@@ -33,7 +33,11 @@ from beanbay.utils.grinder_display import from_display, to_display
 
 router = APIRouter(tags=["Brews"])
 
-BREW_SORT_FIELDS = ["brewed_at", "created_at", "dose"]
+BREW_SORT_FIELDS = [
+    "brewed_at", "created_at", "dose", "grind_setting",
+    "temperature", "yield_amount", "pressure", "flow_rate",
+    "total_time", "pre_infusion_time",
+]
 
 
 def _get_ring_sizes(grinder: Grinder | None) -> list[tuple[float, float, float | None]] | None:

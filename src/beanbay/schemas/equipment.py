@@ -112,11 +112,14 @@ class GrinderUpdate(SQLModel):
         Updated dial type.
     rings : list[RingConfig] | None
         Updated ring configuration.
+    retired_at : datetime | None
+        Set to null to un-retire.
     """
 
     name: str | None = None
     dial_type: DialType | None = None
     rings: list[RingConfig] | None = None
+    retired_at: datetime | None = None
 
 
 class GrinderRead(GrinderBase):
@@ -346,6 +349,7 @@ class BrewerUpdate(SQLModel):
     has_bloom: bool | None = None
     method_ids: list[uuid.UUID] | None = None
     stop_mode_ids: list[uuid.UUID] | None = None
+    retired_at: datetime | None = None
 
 
 class BrewerRead(BrewerBase):
@@ -480,10 +484,13 @@ class PaperUpdate(SQLModel):
         Updated name.
     notes : str | None
         Updated notes.
+    retired_at : datetime | None
+        Set to null to un-retire.
     """
 
     name: str | None = None
     notes: str | None = None
+    retired_at: datetime | None = None
 
 
 class PaperRead(PaperBase):
@@ -615,11 +622,14 @@ class WaterUpdate(SQLModel):
         Updated notes.
     minerals : list[WaterMineralCreate] | None
         Updated mineral composition. When present, replaces all minerals.
+    retired_at : datetime | None
+        Set to null to un-retire.
     """
 
     name: str | None = None
     notes: str | None = None
     minerals: list[WaterMineralCreate] | None = None
+    retired_at: datetime | None = None
 
 
 class WaterRead(WaterBase):

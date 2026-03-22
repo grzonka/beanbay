@@ -29,6 +29,7 @@ class PersonUpdate(SQLModel):
 
     name: str | None = None
     is_default: bool | None = None
+    retired_at: datetime | None = None
 
 
 class PersonRead(PersonBase):

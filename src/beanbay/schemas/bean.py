@@ -95,6 +95,7 @@ class BagUpdate(SQLModel):
     thawed_at: datetime | None = None
     storage_type_id: uuid.UUID | None = None
     best_date: date | None = None
+    retired_at: datetime | None = None
 
 
 class BagRead(BagBase):
@@ -295,6 +296,7 @@ class BeanUpdate(SQLModel):
     process_ids: list[uuid.UUID] | None = None
     variety_ids: list[uuid.UUID] | None = None
     flavor_tag_ids: list[uuid.UUID] | None = None
+    retired_at: datetime | None = None
 
 
 class BeanRead(BeanBase):
