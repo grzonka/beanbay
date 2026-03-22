@@ -1,6 +1,7 @@
 // frontend/src/features/brews/components/BrewWizard.tsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { useQuery } from '@tanstack/react-query';
 import {
   Box,
   Button,
@@ -11,6 +12,9 @@ import {
   Typography,
 } from '@mui/material';
 import { useNotification } from '@/components/NotificationProvider';
+import apiClient from '@/api/client';
+import { validateGrindDisplay } from '@/utils/grindValidation';
+import type { Grinder } from '@/features/equipment/hooks';
 import { useCreateBrew } from '../hooks';
 import BrewStepSetup, { type SetupData } from './BrewStepSetup';
 import BrewStepParams, { type ParamsData } from './BrewStepParams';
@@ -85,6 +89,17 @@ export default function BrewWizard() {
   const [activeStep, setActiveStep] = useState(0);
   const [state, setState] = useState<WizardState>(initialState);
 
+  const grinderId = state.setup.brew_setup?.grinder_id ?? null;
+  const { data: grinder } = useQuery<Grinder | null>({
+    queryKey: ['grinders', grinderId],
+    queryFn: async () => {
+      if (!grinderId) return null;
+      const { data } = await apiClient.get(`/grinders/${grinderId}`);
+      return data;
+    },
+    enabled: !!grinderId,
+  });
+
   const patchSetup = (patch: Partial<SetupData>) =>
     setState((prev) => ({ ...prev, setup: { ...prev.setup, ...patch } }));
 
@@ -100,7 +115,15 @@ export default function BrewWizard() {
     state.setup.brew_setup != null &&
     state.setup.person != null;
 
-  const step1Valid = state.params.dose.trim() !== '' && Number(state.params.dose) > 0;
+  const rings = grinder?.rings ?? undefined;
+  const grindValidationError = rings
+    ? validateGrindDisplay(state.params.grind_setting_display, rings)
+    : null;
+
+  const step1Valid =
+    state.params.dose.trim() !== '' &&
+    Number(state.params.dose) > 0 &&
+    grindValidationError === null;
 
   const canNext =
     activeStep === 0 ? step0Valid :
@@ -175,7 +198,7 @@ export default function BrewWizard() {
           <BrewStepSetup data={state.setup} onChange={patchSetup} />
         )}
         {activeStep === 1 && (
-          <BrewStepParams data={state.params} onChange={patchParams} />
+          <BrewStepParams data={state.params} onChange={patchParams} rings={rings} />
         )}
         {activeStep === 2 && (
           <BrewStepTaste data={state.taste} onChange={patchTaste} />

@@ -28,7 +28,7 @@ export interface Brew {
   brewed_at: string; created_at: string; updated_at: string;
   retired_at: string | null; is_retired: boolean;
   bag: { bean_name: string } | null;
-  brew_setup: { id: string; name: string | null; brew_method_name: string | null; grinder_name: string | null; brewer_name: string | null; paper_name: string | null; water_name: string | null } | null;
+  brew_setup: { id: string; name: string | null; brew_method_name: string | null; grinder_id: string | null; grinder_name: string | null; brewer_name: string | null; paper_name: string | null; water_name: string | null } | null;
   person: { name: string } | null;
   taste: BrewTaste | null;
   stop_mode: { name: string } | null;

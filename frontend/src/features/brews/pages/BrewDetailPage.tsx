@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useParams } from 'react-router';
+import { useQuery } from '@tanstack/react-query';
 import {
   Box, Button, Card, CardContent, Chip, CircularProgress,
   Dialog, DialogActions, DialogContent, DialogTitle,
@@ -16,6 +17,13 @@ import ConfirmDialog from '@/components/ConfirmDialog';
 import TasteRadar, { brewTasteToRadar } from '@/components/TasteRadar';
 import FlavorTagSelect from '@/components/FlavorTagSelect';
 import { useNotification } from '@/components/NotificationProvider';
+import apiClient from '@/api/client';
+import type { Grinder } from '@/features/equipment/hooks';
+import {
+  validateGrindDisplay,
+  getGrindRangeDisplay,
+  getGrindPlaceholder,
+} from '@/utils/grindValidation';
 import {
   useBrew, useUpdateBrew, useDeleteBrew,
   useUpsertBrewTaste, useDeleteBrewTaste,
@@ -472,7 +480,7 @@ function TasteSection({ brew }: { brew: Brew }) {
 interface EditBrewForm {
   dose: string;
   yield_amount: string;
-  grind_setting: string;
+  grind_setting_display: string;
   temperature: string;
   pressure: string;
   flow_rate: string;
@@ -486,7 +494,7 @@ function brewToEditForm(brew: Brew): EditBrewForm {
   return {
     dose: brew.dose != null ? String(brew.dose) : '',
     yield_amount: brew.yield_amount != null ? String(brew.yield_amount) : '',
-    grind_setting: brew.grind_setting != null ? String(brew.grind_setting) : '',
+    grind_setting_display: brew.grind_setting_display ?? '',
     temperature: brew.temperature != null ? String(brew.temperature) : '',
     pressure: brew.pressure != null ? String(brew.pressure) : '',
     flow_rate: brew.flow_rate != null ? String(brew.flow_rate) : '',
@@ -515,6 +523,22 @@ function EditBrewDialog({
   const updateBrew = useUpdateBrew();
   const { notify } = useNotification();
 
+  const grinderId = brew.brew_setup?.grinder_id ?? null;
+  const { data: grinder } = useQuery<Grinder | null>({
+    queryKey: ['grinders', grinderId],
+    queryFn: async () => {
+      if (!grinderId) return null;
+      const { data } = await apiClient.get(`/grinders/${grinderId}`);
+      return data;
+    },
+    enabled: !!grinderId,
+  });
+
+  const rings = grinder?.rings ?? undefined;
+  const grindError = rings && form.grind_setting_display.trim()
+    ? validateGrindDisplay(form.grind_setting_display, rings)
+    : null;
+
   const handleOpen = () => setForm(brewToEditForm(brew));
 
   const set = (field: keyof EditBrewForm) =>
@@ -526,7 +550,7 @@ function EditBrewDialog({
       id: brew.id,
       dose: parseOptionalFloat(form.dose),
       yield_amount: parseOptionalFloat(form.yield_amount),
-      grind_setting: parseOptionalFloat(form.grind_setting),
+      grind_setting_display: form.grind_setting_display.trim() || null,
       temperature: parseOptionalFloat(form.temperature),
       pressure: parseOptionalFloat(form.pressure),
       flow_rate: parseOptionalFloat(form.flow_rate),
@@ -557,8 +581,17 @@ function EditBrewDialog({
             <Grid size={{ xs: 6 }}>
               <TextField label="Yield (g)" value={form.yield_amount} onChange={set('yield_amount')} type="number" fullWidth />
             </Grid>
-            <Grid size={{ xs: 6 }}>
-              <TextField label="Grind Setting" value={form.grind_setting} onChange={set('grind_setting')} type="number" fullWidth />
+            <Grid size={{ xs: 12 }}>
+              <TextField
+                label="Grind Setting"
+                value={form.grind_setting_display}
+                onChange={set('grind_setting_display')}
+                type="text"
+                fullWidth
+                placeholder={rings ? getGrindPlaceholder(rings) : 'e.g. 18 clicks, 3.2'}
+                helperText={grindError ?? (rings ? `Range: ${getGrindRangeDisplay(rings)}` : undefined)}
+                error={!!grindError}
+              />
             </Grid>
             <Grid size={{ xs: 6 }}>
               <TextField label="Temperature (°C)" value={form.temperature} onChange={set('temperature')} type="number" fullWidth />
@@ -600,7 +633,11 @@ function EditBrewDialog({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button variant="contained" onClick={handleSubmit} disabled={updateBrew.isPending}>
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          disabled={updateBrew.isPending || !!grindError}
+        >
           Save
         </Button>
       </DialogActions>

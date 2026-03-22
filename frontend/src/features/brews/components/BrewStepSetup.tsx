@@ -15,6 +15,7 @@ interface BagOption extends OptionItem {
 
 interface BrewSetupOption extends OptionItem {
   brew_method_name: string | null;
+  grinder_id: string | null;
 }
 
 export interface SetupData {
@@ -110,9 +111,10 @@ export default function BrewStepSetup({ data, onChange }: BrewStepSetupProps) {
         fetchFn={async (q) => {
           const { data: d } = await apiClient.get('/brew-setups', { params: { q, limit: 50 } });
           const items: BrewSetupOption[] = (d.items ?? []).map(
-            (s: { id: string; name: string | null; brew_method_name: string | null }) => ({
+            (s: { id: string; name: string | null; brew_method_name: string | null; grinder_id: string | null }) => ({
               id: s.id,
               brew_method_name: s.brew_method_name,
+              grinder_id: s.grinder_id ?? null,
               name: s.name
                 ? s.brew_method_name
                   ? `${s.name} — ${s.brew_method_name}`

@@ -9,6 +9,12 @@ import {
 } from '@mui/material';
 import AutocompleteCreate from '@/components/AutocompleteCreate';
 import apiClient from '@/api/client';
+import {
+  validateGrindDisplay,
+  getGrindRangeDisplay,
+  getGrindPlaceholder,
+  type RingConfig,
+} from '@/utils/grindValidation';
 
 interface OptionItem { id: string; name: string; }
 
@@ -30,9 +36,13 @@ export interface ParamsData {
 interface BrewStepParamsProps {
   data: ParamsData;
   onChange: (patch: Partial<ParamsData>) => void;
+  rings?: RingConfig[];
 }
 
-export default function BrewStepParams({ data, onChange }: BrewStepParamsProps) {
+export default function BrewStepParams({ data, onChange, rings }: BrewStepParamsProps) {
+  const grindError = rings && data.grind_setting_display.trim()
+    ? validateGrindDisplay(data.grind_setting_display, rings)
+    : null;
   return (
     <Stack spacing={2}>
       <Typography variant="body2" color="text.secondary">
@@ -72,7 +82,9 @@ export default function BrewStepParams({ data, onChange }: BrewStepParamsProps) 
         value={data.grind_setting_display}
         onChange={(e) => onChange({ grind_setting_display: e.target.value })}
         fullWidth
-        placeholder="e.g. 18 clicks, 3.2"
+        placeholder={rings ? getGrindPlaceholder(rings) : 'e.g. 18 clicks, 3.2'}
+        helperText={grindError ?? (rings ? `Range: ${getGrindRangeDisplay(rings)}` : undefined)}
+        error={!!grindError}
       />
 
       <Stack direction="row" spacing={2}>
