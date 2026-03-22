@@ -37,7 +37,7 @@ function validateGrindDisplay(input: string, rings: RingConfig[]): string | null
 
 **Brew wizard step 2 (`BrewStepParams.tsx`):**
 - Already uses text input for `grind_setting_display` — add validation
-- When brew setup is selected, resolve grinder's ring config from the setup data
+- Add `rings?: RingConfig[]` prop to `BrewStepParams`. Parent `BrewWizard` passes rings from the selected brew setup's grinder (fetched via the setup's `grinder_id` → grinder detail endpoint)
 - Show `helperText` with range: "Range: 0.0.0 — 4.9.5"
 - Show `error` + validation message when input is invalid
 - Disable Next button if grind validation fails (in addition to dose required check)
@@ -45,7 +45,7 @@ function validateGrindDisplay(input: string, rings: RingConfig[]): string | null
 **Brew edit dialog (`BrewDetailPage.tsx`):**
 - Change from `<TextField type="number" grind_setting>` to `<TextField type="text" grind_setting_display>`
 - Pre-populate with `brew.grind_setting_display` from BrewRead response
-- Resolve grinder ring config from `brew.brew_setup` data
+- Resolve grinder ring config: `BrewRead.brew_setup` only has `grinder_name`, not ring config. Fetch grinder detail via `GET /grinders/{grinder_id}` using `brew_setup.grinder_id` to get rings. Cache with TanStack Query.
 - Same validation, range hint, and error display as wizard
 - On submit: send `grind_setting_display` instead of `grind_setting`
 
@@ -75,19 +75,25 @@ Tables are inconsistent: some have edit/retire icon buttons per row, others use 
 
 **Universal rule:** Click any row = take the primary action. No inline icon buttons.
 
-**Pages with detail routes** (row click navigates):
-- `BeansListPage.tsx` — row click → `/beans/:id` (already works, no buttons to remove)
-- `BrewsListPage.tsx` — row click → `/brews/:id` (already works, no buttons to remove)
-- `CuppingsListPage.tsx` — row click → `/cuppings/:id` (already works, no buttons to remove)
+**DataTable changes** (`frontend/src/components/DataTable.tsx`):
+- Add new optional prop: `onRowClick?: (row: T) => void`
+- `onRowClick` and `detailPath` are mutually exclusive — `onRowClick` takes precedence if both are provided
+- Set `cursor: 'pointer'` when either `detailPath` or `onRowClick` is set
+- Wire `onRowClick` to DataGrid's `onRowClick` handler (call `params.row` callback)
 
-**Pages without detail routes** (row click opens edit dialog):
-- `GrindersPage.tsx` — remove actions column, add `onRowClick` → open edit dialog
-- `BrewersPage.tsx` — remove actions column, add `onRowClick` → open edit dialog
-- `PapersPage.tsx` — remove actions column, add `onRowClick` → open edit dialog
-- `WatersPage.tsx` — remove actions column, add `onRowClick` → open edit dialog
-- `BrewSetupsPage.tsx` — remove actions column, add `onRowClick` → open edit dialog
-- `PeoplePage.tsx` — remove actions column, add `onRowClick` → open edit dialog
-- `LookupTab.tsx` — remove actions column, add `onRowClick` → open edit dialog
+**Pages with detail routes** (use existing `detailPath` — no changes):
+- `BeansListPage.tsx` — row click → `/beans/:id` (already works)
+- `BrewsListPage.tsx` — row click → `/brews/:id` (already works)
+- `CuppingsListPage.tsx` — row click → `/cuppings/:id` (already works)
+
+**Pages without detail routes** (use new `onRowClick` prop):
+- `GrindersPage.tsx` — remove actions column, pass `onRowClick` to open edit dialog
+- `BrewersPage.tsx` — remove actions column, pass `onRowClick` to open edit dialog
+- `PapersPage.tsx` — remove actions column, pass `onRowClick` to open edit dialog
+- `WatersPage.tsx` — remove actions column, pass `onRowClick` to open edit dialog
+- `BrewSetupsPage.tsx` — remove actions column, pass `onRowClick` to open edit dialog
+- `PeoplePage.tsx` — remove actions column, pass `onRowClick` to open edit dialog
+- `LookupTab.tsx` — remove programmatically appended `columnsWithActions`, pass `onRowClick` to open edit dialog
 
 **Retire button placement:**
 - Add a "Retire" button inside the edit dialog for all entities that don't have detail pages
