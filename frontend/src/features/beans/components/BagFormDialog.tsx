@@ -3,6 +3,7 @@ import {
   Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack,
   Switch, FormControlLabel, TextField,
 } from '@mui/material';
+import { Archive as ArchiveIcon, RestoreFromTrash as RestoreFromTrashIcon } from '@mui/icons-material';
 import AutocompleteCreate from '@/components/AutocompleteCreate';
 import apiClient from '@/api/client';
 import { useNotification } from '@/components/NotificationProvider';
@@ -226,10 +227,10 @@ export default function BagFormDialog({ open, onClose, beanId, bag, onRetire, on
       </DialogContent>
       <DialogActions>
         {isEdit && bag?.retired_at && onActivate && (
-          <Button color="success" onClick={onActivate} disabled={isPending} sx={{ mr: 'auto' }}>Activate</Button>
+          <Button color="success" onClick={onActivate} disabled={isPending} sx={{ mr: 'auto' }} startIcon={<RestoreFromTrashIcon />}>Activate</Button>
         )}
         {isEdit && !bag?.retired_at && onRetire && (
-          <Button color="warning" onClick={onRetire} disabled={isPending} sx={{ mr: 'auto' }}>Retire</Button>
+          <Button color="warning" onClick={onRetire} disabled={isPending} sx={{ mr: 'auto' }} startIcon={<ArchiveIcon />}>Retire</Button>
         )}
         <Button onClick={onClose} disabled={isPending}>Cancel</Button>
         <Button

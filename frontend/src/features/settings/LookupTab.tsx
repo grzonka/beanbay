@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { type GridColDef } from '@mui/x-data-grid';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
+import { Add as AddIcon, Archive as ArchiveIcon, RestoreFromTrash as RestoreFromTrashIcon } from '@mui/icons-material';
 import DataTable from '@/components/DataTable';
 import ConfirmDialog from '@/components/ConfirmDialog';
 import { usePaginationParams } from '@/utils/pagination';
@@ -104,10 +104,10 @@ export default function LookupTab({ hooks, columns, fields, entityName }: Lookup
         </DialogContent>
         <DialogActions>
           {editItem && editItem.retired_at && (
-            <Button color="success" onClick={handleActivate} sx={{ mr: 'auto' }}>Activate</Button>
+            <Button color="success" onClick={handleActivate} sx={{ mr: 'auto' }} startIcon={<RestoreFromTrashIcon />}>Activate</Button>
           )}
           {editItem && !editItem.retired_at && (
-            <Button color="warning" onClick={() => setDeleteTarget(editItem)} sx={{ mr: 'auto' }}>Retire</Button>
+            <Button color="warning" onClick={() => setDeleteTarget(editItem)} sx={{ mr: 'auto' }} startIcon={<ArchiveIcon />}>Retire</Button>
           )}
           <Button onClick={() => { setFormOpen(false); setEditItem(null); }}>Cancel</Button>
           <Button variant="contained" onClick={handleSubmit}

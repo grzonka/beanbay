@@ -18,7 +18,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
+import { Archive as ArchiveIcon, ExpandMore as ExpandMoreIcon, RestoreFromTrash as RestoreFromTrashIcon } from '@mui/icons-material';
 import { brewerHooks, type Brewer } from '../hooks';
 import { useNotification } from '@/components/NotificationProvider';
 import AutocompleteCreate from '@/components/AutocompleteCreate';
@@ -367,10 +367,10 @@ export default function BrewerFormDialog({ open, onClose, brewer, onRetire, onAc
       </DialogContent>
       <DialogActions>
         {isEdit && brewer?.retired_at && onActivate && (
-          <Button color="success" onClick={onActivate} sx={{ mr: 'auto' }}>Activate</Button>
+          <Button color="success" onClick={onActivate} sx={{ mr: 'auto' }} startIcon={<RestoreFromTrashIcon />}>Activate</Button>
         )}
         {isEdit && !brewer?.retired_at && onRetire && (
-          <Button color="warning" onClick={onRetire} sx={{ mr: 'auto' }}>Retire</Button>
+          <Button color="warning" onClick={onRetire} sx={{ mr: 'auto' }} startIcon={<ArchiveIcon />}>Retire</Button>
         )}
         <Button onClick={onClose}>Cancel</Button>
         <Button

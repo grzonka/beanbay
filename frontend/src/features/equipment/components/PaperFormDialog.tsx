@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from '@mui/material';
+import { Archive as ArchiveIcon, RestoreFromTrash as RestoreFromTrashIcon } from '@mui/icons-material';
 import { paperHooks, type Paper } from '../hooks';
 import { useNotification } from '@/components/NotificationProvider';
 
@@ -63,10 +64,10 @@ export default function PaperFormDialog({ open, onClose, paper, onRetire, onActi
       </DialogContent>
       <DialogActions>
         {isEdit && paper?.retired_at && onActivate && (
-          <Button color="success" onClick={onActivate} sx={{ mr: 'auto' }}>Activate</Button>
+          <Button color="success" onClick={onActivate} sx={{ mr: 'auto' }} startIcon={<RestoreFromTrashIcon />}>Activate</Button>
         )}
         {isEdit && !paper?.retired_at && onRetire && (
-          <Button color="warning" onClick={onRetire} sx={{ mr: 'auto' }}>Retire</Button>
+          <Button color="warning" onClick={onRetire} sx={{ mr: 'auto' }} startIcon={<ArchiveIcon />}>Retire</Button>
         )}
         <Button onClick={onClose}>Cancel</Button>
         <Button variant="contained" onClick={handleSubmit} disabled={!name.trim()}>

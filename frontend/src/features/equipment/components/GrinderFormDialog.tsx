@@ -14,7 +14,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { Add as AddIcon, Archive as ArchiveIcon, Delete as DeleteIcon, RestoreFromTrash as RestoreFromTrashIcon } from '@mui/icons-material';
 import { grinderHooks, type Grinder, type RingConfig } from '../hooks';
 import { useNotification } from '@/components/NotificationProvider';
 
@@ -153,10 +153,10 @@ export default function GrinderFormDialog({ open, onClose, grinder, onRetire, on
       </DialogContent>
       <DialogActions>
         {isEdit && grinder?.retired_at && onActivate && (
-          <Button color="success" onClick={onActivate} sx={{ mr: 'auto' }}>Activate</Button>
+          <Button color="success" onClick={onActivate} sx={{ mr: 'auto' }} startIcon={<RestoreFromTrashIcon />}>Activate</Button>
         )}
         {isEdit && !grinder?.retired_at && onRetire && (
-          <Button color="warning" onClick={onRetire} sx={{ mr: 'auto' }}>Retire</Button>
+          <Button color="warning" onClick={onRetire} sx={{ mr: 'auto' }} startIcon={<ArchiveIcon />}>Retire</Button>
         )}
         <Button onClick={onClose}>Cancel</Button>
         <Button variant="contained" onClick={handleSubmit} disabled={!name.trim()}>

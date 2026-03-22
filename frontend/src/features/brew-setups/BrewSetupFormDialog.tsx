@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from '@mui/material';
+import { Archive as ArchiveIcon, RestoreFromTrash as RestoreFromTrashIcon } from '@mui/icons-material';
 import AutocompleteCreate from '@/components/AutocompleteCreate';
 import apiClient from '@/api/client';
 import { useCreateBrewSetup, useUpdateBrewSetup, type BrewSetup } from './hooks';
@@ -191,10 +192,10 @@ export default function BrewSetupFormDialog({ open, onClose, brewSetup, onRetire
       </DialogContent>
       <DialogActions>
         {isEdit && brewSetup?.retired_at && onActivate && (
-          <Button color="success" onClick={onActivate} sx={{ mr: 'auto' }}>Activate</Button>
+          <Button color="success" onClick={onActivate} sx={{ mr: 'auto' }} startIcon={<RestoreFromTrashIcon />}>Activate</Button>
         )}
         {isEdit && !brewSetup?.retired_at && onRetire && (
-          <Button color="warning" onClick={onRetire} sx={{ mr: 'auto' }}>Retire</Button>
+          <Button color="warning" onClick={onRetire} sx={{ mr: 'auto' }} startIcon={<ArchiveIcon />}>Retire</Button>
         )}
         <Button onClick={onClose}>Cancel</Button>
         <Button variant="contained" onClick={handleSubmit} disabled={!isValid}>

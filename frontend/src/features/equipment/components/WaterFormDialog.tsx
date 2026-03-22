@@ -3,7 +3,7 @@ import {
   Button, Dialog, DialogActions, DialogContent, DialogTitle,
   Stack, TextField, IconButton, Typography, Box,
 } from '@mui/material';
-import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { Add as AddIcon, Archive as ArchiveIcon, Delete as DeleteIcon, RestoreFromTrash as RestoreFromTrashIcon } from '@mui/icons-material';
 import { waterHooks, type Water } from '../hooks';
 import { useNotification } from '@/components/NotificationProvider';
 
@@ -152,10 +152,10 @@ export default function WaterFormDialog({ open, onClose, water, onRetire, onActi
       </DialogContent>
       <DialogActions>
         {isEdit && water?.retired_at && onActivate && (
-          <Button color="success" onClick={onActivate} sx={{ mr: 'auto' }}>Activate</Button>
+          <Button color="success" onClick={onActivate} sx={{ mr: 'auto' }} startIcon={<RestoreFromTrashIcon />}>Activate</Button>
         )}
         {isEdit && !water?.retired_at && onRetire && (
-          <Button color="warning" onClick={onRetire} sx={{ mr: 'auto' }}>Retire</Button>
+          <Button color="warning" onClick={onRetire} sx={{ mr: 'auto' }} startIcon={<ArchiveIcon />}>Retire</Button>
         )}
         <Button onClick={onClose}>Cancel</Button>
         <Button variant="contained" onClick={handleSubmit} disabled={!name.trim()}>
