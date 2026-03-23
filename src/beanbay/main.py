@@ -42,6 +42,7 @@ async def lifespan(app: FastAPI):
 
     from beanbay.database import engine
     from beanbay.seed import seed_brew_methods, seed_default_person, seed_stop_modes, seed_storage_types
+    from beanbay.seed_optimization import seed_method_parameter_defaults
 
     alembic_cfg = AlembicConfig("alembic.ini")
     command.upgrade(alembic_cfg, "head")
@@ -51,6 +52,7 @@ async def lifespan(app: FastAPI):
         seed_stop_modes(session)
         seed_storage_types(session)
         seed_default_person(session, settings.default_person_name)
+        seed_method_parameter_defaults(session)
         session.commit()
     yield
 
