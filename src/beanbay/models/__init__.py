@@ -41,6 +41,13 @@ from beanbay.models.equipment import (  # noqa: F401
     Water,
     WaterMineral,
 )
+from beanbay.models.optimization import (  # noqa: F401
+    BeanParameterOverride,
+    Campaign,
+    MethodParameterDefault,
+    OptimizationJob,
+    Recommendation,
+)
 from beanbay.models.person import Person  # noqa: F401
 from beanbay.models.rating import (  # noqa: F401
     BeanRating,
