@@ -7,7 +7,6 @@ import json
 import pytest
 
 from beanbay.services.parameter_ranges import (
-    EffectiveRange,
     compute_effective_ranges,
 )
 
