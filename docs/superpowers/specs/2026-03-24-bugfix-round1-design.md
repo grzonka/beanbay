@@ -53,15 +53,15 @@ const Plot = createPlotlyComponent(Plotly);
 
 **Fix**: Eliminate the client-side join. Return `bean_name` directly from the bags API endpoint so the frontend doesn't need a separate beans query.
 
-Backend: The `GET /bags` list endpoint serializes `BagListRead` items. Add a `bean_name: str | None` computed field that joins to the Bean table. The bag model already has `bean_id` as a FK — the serializer just needs to include `bean.name`.
+Backend: The `GET /bags` list endpoint (in `src/beanbay/routers/beans.py:675`, function `list_bags`) serializes items using `BagRead` (defined in `src/beanbay/schemas/bean.py:101`). Add a `bean_name: str | None` field to `BagRead`. The `Bag` model has a `bean` relationship (via `bean_id` FK), so `bag.bean.name` is accessible. The `list_bags` endpoint already loads bags with their relationships — add `bean_name=bag.bean.name` to the serialization.
 
 Frontend: Remove the beans query from `BrewStepSetup`. Use `bag.bean_name` directly in the label formatter instead of `beanMap[bag.bean_id]`.
 
 **Files**:
-- Modify: `src/beanbay/schemas/bag.py` (or wherever `BagListRead` is defined) — add `bean_name` field
-- Modify: `src/beanbay/routers/bags.py` (or wherever the bags list endpoint is) — populate `bean_name` from the join
+- Modify: `src/beanbay/schemas/bean.py` — add `bean_name: str | None = None` field to `BagRead`
+- Modify: `src/beanbay/routers/beans.py` — populate `bean_name` from `bag.bean.name` in `list_bags()` and `list_bean_bags()`
 - Modify: `frontend/src/features/bags/hooks.ts` — add `bean_name` to `BagListItem` interface
-- Modify: `frontend/src/features/brews/components/BrewStepSetup.tsx` — remove beans query, use `bean_name` from bag data
+- Modify: `frontend/src/features/brews/components/BrewStepSetup.tsx` — remove beans query and `beanMap`, use `bag.bean_name` directly
 
 **Verification**: Open BrewWizard, click Bag dropdown. Options should show "Ethiopia Yirgacheffe — 250g" not "Unknown bean — 250g".
 
@@ -81,7 +81,8 @@ Three endpoints use `OptionalPersonIdDep`: `/stats/brews`, `/stats/taste`, `/sta
 
 **Files**:
 - Modify: `src/beanbay/dependencies.py` — change `_resolve_person_id` fallback from default-person lookup to `return None`
-- Modify: `tests/` — update any tests that depend on the auto-resolve behavior
+
+**Test impact**: Existing stats tests do not depend on auto-resolve behavior. The empty-state test calls without `person_id` and expects zeros (still correct — no brews in DB). Tests with brews pass an explicit `person_id`. No test updates needed — verify existing tests still pass.
 
 **Verification**: Navigate to dashboard. "Total Brews" should show 10 (not 0). "This Week" should show 10. "Fail Rate" should show "10.0%". "Best Brew Score" should show 9.0.
 
@@ -93,29 +94,41 @@ Three endpoints use `OptionalPersonIdDep`: `/stats/brews`, `/stats/taste`, `/sta
 
 **Root cause**: The SQLite database stores naive `datetime` objects (no timezone). FastAPI's default JSON serialization outputs them as ISO 8601 strings without a timezone suffix (e.g., `"2026-03-24T11:51:49"`). When JavaScript's `new Date()` parses this string, it interprets it as local time. But the server generated the timestamp in UTC. The difference between UTC and the user's local timezone (e.g., UTC+1) creates the offset.
 
-**Fix**: Ensure all datetime serialization includes the UTC timezone marker. Add a custom JSON encoder at the FastAPI app level that serializes `datetime` objects with `Z` suffix. This is the server-side fix because the server is the source of truth for timezone semantics.
+**Fix**: Ensure all datetime serialization includes the UTC timezone marker. Use a custom `JSONResponse` subclass with a `default` handler that appends `Z` to naive datetimes. This is applied once at the FastAPI app level and affects all responses globally.
 
-In `main.py`, configure a custom JSON serializer for the FastAPI app that converts naive datetimes to UTC-aware strings:
+Implementation approach: Override FastAPI's default `JSONResponse` with a custom class that uses `json.dumps` with a `default` handler for datetime serialization:
 
 ```python
-from datetime import datetime, timezone
+import json
+from datetime import datetime
+from fastapi.responses import JSONResponse
 
-def custom_json_serializer(obj):
-    if isinstance(obj, datetime):
-        if obj.tzinfo is None:
-            # Naive datetime assumed UTC — append Z
-            return obj.isoformat() + "Z"
-        return obj.isoformat()
-    raise TypeError
+class UTCDateTimeResponse(JSONResponse):
+    def render(self, content):
+        return json.dumps(
+            content,
+            default=self._default_serializer,
+            ensure_ascii=False,
+        ).encode("utf-8")
+
+    @staticmethod
+    def _default_serializer(obj):
+        if isinstance(obj, datetime):
+            s = obj.isoformat()
+            if obj.tzinfo is None:
+                s += "Z"
+            return s
+        raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
 ```
 
-Apply via FastAPI's `default` JSON encoder or Pydantic model config.
+Set as the default response class on the FastAPI app: `app = FastAPI(default_response_class=UTCDateTimeResponse)`.
+
+**Note**: This changes datetime serialization for ALL API responses globally. Confirmed that no existing frontend code compensates for missing timezone (the only relative-time formatter is `formatRelativeTime` in `DashboardPage.tsx` which will now work correctly).
 
 **Files**:
-- Modify: `src/beanbay/main.py` — add custom JSON serialization for datetime
-- Alternative: Add a Pydantic `model_serializer` to the base model class used by all read schemas
+- Modify: `src/beanbay/main.py` — add `UTCDateTimeResponse` class and set as `default_response_class`
 
-**Verification**: Dashboard "Recent Brews" should show "Xm ago" (minutes, not hours) for recently created brews. Values should match wall-clock expectation.
+**Verification**: Dashboard "Recent Brews" should show "Xm ago" (minutes, not hours) for recently created brews. Check that all API responses now include `Z` suffix on datetime fields (e.g., `curl /api/v1/brews?limit=1`).
 
 ---
 
@@ -147,6 +160,12 @@ The `ensure_campaign` function:
 - Modify: `tests/integration/test_optimize_api.py` — add test that creating a brew auto-creates a campaign
 
 **Verification**: Create a brew via the wizard. Navigate to `/optimize`. The campaign for that bean+setup should appear automatically.
+
+---
+
+## Dependencies Between Fixes
+
+All 6 fixes are independent and can be implemented in any order. No fix depends on another.
 
 ---
 
