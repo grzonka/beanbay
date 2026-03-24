@@ -4,8746 +4,8765 @@
  */
 
 export interface paths {
-    "/api/v1/flavor-tags": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List Items
-         * @description List lookup items with optional search, pagination, and sorting.
-         */
-        get: operations["list_items_api_v1_flavor_tags_get"];
-        put?: never;
-        /**
-         * Create Item
-         * @description Create a new lookup item.
-         */
-        post: operations["create_item_api_v1_flavor_tags_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+  '/api/v1/flavor-tags': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/flavor-tags/{item_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Item
-         * @description Get a single lookup item by ID.
-         */
-        get: operations["get_item_api_v1_flavor_tags__item_id__get"];
-        put?: never;
-        post?: never;
-        /**
-         * Delete Item
-         * @description Soft-delete a lookup item by setting ``retired_at``.
-         */
-        delete: operations["delete_item_api_v1_flavor_tags__item_id__delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Update Item
-         * @description Partially update a lookup item.
-         */
-        patch: operations["update_item_api_v1_flavor_tags__item_id__patch"];
-        trace?: never;
+    /**
+     * List Items
+     * @description List lookup items with optional search, pagination, and sorting.
+     */
+    get: operations['list_items_api_v1_flavor_tags_get'];
+    put?: never;
+    /**
+     * Create Item
+     * @description Create a new lookup item.
+     */
+    post: operations['create_item_api_v1_flavor_tags_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/flavor-tags/{item_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/origins": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List Items
-         * @description List lookup items with optional search, pagination, and sorting.
-         */
-        get: operations["list_items_api_v1_origins_get"];
-        put?: never;
-        /**
-         * Create Item
-         * @description Create a new lookup item.
-         */
-        post: operations["create_item_api_v1_origins_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Item
+     * @description Get a single lookup item by ID.
+     */
+    get: operations['get_item_api_v1_flavor_tags__item_id__get'];
+    put?: never;
+    post?: never;
+    /**
+     * Delete Item
+     * @description Soft-delete a lookup item by setting ``retired_at``.
+     */
+    delete: operations['delete_item_api_v1_flavor_tags__item_id__delete'];
+    options?: never;
+    head?: never;
+    /**
+     * Update Item
+     * @description Partially update a lookup item.
+     */
+    patch: operations['update_item_api_v1_flavor_tags__item_id__patch'];
+    trace?: never;
+  };
+  '/api/v1/origins': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/origins/{item_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Item
-         * @description Get a single lookup item by ID.
-         */
-        get: operations["get_item_api_v1_origins__item_id__get"];
-        put?: never;
-        post?: never;
-        /**
-         * Delete Item
-         * @description Soft-delete a lookup item by setting ``retired_at``.
-         */
-        delete: operations["delete_item_api_v1_origins__item_id__delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Update Item
-         * @description Partially update a lookup item.
-         */
-        patch: operations["update_item_api_v1_origins__item_id__patch"];
-        trace?: never;
+    /**
+     * List Items
+     * @description List lookup items with optional search, pagination, and sorting.
+     */
+    get: operations['list_items_api_v1_origins_get'];
+    put?: never;
+    /**
+     * Create Item
+     * @description Create a new lookup item.
+     */
+    post: operations['create_item_api_v1_origins_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/origins/{item_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/roasters": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List Items
-         * @description List lookup items with optional search, pagination, and sorting.
-         */
-        get: operations["list_items_api_v1_roasters_get"];
-        put?: never;
-        /**
-         * Create Item
-         * @description Create a new lookup item.
-         */
-        post: operations["create_item_api_v1_roasters_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Item
+     * @description Get a single lookup item by ID.
+     */
+    get: operations['get_item_api_v1_origins__item_id__get'];
+    put?: never;
+    post?: never;
+    /**
+     * Delete Item
+     * @description Soft-delete a lookup item by setting ``retired_at``.
+     */
+    delete: operations['delete_item_api_v1_origins__item_id__delete'];
+    options?: never;
+    head?: never;
+    /**
+     * Update Item
+     * @description Partially update a lookup item.
+     */
+    patch: operations['update_item_api_v1_origins__item_id__patch'];
+    trace?: never;
+  };
+  '/api/v1/roasters': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/roasters/{item_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Item
-         * @description Get a single lookup item by ID.
-         */
-        get: operations["get_item_api_v1_roasters__item_id__get"];
-        put?: never;
-        post?: never;
-        /**
-         * Delete Item
-         * @description Soft-delete a lookup item by setting ``retired_at``.
-         */
-        delete: operations["delete_item_api_v1_roasters__item_id__delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Update Item
-         * @description Partially update a lookup item.
-         */
-        patch: operations["update_item_api_v1_roasters__item_id__patch"];
-        trace?: never;
+    /**
+     * List Items
+     * @description List lookup items with optional search, pagination, and sorting.
+     */
+    get: operations['list_items_api_v1_roasters_get'];
+    put?: never;
+    /**
+     * Create Item
+     * @description Create a new lookup item.
+     */
+    post: operations['create_item_api_v1_roasters_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/roasters/{item_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/process-methods": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List Items
-         * @description List lookup items with optional search, pagination, and sorting.
-         */
-        get: operations["list_items_api_v1_process_methods_get"];
-        put?: never;
-        /**
-         * Create Item
-         * @description Create a new lookup item.
-         */
-        post: operations["create_item_api_v1_process_methods_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Item
+     * @description Get a single lookup item by ID.
+     */
+    get: operations['get_item_api_v1_roasters__item_id__get'];
+    put?: never;
+    post?: never;
+    /**
+     * Delete Item
+     * @description Soft-delete a lookup item by setting ``retired_at``.
+     */
+    delete: operations['delete_item_api_v1_roasters__item_id__delete'];
+    options?: never;
+    head?: never;
+    /**
+     * Update Item
+     * @description Partially update a lookup item.
+     */
+    patch: operations['update_item_api_v1_roasters__item_id__patch'];
+    trace?: never;
+  };
+  '/api/v1/process-methods': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/process-methods/{item_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Item
-         * @description Get a single lookup item by ID.
-         */
-        get: operations["get_item_api_v1_process_methods__item_id__get"];
-        put?: never;
-        post?: never;
-        /**
-         * Delete Item
-         * @description Soft-delete a lookup item by setting ``retired_at``.
-         */
-        delete: operations["delete_item_api_v1_process_methods__item_id__delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Update Item
-         * @description Partially update a lookup item.
-         */
-        patch: operations["update_item_api_v1_process_methods__item_id__patch"];
-        trace?: never;
+    /**
+     * List Items
+     * @description List lookup items with optional search, pagination, and sorting.
+     */
+    get: operations['list_items_api_v1_process_methods_get'];
+    put?: never;
+    /**
+     * Create Item
+     * @description Create a new lookup item.
+     */
+    post: operations['create_item_api_v1_process_methods_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/process-methods/{item_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/bean-varieties": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List Items
-         * @description List lookup items with optional search, pagination, and sorting.
-         */
-        get: operations["list_items_api_v1_bean_varieties_get"];
-        put?: never;
-        /**
-         * Create Item
-         * @description Create a new lookup item.
-         */
-        post: operations["create_item_api_v1_bean_varieties_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Item
+     * @description Get a single lookup item by ID.
+     */
+    get: operations['get_item_api_v1_process_methods__item_id__get'];
+    put?: never;
+    post?: never;
+    /**
+     * Delete Item
+     * @description Soft-delete a lookup item by setting ``retired_at``.
+     */
+    delete: operations['delete_item_api_v1_process_methods__item_id__delete'];
+    options?: never;
+    head?: never;
+    /**
+     * Update Item
+     * @description Partially update a lookup item.
+     */
+    patch: operations['update_item_api_v1_process_methods__item_id__patch'];
+    trace?: never;
+  };
+  '/api/v1/bean-varieties': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/bean-varieties/{item_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Item
-         * @description Get a single lookup item by ID.
-         */
-        get: operations["get_item_api_v1_bean_varieties__item_id__get"];
-        put?: never;
-        post?: never;
-        /**
-         * Delete Item
-         * @description Soft-delete a lookup item by setting ``retired_at``.
-         */
-        delete: operations["delete_item_api_v1_bean_varieties__item_id__delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Update Item
-         * @description Partially update a lookup item.
-         */
-        patch: operations["update_item_api_v1_bean_varieties__item_id__patch"];
-        trace?: never;
+    /**
+     * List Items
+     * @description List lookup items with optional search, pagination, and sorting.
+     */
+    get: operations['list_items_api_v1_bean_varieties_get'];
+    put?: never;
+    /**
+     * Create Item
+     * @description Create a new lookup item.
+     */
+    post: operations['create_item_api_v1_bean_varieties_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/bean-varieties/{item_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/brew-methods": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List Items
-         * @description List lookup items with optional search, pagination, and sorting.
-         */
-        get: operations["list_items_api_v1_brew_methods_get"];
-        put?: never;
-        /**
-         * Create Item
-         * @description Create a new lookup item.
-         */
-        post: operations["create_item_api_v1_brew_methods_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Item
+     * @description Get a single lookup item by ID.
+     */
+    get: operations['get_item_api_v1_bean_varieties__item_id__get'];
+    put?: never;
+    post?: never;
+    /**
+     * Delete Item
+     * @description Soft-delete a lookup item by setting ``retired_at``.
+     */
+    delete: operations['delete_item_api_v1_bean_varieties__item_id__delete'];
+    options?: never;
+    head?: never;
+    /**
+     * Update Item
+     * @description Partially update a lookup item.
+     */
+    patch: operations['update_item_api_v1_bean_varieties__item_id__patch'];
+    trace?: never;
+  };
+  '/api/v1/brew-methods': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/brew-methods/{item_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Item
-         * @description Get a single lookup item by ID.
-         */
-        get: operations["get_item_api_v1_brew_methods__item_id__get"];
-        put?: never;
-        post?: never;
-        /**
-         * Delete Item
-         * @description Soft-delete a lookup item by setting ``retired_at``.
-         */
-        delete: operations["delete_item_api_v1_brew_methods__item_id__delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Update Item
-         * @description Partially update a lookup item.
-         */
-        patch: operations["update_item_api_v1_brew_methods__item_id__patch"];
-        trace?: never;
+    /**
+     * List Items
+     * @description List lookup items with optional search, pagination, and sorting.
+     */
+    get: operations['list_items_api_v1_brew_methods_get'];
+    put?: never;
+    /**
+     * Create Item
+     * @description Create a new lookup item.
+     */
+    post: operations['create_item_api_v1_brew_methods_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/brew-methods/{item_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/stop-modes": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List Items
-         * @description List lookup items with optional search, pagination, and sorting.
-         */
-        get: operations["list_items_api_v1_stop_modes_get"];
-        put?: never;
-        /**
-         * Create Item
-         * @description Create a new lookup item.
-         */
-        post: operations["create_item_api_v1_stop_modes_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Item
+     * @description Get a single lookup item by ID.
+     */
+    get: operations['get_item_api_v1_brew_methods__item_id__get'];
+    put?: never;
+    post?: never;
+    /**
+     * Delete Item
+     * @description Soft-delete a lookup item by setting ``retired_at``.
+     */
+    delete: operations['delete_item_api_v1_brew_methods__item_id__delete'];
+    options?: never;
+    head?: never;
+    /**
+     * Update Item
+     * @description Partially update a lookup item.
+     */
+    patch: operations['update_item_api_v1_brew_methods__item_id__patch'];
+    trace?: never;
+  };
+  '/api/v1/stop-modes': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/stop-modes/{item_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Item
-         * @description Get a single lookup item by ID.
-         */
-        get: operations["get_item_api_v1_stop_modes__item_id__get"];
-        put?: never;
-        post?: never;
-        /**
-         * Delete Item
-         * @description Soft-delete a lookup item by setting ``retired_at``.
-         */
-        delete: operations["delete_item_api_v1_stop_modes__item_id__delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Update Item
-         * @description Partially update a lookup item.
-         */
-        patch: operations["update_item_api_v1_stop_modes__item_id__patch"];
-        trace?: never;
+    /**
+     * List Items
+     * @description List lookup items with optional search, pagination, and sorting.
+     */
+    get: operations['list_items_api_v1_stop_modes_get'];
+    put?: never;
+    /**
+     * Create Item
+     * @description Create a new lookup item.
+     */
+    post: operations['create_item_api_v1_stop_modes_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/stop-modes/{item_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/vendors": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List Items
-         * @description List lookup items with optional search, pagination, and sorting.
-         */
-        get: operations["list_items_api_v1_vendors_get"];
-        put?: never;
-        /**
-         * Create Item
-         * @description Create a new lookup item.
-         */
-        post: operations["create_item_api_v1_vendors_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Item
+     * @description Get a single lookup item by ID.
+     */
+    get: operations['get_item_api_v1_stop_modes__item_id__get'];
+    put?: never;
+    post?: never;
+    /**
+     * Delete Item
+     * @description Soft-delete a lookup item by setting ``retired_at``.
+     */
+    delete: operations['delete_item_api_v1_stop_modes__item_id__delete'];
+    options?: never;
+    head?: never;
+    /**
+     * Update Item
+     * @description Partially update a lookup item.
+     */
+    patch: operations['update_item_api_v1_stop_modes__item_id__patch'];
+    trace?: never;
+  };
+  '/api/v1/vendors': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/vendors/{item_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Item
-         * @description Get a single lookup item by ID.
-         */
-        get: operations["get_item_api_v1_vendors__item_id__get"];
-        put?: never;
-        post?: never;
-        /**
-         * Delete Item
-         * @description Soft-delete a lookup item by setting ``retired_at``.
-         */
-        delete: operations["delete_item_api_v1_vendors__item_id__delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Update Item
-         * @description Partially update a lookup item.
-         */
-        patch: operations["update_item_api_v1_vendors__item_id__patch"];
-        trace?: never;
+    /**
+     * List Items
+     * @description List lookup items with optional search, pagination, and sorting.
+     */
+    get: operations['list_items_api_v1_vendors_get'];
+    put?: never;
+    /**
+     * Create Item
+     * @description Create a new lookup item.
+     */
+    post: operations['create_item_api_v1_vendors_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/vendors/{item_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/storage-types": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List Items
-         * @description List lookup items with optional search, pagination, and sorting.
-         */
-        get: operations["list_items_api_v1_storage_types_get"];
-        put?: never;
-        /**
-         * Create Item
-         * @description Create a new lookup item.
-         */
-        post: operations["create_item_api_v1_storage_types_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Item
+     * @description Get a single lookup item by ID.
+     */
+    get: operations['get_item_api_v1_vendors__item_id__get'];
+    put?: never;
+    post?: never;
+    /**
+     * Delete Item
+     * @description Soft-delete a lookup item by setting ``retired_at``.
+     */
+    delete: operations['delete_item_api_v1_vendors__item_id__delete'];
+    options?: never;
+    head?: never;
+    /**
+     * Update Item
+     * @description Partially update a lookup item.
+     */
+    patch: operations['update_item_api_v1_vendors__item_id__patch'];
+    trace?: never;
+  };
+  '/api/v1/storage-types': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/storage-types/{item_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Item
-         * @description Get a single lookup item by ID.
-         */
-        get: operations["get_item_api_v1_storage_types__item_id__get"];
-        put?: never;
-        post?: never;
-        /**
-         * Delete Item
-         * @description Soft-delete a lookup item by setting ``retired_at``.
-         */
-        delete: operations["delete_item_api_v1_storage_types__item_id__delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Update Item
-         * @description Partially update a lookup item.
-         */
-        patch: operations["update_item_api_v1_storage_types__item_id__patch"];
-        trace?: never;
+    /**
+     * List Items
+     * @description List lookup items with optional search, pagination, and sorting.
+     */
+    get: operations['list_items_api_v1_storage_types_get'];
+    put?: never;
+    /**
+     * Create Item
+     * @description Create a new lookup item.
+     */
+    post: operations['create_item_api_v1_storage_types_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/storage-types/{item_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/people": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List People
-         * @description List people with optional search, pagination, and sorting.
-         *
-         *     Parameters
-         *     ----------
-         *     q : str | None
-         *         Case-insensitive substring match on ``name``.
-         *     include_retired : bool
-         *         When ``True``, include soft-deleted people.
-         *     limit : int
-         *         Maximum items per page (1--200).
-         *     offset : int
-         *         Number of items to skip.
-         *     sort_by : str
-         *         Column to sort by.
-         *     sort_dir : str
-         *         ``"asc"`` or ``"desc"``.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     PaginatedResponse[PersonRead]
-         *         Paginated response with ``items``, ``total``, ``limit``, ``offset``.
-         */
-        get: operations["list_people_api_v1_people_get"];
-        put?: never;
-        /**
-         * Create Person
-         * @description Create a new person.
-         *
-         *     Parameters
-         *     ----------
-         *     payload : PersonCreate
-         *         The person data.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     PersonRead
-         *         The created person.
-         */
-        post: operations["create_person_api_v1_people_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Item
+     * @description Get a single lookup item by ID.
+     */
+    get: operations['get_item_api_v1_storage_types__item_id__get'];
+    put?: never;
+    post?: never;
+    /**
+     * Delete Item
+     * @description Soft-delete a lookup item by setting ``retired_at``.
+     */
+    delete: operations['delete_item_api_v1_storage_types__item_id__delete'];
+    options?: never;
+    head?: never;
+    /**
+     * Update Item
+     * @description Partially update a lookup item.
+     */
+    patch: operations['update_item_api_v1_storage_types__item_id__patch'];
+    trace?: never;
+  };
+  '/api/v1/people': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/people/{person_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Person
-         * @description Get a single person by ID.
-         *
-         *     Parameters
-         *     ----------
-         *     person_id : uuid.UUID
-         *         The person's primary key.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     PersonRead
-         *         The person.
-         */
-        get: operations["get_person_api_v1_people__person_id__get"];
-        put?: never;
-        post?: never;
-        /**
-         * Delete Person
-         * @description Soft-delete a person by setting ``retired_at``.
-         *
-         *     Parameters
-         *     ----------
-         *     person_id : uuid.UUID
-         *         The person's primary key.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     PersonRead
-         *         The soft-deleted person.
-         */
-        delete: operations["delete_person_api_v1_people__person_id__delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Update Person
-         * @description Partially update a person.
-         *
-         *     When ``is_default`` is set to ``True``, the previous default person
-         *     (if any) is automatically unset in the same transaction.
-         *
-         *     Parameters
-         *     ----------
-         *     person_id : uuid.UUID
-         *         The person's primary key.
-         *     payload : PersonUpdate
-         *         Fields to update.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     PersonRead
-         *         The updated person.
-         */
-        patch: operations["update_person_api_v1_people__person_id__patch"];
-        trace?: never;
+    /**
+     * List People
+     * @description List people with optional search, pagination, and sorting.
+     *
+     *     Parameters
+     *     ----------
+     *     q : str | None
+     *         Case-insensitive substring match on ``name``.
+     *     include_retired : bool
+     *         When ``True``, include soft-deleted people.
+     *     limit : int
+     *         Maximum items per page (1--200).
+     *     offset : int
+     *         Number of items to skip.
+     *     sort_by : str
+     *         Column to sort by.
+     *     sort_dir : str
+     *         ``"asc"`` or ``"desc"``.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     PaginatedResponse[PersonRead]
+     *         Paginated response with ``items``, ``total``, ``limit``, ``offset``.
+     */
+    get: operations['list_people_api_v1_people_get'];
+    put?: never;
+    /**
+     * Create Person
+     * @description Create a new person.
+     *
+     *     Parameters
+     *     ----------
+     *     payload : PersonCreate
+     *         The person data.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     PersonRead
+     *         The created person.
+     */
+    post: operations['create_person_api_v1_people_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/people/{person_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/grinders": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List Grinders
-         * @description List grinders with optional search, pagination, and sorting.
-         */
-        get: operations["list_grinders_api_v1_grinders_get"];
-        put?: never;
-        /**
-         * Create Grinder
-         * @description Create a new grinder.
-         */
-        post: operations["create_grinder_api_v1_grinders_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Person
+     * @description Get a single person by ID.
+     *
+     *     Parameters
+     *     ----------
+     *     person_id : uuid.UUID
+     *         The person's primary key.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     PersonRead
+     *         The person.
+     */
+    get: operations['get_person_api_v1_people__person_id__get'];
+    put?: never;
+    post?: never;
+    /**
+     * Delete Person
+     * @description Soft-delete a person by setting ``retired_at``.
+     *
+     *     Parameters
+     *     ----------
+     *     person_id : uuid.UUID
+     *         The person's primary key.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     PersonRead
+     *         The soft-deleted person.
+     */
+    delete: operations['delete_person_api_v1_people__person_id__delete'];
+    options?: never;
+    head?: never;
+    /**
+     * Update Person
+     * @description Partially update a person.
+     *
+     *     When ``is_default`` is set to ``True``, the previous default person
+     *     (if any) is automatically unset in the same transaction.
+     *
+     *     Parameters
+     *     ----------
+     *     person_id : uuid.UUID
+     *         The person's primary key.
+     *     payload : PersonUpdate
+     *         Fields to update.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     PersonRead
+     *         The updated person.
+     */
+    patch: operations['update_person_api_v1_people__person_id__patch'];
+    trace?: never;
+  };
+  '/api/v1/grinders': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/grinders/{grinder_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Grinder
-         * @description Get a single grinder by ID.
-         */
-        get: operations["get_grinder_api_v1_grinders__grinder_id__get"];
-        put?: never;
-        post?: never;
-        /**
-         * Delete Grinder
-         * @description Soft-delete a grinder.
-         */
-        delete: operations["delete_grinder_api_v1_grinders__grinder_id__delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Update Grinder
-         * @description Partially update a grinder.
-         */
-        patch: operations["update_grinder_api_v1_grinders__grinder_id__patch"];
-        trace?: never;
+    /**
+     * List Grinders
+     * @description List grinders with optional search, pagination, and sorting.
+     */
+    get: operations['list_grinders_api_v1_grinders_get'];
+    put?: never;
+    /**
+     * Create Grinder
+     * @description Create a new grinder.
+     */
+    post: operations['create_grinder_api_v1_grinders_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/grinders/{grinder_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/brewers": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List Brewers
-         * @description List brewers with optional search, pagination, and sorting.
-         */
-        get: operations["list_brewers_api_v1_brewers_get"];
-        put?: never;
-        /**
-         * Create Brewer
-         * @description Create a new brewer with optional M2M methods and stop modes.
-         */
-        post: operations["create_brewer_api_v1_brewers_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Grinder
+     * @description Get a single grinder by ID.
+     */
+    get: operations['get_grinder_api_v1_grinders__grinder_id__get'];
+    put?: never;
+    post?: never;
+    /**
+     * Delete Grinder
+     * @description Soft-delete a grinder.
+     */
+    delete: operations['delete_grinder_api_v1_grinders__grinder_id__delete'];
+    options?: never;
+    head?: never;
+    /**
+     * Update Grinder
+     * @description Partially update a grinder.
+     */
+    patch: operations['update_grinder_api_v1_grinders__grinder_id__patch'];
+    trace?: never;
+  };
+  '/api/v1/brewers': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/brewers/{brewer_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Brewer
-         * @description Get a single brewer by ID.
-         */
-        get: operations["get_brewer_api_v1_brewers__brewer_id__get"];
-        put?: never;
-        post?: never;
-        /**
-         * Delete Brewer
-         * @description Soft-delete a brewer.
-         */
-        delete: operations["delete_brewer_api_v1_brewers__brewer_id__delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Update Brewer
-         * @description Partially update a brewer, optionally replacing M2M relations.
-         */
-        patch: operations["update_brewer_api_v1_brewers__brewer_id__patch"];
-        trace?: never;
+    /**
+     * List Brewers
+     * @description List brewers with optional search, pagination, and sorting.
+     */
+    get: operations['list_brewers_api_v1_brewers_get'];
+    put?: never;
+    /**
+     * Create Brewer
+     * @description Create a new brewer with optional M2M methods and stop modes.
+     */
+    post: operations['create_brewer_api_v1_brewers_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/brewers/{brewer_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/papers": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List Papers
-         * @description List papers with optional search, pagination, and sorting.
-         */
-        get: operations["list_papers_api_v1_papers_get"];
-        put?: never;
-        /**
-         * Create Paper
-         * @description Create a new paper.
-         */
-        post: operations["create_paper_api_v1_papers_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Brewer
+     * @description Get a single brewer by ID.
+     */
+    get: operations['get_brewer_api_v1_brewers__brewer_id__get'];
+    put?: never;
+    post?: never;
+    /**
+     * Delete Brewer
+     * @description Soft-delete a brewer.
+     */
+    delete: operations['delete_brewer_api_v1_brewers__brewer_id__delete'];
+    options?: never;
+    head?: never;
+    /**
+     * Update Brewer
+     * @description Partially update a brewer, optionally replacing M2M relations.
+     */
+    patch: operations['update_brewer_api_v1_brewers__brewer_id__patch'];
+    trace?: never;
+  };
+  '/api/v1/papers': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/papers/{paper_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Paper
-         * @description Get a single paper by ID.
-         */
-        get: operations["get_paper_api_v1_papers__paper_id__get"];
-        put?: never;
-        post?: never;
-        /**
-         * Delete Paper
-         * @description Soft-delete a paper.
-         */
-        delete: operations["delete_paper_api_v1_papers__paper_id__delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Update Paper
-         * @description Partially update a paper.
-         */
-        patch: operations["update_paper_api_v1_papers__paper_id__patch"];
-        trace?: never;
+    /**
+     * List Papers
+     * @description List papers with optional search, pagination, and sorting.
+     */
+    get: operations['list_papers_api_v1_papers_get'];
+    put?: never;
+    /**
+     * Create Paper
+     * @description Create a new paper.
+     */
+    post: operations['create_paper_api_v1_papers_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/papers/{paper_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/waters": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List Waters
-         * @description List waters with optional search, pagination, and sorting.
-         */
-        get: operations["list_waters_api_v1_waters_get"];
-        put?: never;
-        /**
-         * Create Water
-         * @description Create a new water with optional inline minerals.
-         */
-        post: operations["create_water_api_v1_waters_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Paper
+     * @description Get a single paper by ID.
+     */
+    get: operations['get_paper_api_v1_papers__paper_id__get'];
+    put?: never;
+    post?: never;
+    /**
+     * Delete Paper
+     * @description Soft-delete a paper.
+     */
+    delete: operations['delete_paper_api_v1_papers__paper_id__delete'];
+    options?: never;
+    head?: never;
+    /**
+     * Update Paper
+     * @description Partially update a paper.
+     */
+    patch: operations['update_paper_api_v1_papers__paper_id__patch'];
+    trace?: never;
+  };
+  '/api/v1/waters': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/waters/{water_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Water
-         * @description Get a single water by ID.
-         */
-        get: operations["get_water_api_v1_waters__water_id__get"];
-        put?: never;
-        post?: never;
-        /**
-         * Delete Water
-         * @description Soft-delete a water.
-         */
-        delete: operations["delete_water_api_v1_waters__water_id__delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Update Water
-         * @description Partially update a water, optionally replacing minerals.
-         */
-        patch: operations["update_water_api_v1_waters__water_id__patch"];
-        trace?: never;
+    /**
+     * List Waters
+     * @description List waters with optional search, pagination, and sorting.
+     */
+    get: operations['list_waters_api_v1_waters_get'];
+    put?: never;
+    /**
+     * Create Water
+     * @description Create a new water with optional inline minerals.
+     */
+    post: operations['create_water_api_v1_waters_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/waters/{water_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/beans": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List Beans
-         * @description List beans with optional filtering, pagination, and sorting.
-         *
-         *     Parameters
-         *     ----------
-         *     q : str | None
-         *         Case-insensitive substring match on ``name``.
-         *     roaster_id : uuid.UUID | None
-         *         Filter by roaster FK.
-         *     origin_id : uuid.UUID | None
-         *         Filter by origin (via M2M).
-         *     process_id : uuid.UUID | None
-         *         Filter by process method (via M2M).
-         *     variety_id : uuid.UUID | None
-         *         Filter by bean variety (via M2M).
-         *     include_retired : bool
-         *         When ``True``, include soft-deleted beans.
-         *     limit : int
-         *         Maximum items per page (1--200).
-         *     offset : int
-         *         Number of items to skip.
-         *     sort_by : str
-         *         Column to sort by.
-         *     sort_dir : str
-         *         ``"asc"`` or ``"desc"``.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     PaginatedResponse[BeanRead]
-         *         Paginated response with ``items``, ``total``, ``limit``, ``offset``.
-         */
-        get: operations["list_beans_api_v1_beans_get"];
-        put?: never;
-        /**
-         * Create Bean
-         * @description Create a new bean with optional M2M relationships.
-         *
-         *     Parameters
-         *     ----------
-         *     payload : BeanCreate
-         *         Bean data including optional M2M IDs.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     BeanRead
-         *         The created bean.
-         */
-        post: operations["create_bean_api_v1_beans_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Water
+     * @description Get a single water by ID.
+     */
+    get: operations['get_water_api_v1_waters__water_id__get'];
+    put?: never;
+    post?: never;
+    /**
+     * Delete Water
+     * @description Soft-delete a water.
+     */
+    delete: operations['delete_water_api_v1_waters__water_id__delete'];
+    options?: never;
+    head?: never;
+    /**
+     * Update Water
+     * @description Partially update a water, optionally replacing minerals.
+     */
+    patch: operations['update_water_api_v1_waters__water_id__patch'];
+    trace?: never;
+  };
+  '/api/v1/beans': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/beans/{bean_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Bean
-         * @description Get a single bean by ID with nested relationships.
-         *
-         *     Parameters
-         *     ----------
-         *     bean_id : uuid.UUID
-         *         The bean's primary key.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     BeanRead
-         *         The bean with nested relationships.
-         */
-        get: operations["get_bean_api_v1_beans__bean_id__get"];
-        put?: never;
-        post?: never;
-        /**
-         * Delete Bean
-         * @description Soft-delete a bean.
-         *
-         *     Blocked with 409 Conflict if the bean has active (non-retired) bags.
-         *
-         *     Parameters
-         *     ----------
-         *     bean_id : uuid.UUID
-         *         The bean's primary key.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     BeanRead
-         *         The soft-deleted bean.
-         */
-        delete: operations["delete_bean_api_v1_beans__bean_id__delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Update Bean
-         * @description Partially update a bean, including M2M lists.
-         *
-         *     Parameters
-         *     ----------
-         *     bean_id : uuid.UUID
-         *         The bean's primary key.
-         *     payload : BeanUpdate
-         *         Fields to update.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     BeanRead
-         *         The updated bean.
-         */
-        patch: operations["update_bean_api_v1_beans__bean_id__patch"];
-        trace?: never;
+    /**
+     * List Beans
+     * @description List beans with optional filtering, pagination, and sorting.
+     *
+     *     Parameters
+     *     ----------
+     *     q : str | None
+     *         Case-insensitive substring match on ``name``.
+     *     roaster_id : uuid.UUID | None
+     *         Filter by roaster FK.
+     *     origin_id : uuid.UUID | None
+     *         Filter by origin (via M2M).
+     *     process_id : uuid.UUID | None
+     *         Filter by process method (via M2M).
+     *     variety_id : uuid.UUID | None
+     *         Filter by bean variety (via M2M).
+     *     include_retired : bool
+     *         When ``True``, include soft-deleted beans.
+     *     limit : int
+     *         Maximum items per page (1--200).
+     *     offset : int
+     *         Number of items to skip.
+     *     sort_by : str
+     *         Column to sort by.
+     *     sort_dir : str
+     *         ``"asc"`` or ``"desc"``.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     PaginatedResponse[BeanRead]
+     *         Paginated response with ``items``, ``total``, ``limit``, ``offset``.
+     */
+    get: operations['list_beans_api_v1_beans_get'];
+    put?: never;
+    /**
+     * Create Bean
+     * @description Create a new bean with optional M2M relationships.
+     *
+     *     Parameters
+     *     ----------
+     *     payload : BeanCreate
+     *         Bean data including optional M2M IDs.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     BeanRead
+     *         The created bean.
+     */
+    post: operations['create_bean_api_v1_beans_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/beans/{bean_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/beans/{bean_id}/bags": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List Bean Bags
-         * @description List bags belonging to a specific bean.
-         *
-         *     Parameters
-         *     ----------
-         *     bean_id : uuid.UUID
-         *         The parent bean's primary key.
-         *     include_retired : bool
-         *         When ``True``, include soft-deleted bags.
-         *     limit : int
-         *         Maximum items per page (1--200).
-         *     offset : int
-         *         Number of items to skip.
-         *     sort_by : str
-         *         Column to sort by.
-         *     sort_dir : str
-         *         ``"asc"`` or ``"desc"``.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     PaginatedResponse[BagRead]
-         *         Paginated response with ``items``, ``total``, ``limit``, ``offset``.
-         */
-        get: operations["list_bean_bags_api_v1_beans__bean_id__bags_get"];
-        put?: never;
-        /**
-         * Create Bag For Bean
-         * @description Create a new bag under the given bean.
-         *
-         *     Parameters
-         *     ----------
-         *     bean_id : uuid.UUID
-         *         The parent bean's primary key.
-         *     payload : BagCreate
-         *         Bag data.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     BagRead
-         *         The created bag.
-         */
-        post: operations["create_bag_for_bean_api_v1_beans__bean_id__bags_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Bean
+     * @description Get a single bean by ID with nested relationships.
+     *
+     *     Parameters
+     *     ----------
+     *     bean_id : uuid.UUID
+     *         The bean's primary key.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     BeanRead
+     *         The bean with nested relationships.
+     */
+    get: operations['get_bean_api_v1_beans__bean_id__get'];
+    put?: never;
+    post?: never;
+    /**
+     * Delete Bean
+     * @description Soft-delete a bean.
+     *
+     *     Blocked with 409 Conflict if the bean has active (non-retired) bags.
+     *
+     *     Parameters
+     *     ----------
+     *     bean_id : uuid.UUID
+     *         The bean's primary key.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     BeanRead
+     *         The soft-deleted bean.
+     */
+    delete: operations['delete_bean_api_v1_beans__bean_id__delete'];
+    options?: never;
+    head?: never;
+    /**
+     * Update Bean
+     * @description Partially update a bean, including M2M lists.
+     *
+     *     Parameters
+     *     ----------
+     *     bean_id : uuid.UUID
+     *         The bean's primary key.
+     *     payload : BeanUpdate
+     *         Fields to update.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     BeanRead
+     *         The updated bean.
+     */
+    patch: operations['update_bean_api_v1_beans__bean_id__patch'];
+    trace?: never;
+  };
+  '/api/v1/beans/{bean_id}/bags': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/bags": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List Bags
-         * @description List all bags with optional filtering, pagination, and sorting.
-         *
-         *     Parameters
-         *     ----------
-         *     bean_id : uuid.UUID | None
-         *         Filter by parent bean.
-         *     is_preground : bool | None
-         *         Filter by pre-ground status.
-         *     opened_after : date | None
-         *         Only return bags opened after this date.
-         *     include_retired : bool
-         *         When ``True``, include soft-deleted bags.
-         *     limit : int
-         *         Maximum items per page (1--200).
-         *     offset : int
-         *         Number of items to skip.
-         *     sort_by : str
-         *         Column to sort by.
-         *     sort_dir : str
-         *         ``"asc"`` or ``"desc"``.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     PaginatedResponse[BagRead]
-         *         Paginated response with ``items``, ``total``, ``limit``, ``offset``.
-         */
-        get: operations["list_bags_api_v1_bags_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * List Bean Bags
+     * @description List bags belonging to a specific bean.
+     *
+     *     Parameters
+     *     ----------
+     *     bean_id : uuid.UUID
+     *         The parent bean's primary key.
+     *     include_retired : bool
+     *         When ``True``, include soft-deleted bags.
+     *     limit : int
+     *         Maximum items per page (1--200).
+     *     offset : int
+     *         Number of items to skip.
+     *     sort_by : str
+     *         Column to sort by.
+     *     sort_dir : str
+     *         ``"asc"`` or ``"desc"``.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     PaginatedResponse[BagRead]
+     *         Paginated response with ``items``, ``total``, ``limit``, ``offset``.
+     */
+    get: operations['list_bean_bags_api_v1_beans__bean_id__bags_get'];
+    put?: never;
+    /**
+     * Create Bag For Bean
+     * @description Create a new bag under the given bean.
+     *
+     *     Parameters
+     *     ----------
+     *     bean_id : uuid.UUID
+     *         The parent bean's primary key.
+     *     payload : BagCreate
+     *         Bag data.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     BagRead
+     *         The created bag.
+     */
+    post: operations['create_bag_for_bean_api_v1_beans__bean_id__bags_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/bags': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/bags/{bag_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Bag
-         * @description Get a single bag by ID.
-         *
-         *     Parameters
-         *     ----------
-         *     bag_id : uuid.UUID
-         *         The bag's primary key.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     BagRead
-         *         The bag.
-         */
-        get: operations["get_bag_api_v1_bags__bag_id__get"];
-        put?: never;
-        post?: never;
-        /**
-         * Delete Bag
-         * @description Soft-delete a bag by setting ``retired_at``.
-         *
-         *     Parameters
-         *     ----------
-         *     bag_id : uuid.UUID
-         *         The bag's primary key.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     BagRead
-         *         The soft-deleted bag.
-         */
-        delete: operations["delete_bag_api_v1_bags__bag_id__delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Update Bag
-         * @description Partially update a bag.
-         *
-         *     Parameters
-         *     ----------
-         *     bag_id : uuid.UUID
-         *         The bag's primary key.
-         *     payload : BagUpdate
-         *         Fields to update.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     BagRead
-         *         The updated bag.
-         */
-        patch: operations["update_bag_api_v1_bags__bag_id__patch"];
-        trace?: never;
+    /**
+     * List Bags
+     * @description List all bags with optional filtering, pagination, and sorting.
+     *
+     *     Parameters
+     *     ----------
+     *     bean_id : uuid.UUID | None
+     *         Filter by parent bean.
+     *     is_preground : bool | None
+     *         Filter by pre-ground status.
+     *     opened_after : date | None
+     *         Only return bags opened after this date.
+     *     include_retired : bool
+     *         When ``True``, include soft-deleted bags.
+     *     limit : int
+     *         Maximum items per page (1--200).
+     *     offset : int
+     *         Number of items to skip.
+     *     sort_by : str
+     *         Column to sort by.
+     *     sort_dir : str
+     *         ``"asc"`` or ``"desc"``.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     PaginatedResponse[BagRead]
+     *         Paginated response with ``items``, ``total``, ``limit``, ``offset``.
+     */
+    get: operations['list_bags_api_v1_bags_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/bags/{bag_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/brew-setups": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List Brew Setups
-         * @description List brew setups with filtering, pagination, and sorting.
-         */
-        get: operations["list_brew_setups_api_v1_brew_setups_get"];
-        put?: never;
-        /**
-         * Create Brew Setup
-         * @description Create a new brew setup.
-         */
-        post: operations["create_brew_setup_api_v1_brew_setups_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Bag
+     * @description Get a single bag by ID.
+     *
+     *     Parameters
+     *     ----------
+     *     bag_id : uuid.UUID
+     *         The bag's primary key.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     BagRead
+     *         The bag.
+     */
+    get: operations['get_bag_api_v1_bags__bag_id__get'];
+    put?: never;
+    post?: never;
+    /**
+     * Delete Bag
+     * @description Soft-delete a bag by setting ``retired_at``.
+     *
+     *     Parameters
+     *     ----------
+     *     bag_id : uuid.UUID
+     *         The bag's primary key.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     BagRead
+     *         The soft-deleted bag.
+     */
+    delete: operations['delete_bag_api_v1_bags__bag_id__delete'];
+    options?: never;
+    head?: never;
+    /**
+     * Update Bag
+     * @description Partially update a bag.
+     *
+     *     Parameters
+     *     ----------
+     *     bag_id : uuid.UUID
+     *         The bag's primary key.
+     *     payload : BagUpdate
+     *         Fields to update.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     BagRead
+     *         The updated bag.
+     */
+    patch: operations['update_bag_api_v1_bags__bag_id__patch'];
+    trace?: never;
+  };
+  '/api/v1/brew-setups': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/brew-setups/{setup_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Brew Setup
-         * @description Get a single brew setup by ID.
-         */
-        get: operations["get_brew_setup_api_v1_brew_setups__setup_id__get"];
-        put?: never;
-        post?: never;
-        /**
-         * Delete Brew Setup
-         * @description Soft-delete a brew setup.
-         */
-        delete: operations["delete_brew_setup_api_v1_brew_setups__setup_id__delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Update Brew Setup
-         * @description Partially update a brew setup.
-         */
-        patch: operations["update_brew_setup_api_v1_brew_setups__setup_id__patch"];
-        trace?: never;
+    /**
+     * List Brew Setups
+     * @description List brew setups with filtering, pagination, and sorting.
+     */
+    get: operations['list_brew_setups_api_v1_brew_setups_get'];
+    put?: never;
+    /**
+     * Create Brew Setup
+     * @description Create a new brew setup.
+     */
+    post: operations['create_brew_setup_api_v1_brew_setups_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/brew-setups/{setup_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/brews": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List Brews
-         * @description List brews with filtering, pagination, and sorting.
-         */
-        get: operations["list_brews_api_v1_brews_get"];
-        put?: never;
-        /**
-         * Create Brew
-         * @description Create a new brew with optional inline taste.
-         */
-        post: operations["create_brew_api_v1_brews_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Brew Setup
+     * @description Get a single brew setup by ID.
+     */
+    get: operations['get_brew_setup_api_v1_brew_setups__setup_id__get'];
+    put?: never;
+    post?: never;
+    /**
+     * Delete Brew Setup
+     * @description Soft-delete a brew setup.
+     */
+    delete: operations['delete_brew_setup_api_v1_brew_setups__setup_id__delete'];
+    options?: never;
+    head?: never;
+    /**
+     * Update Brew Setup
+     * @description Partially update a brew setup.
+     */
+    patch: operations['update_brew_setup_api_v1_brew_setups__setup_id__patch'];
+    trace?: never;
+  };
+  '/api/v1/brews': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/brews/{brew_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Brew
-         * @description Get a single brew by ID with full nesting.
-         */
-        get: operations["get_brew_api_v1_brews__brew_id__get"];
-        put?: never;
-        post?: never;
-        /**
-         * Delete Brew
-         * @description Soft-delete a brew.
-         */
-        delete: operations["delete_brew_api_v1_brews__brew_id__delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Update Brew
-         * @description Partially update a brew.
-         */
-        patch: operations["update_brew_api_v1_brews__brew_id__patch"];
-        trace?: never;
+    /**
+     * List Brews
+     * @description List brews with filtering, pagination, and sorting.
+     */
+    get: operations['list_brews_api_v1_brews_get'];
+    put?: never;
+    /**
+     * Create Brew
+     * @description Create a new brew with optional inline taste.
+     */
+    post: operations['create_brew_api_v1_brews_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/brews/{brew_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/brews/{brew_id}/taste": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /**
-         * Put Taste
-         * @description Create or replace the taste for a brew.
-         */
-        put: operations["put_taste_api_v1_brews__brew_id__taste_put"];
-        post?: never;
-        /**
-         * Delete Taste
-         * @description Remove the taste from a brew.
-         */
-        delete: operations["delete_taste_api_v1_brews__brew_id__taste_delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Patch Taste
-         * @description Partially update the taste for a brew.
-         */
-        patch: operations["patch_taste_api_v1_brews__brew_id__taste_patch"];
-        trace?: never;
+    /**
+     * Get Brew
+     * @description Get a single brew by ID with full nesting.
+     */
+    get: operations['get_brew_api_v1_brews__brew_id__get'];
+    put?: never;
+    post?: never;
+    /**
+     * Delete Brew
+     * @description Soft-delete a brew.
+     */
+    delete: operations['delete_brew_api_v1_brews__brew_id__delete'];
+    options?: never;
+    head?: never;
+    /**
+     * Update Brew
+     * @description Partially update a brew.
+     */
+    patch: operations['update_brew_api_v1_brews__brew_id__patch'];
+    trace?: never;
+  };
+  '/api/v1/brews/{brew_id}/taste': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/cuppings": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List Cuppings
-         * @description List cuppings with filtering, pagination, and sorting.
-         *
-         *     Parameters
-         *     ----------
-         *     bag_id : uuid.UUID | None
-         *         Optional filter by bag.
-         *     person_id : uuid.UUID | None
-         *         Optional filter by person.
-         *     include_retired : bool
-         *         When ``True``, include soft-deleted cuppings.
-         *     limit : int
-         *         Maximum items per page (1--200).
-         *     offset : int
-         *         Number of items to skip.
-         *     sort_by : str
-         *         Field to sort by.
-         *     sort_dir : str
-         *         Sort direction: ``"asc"`` or ``"desc"``.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     PaginatedResponse[CuppingRead]
-         *         Paginated response with ``items``, ``total``, ``limit``, ``offset``.
-         */
-        get: operations["list_cuppings_api_v1_cuppings_get"];
-        put?: never;
-        /**
-         * Create Cupping
-         * @description Create a new cupping evaluation.
-         *
-         *     Parameters
-         *     ----------
-         *     payload : CuppingCreate
-         *         Cupping creation data.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     CuppingRead
-         *         The created cupping.
-         */
-        post: operations["create_cupping_api_v1_cuppings_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    /**
+     * Put Taste
+     * @description Create or replace the taste for a brew.
+     */
+    put: operations['put_taste_api_v1_brews__brew_id__taste_put'];
+    post?: never;
+    /**
+     * Delete Taste
+     * @description Remove the taste from a brew.
+     */
+    delete: operations['delete_taste_api_v1_brews__brew_id__taste_delete'];
+    options?: never;
+    head?: never;
+    /**
+     * Patch Taste
+     * @description Partially update the taste for a brew.
+     */
+    patch: operations['patch_taste_api_v1_brews__brew_id__taste_patch'];
+    trace?: never;
+  };
+  '/api/v1/cuppings': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/cuppings/{cupping_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Cupping
-         * @description Get a single cupping by ID.
-         *
-         *     Parameters
-         *     ----------
-         *     cupping_id : uuid.UUID
-         *         The cupping's primary key.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     CuppingRead
-         *         The cupping with nested flavor tags.
-         */
-        get: operations["get_cupping_api_v1_cuppings__cupping_id__get"];
-        put?: never;
-        post?: never;
-        /**
-         * Delete Cupping
-         * @description Soft-delete a cupping.
-         *
-         *     Parameters
-         *     ----------
-         *     cupping_id : uuid.UUID
-         *         The cupping's primary key.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     CuppingRead
-         *         The soft-deleted cupping.
-         */
-        delete: operations["delete_cupping_api_v1_cuppings__cupping_id__delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Update Cupping
-         * @description Partially update a cupping.
-         *
-         *     Parameters
-         *     ----------
-         *     cupping_id : uuid.UUID
-         *         The cupping's primary key.
-         *     payload : CuppingUpdate
-         *         Fields to update.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     CuppingRead
-         *         The updated cupping.
-         */
-        patch: operations["update_cupping_api_v1_cuppings__cupping_id__patch"];
-        trace?: never;
+    /**
+     * List Cuppings
+     * @description List cuppings with filtering, pagination, and sorting.
+     *
+     *     Parameters
+     *     ----------
+     *     bag_id : uuid.UUID | None
+     *         Optional filter by bag.
+     *     person_id : uuid.UUID | None
+     *         Optional filter by person.
+     *     include_retired : bool
+     *         When ``True``, include soft-deleted cuppings.
+     *     limit : int
+     *         Maximum items per page (1--200).
+     *     offset : int
+     *         Number of items to skip.
+     *     sort_by : str
+     *         Field to sort by.
+     *     sort_dir : str
+     *         Sort direction: ``"asc"`` or ``"desc"``.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     PaginatedResponse[CuppingRead]
+     *         Paginated response with ``items``, ``total``, ``limit``, ``offset``.
+     */
+    get: operations['list_cuppings_api_v1_cuppings_get'];
+    put?: never;
+    /**
+     * Create Cupping
+     * @description Create a new cupping evaluation.
+     *
+     *     Parameters
+     *     ----------
+     *     payload : CuppingCreate
+     *         Cupping creation data.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     CuppingRead
+     *         The created cupping.
+     */
+    post: operations['create_cupping_api_v1_cuppings_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/cuppings/{cupping_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/beans/{bean_id}/ratings": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List Bean Ratings
-         * @description List ratings for a bean, ordered by rated_at desc.
-         *
-         *     Parameters
-         *     ----------
-         *     bean_id : uuid.UUID
-         *         The bean's primary key.
-         *     person_id : uuid.UUID | None
-         *         Optional filter by person.
-         *     include_retired : bool
-         *         When ``True``, include soft-deleted ratings.
-         *     limit : int
-         *         Maximum items per page (1--200).
-         *     offset : int
-         *         Number of items to skip.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     PaginatedResponse[BeanRatingRead]
-         *         Paginated response with ``items``, ``total``, ``limit``, ``offset``.
-         */
-        get: operations["list_bean_ratings_api_v1_beans__bean_id__ratings_get"];
-        put?: never;
-        /**
-         * Create Bean Rating
-         * @description Create a new rating for a bean.
-         *
-         *     Multiple ratings for the same bean+person are allowed (append-only).
-         *
-         *     Parameters
-         *     ----------
-         *     bean_id : uuid.UUID
-         *         The bean's primary key (from path).
-         *     payload : BeanRatingCreate
-         *         Rating data including optional inline taste.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     BeanRatingRead
-         *         The created rating.
-         */
-        post: operations["create_bean_rating_api_v1_beans__bean_id__ratings_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Cupping
+     * @description Get a single cupping by ID.
+     *
+     *     Parameters
+     *     ----------
+     *     cupping_id : uuid.UUID
+     *         The cupping's primary key.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     CuppingRead
+     *         The cupping with nested flavor tags.
+     */
+    get: operations['get_cupping_api_v1_cuppings__cupping_id__get'];
+    put?: never;
+    post?: never;
+    /**
+     * Delete Cupping
+     * @description Soft-delete a cupping.
+     *
+     *     Parameters
+     *     ----------
+     *     cupping_id : uuid.UUID
+     *         The cupping's primary key.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     CuppingRead
+     *         The soft-deleted cupping.
+     */
+    delete: operations['delete_cupping_api_v1_cuppings__cupping_id__delete'];
+    options?: never;
+    head?: never;
+    /**
+     * Update Cupping
+     * @description Partially update a cupping.
+     *
+     *     Parameters
+     *     ----------
+     *     cupping_id : uuid.UUID
+     *         The cupping's primary key.
+     *     payload : CuppingUpdate
+     *         Fields to update.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     CuppingRead
+     *         The updated cupping.
+     */
+    patch: operations['update_cupping_api_v1_cuppings__cupping_id__patch'];
+    trace?: never;
+  };
+  '/api/v1/beans/{bean_id}/ratings': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/bean-ratings/{rating_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Bean Rating
-         * @description Get a single bean rating by ID with nested taste.
-         *
-         *     Parameters
-         *     ----------
-         *     rating_id : uuid.UUID
-         *         The rating's primary key.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     BeanRatingRead
-         *         The rating with nested taste.
-         */
-        get: operations["get_bean_rating_api_v1_bean_ratings__rating_id__get"];
-        put?: never;
-        post?: never;
-        /**
-         * Delete Bean Rating
-         * @description Soft-delete a bean rating.
-         *
-         *     Parameters
-         *     ----------
-         *     rating_id : uuid.UUID
-         *         The rating's primary key.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     BeanRatingRead
-         *         The soft-deleted rating.
-         */
-        delete: operations["delete_bean_rating_api_v1_bean_ratings__rating_id__delete"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * List Bean Ratings
+     * @description List ratings for a bean, ordered by rated_at desc.
+     *
+     *     Parameters
+     *     ----------
+     *     bean_id : uuid.UUID
+     *         The bean's primary key.
+     *     person_id : uuid.UUID | None
+     *         Optional filter by person.
+     *     include_retired : bool
+     *         When ``True``, include soft-deleted ratings.
+     *     limit : int
+     *         Maximum items per page (1--200).
+     *     offset : int
+     *         Number of items to skip.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     PaginatedResponse[BeanRatingRead]
+     *         Paginated response with ``items``, ``total``, ``limit``, ``offset``.
+     */
+    get: operations['list_bean_ratings_api_v1_beans__bean_id__ratings_get'];
+    put?: never;
+    /**
+     * Create Bean Rating
+     * @description Create a new rating for a bean.
+     *
+     *     Multiple ratings for the same bean+person are allowed (append-only).
+     *
+     *     Parameters
+     *     ----------
+     *     bean_id : uuid.UUID
+     *         The bean's primary key (from path).
+     *     payload : BeanRatingCreate
+     *         Rating data including optional inline taste.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     BeanRatingRead
+     *         The created rating.
+     */
+    post: operations['create_bean_rating_api_v1_beans__bean_id__ratings_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/bean-ratings/{rating_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/bean-ratings/{rating_id}/taste": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /**
-         * Put Bean Rating Taste
-         * @description Create or replace the taste for a bean rating.
-         *
-         *     If a taste already exists, it is deleted and replaced with the new one.
-         *
-         *     Parameters
-         *     ----------
-         *     rating_id : uuid.UUID
-         *         The rating's primary key.
-         *     payload : BeanTasteCreate
-         *         Taste data.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     BeanTasteRead
-         *         The created or replaced taste.
-         */
-        put: operations["put_bean_rating_taste_api_v1_bean_ratings__rating_id__taste_put"];
-        post?: never;
-        /**
-         * Delete Bean Rating Taste
-         * @description Remove the taste from a bean rating.
-         *
-         *     Parameters
-         *     ----------
-         *     rating_id : uuid.UUID
-         *         The rating's primary key.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     Response
-         *         Empty 204 response.
-         */
-        delete: operations["delete_bean_rating_taste_api_v1_bean_ratings__rating_id__taste_delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Patch Bean Rating Taste
-         * @description Partially update the taste for a bean rating.
-         *
-         *     Parameters
-         *     ----------
-         *     rating_id : uuid.UUID
-         *         The rating's primary key.
-         *     payload : BeanTasteUpdate
-         *         Fields to update.
-         *     session : SessionDep
-         *         Database session (injected).
-         *
-         *     Returns
-         *     -------
-         *     BeanTasteRead
-         *         The updated taste.
-         */
-        patch: operations["patch_bean_rating_taste_api_v1_bean_ratings__rating_id__taste_patch"];
-        trace?: never;
+    /**
+     * Get Bean Rating
+     * @description Get a single bean rating by ID with nested taste.
+     *
+     *     Parameters
+     *     ----------
+     *     rating_id : uuid.UUID
+     *         The rating's primary key.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     BeanRatingRead
+     *         The rating with nested taste.
+     */
+    get: operations['get_bean_rating_api_v1_bean_ratings__rating_id__get'];
+    put?: never;
+    post?: never;
+    /**
+     * Delete Bean Rating
+     * @description Soft-delete a bean rating.
+     *
+     *     Parameters
+     *     ----------
+     *     rating_id : uuid.UUID
+     *         The rating's primary key.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     BeanRatingRead
+     *         The soft-deleted rating.
+     */
+    delete: operations['delete_bean_rating_api_v1_bean_ratings__rating_id__delete'];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/bean-ratings/{rating_id}/taste': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/stats/brews": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Brew Stats
-         * @description Aggregated brew statistics.
-         *
-         *     Parameters
-         *     ----------
-         *     session : Session
-         *         Database session.
-         *     person_id : uuid.UUID | None
-         *         Optional person filter resolved by dependency.
-         *
-         *     Returns
-         *     -------
-         *     BrewStatsRead
-         *         Aggregated brew statistics including counts, averages, and per-method breakdown.
-         */
-        get: operations["get_brew_stats_api_v1_stats_brews_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    /**
+     * Put Bean Rating Taste
+     * @description Create or replace the taste for a bean rating.
+     *
+     *     If a taste already exists, it is deleted and replaced with the new one.
+     *
+     *     Parameters
+     *     ----------
+     *     rating_id : uuid.UUID
+     *         The rating's primary key.
+     *     payload : BeanTasteCreate
+     *         Taste data.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     BeanTasteRead
+     *         The created or replaced taste.
+     */
+    put: operations['put_bean_rating_taste_api_v1_bean_ratings__rating_id__taste_put'];
+    post?: never;
+    /**
+     * Delete Bean Rating Taste
+     * @description Remove the taste from a bean rating.
+     *
+     *     Parameters
+     *     ----------
+     *     rating_id : uuid.UUID
+     *         The rating's primary key.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     Response
+     *         Empty 204 response.
+     */
+    delete: operations['delete_bean_rating_taste_api_v1_bean_ratings__rating_id__taste_delete'];
+    options?: never;
+    head?: never;
+    /**
+     * Patch Bean Rating Taste
+     * @description Partially update the taste for a bean rating.
+     *
+     *     Parameters
+     *     ----------
+     *     rating_id : uuid.UUID
+     *         The rating's primary key.
+     *     payload : BeanTasteUpdate
+     *         Fields to update.
+     *     session : SessionDep
+     *         Database session (injected).
+     *
+     *     Returns
+     *     -------
+     *     BeanTasteRead
+     *         The updated taste.
+     */
+    patch: operations['patch_bean_rating_taste_api_v1_bean_ratings__rating_id__taste_patch'];
+    trace?: never;
+  };
+  '/api/v1/stats/brews': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/stats/beans": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Bean Stats
-         * @description Aggregated bean and bag statistics.
-         *
-         *     Parameters
-         *     ----------
-         *     session : Session
-         *         Database session.
-         *
-         *     Returns
-         *     -------
-         *     BeanStatsRead
-         *         Aggregated bean and bag statistics including counts, breakdowns, and averages.
-         */
-        get: operations["get_bean_stats_api_v1_stats_beans_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Brew Stats
+     * @description Aggregated brew statistics.
+     *
+     *     Parameters
+     *     ----------
+     *     session : Session
+     *         Database session.
+     *     person_id : uuid.UUID | None
+     *         Optional person filter resolved by dependency.
+     *
+     *     Returns
+     *     -------
+     *     BrewStatsRead
+     *         Aggregated brew statistics including counts, averages, and per-method breakdown.
+     */
+    get: operations['get_brew_stats_api_v1_stats_brews_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/stats/beans': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/stats/taste": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Taste Stats
-         * @description Aggregated sensory statistics.
-         *
-         *     Parameters
-         *     ----------
-         *     session : Session
-         *         Database session.
-         *     person_id : uuid.UUID | None
-         *         Optional person filter resolved by dependency.
-         *
-         *     Returns
-         *     -------
-         *     TasteStatsRead
-         *         Aggregated taste statistics for both brews and beans.
-         */
-        get: operations["get_taste_stats_api_v1_stats_taste_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Bean Stats
+     * @description Aggregated bean and bag statistics.
+     *
+     *     Parameters
+     *     ----------
+     *     session : Session
+     *         Database session.
+     *
+     *     Returns
+     *     -------
+     *     BeanStatsRead
+     *         Aggregated bean and bag statistics including counts, breakdowns, and averages.
+     */
+    get: operations['get_bean_stats_api_v1_stats_beans_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/stats/taste': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/stats/equipment": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Equipment Stats
-         * @description Aggregated equipment statistics and usage rankings.
-         *
-         *     Parameters
-         *     ----------
-         *     session : Session
-         *         Database session.
-         *
-         *     Returns
-         *     -------
-         *     EquipmentStatsRead
-         *         Aggregated equipment statistics including totals and top usage rankings.
-         */
-        get: operations["get_equipment_stats_api_v1_stats_equipment_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Taste Stats
+     * @description Aggregated sensory statistics.
+     *
+     *     Parameters
+     *     ----------
+     *     session : Session
+     *         Database session.
+     *     person_id : uuid.UUID | None
+     *         Optional person filter resolved by dependency.
+     *
+     *     Returns
+     *     -------
+     *     TasteStatsRead
+     *         Aggregated taste statistics for both brews and beans.
+     */
+    get: operations['get_taste_stats_api_v1_stats_taste_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/stats/equipment': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/stats/cuppings": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Cupping Stats
-         * @description Aggregated cupping session statistics.
-         *
-         *     Parameters
-         *     ----------
-         *     session : Session
-         *         Database session.
-         *     person_id : uuid.UUID | None
-         *         Optional person filter resolved by dependency.
-         *
-         *     Returns
-         *     -------
-         *     CuppingStatsRead
-         *         Aggregated cupping statistics including counts, score averages, and top flavor tags.
-         */
-        get: operations["get_cupping_stats_api_v1_stats_cuppings_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Equipment Stats
+     * @description Aggregated equipment statistics and usage rankings.
+     *
+     *     Parameters
+     *     ----------
+     *     session : Session
+     *         Database session.
+     *
+     *     Returns
+     *     -------
+     *     EquipmentStatsRead
+     *         Aggregated equipment statistics including totals and top usage rankings.
+     */
+    get: operations['get_equipment_stats_api_v1_stats_equipment_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/stats/cuppings': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/health": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Health
-         * @description Return a simple health check response.
-         */
-        get: operations["health_health_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get Cupping Stats
+     * @description Aggregated cupping session statistics.
+     *
+     *     Parameters
+     *     ----------
+     *     session : Session
+     *         Database session.
+     *     person_id : uuid.UUID | None
+     *         Optional person filter resolved by dependency.
+     *
+     *     Returns
+     *     -------
+     *     CuppingStatsRead
+     *         Aggregated cupping statistics including counts, score averages, and top flavor tags.
+     */
+    get: operations['get_cupping_stats_api_v1_stats_cuppings_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/health': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
+    /**
+     * Health
+     * @description Return a simple health check response.
+     */
+    get: operations['health_health_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: {
-        /**
-         * BagCreate
-         * @description Schema for creating a Bag.
-         *
-         *     The ``bean_id`` comes from the URL path, not the request body.
-         */
-        BagCreate: {
-            /** Roast Date */
-            roast_date?: string | null;
-            /** Opened At */
-            opened_at?: string | null;
-            /** Weight */
-            weight: number;
-            /** Price */
-            price?: number | null;
-            /**
-             * Is Preground
-             * @default false
-             */
-            is_preground: boolean;
-            /** Notes */
-            notes?: string | null;
-            /** Bought At */
-            bought_at?: string | null;
-            /** Vendor Id */
-            vendor_id?: string | null;
-            /** Frozen At */
-            frozen_at?: string | null;
-            /** Thawed At */
-            thawed_at?: string | null;
-            /** Storage Type Id */
-            storage_type_id?: string | null;
-            /** Best Date */
-            best_date?: string | null;
-        };
-        /**
-         * BagRead
-         * @description Schema returned when reading a Bag.
-         *
-         *     Attributes
-         *     ----------
-         *     id : uuid.UUID
-         *         Primary key.
-         *     bean_id : uuid.UUID
-         *         Parent bean's primary key.
-         *     roast_date : date | None
-         *         Date the coffee was roasted.
-         *     opened_at : date | None
-         *         Date the bag was opened.
-         *     weight : float
-         *         Weight in grams.
-         *     price : float | None
-         *         Price paid.
-         *     is_preground : bool
-         *         Whether the coffee is pre-ground.
-         *     notes : str | None
-         *         Free-text notes.
-         *     bought_at : date | None
-         *         Date the bag was purchased.
-         *     vendor_id : uuid.UUID | None
-         *         Foreign key to the vendor / shop.
-         *     frozen_at : datetime | None
-         *         Timestamp when the bag was frozen.
-         *     thawed_at : datetime | None
-         *         Timestamp when the bag was thawed.
-         *     storage_type_id : uuid.UUID | None
-         *         Foreign key to the frozen-storage type.
-         *     best_date : date | None
-         *         Best-before date.
-         *     created_at : datetime
-         *         Creation timestamp.
-         *     updated_at : datetime
-         *         Last-modified timestamp.
-         *     retired_at : datetime | None
-         *         Soft-delete timestamp.
-         *     is_retired : bool
-         *         Computed from ``retired_at``.
-         */
-        BagRead: {
-            /** Roast Date */
-            roast_date?: string | null;
-            /** Opened At */
-            opened_at?: string | null;
-            /** Weight */
-            weight: number;
-            /** Price */
-            price?: number | null;
-            /**
-             * Is Preground
-             * @default false
-             */
-            is_preground: boolean;
-            /** Notes */
-            notes?: string | null;
-            /** Bought At */
-            bought_at?: string | null;
-            /** Vendor Id */
-            vendor_id?: string | null;
-            /** Frozen At */
-            frozen_at?: string | null;
-            /** Thawed At */
-            thawed_at?: string | null;
-            /** Storage Type Id */
-            storage_type_id?: string | null;
-            /** Best Date */
-            best_date?: string | null;
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Bean Id
-             * Format: uuid
-             */
-            bean_id: string;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /**
-             * Updated At
-             * Format: date-time
-             */
-            updated_at: string;
-            /** Retired At */
-            retired_at: string | null;
-            /** Is Retired */
-            is_retired: boolean;
-        };
-        /**
-         * BagUpdate
-         * @description Schema for partially updating a Bag.
-         *
-         *     All fields are optional so callers can send only the fields they
-         *     want to change.
-         */
-        BagUpdate: {
-            /** Roast Date */
-            roast_date?: string | null;
-            /** Opened At */
-            opened_at?: string | null;
-            /** Weight */
-            weight?: number | null;
-            /** Price */
-            price?: number | null;
-            /** Is Preground */
-            is_preground?: boolean | null;
-            /** Notes */
-            notes?: string | null;
-            /** Bought At */
-            bought_at?: string | null;
-            /** Vendor Id */
-            vendor_id?: string | null;
-            /** Frozen At */
-            frozen_at?: string | null;
-            /** Thawed At */
-            thawed_at?: string | null;
-            /** Storage Type Id */
-            storage_type_id?: string | null;
-            /** Best Date */
-            best_date?: string | null;
-        };
-        /**
-         * BeanCreate
-         * @description Schema for creating a Bean.
-         *
-         *     Attributes
-         *     ----------
-         *     roaster_id : uuid.UUID | None
-         *         Optional roaster FK.
-         *     origin_ids : list[uuid.UUID]
-         *         Origin IDs for M2M (plain, no percentage).
-         *     origins : list[OriginWithPercentage]
-         *         Origins with optional blend percentages.
-         *     process_ids : list[uuid.UUID]
-         *         ProcessMethod IDs for M2M.
-         *     variety_ids : list[uuid.UUID]
-         *         BeanVariety IDs for M2M.
-         *     flavor_tag_ids : list[uuid.UUID]
-         *         FlavorTag IDs for M2M.
-         */
-        BeanCreate: {
-            /** Name */
-            name: string;
-            /** Notes */
-            notes?: string | null;
-            /** Roast Degree */
-            roast_degree?: number | null;
-            /** @default unknown */
-            bean_mix_type: components["schemas"]["BeanMixType"];
-            bean_use_type?: components["schemas"]["BeanUseType"] | null;
-            /**
-             * Decaf
-             * @default false
-             */
-            decaf: boolean;
-            /** Url */
-            url?: string | null;
-            /** Ean */
-            ean?: string | null;
-            /** Roaster Id */
-            roaster_id?: string | null;
-            /**
-             * Origin Ids
-             * @default []
-             */
-            origin_ids: string[];
-            /**
-             * Origins
-             * @default []
-             */
-            origins: components["schemas"]["OriginWithPercentage"][];
-            /**
-             * Process Ids
-             * @default []
-             */
-            process_ids: string[];
-            /**
-             * Variety Ids
-             * @default []
-             */
-            variety_ids: string[];
-            /**
-             * Flavor Tag Ids
-             * @default []
-             */
-            flavor_tag_ids: string[];
-        };
-        /**
-         * BeanMixType
-         * @description Whether a bean is single origin or a blend.
-         * @enum {string}
-         */
-        BeanMixType: "single_origin" | "blend" | "unknown";
-        /**
-         * BeanRatingCreate
-         * @description Schema for creating a BeanRating.
-         *
-         *     Attributes
-         *     ----------
-         *     person_id : uuid.UUID
-         *         ID of the person giving the rating.
-         *     rated_at : datetime | None
-         *         When the rating was given. Defaults to now if not provided.
-         *     taste : BeanTasteCreate | None
-         *         Optional taste profile to create inline.
-         */
-        BeanRatingCreate: {
-            /**
-             * Person Id
-             * Format: uuid
-             */
-            person_id: string;
-            /** Rated At */
-            rated_at?: string | null;
-            taste?: components["schemas"]["BeanTasteCreate"] | null;
-        };
-        /**
-         * BeanRatingRead
-         * @description Schema returned when reading a BeanRating.
-         *
-         *     Attributes
-         *     ----------
-         *     id : uuid.UUID
-         *         Primary key.
-         *     bean_id : uuid.UUID
-         *         Rated bean's primary key.
-         *     person_id : uuid.UUID
-         *         Rating person's primary key.
-         *     rated_at : datetime
-         *         When the rating was given.
-         *     created_at : datetime
-         *         Row creation timestamp.
-         *     updated_at : datetime
-         *         Last-modified timestamp.
-         *     retired_at : datetime | None
-         *         Soft-delete timestamp.
-         *     is_retired : bool
-         *         Computed from ``retired_at``.
-         *     person_name : str
-         *         Name of the person who gave the rating.
-         *     taste : BeanTasteRead | None
-         *         Nested taste profile, if present.
-         */
-        BeanRatingRead: {
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Bean Id
-             * Format: uuid
-             */
-            bean_id: string;
-            /**
-             * Person Id
-             * Format: uuid
-             */
-            person_id: string;
-            /**
-             * Rated At
-             * Format: date-time
-             */
-            rated_at: string;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /**
-             * Updated At
-             * Format: date-time
-             */
-            updated_at: string;
-            /** Retired At */
-            retired_at: string | null;
-            /** Is Retired */
-            is_retired: boolean;
-            /** Person Name */
-            person_name: string;
-            taste?: components["schemas"]["BeanTasteRead"] | null;
-        };
-        /**
-         * BeanRead
-         * @description Schema returned when reading a Bean.
-         *
-         *     Attributes
-         *     ----------
-         *     id : uuid.UUID
-         *         Primary key.
-         *     roaster_id : uuid.UUID | None
-         *         Roaster FK.
-         *     created_at : datetime
-         *         Creation timestamp.
-         *     updated_at : datetime
-         *         Last-modified timestamp.
-         *     retired_at : datetime | None
-         *         Soft-delete timestamp.
-         *     is_retired : bool
-         *         Computed from ``retired_at``.
-         *     roaster : RoasterRead | None
-         *         Nested roaster data.
-         *     origins : list[OriginRead]
-         *         Nested origins.
-         *     processes : list[ProcessMethodRead]
-         *         Nested process methods.
-         *     varieties : list[BeanVarietyRead]
-         *         Nested bean varieties.
-         *     flavor_tags : list[FlavorTagRead]
-         *         Nested flavor tags (roaster's claimed flavors).
-         *     bags : list[BagRead]
-         *         Nested non-retired bags.
-         */
-        BeanRead: {
-            /** Name */
-            name: string;
-            /** Notes */
-            notes?: string | null;
-            /** Roast Degree */
-            roast_degree?: number | null;
-            /** @default unknown */
-            bean_mix_type: components["schemas"]["BeanMixType"];
-            bean_use_type?: components["schemas"]["BeanUseType"] | null;
-            /**
-             * Decaf
-             * @default false
-             */
-            decaf: boolean;
-            /** Url */
-            url?: string | null;
-            /** Ean */
-            ean?: string | null;
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /** Roaster Id */
-            roaster_id: string | null;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /**
-             * Updated At
-             * Format: date-time
-             */
-            updated_at: string;
-            /** Retired At */
-            retired_at: string | null;
-            /** Is Retired */
-            is_retired: boolean;
-            roaster?: components["schemas"]["RoasterRead"] | null;
-            /**
-             * Origins
-             * @default []
-             */
-            origins: components["schemas"]["OriginRead"][];
-            /**
-             * Processes
-             * @default []
-             */
-            processes: components["schemas"]["ProcessMethodRead"][];
-            /**
-             * Varieties
-             * @default []
-             */
-            varieties: components["schemas"]["BeanVarietyRead"][];
-            /**
-             * Flavor Tags
-             * @default []
-             */
-            flavor_tags: components["schemas"]["FlavorTagRead"][];
-            /**
-             * Bags
-             * @default []
-             */
-            bags: components["schemas"]["BagRead"][];
-        };
-        /**
-         * BeanStatsRead
-         * @description Aggregated bean and bag statistics.
-         */
-        BeanStatsRead: {
-            /** Total Beans */
-            total_beans: number;
-            /** Beans Active */
-            beans_active: number;
-            /** Mix Type Breakdown */
-            mix_type_breakdown: {
-                [key: string]: number;
-            };
-            /** Use Type Breakdown */
-            use_type_breakdown: {
-                [key: string]: number;
-            };
-            /** Top Roasters */
-            top_roasters: components["schemas"]["RoasterBeanCount"][];
-            /** Top Origins */
-            top_origins: components["schemas"]["OriginBeanCount"][];
-            /** Total Bags */
-            total_bags: number;
-            /** Bags Active */
-            bags_active: number;
-            /** Bags Unopened */
-            bags_unopened: number;
-            /** Avg Bag Weight G */
-            avg_bag_weight_g: number | null;
-            /** Avg Bag Price */
-            avg_bag_price: number | null;
-        };
-        /**
-         * BeanTasteAxisAverages
-         * @description Average scores across all bean ratings.
-         */
-        BeanTasteAxisAverages: {
-            /** Score */
-            score: number | null;
-            /** Acidity */
-            acidity: number | null;
-            /** Sweetness */
-            sweetness: number | null;
-            /** Body */
-            body: number | null;
-            /** Complexity */
-            complexity: number | null;
-            /** Aroma */
-            aroma: number | null;
-            /** Clean Cup */
-            clean_cup: number | null;
-        };
-        /**
-         * BeanTasteCreate
-         * @description Schema for creating a BeanTaste.
-         *
-         *     Attributes
-         *     ----------
-         *     flavor_tag_ids : list[uuid.UUID]
-         *         Flavor tag IDs to link via M2M.
-         */
-        BeanTasteCreate: {
-            /** Score */
-            score?: number | null;
-            /** Acidity */
-            acidity?: number | null;
-            /** Sweetness */
-            sweetness?: number | null;
-            /** Body */
-            body?: number | null;
-            /** Complexity */
-            complexity?: number | null;
-            /** Aroma */
-            aroma?: number | null;
-            /** Clean Cup */
-            clean_cup?: number | null;
-            /** Notes */
-            notes?: string | null;
-            /**
-             * Flavor Tag Ids
-             * @default []
-             */
-            flavor_tag_ids: string[];
-        };
-        /**
-         * BeanTasteRead
-         * @description Schema returned when reading a BeanTaste.
-         *
-         *     Attributes
-         *     ----------
-         *     id : uuid.UUID
-         *         Primary key.
-         *     bean_rating_id : uuid.UUID
-         *         Parent rating's primary key.
-         *     created_at : datetime
-         *         Creation timestamp.
-         *     updated_at : datetime
-         *         Last-modified timestamp.
-         *     flavor_tags : list[FlavorTagRead]
-         *         Nested flavor tag objects.
-         */
-        BeanTasteRead: {
-            /** Score */
-            score?: number | null;
-            /** Acidity */
-            acidity?: number | null;
-            /** Sweetness */
-            sweetness?: number | null;
-            /** Body */
-            body?: number | null;
-            /** Complexity */
-            complexity?: number | null;
-            /** Aroma */
-            aroma?: number | null;
-            /** Clean Cup */
-            clean_cup?: number | null;
-            /** Notes */
-            notes?: string | null;
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Bean Rating Id
-             * Format: uuid
-             */
-            bean_rating_id: string;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /**
-             * Updated At
-             * Format: date-time
-             */
-            updated_at: string;
-            /**
-             * Flavor Tags
-             * @default []
-             */
-            flavor_tags: components["schemas"]["FlavorTagRead"][];
-        };
-        /**
-         * BeanTasteStats
-         * @description Sensory stats from bean ratings.
-         */
-        BeanTasteStats: {
-            /** Total Rated */
-            total_rated: number;
-            avg_axes: components["schemas"]["BeanTasteAxisAverages"];
-            /** Best Score */
-            best_score: number | null;
-            /** Best Bean Id */
-            best_bean_id: string | null;
-            /** Top Flavor Tags */
-            top_flavor_tags: components["schemas"]["FlavorTagCount"][];
-        };
-        /**
-         * BeanTasteUpdate
-         * @description Schema for partially updating a BeanTaste.
-         *
-         *     All fields optional; only provided fields are updated.
-         *
-         *     Attributes
-         *     ----------
-         *     score : float | None
-         *         Overall score (0-10).
-         *     acidity : float | None
-         *         Acidity score (0-10).
-         *     sweetness : float | None
-         *         Sweetness score (0-10).
-         *     body : float | None
-         *         Body score (0-10).
-         *     complexity : float | None
-         *         Complexity score (0-10).
-         *     aroma : float | None
-         *         Aroma score (0-10).
-         *     clean_cup : float | None
-         *         Clean-cup score (0-10).
-         *     notes : str | None
-         *         Free-text tasting notes.
-         *     flavor_tag_ids : list[uuid.UUID] | None
-         *         Flavor tag IDs to replace the M2M list.
-         */
-        BeanTasteUpdate: {
-            /** Score */
-            score?: number | null;
-            /** Acidity */
-            acidity?: number | null;
-            /** Sweetness */
-            sweetness?: number | null;
-            /** Body */
-            body?: number | null;
-            /** Complexity */
-            complexity?: number | null;
-            /** Aroma */
-            aroma?: number | null;
-            /** Clean Cup */
-            clean_cup?: number | null;
-            /** Notes */
-            notes?: string | null;
-            /** Flavor Tag Ids */
-            flavor_tag_ids?: string[] | null;
-        };
-        /**
-         * BeanUpdate
-         * @description Schema for partially updating a Bean.
-         *
-         *     All fields are optional so callers can send only the fields they
-         *     want to change.
-         */
-        BeanUpdate: {
-            /** Name */
-            name?: string | null;
-            /** Roaster Id */
-            roaster_id?: string | null;
-            /** Notes */
-            notes?: string | null;
-            /** Roast Degree */
-            roast_degree?: number | null;
-            bean_mix_type?: components["schemas"]["BeanMixType"] | null;
-            bean_use_type?: components["schemas"]["BeanUseType"] | null;
-            /** Decaf */
-            decaf?: boolean | null;
-            /** Url */
-            url?: string | null;
-            /** Ean */
-            ean?: string | null;
-            /** Origin Ids */
-            origin_ids?: string[] | null;
-            /** Origins */
-            origins?: components["schemas"]["OriginWithPercentage"][] | null;
-            /** Process Ids */
-            process_ids?: string[] | null;
-            /** Variety Ids */
-            variety_ids?: string[] | null;
-            /** Flavor Tag Ids */
-            flavor_tag_ids?: string[] | null;
-        };
-        /**
-         * BeanUseType
-         * @description Roaster's intended use for the bean.
-         * @enum {string}
-         */
-        BeanUseType: "filter" | "espresso" | "omni";
-        /**
-         * BeanVarietyCreate
-         * @description Schema for creating a BeanVariety.
-         */
-        BeanVarietyCreate: {
-            /** Name */
-            name: string;
-            species?: components["schemas"]["CoffeeSpecies"] | null;
-        };
-        /**
-         * BeanVarietyRead
-         * @description Schema returned when reading a BeanVariety.
-         *
-         *     Attributes
-         *     ----------
-         *     id : uuid.UUID
-         *         Primary key.
-         *     name : str
-         *         Bean variety name.
-         *     created_at : datetime
-         *         Creation timestamp.
-         *     retired_at : datetime | None
-         *         Soft-delete timestamp.
-         *     is_retired : bool
-         *         Computed from ``retired_at``.
-         */
-        BeanVarietyRead: {
-            /** Name */
-            name: string;
-            species?: components["schemas"]["CoffeeSpecies"] | null;
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /** Retired At */
-            retired_at: string | null;
-            /** Is Retired */
-            is_retired: boolean;
-        };
-        /**
-         * BeanVarietyUpdate
-         * @description Schema for partially updating a BeanVariety.
-         */
-        BeanVarietyUpdate: {
-            /** Name */
-            name?: string | null;
-            species?: components["schemas"]["CoffeeSpecies"] | null;
-        };
-        /**
-         * BrewCreate
-         * @description Schema for creating a Brew.
-         *
-         *     Attributes
-         *     ----------
-         *     bag_id : uuid.UUID
-         *         Required bag FK.
-         *     brew_setup_id : uuid.UUID
-         *         Required brew setup FK.
-         *     person_id : uuid.UUID
-         *         Required person FK.
-         *     grind_setting : float | None
-         *         Canonical numeric grind setting.
-         *     grind_setting_display : str | None
-         *         Human-readable grind display (takes precedence over grind_setting).
-         *     temperature : float | None
-         *         Temperature in celsius.
-         *     pressure : float | None
-         *         Pressure in bar.
-         *     flow_rate : float | None
-         *         Flow rate in ml/s.
-         *     dose : float
-         *         Coffee dose in grams.
-         *     yield_amount : float | None
-         *         Yield in grams.
-         *     pre_infusion_time : float | None
-         *         Pre-infusion time in seconds.
-         *     total_time : float | None
-         *         Total brew time in seconds.
-         *     stop_mode_id : uuid.UUID | None
-         *         Optional stop mode FK.
-         *     is_failed : bool
-         *         Whether the brew was considered failed.
-         *     notes : str | None
-         *         Free-text notes.
-         *     brewed_at : datetime
-         *         When the brew took place.
-         *     taste : BrewTasteCreate | None
-         *         Optional inline taste.
-         */
-        BrewCreate: {
-            /**
-             * Bag Id
-             * Format: uuid
-             */
-            bag_id: string;
-            /**
-             * Brew Setup Id
-             * Format: uuid
-             */
-            brew_setup_id: string;
-            /**
-             * Person Id
-             * Format: uuid
-             */
-            person_id: string;
-            /** Grind Setting */
-            grind_setting?: number | null;
-            /** Grind Setting Display */
-            grind_setting_display?: string | null;
-            /** Temperature */
-            temperature?: number | null;
-            /** Pressure */
-            pressure?: number | null;
-            /** Flow Rate */
-            flow_rate?: number | null;
-            /** Dose */
-            dose: number;
-            /** Yield Amount */
-            yield_amount?: number | null;
-            /** Pre Infusion Time */
-            pre_infusion_time?: number | null;
-            /** Total Time */
-            total_time?: number | null;
-            /** Stop Mode Id */
-            stop_mode_id?: string | null;
-            /**
-             * Is Failed
-             * @default false
-             */
-            is_failed: boolean;
-            /** Notes */
-            notes?: string | null;
-            /**
-             * Brewed At
-             * Format: date-time
-             */
-            brewed_at: string;
-            taste?: components["schemas"]["BrewTasteCreate"] | null;
-        };
-        /**
-         * BrewListRead
-         * @description Summary schema for listing brews.
-         *
-         *     Attributes
-         *     ----------
-         *     id : uuid.UUID
-         *         Primary key.
-         *     grind_setting : float | None
-         *         Canonical grind setting.
-         *     grind_setting_display : str | None
-         *         Human-readable grind display.
-         *     dose : float
-         *         Coffee dose in grams.
-         *     temperature : float | None
-         *         Temperature in celsius.
-         *     is_failed : bool
-         *         Whether the brew was considered failed.
-         *     brewed_at : datetime
-         *         When the brew took place.
-         *     created_at : datetime
-         *         Creation timestamp.
-         *     bean_name : str
-         *         Name of the bean (via bag.bean.name).
-         *     brew_method_name : str
-         *         Name of the brew method (via brew_setup.brew_method.name).
-         *     person_name : str
-         *         Name of the person.
-         *     score : float | None
-         *         Overall taste score (from taste.score).
-         */
-        BrewListRead: {
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /** Grind Setting */
-            grind_setting?: number | null;
-            /** Grind Setting Display */
-            grind_setting_display?: string | null;
-            /** Dose */
-            dose: number;
-            /** Temperature */
-            temperature?: number | null;
-            /** Is Failed */
-            is_failed: boolean;
-            /**
-             * Brewed At
-             * Format: date-time
-             */
-            brewed_at: string;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /** Bean Name */
-            bean_name: string;
-            /** Brew Method Name */
-            brew_method_name: string;
-            /** Person Name */
-            person_name: string;
-            /** Score */
-            score?: number | null;
-        };
-        /**
-         * BrewMethodCreate
-         * @description Schema for creating a BrewMethod.
-         */
-        BrewMethodCreate: {
-            /** Name */
-            name: string;
-        };
-        /**
-         * BrewMethodRead
-         * @description Schema returned when reading a BrewMethod.
-         *
-         *     Attributes
-         *     ----------
-         *     id : uuid.UUID
-         *         Primary key.
-         *     name : str
-         *         Brew method name.
-         *     created_at : datetime
-         *         Creation timestamp.
-         *     retired_at : datetime | None
-         *         Soft-delete timestamp.
-         *     is_retired : bool
-         *         Computed from ``retired_at``.
-         */
-        BrewMethodRead: {
-            /** Name */
-            name: string;
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /** Retired At */
-            retired_at: string | null;
-            /** Is Retired */
-            is_retired: boolean;
-        };
-        /**
-         * BrewMethodUpdate
-         * @description Schema for partially updating a BrewMethod.
-         */
-        BrewMethodUpdate: {
-            /** Name */
-            name?: string | null;
-        };
-        /**
-         * BrewRead
-         * @description Full detail schema returned when reading a Brew.
-         *
-         *     Attributes
-         *     ----------
-         *     id : uuid.UUID
-         *         Primary key.
-         *     bag_id : uuid.UUID
-         *         Bag FK.
-         *     brew_setup_id : uuid.UUID
-         *         Brew setup FK.
-         *     person_id : uuid.UUID
-         *         Person FK.
-         *     grind_setting : float | None
-         *         Canonical grind setting.
-         *     grind_setting_display : str | None
-         *         Human-readable grind display.
-         *     temperature : float | None
-         *         Temperature in celsius.
-         *     pressure : float | None
-         *         Pressure in bar.
-         *     flow_rate : float | None
-         *         Flow rate in ml/s.
-         *     dose : float
-         *         Coffee dose in grams.
-         *     yield_amount : float | None
-         *         Yield in grams.
-         *     pre_infusion_time : float | None
-         *         Pre-infusion time in seconds.
-         *     total_time : float | None
-         *         Total brew time in seconds.
-         *     stop_mode_id : uuid.UUID | None
-         *         Stop mode FK.
-         *     is_failed : bool
-         *         Whether the brew was considered failed.
-         *     notes : str | None
-         *         Free-text notes.
-         *     brewed_at : datetime
-         *         When the brew took place.
-         *     created_at : datetime
-         *         Creation timestamp.
-         *     updated_at : datetime
-         *         Last-modified timestamp.
-         *     retired_at : datetime | None
-         *         Soft-delete timestamp.
-         *     is_retired : bool
-         *         Computed from ``retired_at``.
-         *     bag : dict | None
-         *         Nested bag data (with bean).
-         *     brew_setup : BrewSetupRead | None
-         *         Nested brew setup (with equipment names).
-         *     person : dict | None
-         *         Nested person data.
-         *     taste : BrewTasteRead | None
-         *         Nested taste data (with flavor tags).
-         *     stop_mode : dict | None
-         *         Nested stop mode data.
-         */
-        BrewRead: {
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Bag Id
-             * Format: uuid
-             */
-            bag_id: string;
-            /**
-             * Brew Setup Id
-             * Format: uuid
-             */
-            brew_setup_id: string;
-            /**
-             * Person Id
-             * Format: uuid
-             */
-            person_id: string;
-            /** Grind Setting */
-            grind_setting?: number | null;
-            /** Grind Setting Display */
-            grind_setting_display?: string | null;
-            /** Temperature */
-            temperature?: number | null;
-            /** Pressure */
-            pressure?: number | null;
-            /** Flow Rate */
-            flow_rate?: number | null;
-            /** Dose */
-            dose: number;
-            /** Yield Amount */
-            yield_amount?: number | null;
-            /** Pre Infusion Time */
-            pre_infusion_time?: number | null;
-            /** Total Time */
-            total_time?: number | null;
-            /** Stop Mode Id */
-            stop_mode_id?: string | null;
-            /** Is Failed */
-            is_failed: boolean;
-            /** Notes */
-            notes?: string | null;
-            /**
-             * Brewed At
-             * Format: date-time
-             */
-            brewed_at: string;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /**
-             * Updated At
-             * Format: date-time
-             */
-            updated_at: string;
-            /** Retired At */
-            retired_at?: string | null;
-            /**
-             * Is Retired
-             * @default false
-             */
-            is_retired: boolean;
-            /** Bag */
-            bag?: {
-                [key: string]: unknown;
-            } | null;
-            brew_setup?: components["schemas"]["BrewSetupRead"] | null;
-            /** Person */
-            person?: {
-                [key: string]: unknown;
-            } | null;
-            taste?: components["schemas"]["BrewTasteRead"] | null;
-            /** Stop Mode */
-            stop_mode?: {
-                [key: string]: unknown;
-            } | null;
-        };
-        /**
-         * BrewSetupCreate
-         * @description Schema for creating a BrewSetup.
-         *
-         *     Attributes
-         *     ----------
-         *     brew_method_id : uuid.UUID
-         *         Required brew method FK.
-         *     grinder_id : uuid.UUID | None
-         *         Optional grinder FK.
-         *     brewer_id : uuid.UUID | None
-         *         Optional brewer FK.
-         *     paper_id : uuid.UUID | None
-         *         Optional paper FK.
-         *     water_id : uuid.UUID | None
-         *         Optional water FK.
-         */
-        BrewSetupCreate: {
-            /** Name */
-            name?: string | null;
-            /**
-             * Brew Method Id
-             * Format: uuid
-             */
-            brew_method_id: string;
-            /** Grinder Id */
-            grinder_id?: string | null;
-            /** Brewer Id */
-            brewer_id?: string | null;
-            /** Paper Id */
-            paper_id?: string | null;
-            /** Water Id */
-            water_id?: string | null;
-        };
-        /**
-         * BrewSetupRead
-         * @description Schema returned when reading a BrewSetup.
-         *
-         *     Attributes
-         *     ----------
-         *     id : uuid.UUID
-         *         Primary key.
-         *     created_at : datetime
-         *         Creation timestamp.
-         *     updated_at : datetime
-         *         Last-modified timestamp.
-         *     retired_at : datetime | None
-         *         Soft-delete timestamp.
-         *     is_retired : bool
-         *         Computed from ``retired_at``.
-         *     brew_method_id : uuid.UUID
-         *         Brew method FK.
-         *     grinder_id : uuid.UUID | None
-         *         Grinder FK.
-         *     brewer_id : uuid.UUID | None
-         *         Brewer FK.
-         *     paper_id : uuid.UUID | None
-         *         Paper FK.
-         *     water_id : uuid.UUID | None
-         *         Water FK.
-         *     brew_method_name : str | None
-         *         Name of the linked brew method.
-         *     grinder_name : str | None
-         *         Name of the linked grinder.
-         *     brewer_name : str | None
-         *         Name of the linked brewer.
-         *     paper_name : str | None
-         *         Name of the linked paper.
-         *     water_name : str | None
-         *         Name of the linked water.
-         */
-        BrewSetupRead: {
-            /** Name */
-            name?: string | null;
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /**
-             * Updated At
-             * Format: date-time
-             */
-            updated_at: string;
-            /** Retired At */
-            retired_at: string | null;
-            /** Is Retired */
-            is_retired: boolean;
-            /**
-             * Brew Method Id
-             * Format: uuid
-             */
-            brew_method_id: string;
-            /** Grinder Id */
-            grinder_id: string | null;
-            /** Brewer Id */
-            brewer_id: string | null;
-            /** Paper Id */
-            paper_id: string | null;
-            /** Water Id */
-            water_id: string | null;
-            /** Brew Method Name */
-            brew_method_name?: string | null;
-            /** Grinder Name */
-            grinder_name?: string | null;
-            /** Brewer Name */
-            brewer_name?: string | null;
-            /** Paper Name */
-            paper_name?: string | null;
-            /** Water Name */
-            water_name?: string | null;
-        };
-        /**
-         * BrewSetupUpdate
-         * @description Schema for partially updating a BrewSetup.
-         *
-         *     Attributes
-         *     ----------
-         *     name : str | None
-         *         Updated name.
-         *     brew_method_id : uuid.UUID | None
-         *         Updated brew method FK.
-         *     grinder_id : uuid.UUID | None
-         *         Updated grinder FK.
-         *     brewer_id : uuid.UUID | None
-         *         Updated brewer FK.
-         *     paper_id : uuid.UUID | None
-         *         Updated paper FK.
-         *     water_id : uuid.UUID | None
-         *         Updated water FK.
-         */
-        BrewSetupUpdate: {
-            /** Name */
-            name?: string | null;
-            /** Brew Method Id */
-            brew_method_id?: string | null;
-            /** Grinder Id */
-            grinder_id?: string | null;
-            /** Brewer Id */
-            brewer_id?: string | null;
-            /** Paper Id */
-            paper_id?: string | null;
-            /** Water Id */
-            water_id?: string | null;
-        };
-        /**
-         * BrewStatsRead
-         * @description Aggregated brew statistics.
-         */
-        BrewStatsRead: {
-            /** Total */
-            total: number;
-            /** This Week */
-            this_week: number;
-            /** This Month */
-            this_month: number;
-            /** Total Failed */
-            total_failed: number;
-            /** Fail Rate */
-            fail_rate: number | null;
-            /** Avg Dose G */
-            avg_dose_g: number | null;
-            /** Avg Yield G */
-            avg_yield_g: number | null;
-            /** Avg Brew Time S */
-            avg_brew_time_s: number | null;
-            /** Last Brewed At */
-            last_brewed_at: string | null;
-            /** By Method */
-            by_method: components["schemas"]["MethodBrewCount"][];
-        };
-        /**
-         * BrewTasteAxisAverages
-         * @description Average scores across all rated brews.
-         */
-        BrewTasteAxisAverages: {
-            /** Score */
-            score: number | null;
-            /** Acidity */
-            acidity: number | null;
-            /** Sweetness */
-            sweetness: number | null;
-            /** Body */
-            body: number | null;
-            /** Bitterness */
-            bitterness: number | null;
-            /** Balance */
-            balance: number | null;
-            /** Aftertaste */
-            aftertaste: number | null;
-        };
-        /**
-         * BrewTasteCreate
-         * @description Schema for creating a BrewTaste.
-         *
-         *     Attributes
-         *     ----------
-         *     flavor_tag_ids : list[uuid.UUID]
-         *         Flavor tag IDs to link.
-         */
-        BrewTasteCreate: {
-            /** Score */
-            score?: number | null;
-            /** Acidity */
-            acidity?: number | null;
-            /** Sweetness */
-            sweetness?: number | null;
-            /** Body */
-            body?: number | null;
-            /** Bitterness */
-            bitterness?: number | null;
-            /** Balance */
-            balance?: number | null;
-            /** Aftertaste */
-            aftertaste?: number | null;
-            /** Notes */
-            notes?: string | null;
-            /**
-             * Flavor Tag Ids
-             * @default []
-             */
-            flavor_tag_ids: string[];
-        };
-        /**
-         * BrewTasteRead
-         * @description Schema returned when reading a BrewTaste.
-         *
-         *     Attributes
-         *     ----------
-         *     id : uuid.UUID
-         *         Primary key.
-         *     brew_id : uuid.UUID
-         *         Parent brew FK.
-         *     created_at : datetime
-         *         Creation timestamp.
-         *     updated_at : datetime
-         *         Last-modified timestamp.
-         *     flavor_tags : list[FlavorTagRead]
-         *         Nested flavor tags.
-         */
-        BrewTasteRead: {
-            /** Score */
-            score?: number | null;
-            /** Acidity */
-            acidity?: number | null;
-            /** Sweetness */
-            sweetness?: number | null;
-            /** Body */
-            body?: number | null;
-            /** Bitterness */
-            bitterness?: number | null;
-            /** Balance */
-            balance?: number | null;
-            /** Aftertaste */
-            aftertaste?: number | null;
-            /** Notes */
-            notes?: string | null;
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Brew Id
-             * Format: uuid
-             */
-            brew_id: string;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /**
-             * Updated At
-             * Format: date-time
-             */
-            updated_at: string;
-            /**
-             * Flavor Tags
-             * @default []
-             */
-            flavor_tags: components["schemas"]["FlavorTagRead"][];
-        };
-        /**
-         * BrewTasteStats
-         * @description Sensory stats from brew tastings.
-         */
-        BrewTasteStats: {
-            /** Total Rated */
-            total_rated: number;
-            avg_axes: components["schemas"]["BrewTasteAxisAverages"];
-            /** Best Score */
-            best_score: number | null;
-            /** Best Brew Id */
-            best_brew_id: string | null;
-            /** Top Flavor Tags */
-            top_flavor_tags: components["schemas"]["FlavorTagCount"][];
-        };
-        /**
-         * BrewTasteUpdate
-         * @description Schema for partially updating a BrewTaste.
-         *
-         *     All fields are optional so callers can send only the fields they
-         *     want to change.
-         *
-         *     Attributes
-         *     ----------
-         *     score : float | None
-         *         Updated overall score.
-         *     acidity : float | None
-         *         Updated acidity score.
-         *     sweetness : float | None
-         *         Updated sweetness score.
-         *     body : float | None
-         *         Updated body score.
-         *     bitterness : float | None
-         *         Updated bitterness score.
-         *     balance : float | None
-         *         Updated balance score.
-         *     aftertaste : float | None
-         *         Updated aftertaste score.
-         *     notes : str | None
-         *         Updated tasting notes.
-         *     flavor_tag_ids : list[uuid.UUID] | None
-         *         Updated flavor tag IDs; ``None`` means don't touch.
-         */
-        BrewTasteUpdate: {
-            /** Score */
-            score?: number | null;
-            /** Acidity */
-            acidity?: number | null;
-            /** Sweetness */
-            sweetness?: number | null;
-            /** Body */
-            body?: number | null;
-            /** Bitterness */
-            bitterness?: number | null;
-            /** Balance */
-            balance?: number | null;
-            /** Aftertaste */
-            aftertaste?: number | null;
-            /** Notes */
-            notes?: string | null;
-            /** Flavor Tag Ids */
-            flavor_tag_ids?: string[] | null;
-        };
-        /**
-         * BrewUpdate
-         * @description Schema for partially updating a Brew.
-         *
-         *     All fields are optional so callers can send only the fields they
-         *     want to change.
-         *
-         *     Attributes
-         *     ----------
-         *     bag_id : uuid.UUID | None
-         *         Updated bag FK.
-         *     brew_setup_id : uuid.UUID | None
-         *         Updated brew setup FK.
-         *     person_id : uuid.UUID | None
-         *         Updated person FK.
-         *     grind_setting : float | None
-         *         Updated canonical grind setting.
-         *     grind_setting_display : str | None
-         *         Updated human-readable grind display.
-         *     temperature : float | None
-         *         Updated temperature.
-         *     pressure : float | None
-         *         Updated pressure.
-         *     flow_rate : float | None
-         *         Updated flow rate.
-         *     dose : float | None
-         *         Updated dose.
-         *     yield_amount : float | None
-         *         Updated yield.
-         *     pre_infusion_time : float | None
-         *         Updated pre-infusion time.
-         *     total_time : float | None
-         *         Updated total time.
-         *     stop_mode_id : uuid.UUID | None
-         *         Updated stop mode FK.
-         *     is_failed : bool | None
-         *         Updated failure flag.
-         *     notes : str | None
-         *         Updated notes.
-         *     brewed_at : datetime | None
-         *         Updated brew time.
-         */
-        BrewUpdate: {
-            /** Bag Id */
-            bag_id?: string | null;
-            /** Brew Setup Id */
-            brew_setup_id?: string | null;
-            /** Person Id */
-            person_id?: string | null;
-            /** Grind Setting */
-            grind_setting?: number | null;
-            /** Grind Setting Display */
-            grind_setting_display?: string | null;
-            /** Temperature */
-            temperature?: number | null;
-            /** Pressure */
-            pressure?: number | null;
-            /** Flow Rate */
-            flow_rate?: number | null;
-            /** Dose */
-            dose?: number | null;
-            /** Yield Amount */
-            yield_amount?: number | null;
-            /** Pre Infusion Time */
-            pre_infusion_time?: number | null;
-            /** Total Time */
-            total_time?: number | null;
-            /** Stop Mode Id */
-            stop_mode_id?: string | null;
-            /** Is Failed */
-            is_failed?: boolean | null;
-            /** Notes */
-            notes?: string | null;
-            /** Brewed At */
-            brewed_at?: string | null;
-        };
-        /**
-         * BrewerCreate
-         * @description Schema for creating a Brewer.
-         *
-         *     Attributes
-         *     ----------
-         *     method_ids : list[uuid.UUID] | None
-         *         IDs of brew methods to link.
-         *     stop_mode_ids : list[uuid.UUID] | None
-         *         IDs of stop modes to link.
-         */
-        BrewerCreate: {
-            /** Name */
-            name: string;
-            /** @default pid */
-            temp_control_type: components["schemas"]["TempControlType"];
-            /** Temp Min */
-            temp_min?: number | null;
-            /** Temp Max */
-            temp_max?: number | null;
-            /** Temp Step */
-            temp_step?: number | null;
-            /** @default none */
-            preinfusion_type: components["schemas"]["PreinfusionType"];
-            /** Preinfusion Max Time */
-            preinfusion_max_time?: number | null;
-            /** @default fixed */
-            pressure_control_type: components["schemas"]["PressureControlType"];
-            /** Pressure Min */
-            pressure_min?: number | null;
-            /** Pressure Max */
-            pressure_max?: number | null;
-            /** @default none */
-            flow_control_type: components["schemas"]["FlowControlType"];
-            /** Saturation Flow Rate */
-            saturation_flow_rate?: number | null;
-            /**
-             * Has Bloom
-             * @default false
-             */
-            has_bloom: boolean;
-            /** Method Ids */
-            method_ids?: string[] | null;
-            /** Stop Mode Ids */
-            stop_mode_ids?: string[] | null;
-        };
-        /**
-         * BrewerRead
-         * @description Schema returned when reading a Brewer.
-         *
-         *     Attributes
-         *     ----------
-         *     id : uuid.UUID
-         *         Primary key.
-         *     created_at : datetime
-         *         Creation timestamp.
-         *     updated_at : datetime
-         *         Last-modified timestamp.
-         *     retired_at : datetime | None
-         *         Soft-delete timestamp.
-         *     is_retired : bool
-         *         Computed from ``retired_at``.
-         *     tier : int
-         *         Computed UX tier (1--5).
-         *     methods : list[BrewMethodRead]
-         *         Nested brew methods.
-         *     stop_modes : list[StopModeRead]
-         *         Nested stop modes.
-         */
-        BrewerRead: {
-            /** Name */
-            name: string;
-            /** @default pid */
-            temp_control_type: components["schemas"]["TempControlType"];
-            /** Temp Min */
-            temp_min?: number | null;
-            /** Temp Max */
-            temp_max?: number | null;
-            /** Temp Step */
-            temp_step?: number | null;
-            /** @default none */
-            preinfusion_type: components["schemas"]["PreinfusionType"];
-            /** Preinfusion Max Time */
-            preinfusion_max_time?: number | null;
-            /** @default fixed */
-            pressure_control_type: components["schemas"]["PressureControlType"];
-            /** Pressure Min */
-            pressure_min?: number | null;
-            /** Pressure Max */
-            pressure_max?: number | null;
-            /** @default none */
-            flow_control_type: components["schemas"]["FlowControlType"];
-            /** Saturation Flow Rate */
-            saturation_flow_rate?: number | null;
-            /**
-             * Has Bloom
-             * @default false
-             */
-            has_bloom: boolean;
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /**
-             * Updated At
-             * Format: date-time
-             */
-            updated_at: string;
-            /** Retired At */
-            retired_at: string | null;
-            /** Is Retired */
-            is_retired: boolean;
-            /** Tier */
-            tier: number;
-            /** Methods */
-            methods: components["schemas"]["BrewMethodRead"][];
-            /** Stop Modes */
-            stop_modes: components["schemas"]["StopModeRead"][];
-        };
-        /**
-         * BrewerUpdate
-         * @description Schema for partially updating a Brewer.
-         *
-         *     Attributes
-         *     ----------
-         *     name : str | None
-         *         Updated name.
-         *     temp_control_type : TempControlType | None
-         *         Updated temperature control.
-         *     temp_min : float | None
-         *         Updated minimum temperature.
-         *     temp_max : float | None
-         *         Updated maximum temperature.
-         *     temp_step : float | None
-         *         Updated temperature step.
-         *     preinfusion_type : PreinfusionType | None
-         *         Updated pre-infusion type.
-         *     preinfusion_max_time : float | None
-         *         Updated max pre-infusion time.
-         *     pressure_control_type : PressureControlType | None
-         *         Updated pressure control.
-         *     pressure_min : float | None
-         *         Updated minimum pressure.
-         *     pressure_max : float | None
-         *         Updated maximum pressure.
-         *     flow_control_type : FlowControlType | None
-         *         Updated flow control.
-         *     saturation_flow_rate : float | None
-         *         Updated saturation flow rate.
-         *     has_bloom : bool | None
-         *         Updated bloom support.
-         *     method_ids : list[uuid.UUID] | None
-         *         Updated list of brew method IDs.
-         *     stop_mode_ids : list[uuid.UUID] | None
-         *         Updated list of stop mode IDs.
-         */
-        BrewerUpdate: {
-            /** Name */
-            name?: string | null;
-            temp_control_type?: components["schemas"]["TempControlType"] | null;
-            /** Temp Min */
-            temp_min?: number | null;
-            /** Temp Max */
-            temp_max?: number | null;
-            /** Temp Step */
-            temp_step?: number | null;
-            preinfusion_type?: components["schemas"]["PreinfusionType"] | null;
-            /** Preinfusion Max Time */
-            preinfusion_max_time?: number | null;
-            pressure_control_type?: components["schemas"]["PressureControlType"] | null;
-            /** Pressure Min */
-            pressure_min?: number | null;
-            /** Pressure Max */
-            pressure_max?: number | null;
-            flow_control_type?: components["schemas"]["FlowControlType"] | null;
-            /** Saturation Flow Rate */
-            saturation_flow_rate?: number | null;
-            /** Has Bloom */
-            has_bloom?: boolean | null;
-            /** Method Ids */
-            method_ids?: string[] | null;
-            /** Stop Mode Ids */
-            stop_mode_ids?: string[] | null;
-        };
-        /**
-         * CoffeeSpecies
-         * @description Biological species of the coffee plant.
-         * @enum {string}
-         */
-        CoffeeSpecies: "arabica" | "robusta" | "liberica";
-        /**
-         * CuppingCreate
-         * @description Schema for creating a Cupping.
-         *
-         *     Attributes
-         *     ----------
-         *     bag_id : uuid.UUID
-         *         Foreign key to the bag being cupped.
-         *     person_id : uuid.UUID
-         *         Foreign key to the person who cupped.
-         *     cupped_at : datetime
-         *         When the cupping session happened.
-         *     dry_fragrance : float | None
-         *         Ground coffee aroma (0-9 SCAA).
-         *     wet_aroma : float | None
-         *         Aroma after adding water (0-9).
-         *     brightness : float | None
-         *         Acidity / vibrancy (0-9).
-         *     flavor : float | None
-         *         Overall taste quality (0-9).
-         *     body : float | None
-         *         Weight / mouthfeel (0-9).
-         *     finish : float | None
-         *         Aftertaste length and quality (0-9).
-         *     sweetness : float | None
-         *         Sweetness (0-9).
-         *     clean_cup : float | None
-         *         Absence of defects (0-9).
-         *     complexity : float | None
-         *         Flavor layers / depth (0-9).
-         *     uniformity : float | None
-         *         Cup-to-cup consistency (0-9).
-         *     cuppers_correction : float | None
-         *         Personal adjustment (can be negative).
-         *     total_score : float | None
-         *         0-100 SCAA scale.
-         *     notes : str | None
-         *         Free-text notes.
-         *     flavor_tag_ids : list[uuid.UUID]
-         *         Flavor tag IDs to link via M2M.
-         */
-        CuppingCreate: {
-            /**
-             * Bag Id
-             * Format: uuid
-             */
-            bag_id: string;
-            /**
-             * Person Id
-             * Format: uuid
-             */
-            person_id: string;
-            /**
-             * Cupped At
-             * Format: date-time
-             */
-            cupped_at: string;
-            /** Dry Fragrance */
-            dry_fragrance?: number | null;
-            /** Wet Aroma */
-            wet_aroma?: number | null;
-            /** Brightness */
-            brightness?: number | null;
-            /** Flavor */
-            flavor?: number | null;
-            /** Body */
-            body?: number | null;
-            /** Finish */
-            finish?: number | null;
-            /** Sweetness */
-            sweetness?: number | null;
-            /** Clean Cup */
-            clean_cup?: number | null;
-            /** Complexity */
-            complexity?: number | null;
-            /** Uniformity */
-            uniformity?: number | null;
-            /** Cuppers Correction */
-            cuppers_correction?: number | null;
-            /** Total Score */
-            total_score?: number | null;
-            /** Notes */
-            notes?: string | null;
-            /**
-             * Flavor Tag Ids
-             * @default []
-             */
-            flavor_tag_ids: string[];
-        };
-        /**
-         * CuppingRead
-         * @description Schema returned when reading a Cupping.
-         *
-         *     Attributes
-         *     ----------
-         *     id : uuid.UUID
-         *         Primary key.
-         *     bag_id : uuid.UUID
-         *         Foreign key to the bag.
-         *     person_id : uuid.UUID
-         *         Foreign key to the person.
-         *     cupped_at : datetime
-         *         When the cupping session happened.
-         *     dry_fragrance : float | None
-         *         Ground coffee aroma (0-9 SCAA).
-         *     wet_aroma : float | None
-         *         Aroma after adding water (0-9).
-         *     brightness : float | None
-         *         Acidity / vibrancy (0-9).
-         *     flavor : float | None
-         *         Overall taste quality (0-9).
-         *     body : float | None
-         *         Weight / mouthfeel (0-9).
-         *     finish : float | None
-         *         Aftertaste length and quality (0-9).
-         *     sweetness : float | None
-         *         Sweetness (0-9).
-         *     clean_cup : float | None
-         *         Absence of defects (0-9).
-         *     complexity : float | None
-         *         Flavor layers / depth (0-9).
-         *     uniformity : float | None
-         *         Cup-to-cup consistency (0-9).
-         *     cuppers_correction : float | None
-         *         Personal adjustment (can be negative).
-         *     total_score : float | None
-         *         0-100 SCAA scale.
-         *     notes : str | None
-         *         Free-text notes.
-         *     created_at : datetime
-         *         Row creation timestamp.
-         *     updated_at : datetime
-         *         Last-modified timestamp.
-         *     retired_at : datetime | None
-         *         Soft-delete timestamp.
-         *     is_retired : bool
-         *         Computed from ``retired_at``.
-         *     person_name : str
-         *         Name of the person who performed the cupping.
-         *     flavor_tags : list[FlavorTagRead]
-         *         Nested flavor tag objects.
-         */
-        CuppingRead: {
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Bag Id
-             * Format: uuid
-             */
-            bag_id: string;
-            /**
-             * Person Id
-             * Format: uuid
-             */
-            person_id: string;
-            /**
-             * Cupped At
-             * Format: date-time
-             */
-            cupped_at: string;
-            /** Dry Fragrance */
-            dry_fragrance?: number | null;
-            /** Wet Aroma */
-            wet_aroma?: number | null;
-            /** Brightness */
-            brightness?: number | null;
-            /** Flavor */
-            flavor?: number | null;
-            /** Body */
-            body?: number | null;
-            /** Finish */
-            finish?: number | null;
-            /** Sweetness */
-            sweetness?: number | null;
-            /** Clean Cup */
-            clean_cup?: number | null;
-            /** Complexity */
-            complexity?: number | null;
-            /** Uniformity */
-            uniformity?: number | null;
-            /** Cuppers Correction */
-            cuppers_correction?: number | null;
-            /** Total Score */
-            total_score?: number | null;
-            /** Notes */
-            notes?: string | null;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /**
-             * Updated At
-             * Format: date-time
-             */
-            updated_at: string;
-            /** Retired At */
-            retired_at?: string | null;
-            /**
-             * Is Retired
-             * @default false
-             */
-            is_retired: boolean;
-            /**
-             * Person Name
-             * @default
-             */
-            person_name: string;
-            /**
-             * Flavor Tags
-             * @default []
-             */
-            flavor_tags: components["schemas"]["FlavorTagRead"][];
-        };
-        /**
-         * CuppingStatsRead
-         * @description Aggregated cupping session statistics.
-         */
-        CuppingStatsRead: {
-            /** Total */
-            total: number;
-            /** Avg Total Score */
-            avg_total_score: number | null;
-            /** Best Total Score */
-            best_total_score: number | null;
-            /** Best Cupping Id */
-            best_cupping_id: string | null;
-            /** Top Flavor Tags */
-            top_flavor_tags: components["schemas"]["FlavorTagCount"][];
-        };
-        /**
-         * CuppingUpdate
-         * @description Schema for partially updating a Cupping.
-         *
-         *     All fields are optional so callers can send only the fields they
-         *     want to change.
-         *
-         *     Attributes
-         *     ----------
-         *     cupped_at : datetime | None
-         *         Updated cupping time.
-         *     dry_fragrance : float | None
-         *         Updated ground coffee aroma (0-9).
-         *     wet_aroma : float | None
-         *         Updated wet aroma (0-9).
-         *     brightness : float | None
-         *         Updated brightness (0-9).
-         *     flavor : float | None
-         *         Updated flavor (0-9).
-         *     body : float | None
-         *         Updated body (0-9).
-         *     finish : float | None
-         *         Updated finish (0-9).
-         *     sweetness : float | None
-         *         Updated sweetness (0-9).
-         *     clean_cup : float | None
-         *         Updated clean cup (0-9).
-         *     complexity : float | None
-         *         Updated complexity (0-9).
-         *     uniformity : float | None
-         *         Updated uniformity (0-9).
-         *     cuppers_correction : float | None
-         *         Updated cupper's correction.
-         *     total_score : float | None
-         *         Updated total score (0-100).
-         *     notes : str | None
-         *         Updated notes.
-         *     flavor_tag_ids : list[uuid.UUID] | None
-         *         Updated flavor tag IDs; ``None`` means don't touch.
-         */
-        CuppingUpdate: {
-            /** Cupped At */
-            cupped_at?: string | null;
-            /** Dry Fragrance */
-            dry_fragrance?: number | null;
-            /** Wet Aroma */
-            wet_aroma?: number | null;
-            /** Brightness */
-            brightness?: number | null;
-            /** Flavor */
-            flavor?: number | null;
-            /** Body */
-            body?: number | null;
-            /** Finish */
-            finish?: number | null;
-            /** Sweetness */
-            sweetness?: number | null;
-            /** Clean Cup */
-            clean_cup?: number | null;
-            /** Complexity */
-            complexity?: number | null;
-            /** Uniformity */
-            uniformity?: number | null;
-            /** Cuppers Correction */
-            cuppers_correction?: number | null;
-            /** Total Score */
-            total_score?: number | null;
-            /** Notes */
-            notes?: string | null;
-            /** Flavor Tag Ids */
-            flavor_tag_ids?: string[] | null;
-        };
-        /**
-         * DialType
-         * @description Grinder dial type.
-         * @enum {string}
-         */
-        DialType: "stepless" | "stepped";
-        /**
-         * EquipmentStatsRead
-         * @description Aggregated equipment statistics and usage rankings.
-         */
-        EquipmentStatsRead: {
-            /** Total Grinders */
-            total_grinders: number;
-            /** Total Brewers */
-            total_brewers: number;
-            /** Total Papers */
-            total_papers: number;
-            /** Total Waters */
-            total_waters: number;
-            /** Top Grinders */
-            top_grinders: components["schemas"]["NamedUsageCount"][];
-            /** Top Brewers */
-            top_brewers: components["schemas"]["NamedUsageCount"][];
-            /** Top Setups */
-            top_setups: components["schemas"]["SetupUsage"][];
-            most_used_method: components["schemas"]["NamedUsageCount"] | null;
-        };
-        /**
-         * FlavorTagCount
-         * @description Flavor tag usage frequency.
-         */
-        FlavorTagCount: {
-            /**
-             * Flavor Tag Id
-             * Format: uuid
-             */
-            flavor_tag_id: string;
-            /** Flavor Tag Name */
-            flavor_tag_name: string;
-            /** Count */
-            count: number;
-        };
-        /**
-         * FlavorTagCreate
-         * @description Schema for creating a FlavorTag.
-         */
-        FlavorTagCreate: {
-            /** Name */
-            name: string;
-        };
-        /**
-         * FlavorTagRead
-         * @description Schema returned when reading a FlavorTag.
-         *
-         *     Attributes
-         *     ----------
-         *     id : uuid.UUID
-         *         Primary key.
-         *     name : str
-         *         Tag name.
-         *     created_at : datetime
-         *         Creation timestamp.
-         *     retired_at : datetime | None
-         *         Soft-delete timestamp.
-         *     is_retired : bool
-         *         Computed from ``retired_at``.
-         */
-        FlavorTagRead: {
-            /** Name */
-            name: string;
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /** Retired At */
-            retired_at: string | null;
-            /** Is Retired */
-            is_retired: boolean;
-        };
-        /**
-         * FlavorTagUpdate
-         * @description Schema for partially updating a FlavorTag.
-         */
-        FlavorTagUpdate: {
-            /** Name */
-            name?: string | null;
-        };
-        /**
-         * FlowControlType
-         * @description Flow control capability levels.
-         * @enum {string}
-         */
-        FlowControlType: "none" | "manual_paddle" | "manual_valve" | "programmable";
-        /**
-         * GrindRange
-         * @description Linearised grind range computed from ring configuration.
-         *
-         *     Attributes
-         *     ----------
-         *     min : float
-         *         Minimum linear grind value.
-         *     max : float
-         *         Maximum linear grind value.
-         *     step : float
-         *         Step size (always 1.0 for multi-ring, otherwise ring step).
-         */
-        GrindRange: {
-            /** Min */
-            min: number;
-            /** Max */
-            max: number;
-            /** Step */
-            step: number;
-        };
-        /**
-         * GrinderCreate
-         * @description Schema for creating a Grinder.
-         *
-         *     Attributes
-         *     ----------
-         *     name : str
-         *         Grinder name.
-         *     dial_type : DialType
-         *         Stepless or stepped.
-         *     rings : list[RingConfig] | None
-         *         Optional ring configuration.
-         */
-        GrinderCreate: {
-            /** Name */
-            name: string;
-            /** @default stepless */
-            dial_type: components["schemas"]["DialType"];
-            /** Rings */
-            rings?: components["schemas"]["RingConfig"][] | null;
-        };
-        /**
-         * GrinderRead
-         * @description Schema returned when reading a Grinder.
-         *
-         *     Attributes
-         *     ----------
-         *     id : uuid.UUID
-         *         Primary key.
-         *     created_at : datetime
-         *         Creation timestamp.
-         *     updated_at : datetime
-         *         Last-modified timestamp.
-         *     retired_at : datetime | None
-         *         Soft-delete timestamp.
-         *     is_retired : bool
-         *         Computed from ``retired_at``.
-         *     rings : list[RingConfig]
-         *         Structured ring configuration parsed from ``ring_sizes_json``.
-         *     grind_range : GrindRange | None
-         *         Linearised bounds computed from rings.
-         */
-        GrinderRead: {
-            /** Name */
-            name: string;
-            /** @default stepless */
-            dial_type: components["schemas"]["DialType"];
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /**
-             * Updated At
-             * Format: date-time
-             */
-            updated_at: string;
-            /** Retired At */
-            retired_at: string | null;
-            /** Is Retired */
-            is_retired: boolean;
-            /** Rings */
-            rings: components["schemas"]["RingConfig"][];
-            grind_range: components["schemas"]["GrindRange"] | null;
-        };
-        /**
-         * GrinderUpdate
-         * @description Schema for partially updating a Grinder.
-         *
-         *     Attributes
-         *     ----------
-         *     name : str | None
-         *         Updated name.
-         *     dial_type : DialType | None
-         *         Updated dial type.
-         *     rings : list[RingConfig] | None
-         *         Updated ring configuration.
-         */
-        GrinderUpdate: {
-            /** Name */
-            name?: string | null;
-            dial_type?: components["schemas"]["DialType"] | null;
-            /** Rings */
-            rings?: components["schemas"]["RingConfig"][] | null;
-        };
-        /** HTTPValidationError */
-        HTTPValidationError: {
-            /** Detail */
-            detail?: components["schemas"]["ValidationError"][];
-        };
-        /**
-         * MethodBrewCount
-         * @description Brew count grouped by brew method.
-         */
-        MethodBrewCount: {
-            /**
-             * Brew Method Id
-             * Format: uuid
-             */
-            brew_method_id: string;
-            /** Brew Method Name */
-            brew_method_name: string;
-            /** Count */
-            count: number;
-        };
-        /**
-         * NamedUsageCount
-         * @description Entity ranked by brew usage count.
-         */
-        NamedUsageCount: {
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /** Name */
-            name: string;
-            /** Brew Count */
-            brew_count: number;
-        };
-        /**
-         * OriginBeanCount
-         * @description Bean count grouped by origin.
-         */
-        OriginBeanCount: {
-            /**
-             * Origin Id
-             * Format: uuid
-             */
-            origin_id: string;
-            /** Origin Name */
-            origin_name: string;
-            /** Count */
-            count: number;
-        };
-        /**
-         * OriginCreate
-         * @description Schema for creating an Origin.
-         */
-        OriginCreate: {
-            /** Name */
-            name: string;
-            /** Country */
-            country?: string | null;
-            /** Region */
-            region?: string | null;
-        };
-        /**
-         * OriginRead
-         * @description Schema returned when reading an Origin.
-         *
-         *     Attributes
-         *     ----------
-         *     id : uuid.UUID
-         *         Primary key.
-         *     name : str
-         *         Origin name.
-         *     created_at : datetime
-         *         Creation timestamp.
-         *     retired_at : datetime | None
-         *         Soft-delete timestamp.
-         *     is_retired : bool
-         *         Computed from ``retired_at``.
-         *     percentage : float | None
-         *         Blend percentage (only populated when read via a Bean relationship).
-         */
-        OriginRead: {
-            /** Name */
-            name: string;
-            /** Country */
-            country?: string | null;
-            /** Region */
-            region?: string | null;
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /** Retired At */
-            retired_at: string | null;
-            /** Is Retired */
-            is_retired: boolean;
-            /** Percentage */
-            percentage?: number | null;
-        };
-        /**
-         * OriginUpdate
-         * @description Schema for partially updating an Origin.
-         */
-        OriginUpdate: {
-            /** Name */
-            name?: string | null;
-            /** Country */
-            country?: string | null;
-            /** Region */
-            region?: string | null;
-        };
-        /**
-         * OriginWithPercentage
-         * @description An origin reference with an optional blend percentage.
-         *
-         *     Attributes
-         *     ----------
-         *     origin_id : uuid.UUID
-         *         The origin's primary key.
-         *     percentage : float | None
-         *         Blend percentage (0--100). ``None`` if not specified.
-         */
-        OriginWithPercentage: {
-            /**
-             * Origin Id
-             * Format: uuid
-             */
-            origin_id: string;
-            /** Percentage */
-            percentage?: number | null;
-        };
-        /** PaginatedResponse[BagRead] */
-        PaginatedResponse_BagRead_: {
-            /** Items */
-            items: components["schemas"]["BagRead"][];
-            /** Total */
-            total: number;
-            /** Limit */
-            limit: number;
-            /** Offset */
-            offset: number;
-        };
-        /** PaginatedResponse[BeanRatingRead] */
-        PaginatedResponse_BeanRatingRead_: {
-            /** Items */
-            items: components["schemas"]["BeanRatingRead"][];
-            /** Total */
-            total: number;
-            /** Limit */
-            limit: number;
-            /** Offset */
-            offset: number;
-        };
-        /** PaginatedResponse[BeanRead] */
-        PaginatedResponse_BeanRead_: {
-            /** Items */
-            items: components["schemas"]["BeanRead"][];
-            /** Total */
-            total: number;
-            /** Limit */
-            limit: number;
-            /** Offset */
-            offset: number;
-        };
-        /** PaginatedResponse[BeanVarietyRead] */
-        PaginatedResponse_BeanVarietyRead_: {
-            /** Items */
-            items: components["schemas"]["BeanVarietyRead"][];
-            /** Total */
-            total: number;
-            /** Limit */
-            limit: number;
-            /** Offset */
-            offset: number;
-        };
-        /** PaginatedResponse[BrewListRead] */
-        PaginatedResponse_BrewListRead_: {
-            /** Items */
-            items: components["schemas"]["BrewListRead"][];
-            /** Total */
-            total: number;
-            /** Limit */
-            limit: number;
-            /** Offset */
-            offset: number;
-        };
-        /** PaginatedResponse[BrewMethodRead] */
-        PaginatedResponse_BrewMethodRead_: {
-            /** Items */
-            items: components["schemas"]["BrewMethodRead"][];
-            /** Total */
-            total: number;
-            /** Limit */
-            limit: number;
-            /** Offset */
-            offset: number;
-        };
-        /** PaginatedResponse[BrewSetupRead] */
-        PaginatedResponse_BrewSetupRead_: {
-            /** Items */
-            items: components["schemas"]["BrewSetupRead"][];
-            /** Total */
-            total: number;
-            /** Limit */
-            limit: number;
-            /** Offset */
-            offset: number;
-        };
-        /** PaginatedResponse[BrewerRead] */
-        PaginatedResponse_BrewerRead_: {
-            /** Items */
-            items: components["schemas"]["BrewerRead"][];
-            /** Total */
-            total: number;
-            /** Limit */
-            limit: number;
-            /** Offset */
-            offset: number;
-        };
-        /** PaginatedResponse[CuppingRead] */
-        PaginatedResponse_CuppingRead_: {
-            /** Items */
-            items: components["schemas"]["CuppingRead"][];
-            /** Total */
-            total: number;
-            /** Limit */
-            limit: number;
-            /** Offset */
-            offset: number;
-        };
-        /** PaginatedResponse[FlavorTagRead] */
-        PaginatedResponse_FlavorTagRead_: {
-            /** Items */
-            items: components["schemas"]["FlavorTagRead"][];
-            /** Total */
-            total: number;
-            /** Limit */
-            limit: number;
-            /** Offset */
-            offset: number;
-        };
-        /** PaginatedResponse[GrinderRead] */
-        PaginatedResponse_GrinderRead_: {
-            /** Items */
-            items: components["schemas"]["GrinderRead"][];
-            /** Total */
-            total: number;
-            /** Limit */
-            limit: number;
-            /** Offset */
-            offset: number;
-        };
-        /** PaginatedResponse[OriginRead] */
-        PaginatedResponse_OriginRead_: {
-            /** Items */
-            items: components["schemas"]["OriginRead"][];
-            /** Total */
-            total: number;
-            /** Limit */
-            limit: number;
-            /** Offset */
-            offset: number;
-        };
-        /** PaginatedResponse[PaperRead] */
-        PaginatedResponse_PaperRead_: {
-            /** Items */
-            items: components["schemas"]["PaperRead"][];
-            /** Total */
-            total: number;
-            /** Limit */
-            limit: number;
-            /** Offset */
-            offset: number;
-        };
-        /** PaginatedResponse[PersonRead] */
-        PaginatedResponse_PersonRead_: {
-            /** Items */
-            items: components["schemas"]["PersonRead"][];
-            /** Total */
-            total: number;
-            /** Limit */
-            limit: number;
-            /** Offset */
-            offset: number;
-        };
-        /** PaginatedResponse[ProcessMethodRead] */
-        PaginatedResponse_ProcessMethodRead_: {
-            /** Items */
-            items: components["schemas"]["ProcessMethodRead"][];
-            /** Total */
-            total: number;
-            /** Limit */
-            limit: number;
-            /** Offset */
-            offset: number;
-        };
-        /** PaginatedResponse[RoasterRead] */
-        PaginatedResponse_RoasterRead_: {
-            /** Items */
-            items: components["schemas"]["RoasterRead"][];
-            /** Total */
-            total: number;
-            /** Limit */
-            limit: number;
-            /** Offset */
-            offset: number;
-        };
-        /** PaginatedResponse[StopModeRead] */
-        PaginatedResponse_StopModeRead_: {
-            /** Items */
-            items: components["schemas"]["StopModeRead"][];
-            /** Total */
-            total: number;
-            /** Limit */
-            limit: number;
-            /** Offset */
-            offset: number;
-        };
-        /** PaginatedResponse[StorageTypeRead] */
-        PaginatedResponse_StorageTypeRead_: {
-            /** Items */
-            items: components["schemas"]["StorageTypeRead"][];
-            /** Total */
-            total: number;
-            /** Limit */
-            limit: number;
-            /** Offset */
-            offset: number;
-        };
-        /** PaginatedResponse[VendorRead] */
-        PaginatedResponse_VendorRead_: {
-            /** Items */
-            items: components["schemas"]["VendorRead"][];
-            /** Total */
-            total: number;
-            /** Limit */
-            limit: number;
-            /** Offset */
-            offset: number;
-        };
-        /** PaginatedResponse[WaterRead] */
-        PaginatedResponse_WaterRead_: {
-            /** Items */
-            items: components["schemas"]["WaterRead"][];
-            /** Total */
-            total: number;
-            /** Limit */
-            limit: number;
-            /** Offset */
-            offset: number;
-        };
-        /**
-         * PaperCreate
-         * @description Schema for creating a Paper.
-         */
-        PaperCreate: {
-            /** Name */
-            name: string;
-            /** Notes */
-            notes?: string | null;
-        };
-        /**
-         * PaperRead
-         * @description Schema returned when reading a Paper.
-         *
-         *     Attributes
-         *     ----------
-         *     id : uuid.UUID
-         *         Primary key.
-         *     created_at : datetime
-         *         Creation timestamp.
-         *     updated_at : datetime
-         *         Last-modified timestamp.
-         *     retired_at : datetime | None
-         *         Soft-delete timestamp.
-         *     is_retired : bool
-         *         Computed from ``retired_at``.
-         */
-        PaperRead: {
-            /** Name */
-            name: string;
-            /** Notes */
-            notes?: string | null;
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /**
-             * Updated At
-             * Format: date-time
-             */
-            updated_at: string;
-            /** Retired At */
-            retired_at: string | null;
-            /** Is Retired */
-            is_retired: boolean;
-        };
-        /**
-         * PaperUpdate
-         * @description Schema for partially updating a Paper.
-         *
-         *     Attributes
-         *     ----------
-         *     name : str | None
-         *         Updated name.
-         *     notes : str | None
-         *         Updated notes.
-         */
-        PaperUpdate: {
-            /** Name */
-            name?: string | null;
-            /** Notes */
-            notes?: string | null;
-        };
-        /**
-         * PersonCreate
-         * @description Schema for creating a Person.
-         */
-        PersonCreate: {
-            /** Name */
-            name: string;
-        };
-        /**
-         * PersonRead
-         * @description Schema returned when reading a Person.
-         *
-         *     Attributes
-         *     ----------
-         *     id : uuid.UUID
-         *         Primary key.
-         *     name : str
-         *         Person name.
-         *     is_default : bool
-         *         Whether this person is the current default.
-         *     created_at : datetime
-         *         Creation timestamp.
-         *     updated_at : datetime
-         *         Last-modified timestamp.
-         *     retired_at : datetime | None
-         *         Soft-delete timestamp.
-         *     is_retired : bool
-         *         Computed from ``retired_at``.
-         */
-        PersonRead: {
-            /** Name */
-            name: string;
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /** Is Default */
-            is_default: boolean;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /**
-             * Updated At
-             * Format: date-time
-             */
-            updated_at: string;
-            /** Retired At */
-            retired_at: string | null;
-            /** Is Retired */
-            is_retired: boolean;
-        };
-        /**
-         * PersonUpdate
-         * @description Schema for partially updating a Person.
-         *
-         *     All fields are optional so callers can send only the fields they
-         *     want to change.
-         */
-        PersonUpdate: {
-            /** Name */
-            name?: string | null;
-            /** Is Default */
-            is_default?: boolean | null;
-        };
-        /**
-         * PreinfusionType
-         * @description Pre-infusion capability levels.
-         * @enum {string}
-         */
-        PreinfusionType: "none" | "fixed" | "timed" | "adjustable_pressure" | "programmable" | "manual";
-        /**
-         * PressureControlType
-         * @description Pressure control capability levels.
-         * @enum {string}
-         */
-        PressureControlType: "fixed" | "opv_adjustable" | "electronic" | "manual_profiling" | "programmable";
-        /**
-         * ProcessCategory
-         * @description Broad category grouping for coffee processing methods.
-         * @enum {string}
-         */
-        ProcessCategory: "washed" | "natural" | "honey" | "anaerobic" | "experimental" | "other";
-        /**
-         * ProcessMethodCreate
-         * @description Schema for creating a ProcessMethod.
-         */
-        ProcessMethodCreate: {
-            /** Name */
-            name: string;
-            category?: components["schemas"]["ProcessCategory"] | null;
-        };
-        /**
-         * ProcessMethodRead
-         * @description Schema returned when reading a ProcessMethod.
-         *
-         *     Attributes
-         *     ----------
-         *     id : uuid.UUID
-         *         Primary key.
-         *     name : str
-         *         Process method name.
-         *     created_at : datetime
-         *         Creation timestamp.
-         *     retired_at : datetime | None
-         *         Soft-delete timestamp.
-         *     is_retired : bool
-         *         Computed from ``retired_at``.
-         */
-        ProcessMethodRead: {
-            /** Name */
-            name: string;
-            category?: components["schemas"]["ProcessCategory"] | null;
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /** Retired At */
-            retired_at: string | null;
-            /** Is Retired */
-            is_retired: boolean;
-        };
-        /**
-         * ProcessMethodUpdate
-         * @description Schema for partially updating a ProcessMethod.
-         */
-        ProcessMethodUpdate: {
-            /** Name */
-            name?: string | null;
-            category?: components["schemas"]["ProcessCategory"] | null;
-        };
-        /**
-         * RingConfig
-         * @description Configuration for a single grinder ring.
-         *
-         *     Attributes
-         *     ----------
-         *     label : str
-         *         Human-readable ring label.
-         *     min : float
-         *         Minimum dial position.
-         *     max : float
-         *         Maximum dial position.
-         *     step : float
-         *         Step size between positions.
-         */
-        RingConfig: {
-            /** Label */
-            label: string;
-            /** Min */
-            min: number;
-            /** Max */
-            max: number;
-            /** Step */
-            step: number;
-        };
-        /**
-         * RoasterBeanCount
-         * @description Bean count grouped by roaster.
-         */
-        RoasterBeanCount: {
-            /**
-             * Roaster Id
-             * Format: uuid
-             */
-            roaster_id: string;
-            /** Roaster Name */
-            roaster_name: string;
-            /** Count */
-            count: number;
-        };
-        /**
-         * RoasterCreate
-         * @description Schema for creating a Roaster.
-         */
-        RoasterCreate: {
-            /** Name */
-            name: string;
-        };
-        /**
-         * RoasterRead
-         * @description Schema returned when reading a Roaster.
-         *
-         *     Attributes
-         *     ----------
-         *     id : uuid.UUID
-         *         Primary key.
-         *     name : str
-         *         Roaster name.
-         *     created_at : datetime
-         *         Creation timestamp.
-         *     retired_at : datetime | None
-         *         Soft-delete timestamp.
-         *     is_retired : bool
-         *         Computed from ``retired_at``.
-         */
-        RoasterRead: {
-            /** Name */
-            name: string;
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /** Retired At */
-            retired_at: string | null;
-            /** Is Retired */
-            is_retired: boolean;
-        };
-        /**
-         * RoasterUpdate
-         * @description Schema for partially updating a Roaster.
-         */
-        RoasterUpdate: {
-            /** Name */
-            name?: string | null;
-        };
-        /**
-         * SetupUsage
-         * @description Brew setup ranked by usage.
-         */
-        SetupUsage: {
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /** Name */
-            name: string | null;
-            /** Brew Count */
-            brew_count: number;
-        };
-        /**
-         * StopModeCreate
-         * @description Schema for creating a StopMode.
-         */
-        StopModeCreate: {
-            /** Name */
-            name: string;
-        };
-        /**
-         * StopModeRead
-         * @description Schema returned when reading a StopMode.
-         *
-         *     Attributes
-         *     ----------
-         *     id : uuid.UUID
-         *         Primary key.
-         *     name : str
-         *         Stop mode name.
-         *     created_at : datetime
-         *         Creation timestamp.
-         *     retired_at : datetime | None
-         *         Soft-delete timestamp.
-         *     is_retired : bool
-         *         Computed from ``retired_at``.
-         */
-        StopModeRead: {
-            /** Name */
-            name: string;
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /** Retired At */
-            retired_at: string | null;
-            /** Is Retired */
-            is_retired: boolean;
-        };
-        /**
-         * StopModeUpdate
-         * @description Schema for partially updating a StopMode.
-         */
-        StopModeUpdate: {
-            /** Name */
-            name?: string | null;
-        };
-        /**
-         * StorageTypeCreate
-         * @description Schema for creating a StorageType.
-         */
-        StorageTypeCreate: {
-            /** Name */
-            name: string;
-        };
-        /**
-         * StorageTypeRead
-         * @description Schema returned when reading a StorageType.
-         *
-         *     Attributes
-         *     ----------
-         *     id : uuid.UUID
-         *         Primary key.
-         *     name : str
-         *         Storage type name.
-         *     created_at : datetime
-         *         Creation timestamp.
-         *     updated_at : datetime
-         *         Last-modified timestamp.
-         *     retired_at : datetime | None
-         *         Soft-delete timestamp.
-         *     is_retired : bool
-         *         Computed from ``retired_at``.
-         */
-        StorageTypeRead: {
-            /** Name */
-            name: string;
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /**
-             * Updated At
-             * Format: date-time
-             */
-            updated_at: string;
-            /** Retired At */
-            retired_at: string | null;
-            /** Is Retired */
-            is_retired: boolean;
-        };
-        /**
-         * StorageTypeUpdate
-         * @description Schema for partially updating a StorageType.
-         */
-        StorageTypeUpdate: {
-            /** Name */
-            name?: string | null;
-        };
-        /**
-         * TasteStatsRead
-         * @description Combined sensory statistics.
-         */
-        TasteStatsRead: {
-            brew_taste: components["schemas"]["BrewTasteStats"];
-            bean_taste: components["schemas"]["BeanTasteStats"];
-        };
-        /**
-         * TempControlType
-         * @description Temperature control capability levels.
-         * @enum {string}
-         */
-        TempControlType: "none" | "preset" | "pid" | "profiling";
-        /** ValidationError */
-        ValidationError: {
-            /** Location */
-            loc: (string | number)[];
-            /** Message */
-            msg: string;
-            /** Error Type */
-            type: string;
-            /** Input */
-            input?: unknown;
-            /** Context */
-            ctx?: Record<string, never>;
-        };
-        /**
-         * VendorCreate
-         * @description Schema for creating a Vendor.
-         */
-        VendorCreate: {
-            /** Name */
-            name: string;
-            /** Url */
-            url?: string | null;
-            /** Location */
-            location?: string | null;
-            /** Notes */
-            notes?: string | null;
-        };
-        /**
-         * VendorRead
-         * @description Schema returned when reading a Vendor.
-         *
-         *     Attributes
-         *     ----------
-         *     id : uuid.UUID
-         *         Primary key.
-         *     name : str
-         *         Vendor name.
-         *     url : str | None
-         *         Shop website URL.
-         *     location : str | None
-         *         City, address, etc.
-         *     notes : str | None
-         *         Free-text notes.
-         *     created_at : datetime
-         *         Creation timestamp.
-         *     updated_at : datetime
-         *         Last-modified timestamp.
-         *     retired_at : datetime | None
-         *         Soft-delete timestamp.
-         *     is_retired : bool
-         *         Computed from ``retired_at``.
-         */
-        VendorRead: {
-            /** Name */
-            name: string;
-            /** Url */
-            url?: string | null;
-            /** Location */
-            location?: string | null;
-            /** Notes */
-            notes?: string | null;
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /**
-             * Updated At
-             * Format: date-time
-             */
-            updated_at: string;
-            /** Retired At */
-            retired_at: string | null;
-            /** Is Retired */
-            is_retired: boolean;
-        };
-        /**
-         * VendorUpdate
-         * @description Schema for partially updating a Vendor.
-         */
-        VendorUpdate: {
-            /** Name */
-            name?: string | null;
-            /** Url */
-            url?: string | null;
-            /** Location */
-            location?: string | null;
-            /** Notes */
-            notes?: string | null;
-        };
-        /**
-         * WaterCreate
-         * @description Schema for creating a Water with optional inline minerals.
-         *
-         *     Attributes
-         *     ----------
-         *     minerals : list[WaterMineralCreate] | None
-         *         Inline mineral composition.
-         */
-        WaterCreate: {
-            /** Name */
-            name: string;
-            /** Notes */
-            notes?: string | null;
-            /** Minerals */
-            minerals?: components["schemas"]["WaterMineralCreate"][] | null;
-        };
-        /**
-         * WaterMineralCreate
-         * @description Schema for creating a WaterMineral inline with a Water.
-         */
-        WaterMineralCreate: {
-            /** Mineral Name */
-            mineral_name: string;
-            /** Ppm */
-            ppm: number;
-        };
-        /**
-         * WaterMineralRead
-         * @description Schema returned when reading a WaterMineral.
-         *
-         *     Attributes
-         *     ----------
-         *     id : uuid.UUID
-         *         Primary key.
-         *     mineral_name : str
-         *         Name of the mineral.
-         *     ppm : float
-         *         Concentration in parts per million.
-         */
-        WaterMineralRead: {
-            /** Mineral Name */
-            mineral_name: string;
-            /** Ppm */
-            ppm: number;
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-        };
-        /**
-         * WaterRead
-         * @description Schema returned when reading a Water.
-         *
-         *     Attributes
-         *     ----------
-         *     id : uuid.UUID
-         *         Primary key.
-         *     created_at : datetime
-         *         Creation timestamp.
-         *     updated_at : datetime
-         *         Last-modified timestamp.
-         *     retired_at : datetime | None
-         *         Soft-delete timestamp.
-         *     is_retired : bool
-         *         Computed from ``retired_at``.
-         *     minerals : list[WaterMineralRead]
-         *         Nested mineral composition.
-         */
-        WaterRead: {
-            /** Name */
-            name: string;
-            /** Notes */
-            notes?: string | null;
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /**
-             * Updated At
-             * Format: date-time
-             */
-            updated_at: string;
-            /** Retired At */
-            retired_at: string | null;
-            /** Is Retired */
-            is_retired: boolean;
-            /** Minerals */
-            minerals: components["schemas"]["WaterMineralRead"][];
-        };
-        /**
-         * WaterUpdate
-         * @description Schema for partially updating a Water.
-         *
-         *     Attributes
-         *     ----------
-         *     name : str | None
-         *         Updated name.
-         *     notes : str | None
-         *         Updated notes.
-         *     minerals : list[WaterMineralCreate] | None
-         *         Updated mineral composition. When present, replaces all minerals.
-         */
-        WaterUpdate: {
-            /** Name */
-            name?: string | null;
-            /** Notes */
-            notes?: string | null;
-            /** Minerals */
-            minerals?: components["schemas"]["WaterMineralCreate"][] | null;
-        };
+  schemas: {
+    /**
+     * BagCreate
+     * @description Schema for creating a Bag.
+     *
+     *     The ``bean_id`` comes from the URL path, not the request body.
+     */
+    BagCreate: {
+      /** Roast Date */
+      roast_date?: string | null;
+      /** Opened At */
+      opened_at?: string | null;
+      /** Weight */
+      weight: number;
+      /** Price */
+      price?: number | null;
+      /**
+       * Is Preground
+       * @default false
+       */
+      is_preground: boolean;
+      /** Notes */
+      notes?: string | null;
+      /** Bought At */
+      bought_at?: string | null;
+      /** Vendor Id */
+      vendor_id?: string | null;
+      /** Frozen At */
+      frozen_at?: string | null;
+      /** Thawed At */
+      thawed_at?: string | null;
+      /** Storage Type Id */
+      storage_type_id?: string | null;
+      /** Best Date */
+      best_date?: string | null;
     };
-    responses: never;
-    parameters: never;
-    requestBodies: never;
-    headers: never;
-    pathItems: never;
+    /**
+     * BagRead
+     * @description Schema returned when reading a Bag.
+     *
+     *     Attributes
+     *     ----------
+     *     id : uuid.UUID
+     *         Primary key.
+     *     bean_id : uuid.UUID
+     *         Parent bean's primary key.
+     *     roast_date : date | None
+     *         Date the coffee was roasted.
+     *     opened_at : date | None
+     *         Date the bag was opened.
+     *     weight : float
+     *         Weight in grams.
+     *     price : float | None
+     *         Price paid.
+     *     is_preground : bool
+     *         Whether the coffee is pre-ground.
+     *     notes : str | None
+     *         Free-text notes.
+     *     bought_at : date | None
+     *         Date the bag was purchased.
+     *     vendor_id : uuid.UUID | None
+     *         Foreign key to the vendor / shop.
+     *     frozen_at : datetime | None
+     *         Timestamp when the bag was frozen.
+     *     thawed_at : datetime | None
+     *         Timestamp when the bag was thawed.
+     *     storage_type_id : uuid.UUID | None
+     *         Foreign key to the frozen-storage type.
+     *     best_date : date | None
+     *         Best-before date.
+     *     created_at : datetime
+     *         Creation timestamp.
+     *     updated_at : datetime
+     *         Last-modified timestamp.
+     *     retired_at : datetime | None
+     *         Soft-delete timestamp.
+     *     is_retired : bool
+     *         Computed from ``retired_at``.
+     */
+    BagRead: {
+      /** Roast Date */
+      roast_date?: string | null;
+      /** Opened At */
+      opened_at?: string | null;
+      /** Weight */
+      weight: number;
+      /** Price */
+      price?: number | null;
+      /**
+       * Is Preground
+       * @default false
+       */
+      is_preground: boolean;
+      /** Notes */
+      notes?: string | null;
+      /** Bought At */
+      bought_at?: string | null;
+      /** Vendor Id */
+      vendor_id?: string | null;
+      /** Frozen At */
+      frozen_at?: string | null;
+      /** Thawed At */
+      thawed_at?: string | null;
+      /** Storage Type Id */
+      storage_type_id?: string | null;
+      /** Best Date */
+      best_date?: string | null;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Bean Id
+       * Format: uuid
+       */
+      bean_id: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Retired At */
+      retired_at: string | null;
+      /** Is Retired */
+      is_retired: boolean;
+    };
+    /**
+     * BagUpdate
+     * @description Schema for partially updating a Bag.
+     *
+     *     All fields are optional so callers can send only the fields they
+     *     want to change.
+     */
+    BagUpdate: {
+      /** Roast Date */
+      roast_date?: string | null;
+      /** Opened At */
+      opened_at?: string | null;
+      /** Weight */
+      weight?: number | null;
+      /** Price */
+      price?: number | null;
+      /** Is Preground */
+      is_preground?: boolean | null;
+      /** Notes */
+      notes?: string | null;
+      /** Bought At */
+      bought_at?: string | null;
+      /** Vendor Id */
+      vendor_id?: string | null;
+      /** Frozen At */
+      frozen_at?: string | null;
+      /** Thawed At */
+      thawed_at?: string | null;
+      /** Storage Type Id */
+      storage_type_id?: string | null;
+      /** Best Date */
+      best_date?: string | null;
+    };
+    /**
+     * BeanCreate
+     * @description Schema for creating a Bean.
+     *
+     *     Attributes
+     *     ----------
+     *     roaster_id : uuid.UUID | None
+     *         Optional roaster FK.
+     *     origin_ids : list[uuid.UUID]
+     *         Origin IDs for M2M (plain, no percentage).
+     *     origins : list[OriginWithPercentage]
+     *         Origins with optional blend percentages.
+     *     process_ids : list[uuid.UUID]
+     *         ProcessMethod IDs for M2M.
+     *     variety_ids : list[uuid.UUID]
+     *         BeanVariety IDs for M2M.
+     *     flavor_tag_ids : list[uuid.UUID]
+     *         FlavorTag IDs for M2M.
+     */
+    BeanCreate: {
+      /** Name */
+      name: string;
+      /** Notes */
+      notes?: string | null;
+      /** Roast Degree */
+      roast_degree?: number | null;
+      /** @default unknown */
+      bean_mix_type: components['schemas']['BeanMixType'];
+      bean_use_type?: components['schemas']['BeanUseType'] | null;
+      /**
+       * Decaf
+       * @default false
+       */
+      decaf: boolean;
+      /** Url */
+      url?: string | null;
+      /** Ean */
+      ean?: string | null;
+      /** Roaster Id */
+      roaster_id?: string | null;
+      /**
+       * Origin Ids
+       * @default []
+       */
+      origin_ids: string[];
+      /**
+       * Origins
+       * @default []
+       */
+      origins: components['schemas']['OriginWithPercentage'][];
+      /**
+       * Process Ids
+       * @default []
+       */
+      process_ids: string[];
+      /**
+       * Variety Ids
+       * @default []
+       */
+      variety_ids: string[];
+      /**
+       * Flavor Tag Ids
+       * @default []
+       */
+      flavor_tag_ids: string[];
+    };
+    /**
+     * BeanMixType
+     * @description Whether a bean is single origin or a blend.
+     * @enum {string}
+     */
+    BeanMixType: 'single_origin' | 'blend' | 'unknown';
+    /**
+     * BeanRatingCreate
+     * @description Schema for creating a BeanRating.
+     *
+     *     Attributes
+     *     ----------
+     *     person_id : uuid.UUID
+     *         ID of the person giving the rating.
+     *     rated_at : datetime | None
+     *         When the rating was given. Defaults to now if not provided.
+     *     taste : BeanTasteCreate | None
+     *         Optional taste profile to create inline.
+     */
+    BeanRatingCreate: {
+      /**
+       * Person Id
+       * Format: uuid
+       */
+      person_id: string;
+      /** Rated At */
+      rated_at?: string | null;
+      taste?: components['schemas']['BeanTasteCreate'] | null;
+    };
+    /**
+     * BeanRatingRead
+     * @description Schema returned when reading a BeanRating.
+     *
+     *     Attributes
+     *     ----------
+     *     id : uuid.UUID
+     *         Primary key.
+     *     bean_id : uuid.UUID
+     *         Rated bean's primary key.
+     *     person_id : uuid.UUID
+     *         Rating person's primary key.
+     *     rated_at : datetime
+     *         When the rating was given.
+     *     created_at : datetime
+     *         Row creation timestamp.
+     *     updated_at : datetime
+     *         Last-modified timestamp.
+     *     retired_at : datetime | None
+     *         Soft-delete timestamp.
+     *     is_retired : bool
+     *         Computed from ``retired_at``.
+     *     person_name : str
+     *         Name of the person who gave the rating.
+     *     taste : BeanTasteRead | None
+     *         Nested taste profile, if present.
+     */
+    BeanRatingRead: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Bean Id
+       * Format: uuid
+       */
+      bean_id: string;
+      /**
+       * Person Id
+       * Format: uuid
+       */
+      person_id: string;
+      /**
+       * Rated At
+       * Format: date-time
+       */
+      rated_at: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Retired At */
+      retired_at: string | null;
+      /** Is Retired */
+      is_retired: boolean;
+      /** Person Name */
+      person_name: string;
+      taste?: components['schemas']['BeanTasteRead'] | null;
+    };
+    /**
+     * BeanRead
+     * @description Schema returned when reading a Bean.
+     *
+     *     Attributes
+     *     ----------
+     *     id : uuid.UUID
+     *         Primary key.
+     *     roaster_id : uuid.UUID | None
+     *         Roaster FK.
+     *     created_at : datetime
+     *         Creation timestamp.
+     *     updated_at : datetime
+     *         Last-modified timestamp.
+     *     retired_at : datetime | None
+     *         Soft-delete timestamp.
+     *     is_retired : bool
+     *         Computed from ``retired_at``.
+     *     roaster : RoasterRead | None
+     *         Nested roaster data.
+     *     origins : list[OriginRead]
+     *         Nested origins.
+     *     processes : list[ProcessMethodRead]
+     *         Nested process methods.
+     *     varieties : list[BeanVarietyRead]
+     *         Nested bean varieties.
+     *     flavor_tags : list[FlavorTagRead]
+     *         Nested flavor tags (roaster's claimed flavors).
+     *     bags : list[BagRead]
+     *         Nested non-retired bags.
+     */
+    BeanRead: {
+      /** Name */
+      name: string;
+      /** Notes */
+      notes?: string | null;
+      /** Roast Degree */
+      roast_degree?: number | null;
+      /** @default unknown */
+      bean_mix_type: components['schemas']['BeanMixType'];
+      bean_use_type?: components['schemas']['BeanUseType'] | null;
+      /**
+       * Decaf
+       * @default false
+       */
+      decaf: boolean;
+      /** Url */
+      url?: string | null;
+      /** Ean */
+      ean?: string | null;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Roaster Id */
+      roaster_id: string | null;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Retired At */
+      retired_at: string | null;
+      /** Is Retired */
+      is_retired: boolean;
+      roaster?: components['schemas']['RoasterRead'] | null;
+      /**
+       * Origins
+       * @default []
+       */
+      origins: components['schemas']['OriginRead'][];
+      /**
+       * Processes
+       * @default []
+       */
+      processes: components['schemas']['ProcessMethodRead'][];
+      /**
+       * Varieties
+       * @default []
+       */
+      varieties: components['schemas']['BeanVarietyRead'][];
+      /**
+       * Flavor Tags
+       * @default []
+       */
+      flavor_tags: components['schemas']['FlavorTagRead'][];
+      /**
+       * Bags
+       * @default []
+       */
+      bags: components['schemas']['BagRead'][];
+    };
+    /**
+     * BeanStatsRead
+     * @description Aggregated bean and bag statistics.
+     */
+    BeanStatsRead: {
+      /** Total Beans */
+      total_beans: number;
+      /** Beans Active */
+      beans_active: number;
+      /** Mix Type Breakdown */
+      mix_type_breakdown: {
+        [key: string]: number;
+      };
+      /** Use Type Breakdown */
+      use_type_breakdown: {
+        [key: string]: number;
+      };
+      /** Top Roasters */
+      top_roasters: components['schemas']['RoasterBeanCount'][];
+      /** Top Origins */
+      top_origins: components['schemas']['OriginBeanCount'][];
+      /** Total Bags */
+      total_bags: number;
+      /** Bags Active */
+      bags_active: number;
+      /** Bags Unopened */
+      bags_unopened: number;
+      /** Avg Bag Weight G */
+      avg_bag_weight_g: number | null;
+      /** Avg Bag Price */
+      avg_bag_price: number | null;
+    };
+    /**
+     * BeanTasteAxisAverages
+     * @description Average scores across all bean ratings.
+     */
+    BeanTasteAxisAverages: {
+      /** Score */
+      score: number | null;
+      /** Acidity */
+      acidity: number | null;
+      /** Sweetness */
+      sweetness: number | null;
+      /** Body */
+      body: number | null;
+      /** Complexity */
+      complexity: number | null;
+      /** Aroma */
+      aroma: number | null;
+      /** Clean Cup */
+      clean_cup: number | null;
+    };
+    /**
+     * BeanTasteCreate
+     * @description Schema for creating a BeanTaste.
+     *
+     *     Attributes
+     *     ----------
+     *     flavor_tag_ids : list[uuid.UUID]
+     *         Flavor tag IDs to link via M2M.
+     */
+    BeanTasteCreate: {
+      /** Score */
+      score?: number | null;
+      /** Acidity */
+      acidity?: number | null;
+      /** Sweetness */
+      sweetness?: number | null;
+      /** Body */
+      body?: number | null;
+      /** Complexity */
+      complexity?: number | null;
+      /** Aroma */
+      aroma?: number | null;
+      /** Clean Cup */
+      clean_cup?: number | null;
+      /** Notes */
+      notes?: string | null;
+      /**
+       * Flavor Tag Ids
+       * @default []
+       */
+      flavor_tag_ids: string[];
+    };
+    /**
+     * BeanTasteRead
+     * @description Schema returned when reading a BeanTaste.
+     *
+     *     Attributes
+     *     ----------
+     *     id : uuid.UUID
+     *         Primary key.
+     *     bean_rating_id : uuid.UUID
+     *         Parent rating's primary key.
+     *     created_at : datetime
+     *         Creation timestamp.
+     *     updated_at : datetime
+     *         Last-modified timestamp.
+     *     flavor_tags : list[FlavorTagRead]
+     *         Nested flavor tag objects.
+     */
+    BeanTasteRead: {
+      /** Score */
+      score?: number | null;
+      /** Acidity */
+      acidity?: number | null;
+      /** Sweetness */
+      sweetness?: number | null;
+      /** Body */
+      body?: number | null;
+      /** Complexity */
+      complexity?: number | null;
+      /** Aroma */
+      aroma?: number | null;
+      /** Clean Cup */
+      clean_cup?: number | null;
+      /** Notes */
+      notes?: string | null;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Bean Rating Id
+       * Format: uuid
+       */
+      bean_rating_id: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /**
+       * Flavor Tags
+       * @default []
+       */
+      flavor_tags: components['schemas']['FlavorTagRead'][];
+    };
+    /**
+     * BeanTasteStats
+     * @description Sensory stats from bean ratings.
+     */
+    BeanTasteStats: {
+      /** Total Rated */
+      total_rated: number;
+      avg_axes: components['schemas']['BeanTasteAxisAverages'];
+      /** Best Score */
+      best_score: number | null;
+      /** Best Bean Id */
+      best_bean_id: string | null;
+      /** Top Flavor Tags */
+      top_flavor_tags: components['schemas']['FlavorTagCount'][];
+    };
+    /**
+     * BeanTasteUpdate
+     * @description Schema for partially updating a BeanTaste.
+     *
+     *     All fields optional; only provided fields are updated.
+     *
+     *     Attributes
+     *     ----------
+     *     score : float | None
+     *         Overall score (0-10).
+     *     acidity : float | None
+     *         Acidity score (0-10).
+     *     sweetness : float | None
+     *         Sweetness score (0-10).
+     *     body : float | None
+     *         Body score (0-10).
+     *     complexity : float | None
+     *         Complexity score (0-10).
+     *     aroma : float | None
+     *         Aroma score (0-10).
+     *     clean_cup : float | None
+     *         Clean-cup score (0-10).
+     *     notes : str | None
+     *         Free-text tasting notes.
+     *     flavor_tag_ids : list[uuid.UUID] | None
+     *         Flavor tag IDs to replace the M2M list.
+     */
+    BeanTasteUpdate: {
+      /** Score */
+      score?: number | null;
+      /** Acidity */
+      acidity?: number | null;
+      /** Sweetness */
+      sweetness?: number | null;
+      /** Body */
+      body?: number | null;
+      /** Complexity */
+      complexity?: number | null;
+      /** Aroma */
+      aroma?: number | null;
+      /** Clean Cup */
+      clean_cup?: number | null;
+      /** Notes */
+      notes?: string | null;
+      /** Flavor Tag Ids */
+      flavor_tag_ids?: string[] | null;
+    };
+    /**
+     * BeanUpdate
+     * @description Schema for partially updating a Bean.
+     *
+     *     All fields are optional so callers can send only the fields they
+     *     want to change.
+     */
+    BeanUpdate: {
+      /** Name */
+      name?: string | null;
+      /** Roaster Id */
+      roaster_id?: string | null;
+      /** Notes */
+      notes?: string | null;
+      /** Roast Degree */
+      roast_degree?: number | null;
+      bean_mix_type?: components['schemas']['BeanMixType'] | null;
+      bean_use_type?: components['schemas']['BeanUseType'] | null;
+      /** Decaf */
+      decaf?: boolean | null;
+      /** Url */
+      url?: string | null;
+      /** Ean */
+      ean?: string | null;
+      /** Origin Ids */
+      origin_ids?: string[] | null;
+      /** Origins */
+      origins?: components['schemas']['OriginWithPercentage'][] | null;
+      /** Process Ids */
+      process_ids?: string[] | null;
+      /** Variety Ids */
+      variety_ids?: string[] | null;
+      /** Flavor Tag Ids */
+      flavor_tag_ids?: string[] | null;
+    };
+    /**
+     * BeanUseType
+     * @description Roaster's intended use for the bean.
+     * @enum {string}
+     */
+    BeanUseType: 'filter' | 'espresso' | 'omni';
+    /**
+     * BeanVarietyCreate
+     * @description Schema for creating a BeanVariety.
+     */
+    BeanVarietyCreate: {
+      /** Name */
+      name: string;
+      species?: components['schemas']['CoffeeSpecies'] | null;
+    };
+    /**
+     * BeanVarietyRead
+     * @description Schema returned when reading a BeanVariety.
+     *
+     *     Attributes
+     *     ----------
+     *     id : uuid.UUID
+     *         Primary key.
+     *     name : str
+     *         Bean variety name.
+     *     created_at : datetime
+     *         Creation timestamp.
+     *     retired_at : datetime | None
+     *         Soft-delete timestamp.
+     *     is_retired : bool
+     *         Computed from ``retired_at``.
+     */
+    BeanVarietyRead: {
+      /** Name */
+      name: string;
+      species?: components['schemas']['CoffeeSpecies'] | null;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Retired At */
+      retired_at: string | null;
+      /** Is Retired */
+      is_retired: boolean;
+    };
+    /**
+     * BeanVarietyUpdate
+     * @description Schema for partially updating a BeanVariety.
+     */
+    BeanVarietyUpdate: {
+      /** Name */
+      name?: string | null;
+      species?: components['schemas']['CoffeeSpecies'] | null;
+    };
+    /**
+     * BrewCreate
+     * @description Schema for creating a Brew.
+     *
+     *     Attributes
+     *     ----------
+     *     bag_id : uuid.UUID
+     *         Required bag FK.
+     *     brew_setup_id : uuid.UUID
+     *         Required brew setup FK.
+     *     person_id : uuid.UUID
+     *         Required person FK.
+     *     grind_setting : float | None
+     *         Canonical numeric grind setting.
+     *     grind_setting_display : str | None
+     *         Human-readable grind display (takes precedence over grind_setting).
+     *     temperature : float | None
+     *         Temperature in celsius.
+     *     pressure : float | None
+     *         Pressure in bar.
+     *     flow_rate : float | None
+     *         Flow rate in ml/s.
+     *     dose : float
+     *         Coffee dose in grams.
+     *     yield_amount : float | None
+     *         Yield in grams.
+     *     pre_infusion_time : float | None
+     *         Pre-infusion time in seconds.
+     *     total_time : float | None
+     *         Total brew time in seconds.
+     *     stop_mode_id : uuid.UUID | None
+     *         Optional stop mode FK.
+     *     is_failed : bool
+     *         Whether the brew was considered failed.
+     *     notes : str | None
+     *         Free-text notes.
+     *     brewed_at : datetime
+     *         When the brew took place.
+     *     taste : BrewTasteCreate | None
+     *         Optional inline taste.
+     */
+    BrewCreate: {
+      /**
+       * Bag Id
+       * Format: uuid
+       */
+      bag_id: string;
+      /**
+       * Brew Setup Id
+       * Format: uuid
+       */
+      brew_setup_id: string;
+      /**
+       * Person Id
+       * Format: uuid
+       */
+      person_id: string;
+      /** Grind Setting */
+      grind_setting?: number | null;
+      /** Grind Setting Display */
+      grind_setting_display?: string | null;
+      /** Temperature */
+      temperature?: number | null;
+      /** Pressure */
+      pressure?: number | null;
+      /** Flow Rate */
+      flow_rate?: number | null;
+      /** Dose */
+      dose: number;
+      /** Yield Amount */
+      yield_amount?: number | null;
+      /** Pre Infusion Time */
+      pre_infusion_time?: number | null;
+      /** Total Time */
+      total_time?: number | null;
+      /** Stop Mode Id */
+      stop_mode_id?: string | null;
+      /**
+       * Is Failed
+       * @default false
+       */
+      is_failed: boolean;
+      /** Notes */
+      notes?: string | null;
+      /**
+       * Brewed At
+       * Format: date-time
+       */
+      brewed_at: string;
+      taste?: components['schemas']['BrewTasteCreate'] | null;
+    };
+    /**
+     * BrewListRead
+     * @description Summary schema for listing brews.
+     *
+     *     Attributes
+     *     ----------
+     *     id : uuid.UUID
+     *         Primary key.
+     *     grind_setting : float | None
+     *         Canonical grind setting.
+     *     grind_setting_display : str | None
+     *         Human-readable grind display.
+     *     dose : float
+     *         Coffee dose in grams.
+     *     temperature : float | None
+     *         Temperature in celsius.
+     *     is_failed : bool
+     *         Whether the brew was considered failed.
+     *     brewed_at : datetime
+     *         When the brew took place.
+     *     created_at : datetime
+     *         Creation timestamp.
+     *     bean_name : str
+     *         Name of the bean (via bag.bean.name).
+     *     brew_method_name : str
+     *         Name of the brew method (via brew_setup.brew_method.name).
+     *     person_name : str
+     *         Name of the person.
+     *     score : float | None
+     *         Overall taste score (from taste.score).
+     */
+    BrewListRead: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Grind Setting */
+      grind_setting?: number | null;
+      /** Grind Setting Display */
+      grind_setting_display?: string | null;
+      /** Dose */
+      dose: number;
+      /** Temperature */
+      temperature?: number | null;
+      /** Is Failed */
+      is_failed: boolean;
+      /**
+       * Brewed At
+       * Format: date-time
+       */
+      brewed_at: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Bean Name */
+      bean_name: string;
+      /** Brew Method Name */
+      brew_method_name: string;
+      /** Person Name */
+      person_name: string;
+      /** Score */
+      score?: number | null;
+    };
+    /**
+     * BrewMethodCreate
+     * @description Schema for creating a BrewMethod.
+     */
+    BrewMethodCreate: {
+      /** Name */
+      name: string;
+    };
+    /**
+     * BrewMethodRead
+     * @description Schema returned when reading a BrewMethod.
+     *
+     *     Attributes
+     *     ----------
+     *     id : uuid.UUID
+     *         Primary key.
+     *     name : str
+     *         Brew method name.
+     *     created_at : datetime
+     *         Creation timestamp.
+     *     retired_at : datetime | None
+     *         Soft-delete timestamp.
+     *     is_retired : bool
+     *         Computed from ``retired_at``.
+     */
+    BrewMethodRead: {
+      /** Name */
+      name: string;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Retired At */
+      retired_at: string | null;
+      /** Is Retired */
+      is_retired: boolean;
+    };
+    /**
+     * BrewMethodUpdate
+     * @description Schema for partially updating a BrewMethod.
+     */
+    BrewMethodUpdate: {
+      /** Name */
+      name?: string | null;
+    };
+    /**
+     * BrewRead
+     * @description Full detail schema returned when reading a Brew.
+     *
+     *     Attributes
+     *     ----------
+     *     id : uuid.UUID
+     *         Primary key.
+     *     bag_id : uuid.UUID
+     *         Bag FK.
+     *     brew_setup_id : uuid.UUID
+     *         Brew setup FK.
+     *     person_id : uuid.UUID
+     *         Person FK.
+     *     grind_setting : float | None
+     *         Canonical grind setting.
+     *     grind_setting_display : str | None
+     *         Human-readable grind display.
+     *     temperature : float | None
+     *         Temperature in celsius.
+     *     pressure : float | None
+     *         Pressure in bar.
+     *     flow_rate : float | None
+     *         Flow rate in ml/s.
+     *     dose : float
+     *         Coffee dose in grams.
+     *     yield_amount : float | None
+     *         Yield in grams.
+     *     pre_infusion_time : float | None
+     *         Pre-infusion time in seconds.
+     *     total_time : float | None
+     *         Total brew time in seconds.
+     *     stop_mode_id : uuid.UUID | None
+     *         Stop mode FK.
+     *     is_failed : bool
+     *         Whether the brew was considered failed.
+     *     notes : str | None
+     *         Free-text notes.
+     *     brewed_at : datetime
+     *         When the brew took place.
+     *     created_at : datetime
+     *         Creation timestamp.
+     *     updated_at : datetime
+     *         Last-modified timestamp.
+     *     retired_at : datetime | None
+     *         Soft-delete timestamp.
+     *     is_retired : bool
+     *         Computed from ``retired_at``.
+     *     bag : dict | None
+     *         Nested bag data (with bean).
+     *     brew_setup : BrewSetupRead | None
+     *         Nested brew setup (with equipment names).
+     *     person : dict | None
+     *         Nested person data.
+     *     taste : BrewTasteRead | None
+     *         Nested taste data (with flavor tags).
+     *     stop_mode : dict | None
+     *         Nested stop mode data.
+     */
+    BrewRead: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Bag Id
+       * Format: uuid
+       */
+      bag_id: string;
+      /**
+       * Brew Setup Id
+       * Format: uuid
+       */
+      brew_setup_id: string;
+      /**
+       * Person Id
+       * Format: uuid
+       */
+      person_id: string;
+      /** Grind Setting */
+      grind_setting?: number | null;
+      /** Grind Setting Display */
+      grind_setting_display?: string | null;
+      /** Temperature */
+      temperature?: number | null;
+      /** Pressure */
+      pressure?: number | null;
+      /** Flow Rate */
+      flow_rate?: number | null;
+      /** Dose */
+      dose: number;
+      /** Yield Amount */
+      yield_amount?: number | null;
+      /** Pre Infusion Time */
+      pre_infusion_time?: number | null;
+      /** Total Time */
+      total_time?: number | null;
+      /** Stop Mode Id */
+      stop_mode_id?: string | null;
+      /** Is Failed */
+      is_failed: boolean;
+      /** Notes */
+      notes?: string | null;
+      /**
+       * Brewed At
+       * Format: date-time
+       */
+      brewed_at: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Retired At */
+      retired_at?: string | null;
+      /**
+       * Is Retired
+       * @default false
+       */
+      is_retired: boolean;
+      /** Bag */
+      bag?: {
+        [key: string]: unknown;
+      } | null;
+      brew_setup?: components['schemas']['BrewSetupRead'] | null;
+      /** Person */
+      person?: {
+        [key: string]: unknown;
+      } | null;
+      taste?: components['schemas']['BrewTasteRead'] | null;
+      /** Stop Mode */
+      stop_mode?: {
+        [key: string]: unknown;
+      } | null;
+    };
+    /**
+     * BrewSetupCreate
+     * @description Schema for creating a BrewSetup.
+     *
+     *     Attributes
+     *     ----------
+     *     brew_method_id : uuid.UUID
+     *         Required brew method FK.
+     *     grinder_id : uuid.UUID | None
+     *         Optional grinder FK.
+     *     brewer_id : uuid.UUID | None
+     *         Optional brewer FK.
+     *     paper_id : uuid.UUID | None
+     *         Optional paper FK.
+     *     water_id : uuid.UUID | None
+     *         Optional water FK.
+     */
+    BrewSetupCreate: {
+      /** Name */
+      name?: string | null;
+      /**
+       * Brew Method Id
+       * Format: uuid
+       */
+      brew_method_id: string;
+      /** Grinder Id */
+      grinder_id?: string | null;
+      /** Brewer Id */
+      brewer_id?: string | null;
+      /** Paper Id */
+      paper_id?: string | null;
+      /** Water Id */
+      water_id?: string | null;
+    };
+    /**
+     * BrewSetupRead
+     * @description Schema returned when reading a BrewSetup.
+     *
+     *     Attributes
+     *     ----------
+     *     id : uuid.UUID
+     *         Primary key.
+     *     created_at : datetime
+     *         Creation timestamp.
+     *     updated_at : datetime
+     *         Last-modified timestamp.
+     *     retired_at : datetime | None
+     *         Soft-delete timestamp.
+     *     is_retired : bool
+     *         Computed from ``retired_at``.
+     *     brew_method_id : uuid.UUID
+     *         Brew method FK.
+     *     grinder_id : uuid.UUID | None
+     *         Grinder FK.
+     *     brewer_id : uuid.UUID | None
+     *         Brewer FK.
+     *     paper_id : uuid.UUID | None
+     *         Paper FK.
+     *     water_id : uuid.UUID | None
+     *         Water FK.
+     *     brew_method_name : str | None
+     *         Name of the linked brew method.
+     *     grinder_name : str | None
+     *         Name of the linked grinder.
+     *     brewer_name : str | None
+     *         Name of the linked brewer.
+     *     paper_name : str | None
+     *         Name of the linked paper.
+     *     water_name : str | None
+     *         Name of the linked water.
+     */
+    BrewSetupRead: {
+      /** Name */
+      name?: string | null;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Retired At */
+      retired_at: string | null;
+      /** Is Retired */
+      is_retired: boolean;
+      /**
+       * Brew Method Id
+       * Format: uuid
+       */
+      brew_method_id: string;
+      /** Grinder Id */
+      grinder_id: string | null;
+      /** Brewer Id */
+      brewer_id: string | null;
+      /** Paper Id */
+      paper_id: string | null;
+      /** Water Id */
+      water_id: string | null;
+      /** Brew Method Name */
+      brew_method_name?: string | null;
+      /** Grinder Name */
+      grinder_name?: string | null;
+      /** Brewer Name */
+      brewer_name?: string | null;
+      /** Paper Name */
+      paper_name?: string | null;
+      /** Water Name */
+      water_name?: string | null;
+    };
+    /**
+     * BrewSetupUpdate
+     * @description Schema for partially updating a BrewSetup.
+     *
+     *     Attributes
+     *     ----------
+     *     name : str | None
+     *         Updated name.
+     *     brew_method_id : uuid.UUID | None
+     *         Updated brew method FK.
+     *     grinder_id : uuid.UUID | None
+     *         Updated grinder FK.
+     *     brewer_id : uuid.UUID | None
+     *         Updated brewer FK.
+     *     paper_id : uuid.UUID | None
+     *         Updated paper FK.
+     *     water_id : uuid.UUID | None
+     *         Updated water FK.
+     */
+    BrewSetupUpdate: {
+      /** Name */
+      name?: string | null;
+      /** Brew Method Id */
+      brew_method_id?: string | null;
+      /** Grinder Id */
+      grinder_id?: string | null;
+      /** Brewer Id */
+      brewer_id?: string | null;
+      /** Paper Id */
+      paper_id?: string | null;
+      /** Water Id */
+      water_id?: string | null;
+    };
+    /**
+     * BrewStatsRead
+     * @description Aggregated brew statistics.
+     */
+    BrewStatsRead: {
+      /** Total */
+      total: number;
+      /** This Week */
+      this_week: number;
+      /** This Month */
+      this_month: number;
+      /** Total Failed */
+      total_failed: number;
+      /** Fail Rate */
+      fail_rate: number | null;
+      /** Avg Dose G */
+      avg_dose_g: number | null;
+      /** Avg Yield G */
+      avg_yield_g: number | null;
+      /** Avg Brew Time S */
+      avg_brew_time_s: number | null;
+      /** Last Brewed At */
+      last_brewed_at: string | null;
+      /** By Method */
+      by_method: components['schemas']['MethodBrewCount'][];
+    };
+    /**
+     * BrewTasteAxisAverages
+     * @description Average scores across all rated brews.
+     */
+    BrewTasteAxisAverages: {
+      /** Score */
+      score: number | null;
+      /** Acidity */
+      acidity: number | null;
+      /** Sweetness */
+      sweetness: number | null;
+      /** Body */
+      body: number | null;
+      /** Bitterness */
+      bitterness: number | null;
+      /** Balance */
+      balance: number | null;
+      /** Aftertaste */
+      aftertaste: number | null;
+    };
+    /**
+     * BrewTasteCreate
+     * @description Schema for creating a BrewTaste.
+     *
+     *     Attributes
+     *     ----------
+     *     flavor_tag_ids : list[uuid.UUID]
+     *         Flavor tag IDs to link.
+     */
+    BrewTasteCreate: {
+      /** Score */
+      score?: number | null;
+      /** Acidity */
+      acidity?: number | null;
+      /** Sweetness */
+      sweetness?: number | null;
+      /** Body */
+      body?: number | null;
+      /** Bitterness */
+      bitterness?: number | null;
+      /** Balance */
+      balance?: number | null;
+      /** Aftertaste */
+      aftertaste?: number | null;
+      /** Notes */
+      notes?: string | null;
+      /**
+       * Flavor Tag Ids
+       * @default []
+       */
+      flavor_tag_ids: string[];
+    };
+    /**
+     * BrewTasteRead
+     * @description Schema returned when reading a BrewTaste.
+     *
+     *     Attributes
+     *     ----------
+     *     id : uuid.UUID
+     *         Primary key.
+     *     brew_id : uuid.UUID
+     *         Parent brew FK.
+     *     created_at : datetime
+     *         Creation timestamp.
+     *     updated_at : datetime
+     *         Last-modified timestamp.
+     *     flavor_tags : list[FlavorTagRead]
+     *         Nested flavor tags.
+     */
+    BrewTasteRead: {
+      /** Score */
+      score?: number | null;
+      /** Acidity */
+      acidity?: number | null;
+      /** Sweetness */
+      sweetness?: number | null;
+      /** Body */
+      body?: number | null;
+      /** Bitterness */
+      bitterness?: number | null;
+      /** Balance */
+      balance?: number | null;
+      /** Aftertaste */
+      aftertaste?: number | null;
+      /** Notes */
+      notes?: string | null;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Brew Id
+       * Format: uuid
+       */
+      brew_id: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /**
+       * Flavor Tags
+       * @default []
+       */
+      flavor_tags: components['schemas']['FlavorTagRead'][];
+    };
+    /**
+     * BrewTasteStats
+     * @description Sensory stats from brew tastings.
+     */
+    BrewTasteStats: {
+      /** Total Rated */
+      total_rated: number;
+      avg_axes: components['schemas']['BrewTasteAxisAverages'];
+      /** Best Score */
+      best_score: number | null;
+      /** Best Brew Id */
+      best_brew_id: string | null;
+      /** Top Flavor Tags */
+      top_flavor_tags: components['schemas']['FlavorTagCount'][];
+    };
+    /**
+     * BrewTasteUpdate
+     * @description Schema for partially updating a BrewTaste.
+     *
+     *     All fields are optional so callers can send only the fields they
+     *     want to change.
+     *
+     *     Attributes
+     *     ----------
+     *     score : float | None
+     *         Updated overall score.
+     *     acidity : float | None
+     *         Updated acidity score.
+     *     sweetness : float | None
+     *         Updated sweetness score.
+     *     body : float | None
+     *         Updated body score.
+     *     bitterness : float | None
+     *         Updated bitterness score.
+     *     balance : float | None
+     *         Updated balance score.
+     *     aftertaste : float | None
+     *         Updated aftertaste score.
+     *     notes : str | None
+     *         Updated tasting notes.
+     *     flavor_tag_ids : list[uuid.UUID] | None
+     *         Updated flavor tag IDs; ``None`` means don't touch.
+     */
+    BrewTasteUpdate: {
+      /** Score */
+      score?: number | null;
+      /** Acidity */
+      acidity?: number | null;
+      /** Sweetness */
+      sweetness?: number | null;
+      /** Body */
+      body?: number | null;
+      /** Bitterness */
+      bitterness?: number | null;
+      /** Balance */
+      balance?: number | null;
+      /** Aftertaste */
+      aftertaste?: number | null;
+      /** Notes */
+      notes?: string | null;
+      /** Flavor Tag Ids */
+      flavor_tag_ids?: string[] | null;
+    };
+    /**
+     * BrewUpdate
+     * @description Schema for partially updating a Brew.
+     *
+     *     All fields are optional so callers can send only the fields they
+     *     want to change.
+     *
+     *     Attributes
+     *     ----------
+     *     bag_id : uuid.UUID | None
+     *         Updated bag FK.
+     *     brew_setup_id : uuid.UUID | None
+     *         Updated brew setup FK.
+     *     person_id : uuid.UUID | None
+     *         Updated person FK.
+     *     grind_setting : float | None
+     *         Updated canonical grind setting.
+     *     grind_setting_display : str | None
+     *         Updated human-readable grind display.
+     *     temperature : float | None
+     *         Updated temperature.
+     *     pressure : float | None
+     *         Updated pressure.
+     *     flow_rate : float | None
+     *         Updated flow rate.
+     *     dose : float | None
+     *         Updated dose.
+     *     yield_amount : float | None
+     *         Updated yield.
+     *     pre_infusion_time : float | None
+     *         Updated pre-infusion time.
+     *     total_time : float | None
+     *         Updated total time.
+     *     stop_mode_id : uuid.UUID | None
+     *         Updated stop mode FK.
+     *     is_failed : bool | None
+     *         Updated failure flag.
+     *     notes : str | None
+     *         Updated notes.
+     *     brewed_at : datetime | None
+     *         Updated brew time.
+     */
+    BrewUpdate: {
+      /** Bag Id */
+      bag_id?: string | null;
+      /** Brew Setup Id */
+      brew_setup_id?: string | null;
+      /** Person Id */
+      person_id?: string | null;
+      /** Grind Setting */
+      grind_setting?: number | null;
+      /** Grind Setting Display */
+      grind_setting_display?: string | null;
+      /** Temperature */
+      temperature?: number | null;
+      /** Pressure */
+      pressure?: number | null;
+      /** Flow Rate */
+      flow_rate?: number | null;
+      /** Dose */
+      dose?: number | null;
+      /** Yield Amount */
+      yield_amount?: number | null;
+      /** Pre Infusion Time */
+      pre_infusion_time?: number | null;
+      /** Total Time */
+      total_time?: number | null;
+      /** Stop Mode Id */
+      stop_mode_id?: string | null;
+      /** Is Failed */
+      is_failed?: boolean | null;
+      /** Notes */
+      notes?: string | null;
+      /** Brewed At */
+      brewed_at?: string | null;
+    };
+    /**
+     * BrewerCreate
+     * @description Schema for creating a Brewer.
+     *
+     *     Attributes
+     *     ----------
+     *     method_ids : list[uuid.UUID] | None
+     *         IDs of brew methods to link.
+     *     stop_mode_ids : list[uuid.UUID] | None
+     *         IDs of stop modes to link.
+     */
+    BrewerCreate: {
+      /** Name */
+      name: string;
+      /** @default pid */
+      temp_control_type: components['schemas']['TempControlType'];
+      /** Temp Min */
+      temp_min?: number | null;
+      /** Temp Max */
+      temp_max?: number | null;
+      /** Temp Step */
+      temp_step?: number | null;
+      /** @default none */
+      preinfusion_type: components['schemas']['PreinfusionType'];
+      /** Preinfusion Max Time */
+      preinfusion_max_time?: number | null;
+      /** @default fixed */
+      pressure_control_type: components['schemas']['PressureControlType'];
+      /** Pressure Min */
+      pressure_min?: number | null;
+      /** Pressure Max */
+      pressure_max?: number | null;
+      /** @default none */
+      flow_control_type: components['schemas']['FlowControlType'];
+      /** Saturation Flow Rate */
+      saturation_flow_rate?: number | null;
+      /**
+       * Has Bloom
+       * @default false
+       */
+      has_bloom: boolean;
+      /** Method Ids */
+      method_ids?: string[] | null;
+      /** Stop Mode Ids */
+      stop_mode_ids?: string[] | null;
+    };
+    /**
+     * BrewerRead
+     * @description Schema returned when reading a Brewer.
+     *
+     *     Attributes
+     *     ----------
+     *     id : uuid.UUID
+     *         Primary key.
+     *     created_at : datetime
+     *         Creation timestamp.
+     *     updated_at : datetime
+     *         Last-modified timestamp.
+     *     retired_at : datetime | None
+     *         Soft-delete timestamp.
+     *     is_retired : bool
+     *         Computed from ``retired_at``.
+     *     tier : int
+     *         Computed UX tier (1--5).
+     *     methods : list[BrewMethodRead]
+     *         Nested brew methods.
+     *     stop_modes : list[StopModeRead]
+     *         Nested stop modes.
+     */
+    BrewerRead: {
+      /** Name */
+      name: string;
+      /** @default pid */
+      temp_control_type: components['schemas']['TempControlType'];
+      /** Temp Min */
+      temp_min?: number | null;
+      /** Temp Max */
+      temp_max?: number | null;
+      /** Temp Step */
+      temp_step?: number | null;
+      /** @default none */
+      preinfusion_type: components['schemas']['PreinfusionType'];
+      /** Preinfusion Max Time */
+      preinfusion_max_time?: number | null;
+      /** @default fixed */
+      pressure_control_type: components['schemas']['PressureControlType'];
+      /** Pressure Min */
+      pressure_min?: number | null;
+      /** Pressure Max */
+      pressure_max?: number | null;
+      /** @default none */
+      flow_control_type: components['schemas']['FlowControlType'];
+      /** Saturation Flow Rate */
+      saturation_flow_rate?: number | null;
+      /**
+       * Has Bloom
+       * @default false
+       */
+      has_bloom: boolean;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Retired At */
+      retired_at: string | null;
+      /** Is Retired */
+      is_retired: boolean;
+      /** Tier */
+      tier: number;
+      /** Methods */
+      methods: components['schemas']['BrewMethodRead'][];
+      /** Stop Modes */
+      stop_modes: components['schemas']['StopModeRead'][];
+    };
+    /**
+     * BrewerUpdate
+     * @description Schema for partially updating a Brewer.
+     *
+     *     Attributes
+     *     ----------
+     *     name : str | None
+     *         Updated name.
+     *     temp_control_type : TempControlType | None
+     *         Updated temperature control.
+     *     temp_min : float | None
+     *         Updated minimum temperature.
+     *     temp_max : float | None
+     *         Updated maximum temperature.
+     *     temp_step : float | None
+     *         Updated temperature step.
+     *     preinfusion_type : PreinfusionType | None
+     *         Updated pre-infusion type.
+     *     preinfusion_max_time : float | None
+     *         Updated max pre-infusion time.
+     *     pressure_control_type : PressureControlType | None
+     *         Updated pressure control.
+     *     pressure_min : float | None
+     *         Updated minimum pressure.
+     *     pressure_max : float | None
+     *         Updated maximum pressure.
+     *     flow_control_type : FlowControlType | None
+     *         Updated flow control.
+     *     saturation_flow_rate : float | None
+     *         Updated saturation flow rate.
+     *     has_bloom : bool | None
+     *         Updated bloom support.
+     *     method_ids : list[uuid.UUID] | None
+     *         Updated list of brew method IDs.
+     *     stop_mode_ids : list[uuid.UUID] | None
+     *         Updated list of stop mode IDs.
+     */
+    BrewerUpdate: {
+      /** Name */
+      name?: string | null;
+      temp_control_type?: components['schemas']['TempControlType'] | null;
+      /** Temp Min */
+      temp_min?: number | null;
+      /** Temp Max */
+      temp_max?: number | null;
+      /** Temp Step */
+      temp_step?: number | null;
+      preinfusion_type?: components['schemas']['PreinfusionType'] | null;
+      /** Preinfusion Max Time */
+      preinfusion_max_time?: number | null;
+      pressure_control_type?:
+        | components['schemas']['PressureControlType']
+        | null;
+      /** Pressure Min */
+      pressure_min?: number | null;
+      /** Pressure Max */
+      pressure_max?: number | null;
+      flow_control_type?: components['schemas']['FlowControlType'] | null;
+      /** Saturation Flow Rate */
+      saturation_flow_rate?: number | null;
+      /** Has Bloom */
+      has_bloom?: boolean | null;
+      /** Method Ids */
+      method_ids?: string[] | null;
+      /** Stop Mode Ids */
+      stop_mode_ids?: string[] | null;
+    };
+    /**
+     * CoffeeSpecies
+     * @description Biological species of the coffee plant.
+     * @enum {string}
+     */
+    CoffeeSpecies: 'arabica' | 'robusta' | 'liberica';
+    /**
+     * CuppingCreate
+     * @description Schema for creating a Cupping.
+     *
+     *     Attributes
+     *     ----------
+     *     bag_id : uuid.UUID
+     *         Foreign key to the bag being cupped.
+     *     person_id : uuid.UUID
+     *         Foreign key to the person who cupped.
+     *     cupped_at : datetime
+     *         When the cupping session happened.
+     *     dry_fragrance : float | None
+     *         Ground coffee aroma (0-9 SCAA).
+     *     wet_aroma : float | None
+     *         Aroma after adding water (0-9).
+     *     brightness : float | None
+     *         Acidity / vibrancy (0-9).
+     *     flavor : float | None
+     *         Overall taste quality (0-9).
+     *     body : float | None
+     *         Weight / mouthfeel (0-9).
+     *     finish : float | None
+     *         Aftertaste length and quality (0-9).
+     *     sweetness : float | None
+     *         Sweetness (0-9).
+     *     clean_cup : float | None
+     *         Absence of defects (0-9).
+     *     complexity : float | None
+     *         Flavor layers / depth (0-9).
+     *     uniformity : float | None
+     *         Cup-to-cup consistency (0-9).
+     *     cuppers_correction : float | None
+     *         Personal adjustment (can be negative).
+     *     total_score : float | None
+     *         0-100 SCAA scale.
+     *     notes : str | None
+     *         Free-text notes.
+     *     flavor_tag_ids : list[uuid.UUID]
+     *         Flavor tag IDs to link via M2M.
+     */
+    CuppingCreate: {
+      /**
+       * Bag Id
+       * Format: uuid
+       */
+      bag_id: string;
+      /**
+       * Person Id
+       * Format: uuid
+       */
+      person_id: string;
+      /**
+       * Cupped At
+       * Format: date-time
+       */
+      cupped_at: string;
+      /** Dry Fragrance */
+      dry_fragrance?: number | null;
+      /** Wet Aroma */
+      wet_aroma?: number | null;
+      /** Brightness */
+      brightness?: number | null;
+      /** Flavor */
+      flavor?: number | null;
+      /** Body */
+      body?: number | null;
+      /** Finish */
+      finish?: number | null;
+      /** Sweetness */
+      sweetness?: number | null;
+      /** Clean Cup */
+      clean_cup?: number | null;
+      /** Complexity */
+      complexity?: number | null;
+      /** Uniformity */
+      uniformity?: number | null;
+      /** Cuppers Correction */
+      cuppers_correction?: number | null;
+      /** Total Score */
+      total_score?: number | null;
+      /** Notes */
+      notes?: string | null;
+      /**
+       * Flavor Tag Ids
+       * @default []
+       */
+      flavor_tag_ids: string[];
+    };
+    /**
+     * CuppingRead
+     * @description Schema returned when reading a Cupping.
+     *
+     *     Attributes
+     *     ----------
+     *     id : uuid.UUID
+     *         Primary key.
+     *     bag_id : uuid.UUID
+     *         Foreign key to the bag.
+     *     person_id : uuid.UUID
+     *         Foreign key to the person.
+     *     cupped_at : datetime
+     *         When the cupping session happened.
+     *     dry_fragrance : float | None
+     *         Ground coffee aroma (0-9 SCAA).
+     *     wet_aroma : float | None
+     *         Aroma after adding water (0-9).
+     *     brightness : float | None
+     *         Acidity / vibrancy (0-9).
+     *     flavor : float | None
+     *         Overall taste quality (0-9).
+     *     body : float | None
+     *         Weight / mouthfeel (0-9).
+     *     finish : float | None
+     *         Aftertaste length and quality (0-9).
+     *     sweetness : float | None
+     *         Sweetness (0-9).
+     *     clean_cup : float | None
+     *         Absence of defects (0-9).
+     *     complexity : float | None
+     *         Flavor layers / depth (0-9).
+     *     uniformity : float | None
+     *         Cup-to-cup consistency (0-9).
+     *     cuppers_correction : float | None
+     *         Personal adjustment (can be negative).
+     *     total_score : float | None
+     *         0-100 SCAA scale.
+     *     notes : str | None
+     *         Free-text notes.
+     *     created_at : datetime
+     *         Row creation timestamp.
+     *     updated_at : datetime
+     *         Last-modified timestamp.
+     *     retired_at : datetime | None
+     *         Soft-delete timestamp.
+     *     is_retired : bool
+     *         Computed from ``retired_at``.
+     *     person_name : str
+     *         Name of the person who performed the cupping.
+     *     flavor_tags : list[FlavorTagRead]
+     *         Nested flavor tag objects.
+     */
+    CuppingRead: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Bag Id
+       * Format: uuid
+       */
+      bag_id: string;
+      /**
+       * Person Id
+       * Format: uuid
+       */
+      person_id: string;
+      /**
+       * Cupped At
+       * Format: date-time
+       */
+      cupped_at: string;
+      /** Dry Fragrance */
+      dry_fragrance?: number | null;
+      /** Wet Aroma */
+      wet_aroma?: number | null;
+      /** Brightness */
+      brightness?: number | null;
+      /** Flavor */
+      flavor?: number | null;
+      /** Body */
+      body?: number | null;
+      /** Finish */
+      finish?: number | null;
+      /** Sweetness */
+      sweetness?: number | null;
+      /** Clean Cup */
+      clean_cup?: number | null;
+      /** Complexity */
+      complexity?: number | null;
+      /** Uniformity */
+      uniformity?: number | null;
+      /** Cuppers Correction */
+      cuppers_correction?: number | null;
+      /** Total Score */
+      total_score?: number | null;
+      /** Notes */
+      notes?: string | null;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Retired At */
+      retired_at?: string | null;
+      /**
+       * Is Retired
+       * @default false
+       */
+      is_retired: boolean;
+      /**
+       * Person Name
+       * @default
+       */
+      person_name: string;
+      /**
+       * Flavor Tags
+       * @default []
+       */
+      flavor_tags: components['schemas']['FlavorTagRead'][];
+    };
+    /**
+     * CuppingStatsRead
+     * @description Aggregated cupping session statistics.
+     */
+    CuppingStatsRead: {
+      /** Total */
+      total: number;
+      /** Avg Total Score */
+      avg_total_score: number | null;
+      /** Best Total Score */
+      best_total_score: number | null;
+      /** Best Cupping Id */
+      best_cupping_id: string | null;
+      /** Top Flavor Tags */
+      top_flavor_tags: components['schemas']['FlavorTagCount'][];
+    };
+    /**
+     * CuppingUpdate
+     * @description Schema for partially updating a Cupping.
+     *
+     *     All fields are optional so callers can send only the fields they
+     *     want to change.
+     *
+     *     Attributes
+     *     ----------
+     *     cupped_at : datetime | None
+     *         Updated cupping time.
+     *     dry_fragrance : float | None
+     *         Updated ground coffee aroma (0-9).
+     *     wet_aroma : float | None
+     *         Updated wet aroma (0-9).
+     *     brightness : float | None
+     *         Updated brightness (0-9).
+     *     flavor : float | None
+     *         Updated flavor (0-9).
+     *     body : float | None
+     *         Updated body (0-9).
+     *     finish : float | None
+     *         Updated finish (0-9).
+     *     sweetness : float | None
+     *         Updated sweetness (0-9).
+     *     clean_cup : float | None
+     *         Updated clean cup (0-9).
+     *     complexity : float | None
+     *         Updated complexity (0-9).
+     *     uniformity : float | None
+     *         Updated uniformity (0-9).
+     *     cuppers_correction : float | None
+     *         Updated cupper's correction.
+     *     total_score : float | None
+     *         Updated total score (0-100).
+     *     notes : str | None
+     *         Updated notes.
+     *     flavor_tag_ids : list[uuid.UUID] | None
+     *         Updated flavor tag IDs; ``None`` means don't touch.
+     */
+    CuppingUpdate: {
+      /** Cupped At */
+      cupped_at?: string | null;
+      /** Dry Fragrance */
+      dry_fragrance?: number | null;
+      /** Wet Aroma */
+      wet_aroma?: number | null;
+      /** Brightness */
+      brightness?: number | null;
+      /** Flavor */
+      flavor?: number | null;
+      /** Body */
+      body?: number | null;
+      /** Finish */
+      finish?: number | null;
+      /** Sweetness */
+      sweetness?: number | null;
+      /** Clean Cup */
+      clean_cup?: number | null;
+      /** Complexity */
+      complexity?: number | null;
+      /** Uniformity */
+      uniformity?: number | null;
+      /** Cuppers Correction */
+      cuppers_correction?: number | null;
+      /** Total Score */
+      total_score?: number | null;
+      /** Notes */
+      notes?: string | null;
+      /** Flavor Tag Ids */
+      flavor_tag_ids?: string[] | null;
+    };
+    /**
+     * DialType
+     * @description Grinder dial type.
+     * @enum {string}
+     */
+    DialType: 'stepless' | 'stepped';
+    /**
+     * EquipmentStatsRead
+     * @description Aggregated equipment statistics and usage rankings.
+     */
+    EquipmentStatsRead: {
+      /** Total Grinders */
+      total_grinders: number;
+      /** Total Brewers */
+      total_brewers: number;
+      /** Total Papers */
+      total_papers: number;
+      /** Total Waters */
+      total_waters: number;
+      /** Top Grinders */
+      top_grinders: components['schemas']['NamedUsageCount'][];
+      /** Top Brewers */
+      top_brewers: components['schemas']['NamedUsageCount'][];
+      /** Top Setups */
+      top_setups: components['schemas']['SetupUsage'][];
+      most_used_method: components['schemas']['NamedUsageCount'] | null;
+    };
+    /**
+     * FlavorTagCount
+     * @description Flavor tag usage frequency.
+     */
+    FlavorTagCount: {
+      /**
+       * Flavor Tag Id
+       * Format: uuid
+       */
+      flavor_tag_id: string;
+      /** Flavor Tag Name */
+      flavor_tag_name: string;
+      /** Count */
+      count: number;
+    };
+    /**
+     * FlavorTagCreate
+     * @description Schema for creating a FlavorTag.
+     */
+    FlavorTagCreate: {
+      /** Name */
+      name: string;
+    };
+    /**
+     * FlavorTagRead
+     * @description Schema returned when reading a FlavorTag.
+     *
+     *     Attributes
+     *     ----------
+     *     id : uuid.UUID
+     *         Primary key.
+     *     name : str
+     *         Tag name.
+     *     created_at : datetime
+     *         Creation timestamp.
+     *     retired_at : datetime | None
+     *         Soft-delete timestamp.
+     *     is_retired : bool
+     *         Computed from ``retired_at``.
+     */
+    FlavorTagRead: {
+      /** Name */
+      name: string;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Retired At */
+      retired_at: string | null;
+      /** Is Retired */
+      is_retired: boolean;
+    };
+    /**
+     * FlavorTagUpdate
+     * @description Schema for partially updating a FlavorTag.
+     */
+    FlavorTagUpdate: {
+      /** Name */
+      name?: string | null;
+    };
+    /**
+     * FlowControlType
+     * @description Flow control capability levels.
+     * @enum {string}
+     */
+    FlowControlType: 'none' | 'manual_paddle' | 'manual_valve' | 'programmable';
+    /**
+     * GrindRange
+     * @description Linearised grind range computed from ring configuration.
+     *
+     *     Attributes
+     *     ----------
+     *     min : float
+     *         Minimum linear grind value.
+     *     max : float
+     *         Maximum linear grind value.
+     *     step : float
+     *         Step size (always 1.0 for multi-ring, otherwise ring step).
+     */
+    GrindRange: {
+      /** Min */
+      min: number;
+      /** Max */
+      max: number;
+      /** Step */
+      step: number;
+    };
+    /**
+     * GrinderCreate
+     * @description Schema for creating a Grinder.
+     *
+     *     Attributes
+     *     ----------
+     *     name : str
+     *         Grinder name.
+     *     dial_type : DialType
+     *         Stepless or stepped.
+     *     rings : list[RingConfig] | None
+     *         Optional ring configuration.
+     */
+    GrinderCreate: {
+      /** Name */
+      name: string;
+      /** @default stepless */
+      dial_type: components['schemas']['DialType'];
+      /** Rings */
+      rings?: components['schemas']['RingConfig'][] | null;
+    };
+    /**
+     * GrinderRead
+     * @description Schema returned when reading a Grinder.
+     *
+     *     Attributes
+     *     ----------
+     *     id : uuid.UUID
+     *         Primary key.
+     *     created_at : datetime
+     *         Creation timestamp.
+     *     updated_at : datetime
+     *         Last-modified timestamp.
+     *     retired_at : datetime | None
+     *         Soft-delete timestamp.
+     *     is_retired : bool
+     *         Computed from ``retired_at``.
+     *     rings : list[RingConfig]
+     *         Structured ring configuration parsed from ``ring_sizes_json``.
+     *     grind_range : GrindRange | None
+     *         Linearised bounds computed from rings.
+     */
+    GrinderRead: {
+      /** Name */
+      name: string;
+      /** @default stepless */
+      dial_type: components['schemas']['DialType'];
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Retired At */
+      retired_at: string | null;
+      /** Is Retired */
+      is_retired: boolean;
+      /** Rings */
+      rings: components['schemas']['RingConfig'][];
+      grind_range: components['schemas']['GrindRange'] | null;
+    };
+    /**
+     * GrinderUpdate
+     * @description Schema for partially updating a Grinder.
+     *
+     *     Attributes
+     *     ----------
+     *     name : str | None
+     *         Updated name.
+     *     dial_type : DialType | None
+     *         Updated dial type.
+     *     rings : list[RingConfig] | None
+     *         Updated ring configuration.
+     */
+    GrinderUpdate: {
+      /** Name */
+      name?: string | null;
+      dial_type?: components['schemas']['DialType'] | null;
+      /** Rings */
+      rings?: components['schemas']['RingConfig'][] | null;
+    };
+    /** HTTPValidationError */
+    HTTPValidationError: {
+      /** Detail */
+      detail?: components['schemas']['ValidationError'][];
+    };
+    /**
+     * MethodBrewCount
+     * @description Brew count grouped by brew method.
+     */
+    MethodBrewCount: {
+      /**
+       * Brew Method Id
+       * Format: uuid
+       */
+      brew_method_id: string;
+      /** Brew Method Name */
+      brew_method_name: string;
+      /** Count */
+      count: number;
+    };
+    /**
+     * NamedUsageCount
+     * @description Entity ranked by brew usage count.
+     */
+    NamedUsageCount: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Name */
+      name: string;
+      /** Brew Count */
+      brew_count: number;
+    };
+    /**
+     * OriginBeanCount
+     * @description Bean count grouped by origin.
+     */
+    OriginBeanCount: {
+      /**
+       * Origin Id
+       * Format: uuid
+       */
+      origin_id: string;
+      /** Origin Name */
+      origin_name: string;
+      /** Count */
+      count: number;
+    };
+    /**
+     * OriginCreate
+     * @description Schema for creating an Origin.
+     */
+    OriginCreate: {
+      /** Name */
+      name: string;
+      /** Country */
+      country?: string | null;
+      /** Region */
+      region?: string | null;
+    };
+    /**
+     * OriginRead
+     * @description Schema returned when reading an Origin.
+     *
+     *     Attributes
+     *     ----------
+     *     id : uuid.UUID
+     *         Primary key.
+     *     name : str
+     *         Origin name.
+     *     created_at : datetime
+     *         Creation timestamp.
+     *     retired_at : datetime | None
+     *         Soft-delete timestamp.
+     *     is_retired : bool
+     *         Computed from ``retired_at``.
+     *     percentage : float | None
+     *         Blend percentage (only populated when read via a Bean relationship).
+     */
+    OriginRead: {
+      /** Name */
+      name: string;
+      /** Country */
+      country?: string | null;
+      /** Region */
+      region?: string | null;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Retired At */
+      retired_at: string | null;
+      /** Is Retired */
+      is_retired: boolean;
+      /** Percentage */
+      percentage?: number | null;
+    };
+    /**
+     * OriginUpdate
+     * @description Schema for partially updating an Origin.
+     */
+    OriginUpdate: {
+      /** Name */
+      name?: string | null;
+      /** Country */
+      country?: string | null;
+      /** Region */
+      region?: string | null;
+    };
+    /**
+     * OriginWithPercentage
+     * @description An origin reference with an optional blend percentage.
+     *
+     *     Attributes
+     *     ----------
+     *     origin_id : uuid.UUID
+     *         The origin's primary key.
+     *     percentage : float | None
+     *         Blend percentage (0--100). ``None`` if not specified.
+     */
+    OriginWithPercentage: {
+      /**
+       * Origin Id
+       * Format: uuid
+       */
+      origin_id: string;
+      /** Percentage */
+      percentage?: number | null;
+    };
+    /** PaginatedResponse[BagRead] */
+    PaginatedResponse_BagRead_: {
+      /** Items */
+      items: components['schemas']['BagRead'][];
+      /** Total */
+      total: number;
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+    };
+    /** PaginatedResponse[BeanRatingRead] */
+    PaginatedResponse_BeanRatingRead_: {
+      /** Items */
+      items: components['schemas']['BeanRatingRead'][];
+      /** Total */
+      total: number;
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+    };
+    /** PaginatedResponse[BeanRead] */
+    PaginatedResponse_BeanRead_: {
+      /** Items */
+      items: components['schemas']['BeanRead'][];
+      /** Total */
+      total: number;
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+    };
+    /** PaginatedResponse[BeanVarietyRead] */
+    PaginatedResponse_BeanVarietyRead_: {
+      /** Items */
+      items: components['schemas']['BeanVarietyRead'][];
+      /** Total */
+      total: number;
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+    };
+    /** PaginatedResponse[BrewListRead] */
+    PaginatedResponse_BrewListRead_: {
+      /** Items */
+      items: components['schemas']['BrewListRead'][];
+      /** Total */
+      total: number;
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+    };
+    /** PaginatedResponse[BrewMethodRead] */
+    PaginatedResponse_BrewMethodRead_: {
+      /** Items */
+      items: components['schemas']['BrewMethodRead'][];
+      /** Total */
+      total: number;
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+    };
+    /** PaginatedResponse[BrewSetupRead] */
+    PaginatedResponse_BrewSetupRead_: {
+      /** Items */
+      items: components['schemas']['BrewSetupRead'][];
+      /** Total */
+      total: number;
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+    };
+    /** PaginatedResponse[BrewerRead] */
+    PaginatedResponse_BrewerRead_: {
+      /** Items */
+      items: components['schemas']['BrewerRead'][];
+      /** Total */
+      total: number;
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+    };
+    /** PaginatedResponse[CuppingRead] */
+    PaginatedResponse_CuppingRead_: {
+      /** Items */
+      items: components['schemas']['CuppingRead'][];
+      /** Total */
+      total: number;
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+    };
+    /** PaginatedResponse[FlavorTagRead] */
+    PaginatedResponse_FlavorTagRead_: {
+      /** Items */
+      items: components['schemas']['FlavorTagRead'][];
+      /** Total */
+      total: number;
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+    };
+    /** PaginatedResponse[GrinderRead] */
+    PaginatedResponse_GrinderRead_: {
+      /** Items */
+      items: components['schemas']['GrinderRead'][];
+      /** Total */
+      total: number;
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+    };
+    /** PaginatedResponse[OriginRead] */
+    PaginatedResponse_OriginRead_: {
+      /** Items */
+      items: components['schemas']['OriginRead'][];
+      /** Total */
+      total: number;
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+    };
+    /** PaginatedResponse[PaperRead] */
+    PaginatedResponse_PaperRead_: {
+      /** Items */
+      items: components['schemas']['PaperRead'][];
+      /** Total */
+      total: number;
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+    };
+    /** PaginatedResponse[PersonRead] */
+    PaginatedResponse_PersonRead_: {
+      /** Items */
+      items: components['schemas']['PersonRead'][];
+      /** Total */
+      total: number;
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+    };
+    /** PaginatedResponse[ProcessMethodRead] */
+    PaginatedResponse_ProcessMethodRead_: {
+      /** Items */
+      items: components['schemas']['ProcessMethodRead'][];
+      /** Total */
+      total: number;
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+    };
+    /** PaginatedResponse[RoasterRead] */
+    PaginatedResponse_RoasterRead_: {
+      /** Items */
+      items: components['schemas']['RoasterRead'][];
+      /** Total */
+      total: number;
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+    };
+    /** PaginatedResponse[StopModeRead] */
+    PaginatedResponse_StopModeRead_: {
+      /** Items */
+      items: components['schemas']['StopModeRead'][];
+      /** Total */
+      total: number;
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+    };
+    /** PaginatedResponse[StorageTypeRead] */
+    PaginatedResponse_StorageTypeRead_: {
+      /** Items */
+      items: components['schemas']['StorageTypeRead'][];
+      /** Total */
+      total: number;
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+    };
+    /** PaginatedResponse[VendorRead] */
+    PaginatedResponse_VendorRead_: {
+      /** Items */
+      items: components['schemas']['VendorRead'][];
+      /** Total */
+      total: number;
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+    };
+    /** PaginatedResponse[WaterRead] */
+    PaginatedResponse_WaterRead_: {
+      /** Items */
+      items: components['schemas']['WaterRead'][];
+      /** Total */
+      total: number;
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+    };
+    /**
+     * PaperCreate
+     * @description Schema for creating a Paper.
+     */
+    PaperCreate: {
+      /** Name */
+      name: string;
+      /** Notes */
+      notes?: string | null;
+    };
+    /**
+     * PaperRead
+     * @description Schema returned when reading a Paper.
+     *
+     *     Attributes
+     *     ----------
+     *     id : uuid.UUID
+     *         Primary key.
+     *     created_at : datetime
+     *         Creation timestamp.
+     *     updated_at : datetime
+     *         Last-modified timestamp.
+     *     retired_at : datetime | None
+     *         Soft-delete timestamp.
+     *     is_retired : bool
+     *         Computed from ``retired_at``.
+     */
+    PaperRead: {
+      /** Name */
+      name: string;
+      /** Notes */
+      notes?: string | null;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Retired At */
+      retired_at: string | null;
+      /** Is Retired */
+      is_retired: boolean;
+    };
+    /**
+     * PaperUpdate
+     * @description Schema for partially updating a Paper.
+     *
+     *     Attributes
+     *     ----------
+     *     name : str | None
+     *         Updated name.
+     *     notes : str | None
+     *         Updated notes.
+     */
+    PaperUpdate: {
+      /** Name */
+      name?: string | null;
+      /** Notes */
+      notes?: string | null;
+    };
+    /**
+     * PersonCreate
+     * @description Schema for creating a Person.
+     */
+    PersonCreate: {
+      /** Name */
+      name: string;
+    };
+    /**
+     * PersonRead
+     * @description Schema returned when reading a Person.
+     *
+     *     Attributes
+     *     ----------
+     *     id : uuid.UUID
+     *         Primary key.
+     *     name : str
+     *         Person name.
+     *     is_default : bool
+     *         Whether this person is the current default.
+     *     created_at : datetime
+     *         Creation timestamp.
+     *     updated_at : datetime
+     *         Last-modified timestamp.
+     *     retired_at : datetime | None
+     *         Soft-delete timestamp.
+     *     is_retired : bool
+     *         Computed from ``retired_at``.
+     */
+    PersonRead: {
+      /** Name */
+      name: string;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Is Default */
+      is_default: boolean;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Retired At */
+      retired_at: string | null;
+      /** Is Retired */
+      is_retired: boolean;
+    };
+    /**
+     * PersonUpdate
+     * @description Schema for partially updating a Person.
+     *
+     *     All fields are optional so callers can send only the fields they
+     *     want to change.
+     */
+    PersonUpdate: {
+      /** Name */
+      name?: string | null;
+      /** Is Default */
+      is_default?: boolean | null;
+    };
+    /**
+     * PreinfusionType
+     * @description Pre-infusion capability levels.
+     * @enum {string}
+     */
+    PreinfusionType:
+      | 'none'
+      | 'fixed'
+      | 'timed'
+      | 'adjustable_pressure'
+      | 'programmable'
+      | 'manual';
+    /**
+     * PressureControlType
+     * @description Pressure control capability levels.
+     * @enum {string}
+     */
+    PressureControlType:
+      | 'fixed'
+      | 'opv_adjustable'
+      | 'electronic'
+      | 'manual_profiling'
+      | 'programmable';
+    /**
+     * ProcessCategory
+     * @description Broad category grouping for coffee processing methods.
+     * @enum {string}
+     */
+    ProcessCategory:
+      | 'washed'
+      | 'natural'
+      | 'honey'
+      | 'anaerobic'
+      | 'experimental'
+      | 'other';
+    /**
+     * ProcessMethodCreate
+     * @description Schema for creating a ProcessMethod.
+     */
+    ProcessMethodCreate: {
+      /** Name */
+      name: string;
+      category?: components['schemas']['ProcessCategory'] | null;
+    };
+    /**
+     * ProcessMethodRead
+     * @description Schema returned when reading a ProcessMethod.
+     *
+     *     Attributes
+     *     ----------
+     *     id : uuid.UUID
+     *         Primary key.
+     *     name : str
+     *         Process method name.
+     *     created_at : datetime
+     *         Creation timestamp.
+     *     retired_at : datetime | None
+     *         Soft-delete timestamp.
+     *     is_retired : bool
+     *         Computed from ``retired_at``.
+     */
+    ProcessMethodRead: {
+      /** Name */
+      name: string;
+      category?: components['schemas']['ProcessCategory'] | null;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Retired At */
+      retired_at: string | null;
+      /** Is Retired */
+      is_retired: boolean;
+    };
+    /**
+     * ProcessMethodUpdate
+     * @description Schema for partially updating a ProcessMethod.
+     */
+    ProcessMethodUpdate: {
+      /** Name */
+      name?: string | null;
+      category?: components['schemas']['ProcessCategory'] | null;
+    };
+    /**
+     * RingConfig
+     * @description Configuration for a single grinder ring.
+     *
+     *     Attributes
+     *     ----------
+     *     label : str
+     *         Human-readable ring label.
+     *     min : float
+     *         Minimum dial position.
+     *     max : float
+     *         Maximum dial position.
+     *     step : float
+     *         Step size between positions.
+     */
+    RingConfig: {
+      /** Label */
+      label: string;
+      /** Min */
+      min: number;
+      /** Max */
+      max: number;
+      /** Step */
+      step: number;
+    };
+    /**
+     * RoasterBeanCount
+     * @description Bean count grouped by roaster.
+     */
+    RoasterBeanCount: {
+      /**
+       * Roaster Id
+       * Format: uuid
+       */
+      roaster_id: string;
+      /** Roaster Name */
+      roaster_name: string;
+      /** Count */
+      count: number;
+    };
+    /**
+     * RoasterCreate
+     * @description Schema for creating a Roaster.
+     */
+    RoasterCreate: {
+      /** Name */
+      name: string;
+    };
+    /**
+     * RoasterRead
+     * @description Schema returned when reading a Roaster.
+     *
+     *     Attributes
+     *     ----------
+     *     id : uuid.UUID
+     *         Primary key.
+     *     name : str
+     *         Roaster name.
+     *     created_at : datetime
+     *         Creation timestamp.
+     *     retired_at : datetime | None
+     *         Soft-delete timestamp.
+     *     is_retired : bool
+     *         Computed from ``retired_at``.
+     */
+    RoasterRead: {
+      /** Name */
+      name: string;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Retired At */
+      retired_at: string | null;
+      /** Is Retired */
+      is_retired: boolean;
+    };
+    /**
+     * RoasterUpdate
+     * @description Schema for partially updating a Roaster.
+     */
+    RoasterUpdate: {
+      /** Name */
+      name?: string | null;
+    };
+    /**
+     * SetupUsage
+     * @description Brew setup ranked by usage.
+     */
+    SetupUsage: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Name */
+      name: string | null;
+      /** Brew Count */
+      brew_count: number;
+    };
+    /**
+     * StopModeCreate
+     * @description Schema for creating a StopMode.
+     */
+    StopModeCreate: {
+      /** Name */
+      name: string;
+    };
+    /**
+     * StopModeRead
+     * @description Schema returned when reading a StopMode.
+     *
+     *     Attributes
+     *     ----------
+     *     id : uuid.UUID
+     *         Primary key.
+     *     name : str
+     *         Stop mode name.
+     *     created_at : datetime
+     *         Creation timestamp.
+     *     retired_at : datetime | None
+     *         Soft-delete timestamp.
+     *     is_retired : bool
+     *         Computed from ``retired_at``.
+     */
+    StopModeRead: {
+      /** Name */
+      name: string;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Retired At */
+      retired_at: string | null;
+      /** Is Retired */
+      is_retired: boolean;
+    };
+    /**
+     * StopModeUpdate
+     * @description Schema for partially updating a StopMode.
+     */
+    StopModeUpdate: {
+      /** Name */
+      name?: string | null;
+    };
+    /**
+     * StorageTypeCreate
+     * @description Schema for creating a StorageType.
+     */
+    StorageTypeCreate: {
+      /** Name */
+      name: string;
+    };
+    /**
+     * StorageTypeRead
+     * @description Schema returned when reading a StorageType.
+     *
+     *     Attributes
+     *     ----------
+     *     id : uuid.UUID
+     *         Primary key.
+     *     name : str
+     *         Storage type name.
+     *     created_at : datetime
+     *         Creation timestamp.
+     *     updated_at : datetime
+     *         Last-modified timestamp.
+     *     retired_at : datetime | None
+     *         Soft-delete timestamp.
+     *     is_retired : bool
+     *         Computed from ``retired_at``.
+     */
+    StorageTypeRead: {
+      /** Name */
+      name: string;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Retired At */
+      retired_at: string | null;
+      /** Is Retired */
+      is_retired: boolean;
+    };
+    /**
+     * StorageTypeUpdate
+     * @description Schema for partially updating a StorageType.
+     */
+    StorageTypeUpdate: {
+      /** Name */
+      name?: string | null;
+    };
+    /**
+     * TasteStatsRead
+     * @description Combined sensory statistics.
+     */
+    TasteStatsRead: {
+      brew_taste: components['schemas']['BrewTasteStats'];
+      bean_taste: components['schemas']['BeanTasteStats'];
+    };
+    /**
+     * TempControlType
+     * @description Temperature control capability levels.
+     * @enum {string}
+     */
+    TempControlType: 'none' | 'preset' | 'pid' | 'profiling';
+    /** ValidationError */
+    ValidationError: {
+      /** Location */
+      loc: (string | number)[];
+      /** Message */
+      msg: string;
+      /** Error Type */
+      type: string;
+      /** Input */
+      input?: unknown;
+      /** Context */
+      ctx?: Record<string, never>;
+    };
+    /**
+     * VendorCreate
+     * @description Schema for creating a Vendor.
+     */
+    VendorCreate: {
+      /** Name */
+      name: string;
+      /** Url */
+      url?: string | null;
+      /** Location */
+      location?: string | null;
+      /** Notes */
+      notes?: string | null;
+    };
+    /**
+     * VendorRead
+     * @description Schema returned when reading a Vendor.
+     *
+     *     Attributes
+     *     ----------
+     *     id : uuid.UUID
+     *         Primary key.
+     *     name : str
+     *         Vendor name.
+     *     url : str | None
+     *         Shop website URL.
+     *     location : str | None
+     *         City, address, etc.
+     *     notes : str | None
+     *         Free-text notes.
+     *     created_at : datetime
+     *         Creation timestamp.
+     *     updated_at : datetime
+     *         Last-modified timestamp.
+     *     retired_at : datetime | None
+     *         Soft-delete timestamp.
+     *     is_retired : bool
+     *         Computed from ``retired_at``.
+     */
+    VendorRead: {
+      /** Name */
+      name: string;
+      /** Url */
+      url?: string | null;
+      /** Location */
+      location?: string | null;
+      /** Notes */
+      notes?: string | null;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Retired At */
+      retired_at: string | null;
+      /** Is Retired */
+      is_retired: boolean;
+    };
+    /**
+     * VendorUpdate
+     * @description Schema for partially updating a Vendor.
+     */
+    VendorUpdate: {
+      /** Name */
+      name?: string | null;
+      /** Url */
+      url?: string | null;
+      /** Location */
+      location?: string | null;
+      /** Notes */
+      notes?: string | null;
+    };
+    /**
+     * WaterCreate
+     * @description Schema for creating a Water with optional inline minerals.
+     *
+     *     Attributes
+     *     ----------
+     *     minerals : list[WaterMineralCreate] | None
+     *         Inline mineral composition.
+     */
+    WaterCreate: {
+      /** Name */
+      name: string;
+      /** Notes */
+      notes?: string | null;
+      /** Minerals */
+      minerals?: components['schemas']['WaterMineralCreate'][] | null;
+    };
+    /**
+     * WaterMineralCreate
+     * @description Schema for creating a WaterMineral inline with a Water.
+     */
+    WaterMineralCreate: {
+      /** Mineral Name */
+      mineral_name: string;
+      /** Ppm */
+      ppm: number;
+    };
+    /**
+     * WaterMineralRead
+     * @description Schema returned when reading a WaterMineral.
+     *
+     *     Attributes
+     *     ----------
+     *     id : uuid.UUID
+     *         Primary key.
+     *     mineral_name : str
+     *         Name of the mineral.
+     *     ppm : float
+     *         Concentration in parts per million.
+     */
+    WaterMineralRead: {
+      /** Mineral Name */
+      mineral_name: string;
+      /** Ppm */
+      ppm: number;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+    };
+    /**
+     * WaterRead
+     * @description Schema returned when reading a Water.
+     *
+     *     Attributes
+     *     ----------
+     *     id : uuid.UUID
+     *         Primary key.
+     *     created_at : datetime
+     *         Creation timestamp.
+     *     updated_at : datetime
+     *         Last-modified timestamp.
+     *     retired_at : datetime | None
+     *         Soft-delete timestamp.
+     *     is_retired : bool
+     *         Computed from ``retired_at``.
+     *     minerals : list[WaterMineralRead]
+     *         Nested mineral composition.
+     */
+    WaterRead: {
+      /** Name */
+      name: string;
+      /** Notes */
+      notes?: string | null;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Retired At */
+      retired_at: string | null;
+      /** Is Retired */
+      is_retired: boolean;
+      /** Minerals */
+      minerals: components['schemas']['WaterMineralRead'][];
+    };
+    /**
+     * WaterUpdate
+     * @description Schema for partially updating a Water.
+     *
+     *     Attributes
+     *     ----------
+     *     name : str | None
+     *         Updated name.
+     *     notes : str | None
+     *         Updated notes.
+     *     minerals : list[WaterMineralCreate] | None
+     *         Updated mineral composition. When present, replaces all minerals.
+     */
+    WaterUpdate: {
+      /** Name */
+      name?: string | null;
+      /** Notes */
+      notes?: string | null;
+      /** Minerals */
+      minerals?: components['schemas']['WaterMineralCreate'][] | null;
+    };
+  };
+  responses: never;
+  parameters: never;
+  requestBodies: never;
+  headers: never;
+  pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    list_items_api_v1_flavor_tags_get: {
-        parameters: {
-            query?: {
-                /** @description Case-insensitive name search */
-                q?: string | null;
-                /** @description Include soft-deleted items */
-                include_retired?: boolean;
-                limit?: number;
-                offset?: number;
-                /** @description Field to sort by */
-                sort_by?: string;
-                /** @description Sort direction: asc or desc */
-                sort_dir?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponse_FlavorTagRead_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_item_api_v1_flavor_tags_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["FlavorTagCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["FlavorTagRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_item_api_v1_flavor_tags__item_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["FlavorTagRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    delete_item_api_v1_flavor_tags__item_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["FlavorTagRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_item_api_v1_flavor_tags__item_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["FlavorTagUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["FlavorTagRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_items_api_v1_origins_get: {
-        parameters: {
-            query?: {
-                /** @description Case-insensitive name search */
-                q?: string | null;
-                /** @description Include soft-deleted items */
-                include_retired?: boolean;
-                limit?: number;
-                offset?: number;
-                /** @description Field to sort by */
-                sort_by?: string;
-                /** @description Sort direction: asc or desc */
-                sort_dir?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponse_OriginRead_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_item_api_v1_origins_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["OriginCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["OriginRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_item_api_v1_origins__item_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["OriginRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    delete_item_api_v1_origins__item_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["OriginRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_item_api_v1_origins__item_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["OriginUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["OriginRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_items_api_v1_roasters_get: {
-        parameters: {
-            query?: {
-                /** @description Case-insensitive name search */
-                q?: string | null;
-                /** @description Include soft-deleted items */
-                include_retired?: boolean;
-                limit?: number;
-                offset?: number;
-                /** @description Field to sort by */
-                sort_by?: string;
-                /** @description Sort direction: asc or desc */
-                sort_dir?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponse_RoasterRead_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_item_api_v1_roasters_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RoasterCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RoasterRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_item_api_v1_roasters__item_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RoasterRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    delete_item_api_v1_roasters__item_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RoasterRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_item_api_v1_roasters__item_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RoasterUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RoasterRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_items_api_v1_process_methods_get: {
-        parameters: {
-            query?: {
-                /** @description Case-insensitive name search */
-                q?: string | null;
-                /** @description Include soft-deleted items */
-                include_retired?: boolean;
-                limit?: number;
-                offset?: number;
-                /** @description Field to sort by */
-                sort_by?: string;
-                /** @description Sort direction: asc or desc */
-                sort_dir?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponse_ProcessMethodRead_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_item_api_v1_process_methods_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ProcessMethodCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProcessMethodRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_item_api_v1_process_methods__item_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProcessMethodRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    delete_item_api_v1_process_methods__item_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProcessMethodRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_item_api_v1_process_methods__item_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ProcessMethodUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProcessMethodRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_items_api_v1_bean_varieties_get: {
-        parameters: {
-            query?: {
-                /** @description Case-insensitive name search */
-                q?: string | null;
-                /** @description Include soft-deleted items */
-                include_retired?: boolean;
-                limit?: number;
-                offset?: number;
-                /** @description Field to sort by */
-                sort_by?: string;
-                /** @description Sort direction: asc or desc */
-                sort_dir?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponse_BeanVarietyRead_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_item_api_v1_bean_varieties_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BeanVarietyCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BeanVarietyRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_item_api_v1_bean_varieties__item_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BeanVarietyRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    delete_item_api_v1_bean_varieties__item_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BeanVarietyRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_item_api_v1_bean_varieties__item_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BeanVarietyUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BeanVarietyRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_items_api_v1_brew_methods_get: {
-        parameters: {
-            query?: {
-                /** @description Case-insensitive name search */
-                q?: string | null;
-                /** @description Include soft-deleted items */
-                include_retired?: boolean;
-                limit?: number;
-                offset?: number;
-                /** @description Field to sort by */
-                sort_by?: string;
-                /** @description Sort direction: asc or desc */
-                sort_dir?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponse_BrewMethodRead_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_item_api_v1_brew_methods_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BrewMethodCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BrewMethodRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_item_api_v1_brew_methods__item_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BrewMethodRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    delete_item_api_v1_brew_methods__item_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BrewMethodRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_item_api_v1_brew_methods__item_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BrewMethodUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BrewMethodRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_items_api_v1_stop_modes_get: {
-        parameters: {
-            query?: {
-                /** @description Case-insensitive name search */
-                q?: string | null;
-                /** @description Include soft-deleted items */
-                include_retired?: boolean;
-                limit?: number;
-                offset?: number;
-                /** @description Field to sort by */
-                sort_by?: string;
-                /** @description Sort direction: asc or desc */
-                sort_dir?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponse_StopModeRead_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_item_api_v1_stop_modes_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["StopModeCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["StopModeRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_item_api_v1_stop_modes__item_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["StopModeRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    delete_item_api_v1_stop_modes__item_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["StopModeRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_item_api_v1_stop_modes__item_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["StopModeUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["StopModeRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_items_api_v1_vendors_get: {
-        parameters: {
-            query?: {
-                /** @description Case-insensitive name search */
-                q?: string | null;
-                /** @description Include soft-deleted items */
-                include_retired?: boolean;
-                limit?: number;
-                offset?: number;
-                /** @description Field to sort by */
-                sort_by?: string;
-                /** @description Sort direction: asc or desc */
-                sort_dir?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponse_VendorRead_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_item_api_v1_vendors_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["VendorCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["VendorRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_item_api_v1_vendors__item_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["VendorRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    delete_item_api_v1_vendors__item_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["VendorRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_item_api_v1_vendors__item_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["VendorUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["VendorRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_items_api_v1_storage_types_get: {
-        parameters: {
-            query?: {
-                /** @description Case-insensitive name search */
-                q?: string | null;
-                /** @description Include soft-deleted items */
-                include_retired?: boolean;
-                limit?: number;
-                offset?: number;
-                /** @description Field to sort by */
-                sort_by?: string;
-                /** @description Sort direction: asc or desc */
-                sort_dir?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponse_StorageTypeRead_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_item_api_v1_storage_types_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["StorageTypeCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["StorageTypeRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_item_api_v1_storage_types__item_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["StorageTypeRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    delete_item_api_v1_storage_types__item_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["StorageTypeRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_item_api_v1_storage_types__item_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                item_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["StorageTypeUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["StorageTypeRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_people_api_v1_people_get: {
-        parameters: {
-            query?: {
-                /** @description Case-insensitive name search */
-                q?: string | null;
-                /** @description Include soft-deleted items */
-                include_retired?: boolean;
-                limit?: number;
-                offset?: number;
-                /** @description Field to sort by */
-                sort_by?: string;
-                /** @description Sort direction: asc or desc */
-                sort_dir?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponse_PersonRead_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_person_api_v1_people_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PersonCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PersonRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_person_api_v1_people__person_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                person_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PersonRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    delete_person_api_v1_people__person_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                person_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PersonRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_person_api_v1_people__person_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                person_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PersonUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PersonRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_grinders_api_v1_grinders_get: {
-        parameters: {
-            query?: {
-                /** @description Case-insensitive name search */
-                q?: string | null;
-                /** @description Include soft-deleted items */
-                include_retired?: boolean;
-                limit?: number;
-                offset?: number;
-                /** @description Field to sort by */
-                sort_by?: string;
-                /** @description Sort direction: asc or desc */
-                sort_dir?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponse_GrinderRead_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_grinder_api_v1_grinders_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["GrinderCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["GrinderRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_grinder_api_v1_grinders__grinder_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                grinder_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["GrinderRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    delete_grinder_api_v1_grinders__grinder_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                grinder_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["GrinderRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_grinder_api_v1_grinders__grinder_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                grinder_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["GrinderUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["GrinderRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_brewers_api_v1_brewers_get: {
-        parameters: {
-            query?: {
-                /** @description Case-insensitive name search */
-                q?: string | null;
-                /** @description Include soft-deleted items */
-                include_retired?: boolean;
-                limit?: number;
-                offset?: number;
-                /** @description Field to sort by */
-                sort_by?: string;
-                /** @description Sort direction: asc or desc */
-                sort_dir?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponse_BrewerRead_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_brewer_api_v1_brewers_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BrewerCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BrewerRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_brewer_api_v1_brewers__brewer_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                brewer_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BrewerRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    delete_brewer_api_v1_brewers__brewer_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                brewer_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BrewerRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_brewer_api_v1_brewers__brewer_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                brewer_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BrewerUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BrewerRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_papers_api_v1_papers_get: {
-        parameters: {
-            query?: {
-                /** @description Case-insensitive name search */
-                q?: string | null;
-                /** @description Include soft-deleted items */
-                include_retired?: boolean;
-                limit?: number;
-                offset?: number;
-                /** @description Field to sort by */
-                sort_by?: string;
-                /** @description Sort direction: asc or desc */
-                sort_dir?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponse_PaperRead_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_paper_api_v1_papers_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PaperCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaperRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_paper_api_v1_papers__paper_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                paper_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaperRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    delete_paper_api_v1_papers__paper_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                paper_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaperRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_paper_api_v1_papers__paper_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                paper_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PaperUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaperRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_waters_api_v1_waters_get: {
-        parameters: {
-            query?: {
-                /** @description Case-insensitive name search */
-                q?: string | null;
-                /** @description Include soft-deleted items */
-                include_retired?: boolean;
-                limit?: number;
-                offset?: number;
-                /** @description Field to sort by */
-                sort_by?: string;
-                /** @description Sort direction: asc or desc */
-                sort_dir?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponse_WaterRead_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_water_api_v1_waters_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["WaterCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["WaterRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_water_api_v1_waters__water_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                water_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["WaterRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    delete_water_api_v1_waters__water_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                water_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["WaterRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_water_api_v1_waters__water_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                water_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["WaterUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["WaterRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_beans_api_v1_beans_get: {
-        parameters: {
-            query?: {
-                /** @description Case-insensitive name search */
-                q?: string | null;
-                /** @description Filter by roaster */
-                roaster_id?: string | null;
-                /** @description Filter by origin */
-                origin_id?: string | null;
-                /** @description Filter by process method */
-                process_id?: string | null;
-                /** @description Filter by bean variety */
-                variety_id?: string | null;
-                /** @description Include soft-deleted items */
-                include_retired?: boolean;
-                limit?: number;
-                offset?: number;
-                /** @description Field to sort by */
-                sort_by?: string;
-                /** @description Sort direction: asc or desc */
-                sort_dir?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponse_BeanRead_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_bean_api_v1_beans_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BeanCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BeanRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_bean_api_v1_beans__bean_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                bean_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BeanRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    delete_bean_api_v1_beans__bean_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                bean_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BeanRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_bean_api_v1_beans__bean_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                bean_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BeanUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BeanRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_bean_bags_api_v1_beans__bean_id__bags_get: {
-        parameters: {
-            query?: {
-                /** @description Include soft-deleted items */
-                include_retired?: boolean;
-                limit?: number;
-                offset?: number;
-                /** @description Field to sort by */
-                sort_by?: string;
-                /** @description Sort direction: asc or desc */
-                sort_dir?: string;
-            };
-            header?: never;
-            path: {
-                bean_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponse_BagRead_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_bag_for_bean_api_v1_beans__bean_id__bags_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                bean_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BagCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BagRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_bags_api_v1_bags_get: {
-        parameters: {
-            query?: {
-                /** @description Filter by bean */
-                bean_id?: string | null;
-                /** @description Filter by pre-ground status */
-                is_preground?: boolean | null;
-                /** @description Filter bags opened after this date */
-                opened_after?: string | null;
-                /** @description Include soft-deleted items */
-                include_retired?: boolean;
-                limit?: number;
-                offset?: number;
-                /** @description Field to sort by */
-                sort_by?: string;
-                /** @description Sort direction: asc or desc */
-                sort_dir?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponse_BagRead_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_bag_api_v1_bags__bag_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                bag_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BagRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    delete_bag_api_v1_bags__bag_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                bag_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BagRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_bag_api_v1_bags__bag_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                bag_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BagUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BagRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_brew_setups_api_v1_brew_setups_get: {
-        parameters: {
-            query?: {
-                /** @description Filter by brew method */
-                brew_method_id?: string | null;
-                /** @description Filter by grinder */
-                grinder_id?: string | null;
-                /** @description Filter by brewer */
-                brewer_id?: string | null;
-                /** @description Filter by grinder presence */
-                has_grinder?: boolean | null;
-                /** @description Include soft-deleted items */
-                include_retired?: boolean;
-                limit?: number;
-                offset?: number;
-                /** @description Field to sort by */
-                sort_by?: string;
-                /** @description Sort direction: asc or desc */
-                sort_dir?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponse_BrewSetupRead_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_brew_setup_api_v1_brew_setups_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BrewSetupCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BrewSetupRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_brew_setup_api_v1_brew_setups__setup_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                setup_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BrewSetupRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    delete_brew_setup_api_v1_brew_setups__setup_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                setup_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BrewSetupRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_brew_setup_api_v1_brew_setups__setup_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                setup_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BrewSetupUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BrewSetupRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_brews_api_v1_brews_get: {
-        parameters: {
-            query?: {
-                /** @description Filter by person */
-                person_id?: string | null;
-                /** @description Filter by bean (resolves through bag) */
-                bean_id?: string | null;
-                /** @description Filter by bag */
-                bag_id?: string | null;
-                /** @description Filter by brew setup */
-                brew_setup_id?: string | null;
-                /** @description Filter brewed_at >= value */
-                brewed_after?: string | null;
-                /** @description Filter brewed_at <= value */
-                brewed_before?: string | null;
-                /** @description Include soft-deleted items */
-                include_retired?: boolean;
-                limit?: number;
-                offset?: number;
-                /** @description Field to sort by */
-                sort_by?: string;
-                /** @description Sort direction: asc or desc */
-                sort_dir?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponse_BrewListRead_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_brew_api_v1_brews_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BrewCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BrewRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_brew_api_v1_brews__brew_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                brew_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BrewRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    delete_brew_api_v1_brews__brew_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                brew_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BrewRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_brew_api_v1_brews__brew_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                brew_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BrewUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BrewRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    put_taste_api_v1_brews__brew_id__taste_put: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                brew_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BrewTasteCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BrewTasteRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    delete_taste_api_v1_brews__brew_id__taste_delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                brew_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    patch_taste_api_v1_brews__brew_id__taste_patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                brew_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BrewTasteUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BrewTasteRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_cuppings_api_v1_cuppings_get: {
-        parameters: {
-            query?: {
-                /** @description Filter by bag */
-                bag_id?: string | null;
-                /** @description Filter by person */
-                person_id?: string | null;
-                /** @description Include soft-deleted items */
-                include_retired?: boolean;
-                limit?: number;
-                offset?: number;
-                /** @description Field to sort by */
-                sort_by?: string;
-                /** @description Sort direction: asc or desc */
-                sort_dir?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponse_CuppingRead_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_cupping_api_v1_cuppings_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CuppingCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CuppingRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_cupping_api_v1_cuppings__cupping_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                cupping_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CuppingRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    delete_cupping_api_v1_cuppings__cupping_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                cupping_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CuppingRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_cupping_api_v1_cuppings__cupping_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                cupping_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CuppingUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CuppingRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_bean_ratings_api_v1_beans__bean_id__ratings_get: {
-        parameters: {
-            query?: {
-                /** @description Filter by person */
-                person_id?: string | null;
-                /** @description Include soft-deleted items */
-                include_retired?: boolean;
-                limit?: number;
-                offset?: number;
-            };
-            header?: never;
-            path: {
-                bean_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponse_BeanRatingRead_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_bean_rating_api_v1_beans__bean_id__ratings_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                bean_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BeanRatingCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BeanRatingRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_bean_rating_api_v1_bean_ratings__rating_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                rating_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BeanRatingRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    delete_bean_rating_api_v1_bean_ratings__rating_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                rating_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BeanRatingRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    put_bean_rating_taste_api_v1_bean_ratings__rating_id__taste_put: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                rating_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BeanTasteCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BeanTasteRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    delete_bean_rating_taste_api_v1_bean_ratings__rating_id__taste_delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                rating_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    patch_bean_rating_taste_api_v1_bean_ratings__rating_id__taste_patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                rating_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BeanTasteUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BeanTasteRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_brew_stats_api_v1_stats_brews_get: {
-        parameters: {
-            query?: {
-                person_id?: string | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BrewStatsRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_bean_stats_api_v1_stats_beans_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BeanStatsRead"];
-                };
-            };
-        };
-    };
-    get_taste_stats_api_v1_stats_taste_get: {
-        parameters: {
-            query?: {
-                person_id?: string | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TasteStatsRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_equipment_stats_api_v1_stats_equipment_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EquipmentStatsRead"];
-                };
-            };
-        };
-    };
-    get_cupping_stats_api_v1_stats_cuppings_get: {
-        parameters: {
-            query?: {
-                person_id?: string | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CuppingStatsRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    health_health_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        [key: string]: string;
-                    };
-                };
-            };
-        };
-    };
+  list_items_api_v1_flavor_tags_get: {
+    parameters: {
+      query?: {
+        /** @description Case-insensitive name search */
+        q?: string | null;
+        /** @description Include soft-deleted items */
+        include_retired?: boolean;
+        limit?: number;
+        offset?: number;
+        /** @description Field to sort by */
+        sort_by?: string;
+        /** @description Sort direction: asc or desc */
+        sort_dir?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaginatedResponse_FlavorTagRead_'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  create_item_api_v1_flavor_tags_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['FlavorTagCreate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['FlavorTagRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  get_item_api_v1_flavor_tags__item_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['FlavorTagRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  delete_item_api_v1_flavor_tags__item_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['FlavorTagRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  update_item_api_v1_flavor_tags__item_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['FlavorTagUpdate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['FlavorTagRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  list_items_api_v1_origins_get: {
+    parameters: {
+      query?: {
+        /** @description Case-insensitive name search */
+        q?: string | null;
+        /** @description Include soft-deleted items */
+        include_retired?: boolean;
+        limit?: number;
+        offset?: number;
+        /** @description Field to sort by */
+        sort_by?: string;
+        /** @description Sort direction: asc or desc */
+        sort_dir?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaginatedResponse_OriginRead_'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  create_item_api_v1_origins_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['OriginCreate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['OriginRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  get_item_api_v1_origins__item_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['OriginRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  delete_item_api_v1_origins__item_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['OriginRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  update_item_api_v1_origins__item_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['OriginUpdate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['OriginRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  list_items_api_v1_roasters_get: {
+    parameters: {
+      query?: {
+        /** @description Case-insensitive name search */
+        q?: string | null;
+        /** @description Include soft-deleted items */
+        include_retired?: boolean;
+        limit?: number;
+        offset?: number;
+        /** @description Field to sort by */
+        sort_by?: string;
+        /** @description Sort direction: asc or desc */
+        sort_dir?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaginatedResponse_RoasterRead_'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  create_item_api_v1_roasters_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RoasterCreate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RoasterRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  get_item_api_v1_roasters__item_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RoasterRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  delete_item_api_v1_roasters__item_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RoasterRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  update_item_api_v1_roasters__item_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RoasterUpdate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RoasterRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  list_items_api_v1_process_methods_get: {
+    parameters: {
+      query?: {
+        /** @description Case-insensitive name search */
+        q?: string | null;
+        /** @description Include soft-deleted items */
+        include_retired?: boolean;
+        limit?: number;
+        offset?: number;
+        /** @description Field to sort by */
+        sort_by?: string;
+        /** @description Sort direction: asc or desc */
+        sort_dir?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaginatedResponse_ProcessMethodRead_'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  create_item_api_v1_process_methods_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ProcessMethodCreate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ProcessMethodRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  get_item_api_v1_process_methods__item_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ProcessMethodRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  delete_item_api_v1_process_methods__item_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ProcessMethodRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  update_item_api_v1_process_methods__item_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ProcessMethodUpdate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ProcessMethodRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  list_items_api_v1_bean_varieties_get: {
+    parameters: {
+      query?: {
+        /** @description Case-insensitive name search */
+        q?: string | null;
+        /** @description Include soft-deleted items */
+        include_retired?: boolean;
+        limit?: number;
+        offset?: number;
+        /** @description Field to sort by */
+        sort_by?: string;
+        /** @description Sort direction: asc or desc */
+        sort_dir?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaginatedResponse_BeanVarietyRead_'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  create_item_api_v1_bean_varieties_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BeanVarietyCreate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BeanVarietyRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  get_item_api_v1_bean_varieties__item_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BeanVarietyRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  delete_item_api_v1_bean_varieties__item_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BeanVarietyRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  update_item_api_v1_bean_varieties__item_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BeanVarietyUpdate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BeanVarietyRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  list_items_api_v1_brew_methods_get: {
+    parameters: {
+      query?: {
+        /** @description Case-insensitive name search */
+        q?: string | null;
+        /** @description Include soft-deleted items */
+        include_retired?: boolean;
+        limit?: number;
+        offset?: number;
+        /** @description Field to sort by */
+        sort_by?: string;
+        /** @description Sort direction: asc or desc */
+        sort_dir?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaginatedResponse_BrewMethodRead_'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  create_item_api_v1_brew_methods_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BrewMethodCreate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BrewMethodRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  get_item_api_v1_brew_methods__item_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BrewMethodRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  delete_item_api_v1_brew_methods__item_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BrewMethodRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  update_item_api_v1_brew_methods__item_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BrewMethodUpdate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BrewMethodRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  list_items_api_v1_stop_modes_get: {
+    parameters: {
+      query?: {
+        /** @description Case-insensitive name search */
+        q?: string | null;
+        /** @description Include soft-deleted items */
+        include_retired?: boolean;
+        limit?: number;
+        offset?: number;
+        /** @description Field to sort by */
+        sort_by?: string;
+        /** @description Sort direction: asc or desc */
+        sort_dir?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaginatedResponse_StopModeRead_'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  create_item_api_v1_stop_modes_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['StopModeCreate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['StopModeRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  get_item_api_v1_stop_modes__item_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['StopModeRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  delete_item_api_v1_stop_modes__item_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['StopModeRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  update_item_api_v1_stop_modes__item_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['StopModeUpdate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['StopModeRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  list_items_api_v1_vendors_get: {
+    parameters: {
+      query?: {
+        /** @description Case-insensitive name search */
+        q?: string | null;
+        /** @description Include soft-deleted items */
+        include_retired?: boolean;
+        limit?: number;
+        offset?: number;
+        /** @description Field to sort by */
+        sort_by?: string;
+        /** @description Sort direction: asc or desc */
+        sort_dir?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaginatedResponse_VendorRead_'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  create_item_api_v1_vendors_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['VendorCreate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['VendorRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  get_item_api_v1_vendors__item_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['VendorRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  delete_item_api_v1_vendors__item_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['VendorRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  update_item_api_v1_vendors__item_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['VendorUpdate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['VendorRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  list_items_api_v1_storage_types_get: {
+    parameters: {
+      query?: {
+        /** @description Case-insensitive name search */
+        q?: string | null;
+        /** @description Include soft-deleted items */
+        include_retired?: boolean;
+        limit?: number;
+        offset?: number;
+        /** @description Field to sort by */
+        sort_by?: string;
+        /** @description Sort direction: asc or desc */
+        sort_dir?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaginatedResponse_StorageTypeRead_'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  create_item_api_v1_storage_types_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['StorageTypeCreate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['StorageTypeRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  get_item_api_v1_storage_types__item_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['StorageTypeRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  delete_item_api_v1_storage_types__item_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['StorageTypeRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  update_item_api_v1_storage_types__item_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        item_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['StorageTypeUpdate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['StorageTypeRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  list_people_api_v1_people_get: {
+    parameters: {
+      query?: {
+        /** @description Case-insensitive name search */
+        q?: string | null;
+        /** @description Include soft-deleted items */
+        include_retired?: boolean;
+        limit?: number;
+        offset?: number;
+        /** @description Field to sort by */
+        sort_by?: string;
+        /** @description Sort direction: asc or desc */
+        sort_dir?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaginatedResponse_PersonRead_'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  create_person_api_v1_people_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PersonCreate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PersonRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  get_person_api_v1_people__person_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        person_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PersonRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  delete_person_api_v1_people__person_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        person_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PersonRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  update_person_api_v1_people__person_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        person_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PersonUpdate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PersonRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  list_grinders_api_v1_grinders_get: {
+    parameters: {
+      query?: {
+        /** @description Case-insensitive name search */
+        q?: string | null;
+        /** @description Include soft-deleted items */
+        include_retired?: boolean;
+        limit?: number;
+        offset?: number;
+        /** @description Field to sort by */
+        sort_by?: string;
+        /** @description Sort direction: asc or desc */
+        sort_dir?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaginatedResponse_GrinderRead_'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  create_grinder_api_v1_grinders_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['GrinderCreate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['GrinderRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  get_grinder_api_v1_grinders__grinder_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        grinder_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['GrinderRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  delete_grinder_api_v1_grinders__grinder_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        grinder_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['GrinderRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  update_grinder_api_v1_grinders__grinder_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        grinder_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['GrinderUpdate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['GrinderRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  list_brewers_api_v1_brewers_get: {
+    parameters: {
+      query?: {
+        /** @description Case-insensitive name search */
+        q?: string | null;
+        /** @description Include soft-deleted items */
+        include_retired?: boolean;
+        limit?: number;
+        offset?: number;
+        /** @description Field to sort by */
+        sort_by?: string;
+        /** @description Sort direction: asc or desc */
+        sort_dir?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaginatedResponse_BrewerRead_'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  create_brewer_api_v1_brewers_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BrewerCreate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BrewerRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  get_brewer_api_v1_brewers__brewer_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        brewer_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BrewerRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  delete_brewer_api_v1_brewers__brewer_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        brewer_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BrewerRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  update_brewer_api_v1_brewers__brewer_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        brewer_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BrewerUpdate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BrewerRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  list_papers_api_v1_papers_get: {
+    parameters: {
+      query?: {
+        /** @description Case-insensitive name search */
+        q?: string | null;
+        /** @description Include soft-deleted items */
+        include_retired?: boolean;
+        limit?: number;
+        offset?: number;
+        /** @description Field to sort by */
+        sort_by?: string;
+        /** @description Sort direction: asc or desc */
+        sort_dir?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaginatedResponse_PaperRead_'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  create_paper_api_v1_papers_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PaperCreate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaperRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  get_paper_api_v1_papers__paper_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        paper_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaperRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  delete_paper_api_v1_papers__paper_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        paper_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaperRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  update_paper_api_v1_papers__paper_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        paper_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PaperUpdate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaperRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  list_waters_api_v1_waters_get: {
+    parameters: {
+      query?: {
+        /** @description Case-insensitive name search */
+        q?: string | null;
+        /** @description Include soft-deleted items */
+        include_retired?: boolean;
+        limit?: number;
+        offset?: number;
+        /** @description Field to sort by */
+        sort_by?: string;
+        /** @description Sort direction: asc or desc */
+        sort_dir?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaginatedResponse_WaterRead_'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  create_water_api_v1_waters_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['WaterCreate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['WaterRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  get_water_api_v1_waters__water_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        water_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['WaterRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  delete_water_api_v1_waters__water_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        water_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['WaterRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  update_water_api_v1_waters__water_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        water_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['WaterUpdate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['WaterRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  list_beans_api_v1_beans_get: {
+    parameters: {
+      query?: {
+        /** @description Case-insensitive name search */
+        q?: string | null;
+        /** @description Filter by roaster */
+        roaster_id?: string | null;
+        /** @description Filter by origin */
+        origin_id?: string | null;
+        /** @description Filter by process method */
+        process_id?: string | null;
+        /** @description Filter by bean variety */
+        variety_id?: string | null;
+        /** @description Include soft-deleted items */
+        include_retired?: boolean;
+        limit?: number;
+        offset?: number;
+        /** @description Field to sort by */
+        sort_by?: string;
+        /** @description Sort direction: asc or desc */
+        sort_dir?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaginatedResponse_BeanRead_'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  create_bean_api_v1_beans_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BeanCreate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BeanRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  get_bean_api_v1_beans__bean_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        bean_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BeanRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  delete_bean_api_v1_beans__bean_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        bean_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BeanRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  update_bean_api_v1_beans__bean_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        bean_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BeanUpdate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BeanRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  list_bean_bags_api_v1_beans__bean_id__bags_get: {
+    parameters: {
+      query?: {
+        /** @description Include soft-deleted items */
+        include_retired?: boolean;
+        limit?: number;
+        offset?: number;
+        /** @description Field to sort by */
+        sort_by?: string;
+        /** @description Sort direction: asc or desc */
+        sort_dir?: string;
+      };
+      header?: never;
+      path: {
+        bean_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaginatedResponse_BagRead_'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  create_bag_for_bean_api_v1_beans__bean_id__bags_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        bean_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BagCreate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BagRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  list_bags_api_v1_bags_get: {
+    parameters: {
+      query?: {
+        /** @description Filter by bean */
+        bean_id?: string | null;
+        /** @description Filter by pre-ground status */
+        is_preground?: boolean | null;
+        /** @description Filter bags opened after this date */
+        opened_after?: string | null;
+        /** @description Include soft-deleted items */
+        include_retired?: boolean;
+        limit?: number;
+        offset?: number;
+        /** @description Field to sort by */
+        sort_by?: string;
+        /** @description Sort direction: asc or desc */
+        sort_dir?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaginatedResponse_BagRead_'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  get_bag_api_v1_bags__bag_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        bag_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BagRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  delete_bag_api_v1_bags__bag_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        bag_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BagRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  update_bag_api_v1_bags__bag_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        bag_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BagUpdate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BagRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  list_brew_setups_api_v1_brew_setups_get: {
+    parameters: {
+      query?: {
+        /** @description Filter by brew method */
+        brew_method_id?: string | null;
+        /** @description Filter by grinder */
+        grinder_id?: string | null;
+        /** @description Filter by brewer */
+        brewer_id?: string | null;
+        /** @description Filter by grinder presence */
+        has_grinder?: boolean | null;
+        /** @description Include soft-deleted items */
+        include_retired?: boolean;
+        limit?: number;
+        offset?: number;
+        /** @description Field to sort by */
+        sort_by?: string;
+        /** @description Sort direction: asc or desc */
+        sort_dir?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaginatedResponse_BrewSetupRead_'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  create_brew_setup_api_v1_brew_setups_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BrewSetupCreate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BrewSetupRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  get_brew_setup_api_v1_brew_setups__setup_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        setup_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BrewSetupRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  delete_brew_setup_api_v1_brew_setups__setup_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        setup_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BrewSetupRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  update_brew_setup_api_v1_brew_setups__setup_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        setup_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BrewSetupUpdate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BrewSetupRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  list_brews_api_v1_brews_get: {
+    parameters: {
+      query?: {
+        /** @description Filter by person */
+        person_id?: string | null;
+        /** @description Filter by bean (resolves through bag) */
+        bean_id?: string | null;
+        /** @description Filter by bag */
+        bag_id?: string | null;
+        /** @description Filter by brew setup */
+        brew_setup_id?: string | null;
+        /** @description Filter brewed_at >= value */
+        brewed_after?: string | null;
+        /** @description Filter brewed_at <= value */
+        brewed_before?: string | null;
+        /** @description Include soft-deleted items */
+        include_retired?: boolean;
+        limit?: number;
+        offset?: number;
+        /** @description Field to sort by */
+        sort_by?: string;
+        /** @description Sort direction: asc or desc */
+        sort_dir?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaginatedResponse_BrewListRead_'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  create_brew_api_v1_brews_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BrewCreate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BrewRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  get_brew_api_v1_brews__brew_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        brew_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BrewRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  delete_brew_api_v1_brews__brew_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        brew_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BrewRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  update_brew_api_v1_brews__brew_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        brew_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BrewUpdate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BrewRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  put_taste_api_v1_brews__brew_id__taste_put: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        brew_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BrewTasteCreate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BrewTasteRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  delete_taste_api_v1_brews__brew_id__taste_delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        brew_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  patch_taste_api_v1_brews__brew_id__taste_patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        brew_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BrewTasteUpdate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BrewTasteRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  list_cuppings_api_v1_cuppings_get: {
+    parameters: {
+      query?: {
+        /** @description Filter by bag */
+        bag_id?: string | null;
+        /** @description Filter by person */
+        person_id?: string | null;
+        /** @description Include soft-deleted items */
+        include_retired?: boolean;
+        limit?: number;
+        offset?: number;
+        /** @description Field to sort by */
+        sort_by?: string;
+        /** @description Sort direction: asc or desc */
+        sort_dir?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaginatedResponse_CuppingRead_'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  create_cupping_api_v1_cuppings_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CuppingCreate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CuppingRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  get_cupping_api_v1_cuppings__cupping_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        cupping_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CuppingRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  delete_cupping_api_v1_cuppings__cupping_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        cupping_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CuppingRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  update_cupping_api_v1_cuppings__cupping_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        cupping_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CuppingUpdate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CuppingRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  list_bean_ratings_api_v1_beans__bean_id__ratings_get: {
+    parameters: {
+      query?: {
+        /** @description Filter by person */
+        person_id?: string | null;
+        /** @description Include soft-deleted items */
+        include_retired?: boolean;
+        limit?: number;
+        offset?: number;
+      };
+      header?: never;
+      path: {
+        bean_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaginatedResponse_BeanRatingRead_'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  create_bean_rating_api_v1_beans__bean_id__ratings_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        bean_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BeanRatingCreate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BeanRatingRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  get_bean_rating_api_v1_bean_ratings__rating_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        rating_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BeanRatingRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  delete_bean_rating_api_v1_bean_ratings__rating_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        rating_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BeanRatingRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  put_bean_rating_taste_api_v1_bean_ratings__rating_id__taste_put: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        rating_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BeanTasteCreate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BeanTasteRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  delete_bean_rating_taste_api_v1_bean_ratings__rating_id__taste_delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        rating_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  patch_bean_rating_taste_api_v1_bean_ratings__rating_id__taste_patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        rating_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BeanTasteUpdate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BeanTasteRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  get_brew_stats_api_v1_stats_brews_get: {
+    parameters: {
+      query?: {
+        person_id?: string | null;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BrewStatsRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  get_bean_stats_api_v1_stats_beans_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BeanStatsRead'];
+        };
+      };
+    };
+  };
+  get_taste_stats_api_v1_stats_taste_get: {
+    parameters: {
+      query?: {
+        person_id?: string | null;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['TasteStatsRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  get_equipment_stats_api_v1_stats_equipment_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['EquipmentStatsRead'];
+        };
+      };
+    };
+  };
+  get_cupping_stats_api_v1_stats_cuppings_get: {
+    parameters: {
+      query?: {
+        person_id?: string | null;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CuppingStatsRead'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  health_health_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': {
+            [key: string]: string;
+          };
+        };
+      };
+    };
+  };
 }

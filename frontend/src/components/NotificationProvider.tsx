@@ -1,13 +1,13 @@
+import { API_ERROR_EVENT } from '@/api/client';
+import { Alert, Snackbar, useMediaQuery, useTheme } from '@mui/material';
 import {
+  type ReactNode,
   createContext,
   useCallback,
   useContext,
   useEffect,
   useState,
-  type ReactNode,
 } from 'react';
-import { Alert, Snackbar, useMediaQuery, useTheme } from '@mui/material';
-import { API_ERROR_EVENT } from '@/api/client';
 
 interface Notification {
   id: number;
@@ -17,7 +17,11 @@ interface Notification {
 }
 
 interface NotificationContextValue {
-  notify: (message: string, severity?: Notification['severity'], autoHide?: number) => void;
+  notify: (
+    message: string,
+    severity?: Notification['severity'],
+    autoHide?: number,
+  ) => void;
 }
 
 const NotificationContext = createContext<NotificationContextValue>({
@@ -34,9 +38,16 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const notify = useCallback(
-    (message: string, severity: Notification['severity'] = 'success', autoHide = 3000) => {
+    (
+      message: string,
+      severity: Notification['severity'] = 'success',
+      autoHide = 3000,
+    ) => {
       const id = nextId++;
-      setNotifications((prev) => [...prev, { id, message, severity, autoHide }]);
+      setNotifications((prev) => [
+        ...prev,
+        { id, message, severity, autoHide },
+      ]);
     },
     [],
   );
@@ -61,14 +72,20 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
         <Snackbar
           key={n.id}
           open
-          autoHideDuration={n.severity === 'error' ? null : (n.autoHide ?? 3000)}
+          autoHideDuration={
+            n.severity === 'error' ? null : (n.autoHide ?? 3000)
+          }
           onClose={() => handleClose(n.id)}
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: isMobile ? 'center' : 'left',
           }}
         >
-          <Alert severity={n.severity} onClose={() => handleClose(n.id)} variant="filled">
+          <Alert
+            severity={n.severity}
+            onClose={() => handleClose(n.id)}
+            variant="filled"
+          >
             {n.message}
           </Alert>
         </Snackbar>

@@ -4,7 +4,7 @@
 export function fmtDate(value: string | null | undefined): string {
   if (!value) return '—';
   const d = new Date(value);
-  if (isNaN(d.getTime())) return value;
+  if (Number.isNaN(d.getTime())) return value;
   return d.toISOString().slice(0, 10);
 }
 
@@ -14,6 +14,6 @@ export function fmtDate(value: string | null | undefined): string {
 export function fmtDateTime(value: string | null | undefined): string {
   if (!value) return '—';
   const d = new Date(value);
-  if (isNaN(d.getTime())) return value;
+  if (Number.isNaN(d.getTime())) return value;
   return `${d.toISOString().slice(0, 10)} ${d.toISOString().slice(11, 16)}`;
 }

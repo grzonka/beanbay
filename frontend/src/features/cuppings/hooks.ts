@@ -1,6 +1,6 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import apiClient from '@/api/client';
 import type { PaginationParams } from '@/utils/pagination';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 // ---- TypeScript interfaces ----
 
@@ -77,7 +77,10 @@ export function useCreateCupping() {
 export function useUpdateCupping() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, ...body }: { id: string; [key: string]: unknown }) => {
+    mutationFn: async ({
+      id,
+      ...body
+    }: { id: string; [key: string]: unknown }) => {
       const { data } = await apiClient.patch(`/cuppings/${id}`, body);
       return data;
     },

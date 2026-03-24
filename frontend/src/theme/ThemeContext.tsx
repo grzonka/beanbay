@@ -1,7 +1,13 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
-import { ThemeProvider as MuiThemeProvider, CssBaseline } from '@mui/material';
-import { espressoDark } from './espressoDark';
+import { CssBaseline, ThemeProvider as MuiThemeProvider } from '@mui/material';
+import {
+  type ReactNode,
+  createContext,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
 import { craftLight } from './craftLight';
+import { espressoDark } from './espressoDark';
 
 type ThemeMode = 'dark' | 'light';
 
@@ -36,7 +42,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const theme = useMemo(() => (mode === 'dark' ? espressoDark : craftLight), [mode]);
+  const theme = useMemo(
+    () => (mode === 'dark' ? espressoDark : craftLight),
+    [mode],
+  );
 
   const value = useMemo(() => ({ mode, toggleTheme }), [mode]);
 

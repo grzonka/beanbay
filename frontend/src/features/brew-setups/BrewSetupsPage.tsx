@@ -1,18 +1,29 @@
-import { useState } from 'react';
-import { type GridColDef } from '@mui/x-data-grid';
-import { Button } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
-import PageHeader from '@/components/PageHeader';
-import DataTable from '@/components/DataTable';
 import ConfirmDialog from '@/components/ConfirmDialog';
-import { usePaginationParams } from '@/utils/pagination';
-import { useBrewSetups, useUpdateBrewSetup, useDeleteBrewSetup, type BrewSetup } from './hooks';
-import BrewSetupFormDialog from './BrewSetupFormDialog';
+import DataTable from '@/components/DataTable';
 import { useNotification } from '@/components/NotificationProvider';
+import PageHeader from '@/components/PageHeader';
+import { usePaginationParams } from '@/utils/pagination';
+import { Add as AddIcon } from '@mui/icons-material';
+import { Button } from '@mui/material';
+import type { GridColDef } from '@mui/x-data-grid';
+import { useState } from 'react';
+import BrewSetupFormDialog from './BrewSetupFormDialog';
+import {
+  type BrewSetup,
+  useBrewSetups,
+  useDeleteBrewSetup,
+  useUpdateBrewSetup,
+} from './hooks';
 
 export default function BrewSetupsPage() {
-  const { params, paginationModel, sortModel, onPaginationModelChange, onSortModelChange, setIncludeRetired } =
-    usePaginationParams('name');
+  const {
+    params,
+    paginationModel,
+    sortModel,
+    onPaginationModelChange,
+    onSortModelChange,
+    setIncludeRetired,
+  } = usePaginationParams('name');
   const { data, isLoading } = useBrewSetups(params);
   const deleteBrewSetup = useDeleteBrewSetup();
   const { notify } = useNotification();
@@ -83,7 +94,10 @@ export default function BrewSetupsPage() {
           <Button
             variant="contained"
             startIcon={<AddIcon />}
-            onClick={() => { setEditSetup(null); setFormOpen(true); }}
+            onClick={() => {
+              setEditSetup(null);
+              setFormOpen(true);
+            }}
           >
             Add Brew Setup
           </Button>
@@ -100,14 +114,23 @@ export default function BrewSetupsPage() {
         onSortModelChange={onSortModelChange}
         includeRetired={params.include_retired}
         onIncludeRetiredChange={setIncludeRetired}
-        onRowClick={(row) => { setEditSetup(row); setFormOpen(true); }}
+        onRowClick={(row) => {
+          setEditSetup(row);
+          setFormOpen(true);
+        }}
         emptyTitle="No brew setups yet"
         emptyActionLabel="Add Brew Setup"
-        onEmptyAction={() => { setEditSetup(null); setFormOpen(true); }}
+        onEmptyAction={() => {
+          setEditSetup(null);
+          setFormOpen(true);
+        }}
       />
       <BrewSetupFormDialog
         open={formOpen}
-        onClose={() => { setFormOpen(false); setEditSetup(null); }}
+        onClose={() => {
+          setFormOpen(false);
+          setEditSetup(null);
+        }}
         brewSetup={editSetup}
         onRetire={editSetup ? () => setRetireTarget(editSetup) : undefined}
         onActivate={editSetup?.retired_at ? handleActivate : undefined}

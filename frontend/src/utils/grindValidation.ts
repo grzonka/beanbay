@@ -9,18 +9,21 @@ export interface RingConfig {
  * Validate a grind display string against ring configuration.
  * Returns error message or null if valid.
  */
-export function validateGrindDisplay(input: string, rings: RingConfig[]): string | null {
+export function validateGrindDisplay(
+  input: string,
+  rings: RingConfig[],
+): string | null {
   if (!input.trim()) return null; // Empty is OK (optional field)
 
   const segments = input.split('.');
   if (segments.length !== rings.length) {
-    return `Expected ${rings.length} segment${rings.length > 1 ? 's' : ''} (${rings.map(r => r.label).join('.')})`;
+    return `Expected ${rings.length} segment${rings.length > 1 ? 's' : ''} (${rings.map((r) => r.label).join('.')})`;
   }
 
   for (let i = 0; i < segments.length; i++) {
     const num = Number(segments[i]);
     const ring = rings[i];
-    if (isNaN(num)) {
+    if (Number.isNaN(num)) {
       return `${ring.label}: must be a number`;
     }
     if (num < ring.min || num > ring.max) {
@@ -37,8 +40,8 @@ export function validateGrindDisplay(input: string, rings: RingConfig[]): string
  * Get display range string, e.g. "0.0.0 — 4.9.5" or "0 — 40"
  */
 export function getGrindRangeDisplay(rings: RingConfig[]): string {
-  const minParts = rings.map(r => String(r.min));
-  const maxParts = rings.map(r => String(r.max));
+  const minParts = rings.map((r) => String(r.min));
+  const maxParts = rings.map((r) => String(r.max));
   return `${minParts.join('.')} — ${maxParts.join('.')}`;
 }
 
@@ -46,6 +49,6 @@ export function getGrindRangeDisplay(rings: RingConfig[]): string {
  * Get placeholder string, e.g. "e.g. 2.3.4" or "e.g. 22"
  */
 export function getGrindPlaceholder(rings: RingConfig[]): string {
-  const midParts = rings.map(r => String(Math.floor((r.min + r.max) / 2)));
+  const midParts = rings.map((r) => String(Math.floor((r.min + r.max) / 2)));
   return `e.g. ${midParts.join('.')}`;
 }

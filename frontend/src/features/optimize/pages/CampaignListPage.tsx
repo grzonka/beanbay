@@ -1,10 +1,17 @@
-import { useNavigate } from 'react-router';
-import {
-  Box, Card, CardActionArea, CardContent, Chip, Grid, LinearProgress,
-  Typography, Tooltip,
-} from '@mui/material';
-import PageHeader from '@/components/PageHeader';
 import EmptyState from '@/components/EmptyState';
+import PageHeader from '@/components/PageHeader';
+import {
+  Box,
+  Card,
+  CardActionArea,
+  CardContent,
+  Chip,
+  Grid,
+  LinearProgress,
+  Tooltip,
+  Typography,
+} from '@mui/material';
+import { useNavigate } from 'react-router';
 import { useCampaigns } from '../hooks';
 
 const phaseColor: Record<string, 'info' | 'warning' | 'success'> = {
@@ -46,23 +53,46 @@ export default function CampaignListPage() {
                   <Typography variant="body2" color="text.secondary" noWrap>
                     {c.brew_setup_name ?? 'Unknown setup'}
                   </Typography>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1.5 }}>
-                    <Chip label={c.phase} size="small" color={phaseColor[c.phase] ?? 'default'} />
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1,
+                      mt: 1.5,
+                    }}
+                  >
+                    <Chip
+                      label={c.phase}
+                      size="small"
+                      color={phaseColor[c.phase] ?? 'default'}
+                    />
                     <Typography variant="body2" color="text.secondary">
                       {c.measurement_count} shots
                     </Typography>
                   </Box>
                   {c.best_score != null && (
-                    <Typography variant="h5" fontWeight="bold" sx={{ mt: 1, color: scoreColor(c.best_score) }}>
+                    <Typography
+                      variant="h5"
+                      fontWeight="bold"
+                      sx={{ mt: 1, color: scoreColor(c.best_score) }}
+                    >
                       {c.best_score.toFixed(1)}
                     </Typography>
                   )}
-                  <Tooltip title={`${c.phase} phase — ${c.measurement_count} measurements`}>
+                  <Tooltip
+                    title={`${c.phase} phase — ${c.measurement_count} measurements`}
+                  >
                     <LinearProgress
                       variant="determinate"
                       value={Math.min(100, (c.measurement_count / 15) * 100)}
                       sx={{ mt: 1.5, height: 6, borderRadius: 3 }}
-                      color={c.phase === 'optimizing' ? 'success' : c.phase === 'learning' ? 'warning' : 'info'}
+                      color={
+                        c.phase === 'optimizing'
+                          ? 'success'
+                          : c.phase === 'learning'
+                            ? 'warning'
+                            : 'info'
+                      }
                     />
                   </Tooltip>
                 </CardContent>

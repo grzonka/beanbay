@@ -1,16 +1,31 @@
-import { useState, useEffect } from 'react';
-import {
-  Button, Dialog, DialogActions, DialogContent, DialogTitle,
-  Stack, Slider, TextField, Typography, Box, Divider,
-} from '@mui/material';
+import apiClient from '@/api/client';
 import AutocompleteCreate from '@/components/AutocompleteCreate';
 import FlavorTagSelect from '@/components/FlavorTagSelect';
-import apiClient from '@/api/client';
 import { useNotification } from '@/components/NotificationProvider';
-import { useQueryClient, useQuery } from '@tanstack/react-query';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Slider,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 
-interface Person { id: string; name: string; }
-interface FlavorTag { id: string; name: string; }
+interface Person {
+  id: string;
+  name: string;
+}
+interface FlavorTag {
+  id: string;
+  name: string;
+}
 
 interface CreatePersonForm {
   initialName: string;
@@ -18,7 +33,11 @@ interface CreatePersonForm {
   onCancel: () => void;
 }
 
-function CreatePersonInlineForm({ initialName, onCreated, onCancel }: CreatePersonForm) {
+function CreatePersonInlineForm({
+  initialName,
+  onCreated,
+  onCancel,
+}: CreatePersonForm) {
   const [name, setName] = useState(initialName);
   const { notify } = useNotification();
 
@@ -30,10 +49,22 @@ function CreatePersonInlineForm({ initialName, onCreated, onCancel }: CreatePers
 
   return (
     <Stack spacing={2} sx={{ pt: 1 }}>
-      <TextField label="Name" value={name} onChange={(e) => setName(e.target.value)} required autoFocus />
+      <TextField
+        label="Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        required
+        autoFocus
+      />
       <Stack direction="row" spacing={1} justifyContent="flex-end">
         <Button onClick={onCancel}>Cancel</Button>
-        <Button variant="contained" onClick={handleSubmit} disabled={!name.trim()}>Create</Button>
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          disabled={!name.trim()}
+        >
+          Create
+        </Button>
       </Stack>
     </Stack>
   );
@@ -54,7 +85,10 @@ function SliderField({ label, value, onChange }: SliderFieldProps) {
       <Slider
         value={value}
         onChange={(_, v) => onChange(v as number)}
-        min={0} max={10} step={1} marks
+        min={0}
+        max={10}
+        step={1}
+        marks
         valueLabelDisplay="auto"
         size="small"
       />
@@ -68,7 +102,11 @@ interface RatingFormDialogProps {
   beanId: string;
 }
 
-export default function RatingFormDialog({ open, onClose, beanId }: RatingFormDialogProps) {
+export default function RatingFormDialog({
+  open,
+  onClose,
+  beanId,
+}: RatingFormDialogProps) {
   const { notify } = useNotification();
   const qc = useQueryClient();
 
@@ -79,7 +117,9 @@ export default function RatingFormDialog({ open, onClose, beanId }: RatingFormDi
   const { data: peopleData } = useQuery({
     queryKey: ['people', 'default'],
     queryFn: async () => {
-      const { data } = await apiClient.get('/people', { params: { limit: 50 } });
+      const { data } = await apiClient.get('/people', {
+        params: { limit: 50 },
+      });
       return data;
     },
   });
@@ -106,7 +146,9 @@ export default function RatingFormDialog({ open, onClose, beanId }: RatingFormDi
 
   const resetForm = () => {
     const defaultPerson = peopleData?.items?.find((p: any) => p.is_default);
-    setPerson(defaultPerson ? { id: defaultPerson.id, name: defaultPerson.name } : null);
+    setPerson(
+      defaultPerson ? { id: defaultPerson.id, name: defaultPerson.name } : null,
+    );
     setPersonError(false);
     setScore(5);
     setAcidity(5);
@@ -162,7 +204,9 @@ export default function RatingFormDialog({ open, onClose, beanId }: RatingFormDi
             label="Person"
             queryKey={['people']}
             fetchFn={async (q) => {
-              const { data } = await apiClient.get('/people', { params: { q, limit: 50 } });
+              const { data } = await apiClient.get('/people', {
+                params: { q, limit: 50 },
+              });
               return data;
             }}
             value={person}
@@ -177,29 +221,51 @@ export default function RatingFormDialog({ open, onClose, beanId }: RatingFormDi
           />
 
           <Divider>
-            <Typography variant="caption" color="text.secondary">Taste</Typography>
+            <Typography variant="caption" color="text.secondary">
+              Taste
+            </Typography>
           </Divider>
 
           <SliderField label="Score" value={score} onChange={setScore} />
           <SliderField label="Acidity" value={acidity} onChange={setAcidity} />
-          <SliderField label="Sweetness" value={sweetness} onChange={setSweetness} />
+          <SliderField
+            label="Sweetness"
+            value={sweetness}
+            onChange={setSweetness}
+          />
           <SliderField label="Body" value={body} onChange={setBody} />
-          <SliderField label="Complexity" value={complexity} onChange={setComplexity} />
+          <SliderField
+            label="Complexity"
+            value={complexity}
+            onChange={setComplexity}
+          />
           <SliderField label="Aroma" value={aroma} onChange={setAroma} />
-          <SliderField label="Clean Cup" value={cleanCup} onChange={setCleanCup} />
+          <SliderField
+            label="Clean Cup"
+            value={cleanCup}
+            onChange={setCleanCup}
+          />
 
           <TextField
-            label="Notes" value={notes}
+            label="Notes"
+            value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            multiline rows={3}
+            multiline
+            rows={3}
           />
 
           <FlavorTagSelect value={flavorTags} onChange={setFlavorTags} />
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} disabled={isPending}>Cancel</Button>
-        <Button variant="contained" onClick={handleSubmit} disabled={!person || isPending}>
+        <Button onClick={handleClose} disabled={isPending}>
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          disabled={!person || isPending}
+        >
           Add Rating
         </Button>
       </DialogActions>

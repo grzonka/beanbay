@@ -1,60 +1,99 @@
+import apiClient from '@/api/client';
+import ConfirmDialog from '@/components/ConfirmDialog';
+import DataTable from '@/components/DataTable';
+import { useNotification } from '@/components/NotificationProvider';
+import PageHeader from '@/components/PageHeader';
+import RatingFormDialog from '@/features/ratings/RatingFormDialog';
+import { fmtDate } from '@/utils/date';
+import { usePaginationParams } from '@/utils/pagination';
+import {
+  Add as AddIcon,
+  Archive as ArchiveIcon,
+  Edit as EditIcon,
+} from '@mui/icons-material';
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  CircularProgress,
+  Divider,
+  Stack,
+  Typography,
+} from '@mui/material';
+import type { GridColDef } from '@mui/x-data-grid';
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useParams } from 'react-router';
-import {
-  Box, Button, Card, CardContent, Chip, CircularProgress,
-  Divider, Stack, Typography,
-} from '@mui/material';
-import { Edit as EditIcon, Archive as ArchiveIcon, Add as AddIcon } from '@mui/icons-material';
-import { type GridColDef } from '@mui/x-data-grid';
-import PageHeader from '@/components/PageHeader';
-import DataTable from '@/components/DataTable';
-import ConfirmDialog from '@/components/ConfirmDialog';
-import { usePaginationParams } from '@/utils/pagination';
-import { useNotification } from '@/components/NotificationProvider';
-import { fmtDate } from '@/utils/date';
-import { useQuery } from '@tanstack/react-query';
-import apiClient from '@/api/client';
-import {
-  useBean, useDeleteBean, useBags, useDeleteBag, useUpdateBag, useBeanRatings,
-  type Bean, type Bag, type BeanRating,
-} from '../hooks';
-import BeanFormDialog from '../components/BeanFormDialog';
 import BagFormDialog from '../components/BagFormDialog';
-import RatingFormDialog from '@/features/ratings/RatingFormDialog';
+import BeanFormDialog from '../components/BeanFormDialog';
+import {
+  type Bag,
+  type Bean,
+  type BeanRating,
+  useBags,
+  useBean,
+  useBeanRatings,
+  useDeleteBag,
+  useDeleteBean,
+  useUpdateBag,
+} from '../hooks';
 
 // Base columns for Bags sub-table (actions column added inside BagsSection)
 const baseBagColumns: GridColDef<Bag>[] = [
   {
-    field: 'roast_date', headerName: 'Roast Date', width: 130,
+    field: 'roast_date',
+    headerName: 'Roast Date',
+    width: 130,
     renderCell: (p) => fmtDate(p.value as string),
   },
   {
-    field: 'weight', headerName: 'Weight (g)', width: 120,
-    renderCell: (p) => p.value != null ? `${p.value} g` : '—',
+    field: 'weight',
+    headerName: 'Weight (g)',
+    width: 120,
+    renderCell: (p) => (p.value != null ? `${p.value} g` : '—'),
   },
   {
-    field: 'price', headerName: 'Price', width: 100,
-    renderCell: (p) => p.value != null ? `${p.value}` : '—',
+    field: 'price',
+    headerName: 'Price',
+    width: 100,
+    renderCell: (p) => (p.value != null ? `${p.value}` : '—'),
   },
   {
-    field: 'is_preground', headerName: 'Pre-ground', width: 120,
-    renderCell: (p) => p.value ? <Chip label="Yes" size="small" color="warning" /> : null,
+    field: 'is_preground',
+    headerName: 'Pre-ground',
+    width: 120,
+    renderCell: (p) =>
+      p.value ? <Chip label="Yes" size="small" color="warning" /> : null,
   },
   {
-    field: 'opened_at', headerName: 'Opened At', width: 130,
+    field: 'opened_at',
+    headerName: 'Opened At',
+    width: 130,
     renderCell: (p) => p.value ?? '—',
   },
 ];
 
 // Columns for Ratings sub-table
 const ratingColumns: GridColDef<BeanRating>[] = [
-  { field: 'person_name', headerName: 'Person', flex: 1, renderCell: (p) => p.value ?? '—' },
-  { field: 'rated_at', headerName: 'Rated At', width: 130, renderCell: (p) => fmtDate(p.value as string) },
+  {
+    field: 'person_name',
+    headerName: 'Person',
+    flex: 1,
+    renderCell: (p) => p.value ?? '—',
+  },
+  {
+    field: 'rated_at',
+    headerName: 'Rated At',
+    width: 130,
+    renderCell: (p) => fmtDate(p.value as string),
+  },
   {
     field: 'taste',
     headerName: 'Score',
     width: 100,
-    renderCell: (p) => p.row.taste?.score != null ? p.row.taste.score : '—',
+    renderCell: (p) => (p.row.taste?.score != null ? p.row.taste.score : '—'),
     sortable: false,
   },
 ];
@@ -80,20 +119,42 @@ function BeanInfoCard({ bean }: { bean: Bean }) {
           <InfoRow label="Use Type" value={bean.bean_use_type} />
           <InfoRow label="Roast Degree" value={bean.roast_degree} />
           <InfoRow label="Decaf" value={bean.decaf ? 'Yes' : 'No'} />
-          {bean.url && <InfoRow label="URL" value={<a href={bean.url} target="_blank" rel="noreferrer">{bean.url}</a>} />}
+          {bean.url && (
+            <InfoRow
+              label="URL"
+              value={
+                <a href={bean.url} target="_blank" rel="noreferrer">
+                  {bean.url}
+                </a>
+              }
+            />
+          )}
           {bean.ean && <InfoRow label="EAN" value={bean.ean} />}
           {bean.notes && <InfoRow label="Notes" value={bean.notes} />}
 
           {bean.origins.length > 0 && (
-            <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
-              <Typography variant="body2" color="text.secondary" sx={{ minWidth: 140 }}>
+            <Stack
+              direction="row"
+              spacing={1}
+              alignItems="center"
+              flexWrap="wrap"
+            >
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ minWidth: 140 }}
+              >
                 Origins
               </Typography>
               <Stack direction="row" spacing={0.5} flexWrap="wrap">
                 {bean.origins.map((o) => (
                   <Chip
                     key={o.origin_id}
-                    label={o.percentage != null ? `${o.origin_name} (${o.percentage}%)` : o.origin_name}
+                    label={
+                      o.percentage != null
+                        ? `${o.origin_name} (${o.percentage}%)`
+                        : o.origin_name
+                    }
                     size="small"
                     variant="outlined"
                   />
@@ -103,39 +164,82 @@ function BeanInfoCard({ bean }: { bean: Bean }) {
           )}
 
           {bean.processes.length > 0 && (
-            <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
-              <Typography variant="body2" color="text.secondary" sx={{ minWidth: 140 }}>
+            <Stack
+              direction="row"
+              spacing={1}
+              alignItems="center"
+              flexWrap="wrap"
+            >
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ minWidth: 140 }}
+              >
                 Processes
               </Typography>
               <Stack direction="row" spacing={0.5} flexWrap="wrap">
                 {bean.processes.map((p) => (
-                  <Chip key={p.id} label={p.name} size="small" variant="outlined" />
+                  <Chip
+                    key={p.id}
+                    label={p.name}
+                    size="small"
+                    variant="outlined"
+                  />
                 ))}
               </Stack>
             </Stack>
           )}
 
           {bean.varieties.length > 0 && (
-            <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
-              <Typography variant="body2" color="text.secondary" sx={{ minWidth: 140 }}>
+            <Stack
+              direction="row"
+              spacing={1}
+              alignItems="center"
+              flexWrap="wrap"
+            >
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ minWidth: 140 }}
+              >
                 Varieties
               </Typography>
               <Stack direction="row" spacing={0.5} flexWrap="wrap">
                 {bean.varieties.map((v) => (
-                  <Chip key={v.id} label={v.name} size="small" variant="outlined" />
+                  <Chip
+                    key={v.id}
+                    label={v.name}
+                    size="small"
+                    variant="outlined"
+                  />
                 ))}
               </Stack>
             </Stack>
           )}
 
           {bean.flavor_tags.length > 0 && (
-            <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
-              <Typography variant="body2" color="text.secondary" sx={{ minWidth: 140 }}>
+            <Stack
+              direction="row"
+              spacing={1}
+              alignItems="center"
+              flexWrap="wrap"
+            >
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ minWidth: 140 }}
+              >
                 Flavor Tags
               </Typography>
               <Stack direction="row" spacing={0.5} flexWrap="wrap">
                 {bean.flavor_tags.map((t) => (
-                  <Chip key={t.id} label={t.name} size="small" color="primary" variant="outlined" />
+                  <Chip
+                    key={t.id}
+                    label={t.name}
+                    size="small"
+                    color="primary"
+                    variant="outlined"
+                  />
                 ))}
               </Stack>
             </Stack>
@@ -148,8 +252,11 @@ function BeanInfoCard({ bean }: { bean: Bean }) {
 
 function BagsSection({ beanId }: { beanId: string }) {
   const {
-    params, paginationModel, sortModel,
-    onPaginationModelChange, onSortModelChange,
+    params,
+    paginationModel,
+    sortModel,
+    onPaginationModelChange,
+    onSortModelChange,
   } = usePaginationParams('roast_date');
   const { data, isLoading } = useBags(beanId, params);
   const deleteBag = useDeleteBag(beanId);
@@ -180,11 +287,21 @@ function BagsSection({ beanId }: { beanId: string }) {
 
   return (
     <Box sx={{ mb: 4 }}>
-      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        sx={{ mb: 2 }}
+      >
         <Typography variant="h6">Bags</Typography>
         <Button
-          variant="outlined" size="small" startIcon={<AddIcon />}
-          onClick={() => { setEditBag(null); setBagFormOpen(true); }}
+          variant="outlined"
+          size="small"
+          startIcon={<AddIcon />}
+          onClick={() => {
+            setEditBag(null);
+            setBagFormOpen(true);
+          }}
         >
           Add Bag
         </Button>
@@ -198,17 +315,27 @@ function BagsSection({ beanId }: { beanId: string }) {
         onPaginationModelChange={onPaginationModelChange}
         sortModel={sortModel}
         onSortModelChange={onSortModelChange}
-        onRowClick={(row) => { setEditBag(row); setBagFormOpen(true); }}
+        onRowClick={(row) => {
+          setEditBag(row);
+          setBagFormOpen(true);
+        }}
         emptyTitle="No bags yet"
         emptyActionLabel="Add Bag"
-        onEmptyAction={() => { setEditBag(null); setBagFormOpen(true); }}
+        onEmptyAction={() => {
+          setEditBag(null);
+          setBagFormOpen(true);
+        }}
       />
       <BagFormDialog
         open={bagFormOpen}
         onClose={() => setBagFormOpen(false)}
         beanId={beanId}
         bag={editBag}
-        onRetire={editBag && !editBag.retired_at ? () => setRetireBagTarget(editBag) : undefined}
+        onRetire={
+          editBag && !editBag.retired_at
+            ? () => setRetireBagTarget(editBag)
+            : undefined
+        }
         onActivate={editBag?.retired_at ? handleActivateBag : undefined}
       />
       <ConfirmDialog
@@ -224,8 +351,11 @@ function BagsSection({ beanId }: { beanId: string }) {
 
 function RatingsSection({ beanId }: { beanId: string }) {
   const {
-    params, paginationModel, sortModel,
-    onPaginationModelChange, onSortModelChange,
+    params,
+    paginationModel,
+    sortModel,
+    onPaginationModelChange,
+    onSortModelChange,
   } = usePaginationParams('rated_at');
   const { data, isLoading } = useBeanRatings(beanId, params);
 
@@ -233,10 +363,17 @@ function RatingsSection({ beanId }: { beanId: string }) {
 
   return (
     <Box>
-      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        sx={{ mb: 2 }}
+      >
         <Typography variant="h6">Ratings</Typography>
         <Button
-          variant="outlined" size="small" startIcon={<AddIcon />}
+          variant="outlined"
+          size="small"
+          startIcon={<AddIcon />}
           onClick={() => setRatingFormOpen(true)}
         >
           Add Rating
@@ -275,10 +412,17 @@ interface CuppingSummary {
 const cuppingColumns: GridColDef<CuppingSummary>[] = [
   { field: 'person_name', headerName: 'Person', flex: 1 },
   {
-    field: 'total_score', headerName: 'Score', width: 100,
-    renderCell: (p) => p.value != null ? (p.value as number).toFixed(1) : '—',
+    field: 'total_score',
+    headerName: 'Score',
+    width: 100,
+    renderCell: (p) => (p.value != null ? (p.value as number).toFixed(1) : '—'),
   },
-  { field: 'cupped_at', headerName: 'Cupped At', width: 130, renderCell: (p) => fmtDate(p.value as string) },
+  {
+    field: 'cupped_at',
+    headerName: 'Cupped At',
+    width: 130,
+    renderCell: (p) => fmtDate(p.value as string),
+  },
 ];
 
 function CuppingsSection({ beanId, bags }: { beanId: string; bags: Bag[] }) {
@@ -291,8 +435,10 @@ function CuppingsSection({ beanId, bags }: { beanId: string; bags: Bag[] }) {
       // Fetch cuppings for each bag in parallel
       const results = await Promise.all(
         bagIds.map((bagId) =>
-          apiClient.get('/cuppings', { params: { bag_id: bagId, limit: 100 } }).then((r) => r.data.items)
-        )
+          apiClient
+            .get('/cuppings', { params: { bag_id: bagId, limit: 100 } })
+            .then((r) => r.data.items),
+        ),
       );
       return results.flat();
     },
@@ -303,7 +449,12 @@ function CuppingsSection({ beanId, bags }: { beanId: string; bags: Bag[] }) {
 
   return (
     <Box>
-      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        sx={{ mb: 2 }}
+      >
         <Typography variant="h6">Cuppings</Typography>
       </Stack>
       <DataTable<CuppingSummary>
@@ -342,7 +493,12 @@ export default function BeanDetailPage() {
 
   if (isLoading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="40vh">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="40vh"
+      >
         <CircularProgress />
       </Box>
     );
@@ -356,20 +512,20 @@ export default function BeanDetailPage() {
     <>
       <PageHeader
         title={bean.name}
-        breadcrumbs={[
-          { label: 'Beans', to: '/beans' },
-          { label: bean.name },
-        ]}
+        breadcrumbs={[{ label: 'Beans', to: '/beans' }, { label: bean.name }]}
         actions={
           <>
             <Button
-              variant="outlined" startIcon={<EditIcon />}
+              variant="outlined"
+              startIcon={<EditIcon />}
               onClick={() => setFormOpen(true)}
             >
               Edit
             </Button>
             <Button
-              variant="outlined" color="warning" startIcon={<ArchiveIcon />}
+              variant="outlined"
+              color="warning"
+              startIcon={<ArchiveIcon />}
               onClick={() => setRetireOpen(true)}
             >
               Retire

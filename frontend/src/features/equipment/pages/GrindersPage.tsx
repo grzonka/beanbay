@@ -1,18 +1,24 @@
-import { useState } from 'react';
-import { type GridColDef } from '@mui/x-data-grid';
-import { Button } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
-import PageHeader from '@/components/PageHeader';
-import DataTable from '@/components/DataTable';
 import ConfirmDialog from '@/components/ConfirmDialog';
-import { usePaginationParams } from '@/utils/pagination';
-import { grinderHooks, type Grinder } from '../hooks';
-import GrinderFormDialog from '../components/GrinderFormDialog';
+import DataTable from '@/components/DataTable';
 import { useNotification } from '@/components/NotificationProvider';
+import PageHeader from '@/components/PageHeader';
+import { usePaginationParams } from '@/utils/pagination';
+import { Add as AddIcon } from '@mui/icons-material';
+import { Button } from '@mui/material';
+import type { GridColDef } from '@mui/x-data-grid';
+import { useState } from 'react';
+import GrinderFormDialog from '../components/GrinderFormDialog';
+import { type Grinder, grinderHooks } from '../hooks';
 
 export default function GrindersPage() {
-  const { params, paginationModel, sortModel, onPaginationModelChange, onSortModelChange, setIncludeRetired } =
-    usePaginationParams('name');
+  const {
+    params,
+    paginationModel,
+    sortModel,
+    onPaginationModelChange,
+    onSortModelChange,
+    setIncludeRetired,
+  } = usePaginationParams('name');
   const { data, isLoading } = grinderHooks.useList(params);
   const deleteGrinder = grinderHooks.useDelete();
   const { notify } = useNotification();
@@ -64,7 +70,10 @@ export default function GrindersPage() {
           <Button
             variant="contained"
             startIcon={<AddIcon />}
-            onClick={() => { setEditGrinder(null); setFormOpen(true); }}
+            onClick={() => {
+              setEditGrinder(null);
+              setFormOpen(true);
+            }}
           >
             Add Grinder
           </Button>
@@ -81,10 +90,16 @@ export default function GrindersPage() {
         onSortModelChange={onSortModelChange}
         includeRetired={params.include_retired}
         onIncludeRetiredChange={setIncludeRetired}
-        onRowClick={(row) => { setEditGrinder(row); setFormOpen(true); }}
+        onRowClick={(row) => {
+          setEditGrinder(row);
+          setFormOpen(true);
+        }}
         emptyTitle="No grinders yet"
         emptyActionLabel="Add Grinder"
-        onEmptyAction={() => { setEditGrinder(null); setFormOpen(true); }}
+        onEmptyAction={() => {
+          setEditGrinder(null);
+          setFormOpen(true);
+        }}
       />
       <GrinderFormDialog
         open={formOpen}

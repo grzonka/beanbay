@@ -1,7 +1,7 @@
-import { Button, CircularProgress } from '@mui/material';
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
-import { useSuggest, type Recommendation } from '../hooks';
 import { useNotification } from '@/components/NotificationProvider';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import { Button, CircularProgress } from '@mui/material';
+import { type Recommendation, useSuggest } from '../hooks';
 
 interface Props {
   beanId: string;
@@ -11,7 +11,13 @@ interface Props {
   disabled?: boolean;
 }
 
-export default function SuggestButton({ beanId, brewSetupId, personId, onSuggestion, disabled }: Props) {
+export default function SuggestButton({
+  beanId,
+  brewSetupId,
+  personId,
+  onSuggestion,
+  disabled,
+}: Props) {
   const suggest = useSuggest();
   const { notify } = useNotification();
 
@@ -31,7 +37,9 @@ export default function SuggestButton({ beanId, brewSetupId, personId, onSuggest
   return (
     <Button
       variant="outlined"
-      startIcon={suggest.isPending ? <CircularProgress size={18} /> : <AutoFixHighIcon />}
+      startIcon={
+        suggest.isPending ? <CircularProgress size={18} /> : <AutoFixHighIcon />
+      }
       onClick={handleClick}
       disabled={disabled || suggest.isPending || !beanId || !brewSetupId}
     >

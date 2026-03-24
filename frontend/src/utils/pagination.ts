@@ -1,6 +1,6 @@
+import type { GridPaginationModel, GridSortModel } from '@mui/x-data-grid';
 import { useCallback, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router';
-import type { GridPaginationModel, GridSortModel } from '@mui/x-data-grid';
 
 export interface PaginationParams {
   offset: number;
@@ -16,19 +16,28 @@ const DEFAULT_LIMIT = 25;
 export function usePaginationParams(defaultSortBy = 'created_at') {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const params: PaginationParams = useMemo(() => ({
-    offset: parseInt(searchParams.get('offset') ?? '0', 10),
-    limit: parseInt(searchParams.get('limit') ?? String(DEFAULT_LIMIT), 10),
-    sort_by: searchParams.get('sort_by') ?? defaultSortBy,
-    sort_dir: (searchParams.get('sort_dir') as 'asc' | 'desc') ?? 'desc',
-    q: searchParams.get('q') ?? undefined,
-    include_retired: searchParams.get('include_retired') === 'true',
-  }), [searchParams, defaultSortBy]);
+  const params: PaginationParams = useMemo(
+    () => ({
+      offset: Number.parseInt(searchParams.get('offset') ?? '0', 10),
+      limit: Number.parseInt(
+        searchParams.get('limit') ?? String(DEFAULT_LIMIT),
+        10,
+      ),
+      sort_by: searchParams.get('sort_by') ?? defaultSortBy,
+      sort_dir: (searchParams.get('sort_dir') as 'asc' | 'desc') ?? 'desc',
+      q: searchParams.get('q') ?? undefined,
+      include_retired: searchParams.get('include_retired') === 'true',
+    }),
+    [searchParams, defaultSortBy],
+  );
 
-  const paginationModel: GridPaginationModel = useMemo(() => ({
-    page: Math.floor(params.offset / params.limit),
-    pageSize: params.limit,
-  }), [params.offset, params.limit]);
+  const paginationModel: GridPaginationModel = useMemo(
+    () => ({
+      page: Math.floor(params.offset / params.limit),
+      pageSize: params.limit,
+    }),
+    [params.offset, params.limit],
+  );
 
   const sortModel: GridSortModel = useMemo(() => {
     if (!params.sort_by) return [];
@@ -133,5 +142,10 @@ export function usePagination(defaultSort: UsePaginationOptions) {
     setSortModel(model);
   }, []);
 
-  return { paginationModel, onPaginationModelChange, sortModel, onSortModelChange };
+  return {
+    paginationModel,
+    onPaginationModelChange,
+    sortModel,
+    onSortModelChange,
+  };
 }

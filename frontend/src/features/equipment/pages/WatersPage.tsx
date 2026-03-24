@@ -1,18 +1,24 @@
-import { useState } from 'react';
-import { type GridColDef } from '@mui/x-data-grid';
-import { Button } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
-import PageHeader from '@/components/PageHeader';
-import DataTable from '@/components/DataTable';
 import ConfirmDialog from '@/components/ConfirmDialog';
-import { usePaginationParams } from '@/utils/pagination';
-import { waterHooks, type Water } from '../hooks';
-import WaterFormDialog from '../components/WaterFormDialog';
+import DataTable from '@/components/DataTable';
 import { useNotification } from '@/components/NotificationProvider';
+import PageHeader from '@/components/PageHeader';
+import { usePaginationParams } from '@/utils/pagination';
+import { Add as AddIcon } from '@mui/icons-material';
+import { Button } from '@mui/material';
+import type { GridColDef } from '@mui/x-data-grid';
+import { useState } from 'react';
+import WaterFormDialog from '../components/WaterFormDialog';
+import { type Water, waterHooks } from '../hooks';
 
 export default function WatersPage() {
-  const { params, paginationModel, sortModel, onPaginationModelChange, onSortModelChange, setIncludeRetired } =
-    usePaginationParams('name');
+  const {
+    params,
+    paginationModel,
+    sortModel,
+    onPaginationModelChange,
+    onSortModelChange,
+    setIncludeRetired,
+  } = usePaginationParams('name');
   const { data, isLoading } = waterHooks.useList(params);
   const deleteWater = waterHooks.useDelete();
   const { notify } = useNotification();
@@ -60,7 +66,10 @@ export default function WatersPage() {
           <Button
             variant="contained"
             startIcon={<AddIcon />}
-            onClick={() => { setEditWater(null); setFormOpen(true); }}
+            onClick={() => {
+              setEditWater(null);
+              setFormOpen(true);
+            }}
           >
             Add Water
           </Button>
@@ -77,10 +86,16 @@ export default function WatersPage() {
         onSortModelChange={onSortModelChange}
         includeRetired={params.include_retired}
         onIncludeRetiredChange={setIncludeRetired}
-        onRowClick={(row) => { setEditWater(row); setFormOpen(true); }}
+        onRowClick={(row) => {
+          setEditWater(row);
+          setFormOpen(true);
+        }}
         emptyTitle="No waters yet"
         emptyActionLabel="Add Water"
-        onEmptyAction={() => { setEditWater(null); setFormOpen(true); }}
+        onEmptyAction={() => {
+          setEditWater(null);
+          setFormOpen(true);
+        }}
       />
       <WaterFormDialog
         open={formOpen}

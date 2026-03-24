@@ -1,12 +1,23 @@
-// frontend/src/components/AutocompleteCreate.tsx
-import { useState, type ReactNode } from 'react';
 import {
-  Autocomplete, Chip, Dialog, DialogTitle, DialogContent, TextField,
-  createFilterOptions, type AutocompleteRenderGetTagProps, type FilterOptionsState,
+  Autocomplete,
+  type AutocompleteRenderGetTagProps,
+  Chip,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  type FilterOptionsState,
+  TextField,
+  createFilterOptions,
 } from '@mui/material';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+// frontend/src/components/AutocompleteCreate.tsx
+import { type ReactNode, useState } from 'react';
 
-interface OptionType { id: string; name: string; inputValue?: string; }
+interface OptionType {
+  id: string;
+  name: string;
+  inputValue?: string;
+}
 
 const filter = createFilterOptions<OptionType>();
 
@@ -17,15 +28,27 @@ interface AutocompleteCreateProps<T extends OptionType> {
   value: T | T[] | null;
   onChange: (value: T | T[] | null) => void;
   multiple?: boolean;
-  renderCreateForm?: (props: { onCreated: (item: T) => void; onCancel: () => void; initialName: string }) => ReactNode;
+  renderCreateForm?: (props: {
+    onCreated: (item: T) => void;
+    onCancel: () => void;
+    initialName: string;
+  }) => ReactNode;
   error?: boolean;
   helperText?: string;
   required?: boolean;
 }
 
 export default function AutocompleteCreate<T extends OptionType>({
-  label, queryKey, fetchFn, value, onChange, multiple = false,
-  renderCreateForm, error, helperText, required,
+  label,
+  queryKey,
+  fetchFn,
+  value,
+  onChange,
+  multiple = false,
+  renderCreateForm,
+  error,
+  helperText,
+  required,
 }: AutocompleteCreateProps<T>) {
   const [inputValue, setInputValue] = useState('');
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
@@ -58,7 +81,9 @@ export default function AutocompleteCreate<T extends OptionType>({
         freeSolo
         options={options}
         loading={isLoading}
-        getOptionLabel={(option) => (typeof option === 'string' ? option : option.name)}
+        getOptionLabel={(option) =>
+          typeof option === 'string' ? option : option.name
+        }
         isOptionEqualToValue={(option, val) => option.id === val.id}
         value={value as T & T[]}
         inputValue={inputValue}
@@ -75,38 +100,77 @@ export default function AutocompleteCreate<T extends OptionType>({
               return;
             }
             onChange(newValue.filter((v) => typeof v !== 'string') as T[]);
-          } else if (newValue && typeof newValue !== 'string' && 'inputValue' in newValue && newValue.inputValue && renderCreateForm) {
+          } else if (
+            newValue &&
+            typeof newValue !== 'string' &&
+            'inputValue' in newValue &&
+            newValue.inputValue &&
+            renderCreateForm
+          ) {
             setPendingName(newValue.inputValue);
             setCreateDialogOpen(true);
           } else {
-            onChange(typeof newValue === 'string' ? null : (newValue as T | null));
+            onChange(
+              typeof newValue === 'string' ? null : (newValue as T | null),
+            );
           }
         }}
         filterOptions={(opts, params) => {
-          const filtered = filter(opts as OptionType[], params as FilterOptionsState<OptionType>) as T[];
-          if (renderCreateForm && params.inputValue !== '' && !opts.some((o) => o.name === params.inputValue)) {
-            filtered.push({ id: '', name: `+ Create "${params.inputValue}"`, inputValue: params.inputValue } as T);
+          const filtered = filter(
+            opts as OptionType[],
+            params as FilterOptionsState<OptionType>,
+          ) as T[];
+          if (
+            renderCreateForm &&
+            params.inputValue !== '' &&
+            !opts.some((o) => o.name === params.inputValue)
+          ) {
+            filtered.push({
+              id: '',
+              name: `+ Create "${params.inputValue}"`,
+              inputValue: params.inputValue,
+            } as T);
           }
           return filtered;
         }}
         renderInput={(params) => (
-          <TextField {...params} label={label} error={error} helperText={helperText} required={required} />
+          <TextField
+            {...params}
+            label={label}
+            error={error}
+            helperText={helperText}
+            required={required}
+          />
         )}
         renderTags={
           multiple
             ? (tagValues: T[], getTagProps: AutocompleteRenderGetTagProps) =>
                 tagValues.map((option, index) => {
                   const { key, ...rest } = getTagProps({ index });
-                  return <Chip key={key} label={option.name} size="small" {...rest} />;
+                  return (
+                    <Chip
+                      key={key}
+                      label={option.name}
+                      size="small"
+                      {...rest}
+                    />
+                  );
                 })
             : undefined
         }
       />
       {renderCreateForm && (
-        <Dialog open={createDialogOpen} onClose={() => setCreateDialogOpen(false)}>
+        <Dialog
+          open={createDialogOpen}
+          onClose={() => setCreateDialogOpen(false)}
+        >
           <DialogTitle>Create {label}</DialogTitle>
           <DialogContent>
-            {renderCreateForm({ onCreated: handleCreated, onCancel: () => setCreateDialogOpen(false), initialName: pendingName })}
+            {renderCreateForm({
+              onCreated: handleCreated,
+              onCancel: () => setCreateDialogOpen(false),
+              initialName: pendingName,
+            })}
           </DialogContent>
         </Dialog>
       )}

@@ -1,16 +1,27 @@
-import { Box, Divider, List, ListItem, ListItemText, Typography } from '@mui/material';
-import { Coffee as CoffeeIcon, LocalCafe as LocalCafeIcon, AutoFixHigh as OptimizeIcon } from '@mui/icons-material';
-import { useNavigate } from 'react-router';
-import StatsCard from '@/components/StatsCard';
 import PageHeader from '@/components/PageHeader';
+import StatsCard from '@/components/StatsCard';
 import { useCampaigns } from '@/features/optimize/hooks';
 import {
-  useBrewStats,
+  Coffee as CoffeeIcon,
+  LocalCafe as LocalCafeIcon,
+  AutoFixHigh as OptimizeIcon,
+} from '@mui/icons-material';
+import {
+  Box,
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+} from '@mui/material';
+import { useNavigate } from 'react-router';
+import {
   useBeanStats,
-  useTasteStats,
-  useEquipmentStats,
+  useBrewStats,
   useCuppingStats,
+  useEquipmentStats,
   useRecentBrews,
+  useTasteStats,
 } from './hooks';
 
 function formatRelativeTime(dateStr: string): string {
@@ -38,7 +49,11 @@ function StatRow({ children }: { children: React.ReactNode }) {
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <Typography variant="overline" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+    <Typography
+      variant="overline"
+      color="text.secondary"
+      sx={{ mb: 1, display: 'block' }}
+    >
       {children}
     </Typography>
   );
@@ -48,14 +63,18 @@ export default function DashboardPage() {
   const { data: brewStats, isLoading: brewLoading } = useBrewStats();
   const { data: beanStats, isLoading: beanLoading } = useBeanStats();
   const { data: tasteStats, isLoading: tasteLoading } = useTasteStats();
-  const { data: equipmentStats, isLoading: equipmentLoading } = useEquipmentStats();
+  const { data: equipmentStats, isLoading: equipmentLoading } =
+    useEquipmentStats();
   const { data: cuppingStats, isLoading: cuppingLoading } = useCuppingStats();
   const { data: recentBrews, isLoading: recentLoading } = useRecentBrews();
   const { data: campaigns } = useCampaigns();
   const navigate = useNavigate();
   const activeCampaigns = campaigns?.length ?? 0;
   const bestOverall = campaigns?.reduce(
-    (best, c) => (c.best_score != null && (best == null || c.best_score > best) ? c.best_score : best),
+    (best, c) =>
+      c.best_score != null && (best == null || c.best_score > best)
+        ? c.best_score
+        : best,
     null as number | null,
   );
 
@@ -65,7 +84,9 @@ export default function DashboardPage() {
       : null;
 
   const avgDoseDisplay =
-    brewStats?.avg_dose_g != null ? `${brewStats.avg_dose_g.toFixed(1)}g` : null;
+    brewStats?.avg_dose_g != null
+      ? `${brewStats.avg_dose_g.toFixed(1)}g`
+      : null;
 
   return (
     <>
@@ -177,7 +198,11 @@ export default function DashboardPage() {
       <SectionLabel>Optimization</SectionLabel>
       <StatRow>
         <Box onClick={() => navigate('/optimize')} sx={{ cursor: 'pointer' }}>
-          <StatsCard label="Active Campaigns" value={activeCampaigns} icon={<OptimizeIcon />} />
+          <StatsCard
+            label="Active Campaigns"
+            value={activeCampaigns}
+            icon={<OptimizeIcon />}
+          />
         </Box>
         <StatsCard label="Best Score" value={bestOverall?.toFixed(1) ?? '—'} />
       </StatRow>
@@ -188,7 +213,9 @@ export default function DashboardPage() {
         Recent Brews
       </Typography>
       {recentLoading ? (
-        <Typography variant="body2" color="text.secondary">Loading...</Typography>
+        <Typography variant="body2" color="text.secondary">
+          Loading...
+        </Typography>
       ) : recentBrews?.items?.length ? (
         <List disablePadding>
           {recentBrews.items.map((brew) => (
@@ -199,11 +226,19 @@ export default function DashboardPage() {
                     <Typography variant="body1" component="span">
                       {brew.bean_name}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary" component="span">
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      component="span"
+                    >
                       · {brew.brew_method_name}
                     </Typography>
                     {brew.score != null && (
-                      <Typography variant="body2" color="text.secondary" component="span">
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        component="span"
+                      >
                         · {brew.score.toFixed(1)}
                       </Typography>
                     )}
@@ -215,7 +250,9 @@ export default function DashboardPage() {
           ))}
         </List>
       ) : (
-        <Typography variant="body2" color="text.secondary">No brews yet.</Typography>
+        <Typography variant="body2" color="text.secondary">
+          No brews yet.
+        </Typography>
       )}
     </>
   );

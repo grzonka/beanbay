@@ -1,18 +1,34 @@
-import { useState, useEffect } from 'react';
-import {
-  Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack,
-  TextField, Typography, Box, Slider, FormControlLabel, Switch,
-} from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
+import apiClient from '@/api/client';
 import AutocompleteCreate from '@/components/AutocompleteCreate';
 import FlavorTagSelect from '@/components/FlavorTagSelect';
-import apiClient from '@/api/client';
 import { useNotification } from '@/components/NotificationProvider';
-import { useCreateCupping, useUpdateCupping, type Cupping } from '../hooks';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
+  Slider,
+  Stack,
+  Switch,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import { type Cupping, useCreateCupping, useUpdateCupping } from '../hooks';
 
-interface OptionItem { id: string; name: string; }
+interface OptionItem {
+  id: string;
+  name: string;
+}
 
-interface FlavorTag { id: string; name: string; }
+interface FlavorTag {
+  id: string;
+  name: string;
+}
 
 interface CuppingFormDialogProps {
   open: boolean;
@@ -33,7 +49,7 @@ const SCAA_AXES = [
   { key: 'uniformity', label: 'Uniformity' },
 ] as const;
 
-type ScaaKey = typeof SCAA_AXES[number]['key'];
+type ScaaKey = (typeof SCAA_AXES)[number]['key'];
 
 type ScaaScores = Record<ScaaKey, number>;
 
@@ -56,8 +72,14 @@ function calcAutoTotal(scores: ScaaScores, correction: number): number {
 }
 
 function CreatePersonForm({
-  initialName, onCreated, onCancel,
-}: { initialName: string; onCreated: (item: OptionItem) => void; onCancel: () => void; }) {
+  initialName,
+  onCreated,
+  onCancel,
+}: {
+  initialName: string;
+  onCreated: (item: OptionItem) => void;
+  onCancel: () => void;
+}) {
   const [name, setName] = useState(initialName);
   const { notify } = useNotification();
 
@@ -69,16 +91,32 @@ function CreatePersonForm({
 
   return (
     <Stack spacing={2} sx={{ pt: 1 }}>
-      <TextField label="Name" value={name} onChange={(e) => setName(e.target.value)} required autoFocus />
+      <TextField
+        label="Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        required
+        autoFocus
+      />
       <Stack direction="row" spacing={1} justifyContent="flex-end">
         <Button onClick={onCancel}>Cancel</Button>
-        <Button variant="contained" onClick={handleSubmit} disabled={!name.trim()}>Create</Button>
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          disabled={!name.trim()}
+        >
+          Create
+        </Button>
       </Stack>
     </Stack>
   );
 }
 
-export default function CuppingFormDialog({ open, onClose, cupping }: CuppingFormDialogProps) {
+export default function CuppingFormDialog({
+  open,
+  onClose,
+  cupping,
+}: CuppingFormDialogProps) {
   const isEdit = !!cupping;
   const create = useCreateCupping();
   const update = useUpdateCupping();
@@ -101,7 +139,7 @@ export default function CuppingFormDialog({ open, onClose, cupping }: CuppingFor
     queryKey: ['bags', cupping?.bag_id, 'resolve'],
     queryFn: async () => {
       const [bagRes, beansRes] = await Promise.all([
-        apiClient.get(`/bags/${cupping!.bag_id}`),
+        apiClient.get(`/bags/${cupping?.bag_id}`),
         apiClient.get('/beans', { params: { limit: 200 } }),
       ]);
       const beanMap = new Map();
@@ -152,7 +190,9 @@ export default function CuppingFormDialog({ open, onClose, cupping }: CuppingFor
       setManualTotal(false);
       setTotalScore(cupping.total_score ?? 0);
       setNotes(cupping.notes ?? '');
-      setFlavorTags(cupping.flavor_tags.map((t) => ({ id: t.id, name: t.name })));
+      setFlavorTags(
+        cupping.flavor_tags.map((t) => ({ id: t.id, name: t.name })),
+      );
     } else {
       setBag(null);
       setPerson(null);
@@ -183,7 +223,7 @@ export default function CuppingFormDialog({ open, onClose, cupping }: CuppingFor
 
   const handleSubmit = async () => {
     if (isEdit) {
-      await update.mutateAsync({ id: cupping!.id, ...buildBody() });
+      await update.mutateAsync({ id: cupping?.id, ...buildBody() });
       notify('Cupping updated');
     } else {
       await create.mutateAsync(buildBody());
@@ -215,12 +255,15 @@ export default function CuppingFormDialog({ open, onClose, cupping }: CuppingFor
               return {
                 ...data,
                 items: data.items.map((bag: any) => {
-                  const beanName = beanMap.get(bag.bean_id) ?? `Bag ${bag.id.slice(0, 8)}`;
+                  const beanName =
+                    beanMap.get(bag.bean_id) ?? `Bag ${bag.id.slice(0, 8)}`;
                   const weightStr = bag.weight != null ? `${bag.weight}g` : '';
                   const dateStr = bag.roast_date ? ` (${bag.roast_date})` : '';
                   return {
                     ...bag,
-                    name: [beanName, weightStr].filter(Boolean).join(' — ') + dateStr,
+                    name:
+                      [beanName, weightStr].filter(Boolean).join(' — ') +
+                      dateStr,
                   };
                 }),
               };
@@ -234,7 +277,9 @@ export default function CuppingFormDialog({ open, onClose, cupping }: CuppingFor
             label="Person"
             queryKey={['people']}
             fetchFn={async (q) => {
-              const { data } = await apiClient.get('/people', { params: { q, limit: 50 } });
+              const { data } = await apiClient.get('/people', {
+                params: { q, limit: 50 },
+              });
               return data;
             }}
             value={person}
@@ -257,14 +302,22 @@ export default function CuppingFormDialog({ open, onClose, cupping }: CuppingFor
 
           {SCAA_AXES.map(({ key, label }) => (
             <Box key={key}>
-              <Stack direction="row" justifyContent="space-between" alignItems="center">
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+              >
                 <Typography variant="body2">{label}</Typography>
-                <Typography variant="body2" fontWeight="bold">{scores[key].toFixed(1)}</Typography>
+                <Typography variant="body2" fontWeight="bold">
+                  {scores[key].toFixed(1)}
+                </Typography>
               </Stack>
               <Slider
                 value={scores[key]}
                 onChange={(_, v) => handleScoreChange(key, v as number)}
-                min={0} max={9} step={0.5}
+                min={0}
+                max={9}
+                step={0.5}
                 valueLabelDisplay="auto"
                 size="small"
               />
@@ -280,9 +333,14 @@ export default function CuppingFormDialog({ open, onClose, cupping }: CuppingFor
           />
 
           <Box>
-            <Stack direction="row" justifyContent="space-between" alignItems="center">
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+            >
               <Typography variant="body2" fontWeight="bold">
-                Total Score: {manualTotal ? totalScore.toFixed(2) : autoTotal.toFixed(2)}
+                Total Score:{' '}
+                {manualTotal ? totalScore.toFixed(2) : autoTotal.toFixed(2)}
               </Typography>
               <FormControlLabel
                 control={
@@ -318,13 +376,20 @@ export default function CuppingFormDialog({ open, onClose, cupping }: CuppingFor
             label="Notes"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            multiline rows={3}
+            multiline
+            rows={3}
           />
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} disabled={isPending}>Cancel</Button>
-        <Button variant="contained" onClick={handleSubmit} disabled={!isValid || isPending}>
+        <Button onClick={onClose} disabled={isPending}>
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          disabled={!isValid || isPending}
+        >
           {isEdit ? 'Save' : 'Create'}
         </Button>
       </DialogActions>

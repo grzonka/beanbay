@@ -1,20 +1,23 @@
-import { useState } from 'react';
-import { type GridColDef } from '@mui/x-data-grid';
-import { Button } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
-import { useQuery } from '@tanstack/react-query';
-import PageHeader from '@/components/PageHeader';
-import DataTable from '@/components/DataTable';
-import { usePaginationParams } from '@/utils/pagination';
-import { fmtDateTime } from '@/utils/date';
-import { useCuppings, type Cupping } from '../hooks';
-import CuppingFormDialog from '../components/CuppingFormDialog';
 import apiClient from '@/api/client';
+import DataTable from '@/components/DataTable';
+import PageHeader from '@/components/PageHeader';
+import { fmtDateTime } from '@/utils/date';
+import { usePaginationParams } from '@/utils/pagination';
+import { Add as AddIcon } from '@mui/icons-material';
+import { Button } from '@mui/material';
+import type { GridColDef } from '@mui/x-data-grid';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import CuppingFormDialog from '../components/CuppingFormDialog';
+import { type Cupping, useCuppings } from '../hooks';
 
 export default function CuppingsListPage() {
   const {
-    params, paginationModel, sortModel,
-    onPaginationModelChange, onSortModelChange,
+    params,
+    paginationModel,
+    sortModel,
+    onPaginationModelChange,
+    onSortModelChange,
     setIncludeRetired,
   } = usePaginationParams('cupped_at');
 
@@ -31,7 +34,9 @@ export default function CuppingsListPage() {
   const { data: beansData } = useQuery({
     queryKey: ['beans', 'all'],
     queryFn: async () => {
-      const { data } = await apiClient.get('/beans', { params: { limit: 200 } });
+      const { data } = await apiClient.get('/beans', {
+        params: { limit: 200 },
+      });
       return data;
     },
   });
@@ -56,7 +61,7 @@ export default function CuppingsListPage() {
       field: 'total_score',
       headerName: 'Total Score',
       width: 130,
-      renderCell: (p) => p.value != null ? p.value.toFixed(2) : '—',
+      renderCell: (p) => (p.value != null ? p.value.toFixed(2) : '—'),
     },
     {
       field: 'cupped_at',
@@ -96,10 +101,7 @@ export default function CuppingsListPage() {
         emptyActionLabel="Add Cupping"
         onEmptyAction={() => setFormOpen(true)}
       />
-      <CuppingFormDialog
-        open={formOpen}
-        onClose={() => setFormOpen(false)}
-      />
+      <CuppingFormDialog open={formOpen} onClose={() => setFormOpen(false)} />
     </>
   );
 }

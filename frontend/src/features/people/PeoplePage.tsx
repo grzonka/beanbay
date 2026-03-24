@@ -1,19 +1,30 @@
+import ConfirmDialog from '@/components/ConfirmDialog';
+import DataTable from '@/components/DataTable';
+import { useNotification } from '@/components/NotificationProvider';
+import PageHeader from '@/components/PageHeader';
+import { usePaginationParams } from '@/utils/pagination';
+import { Add as AddIcon } from '@mui/icons-material';
+import { Button, Chip } from '@mui/material';
+import type { GridColDef } from '@mui/x-data-grid';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { type GridColDef } from '@mui/x-data-grid';
-import { Button, Chip } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
-import PageHeader from '@/components/PageHeader';
-import DataTable from '@/components/DataTable';
-import ConfirmDialog from '@/components/ConfirmDialog';
-import { usePaginationParams } from '@/utils/pagination';
-import { usePeople, useDeletePerson, useUpdatePerson, type Person } from './hooks';
 import PersonFormDialog from './PersonFormDialog';
-import { useNotification } from '@/components/NotificationProvider';
+import {
+  type Person,
+  useDeletePerson,
+  usePeople,
+  useUpdatePerson,
+} from './hooks';
 
 export default function PeoplePage() {
-  const { params, paginationModel, sortModel, onPaginationModelChange, onSortModelChange, setIncludeRetired } =
-    usePaginationParams('name');
+  const {
+    params,
+    paginationModel,
+    sortModel,
+    onPaginationModelChange,
+    onSortModelChange,
+    setIncludeRetired,
+  } = usePaginationParams('name');
   const { data, isLoading } = usePeople(params);
   const deletePerson = useDeletePerson();
   const { notify } = useNotification();
@@ -46,24 +57,51 @@ export default function PeoplePage() {
   const columns: GridColDef[] = [
     { field: 'name', headerName: 'Name', flex: 1, minWidth: 150 },
     {
-      field: 'is_default', headerName: 'Default', width: 100,
-      renderCell: (params) => params.value ? <Chip label="Default" size="small" color="primary" /> : null,
+      field: 'is_default',
+      headerName: 'Default',
+      width: 100,
+      renderCell: (params) =>
+        params.value ? (
+          <Chip label="Default" size="small" color="primary" />
+        ) : null,
     },
   ];
 
   return (
     <>
-      <PageHeader title="People"
-        actions={<Button variant="contained" startIcon={<AddIcon />} onClick={() => { setEditPerson(null); setFormOpen(true); }}>Add Person</Button>}
+      <PageHeader
+        title="People"
+        actions={
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => {
+              setEditPerson(null);
+              setFormOpen(true);
+            }}
+          >
+            Add Person
+          </Button>
+        }
       />
       <DataTable<Person>
-        columns={columns} rows={data?.items ?? []} total={data?.total ?? 0} loading={isLoading}
-        paginationModel={paginationModel} onPaginationModelChange={onPaginationModelChange}
-        sortModel={sortModel} onSortModelChange={onSortModelChange}
-        includeRetired={params.include_retired} onIncludeRetiredChange={setIncludeRetired}
+        columns={columns}
+        rows={data?.items ?? []}
+        total={data?.total ?? 0}
+        loading={isLoading}
+        paginationModel={paginationModel}
+        onPaginationModelChange={onPaginationModelChange}
+        sortModel={sortModel}
+        onSortModelChange={onSortModelChange}
+        includeRetired={params.include_retired}
+        onIncludeRetiredChange={setIncludeRetired}
         onRowClick={(row) => navigate(`/people/${row.id}/preferences`)}
-        emptyTitle="No people yet" emptyActionLabel="Add Person"
-        onEmptyAction={() => { setEditPerson(null); setFormOpen(true); }}
+        emptyTitle="No people yet"
+        emptyActionLabel="Add Person"
+        onEmptyAction={() => {
+          setEditPerson(null);
+          setFormOpen(true);
+        }}
       />
       <PersonFormDialog
         open={formOpen}
@@ -72,9 +110,13 @@ export default function PeoplePage() {
         onRetire={editPerson ? () => setRetireTarget(editPerson) : undefined}
         onActivate={editPerson?.retired_at ? handleActivate : undefined}
       />
-      <ConfirmDialog open={!!retireTarget} title="Retire Person"
+      <ConfirmDialog
+        open={!!retireTarget}
+        title="Retire Person"
         message={`Retire "${retireTarget?.name}"? This won't delete their brews or ratings.`}
-        onConfirm={handleRetire} onCancel={() => setRetireTarget(null)} />
+        onConfirm={handleRetire}
+        onCancel={() => setRetireTarget(null)}
+      />
     </>
   );
 }

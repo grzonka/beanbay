@@ -1,6 +1,6 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import apiClient from '@/api/client';
 import type { PaginationParams } from '@/utils/pagination';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 // Paper interfaces
 export interface Paper {
@@ -115,7 +115,10 @@ function createEquipmentHooks<T>(endpoint: string, queryKey: string) {
     useUpdate: () => {
       const qc = useQueryClient();
       return useMutation({
-        mutationFn: async ({ id, ...body }: { id: string; [key: string]: unknown }) => {
+        mutationFn: async ({
+          id,
+          ...body
+        }: { id: string; [key: string]: unknown }) => {
           const { data } = await apiClient.patch(`/${endpoint}/${id}`, body);
           return data as T;
         },
@@ -136,5 +139,8 @@ function createEquipmentHooks<T>(endpoint: string, queryKey: string) {
 
 export const paperHooks = createEquipmentHooks<Paper>('papers', 'papers');
 export const waterHooks = createEquipmentHooks<Water>('waters', 'waters');
-export const grinderHooks = createEquipmentHooks<Grinder>('grinders', 'grinders');
+export const grinderHooks = createEquipmentHooks<Grinder>(
+  'grinders',
+  'grinders',
+);
 export const brewerHooks = createEquipmentHooks<Brewer>('brewers', 'brewers');

@@ -1,8 +1,19 @@
-import { useState, useEffect } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from '@mui/material';
-import { Archive as ArchiveIcon, RestoreFromTrash as RestoreFromTrashIcon } from '@mui/icons-material';
-import { paperHooks, type Paper } from '../hooks';
 import { useNotification } from '@/components/NotificationProvider';
+import {
+  Archive as ArchiveIcon,
+  RestoreFromTrash as RestoreFromTrashIcon,
+} from '@mui/icons-material';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Stack,
+  TextField,
+} from '@mui/material';
+import { useEffect, useState } from 'react';
+import { type Paper, paperHooks } from '../hooks';
 
 interface PaperFormDialogProps {
   open: boolean;
@@ -12,7 +23,13 @@ interface PaperFormDialogProps {
   onActivate?: () => void;
 }
 
-export default function PaperFormDialog({ open, onClose, paper, onRetire, onActivate }: PaperFormDialogProps) {
+export default function PaperFormDialog({
+  open,
+  onClose,
+  paper,
+  onRetire,
+  onActivate,
+}: PaperFormDialogProps) {
   const [name, setName] = useState('');
   const [notes, setNotes] = useState('');
   const isEdit = !!paper;
@@ -32,7 +49,7 @@ export default function PaperFormDialog({ open, onClose, paper, onRetire, onActi
 
   const handleSubmit = async () => {
     if (isEdit) {
-      await update.mutateAsync({ id: paper!.id, name, notes: notes || null });
+      await update.mutateAsync({ id: paper?.id, name, notes: notes || null });
       notify('Paper updated');
     } else {
       await create.mutateAsync({ name, notes: notes || null });
@@ -64,13 +81,31 @@ export default function PaperFormDialog({ open, onClose, paper, onRetire, onActi
       </DialogContent>
       <DialogActions>
         {isEdit && paper?.retired_at && onActivate && (
-          <Button color="success" onClick={onActivate} sx={{ mr: 'auto' }} startIcon={<RestoreFromTrashIcon />}>Activate</Button>
+          <Button
+            color="success"
+            onClick={onActivate}
+            sx={{ mr: 'auto' }}
+            startIcon={<RestoreFromTrashIcon />}
+          >
+            Activate
+          </Button>
         )}
         {isEdit && !paper?.retired_at && onRetire && (
-          <Button color="warning" onClick={onRetire} sx={{ mr: 'auto' }} startIcon={<ArchiveIcon />}>Retire</Button>
+          <Button
+            color="warning"
+            onClick={onRetire}
+            sx={{ mr: 'auto' }}
+            startIcon={<ArchiveIcon />}
+          >
+            Retire
+          </Button>
         )}
         <Button onClick={onClose}>Cancel</Button>
-        <Button variant="contained" onClick={handleSubmit} disabled={!name.trim()}>
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          disabled={!name.trim()}
+        >
           {isEdit ? 'Save' : 'Create'}
         </Button>
       </DialogActions>

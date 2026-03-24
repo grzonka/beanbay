@@ -1,4 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useNotification } from '@/components/NotificationProvider';
+import {
+  Add as AddIcon,
+  Archive as ArchiveIcon,
+  Delete as DeleteIcon,
+  RestoreFromTrash as RestoreFromTrashIcon,
+} from '@mui/icons-material';
 import {
   Button,
   Dialog,
@@ -14,9 +20,8 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Add as AddIcon, Archive as ArchiveIcon, Delete as DeleteIcon, RestoreFromTrash as RestoreFromTrashIcon } from '@mui/icons-material';
-import { grinderHooks, type Grinder, type RingConfig } from '../hooks';
-import { useNotification } from '@/components/NotificationProvider';
+import { useEffect, useState } from 'react';
+import { type Grinder, type RingConfig, grinderHooks } from '../hooks';
 
 interface GrinderFormDialogProps {
   open: boolean;
@@ -28,7 +33,13 @@ interface GrinderFormDialogProps {
 
 const emptyRing = (): RingConfig => ({ label: '', min: 0, max: 100, step: 1 });
 
-export default function GrinderFormDialog({ open, onClose, grinder, onRetire, onActivate }: GrinderFormDialogProps) {
+export default function GrinderFormDialog({
+  open,
+  onClose,
+  grinder,
+  onRetire,
+  onActivate,
+}: GrinderFormDialogProps) {
   const [name, setName] = useState('');
   const [dialType, setDialType] = useState('stepless');
   const [rings, setRings] = useState<RingConfig[]>([emptyRing()]);
@@ -54,7 +65,11 @@ export default function GrinderFormDialog({ open, onClose, grinder, onRetire, on
   const handleRemoveRing = (index: number) =>
     setRings((prev) => prev.filter((_, i) => i !== index));
 
-  const handleRingChange = (index: number, field: keyof RingConfig, value: string | number) =>
+  const handleRingChange = (
+    index: number,
+    field: keyof RingConfig,
+    value: string | number,
+  ) =>
     setRings((prev) =>
       prev.map((ring, i) => (i === index ? { ...ring, [field]: value } : ring)),
     );
@@ -66,7 +81,7 @@ export default function GrinderFormDialog({ open, onClose, grinder, onRetire, on
       rings,
     };
     if (isEdit) {
-      await update.mutateAsync({ id: grinder!.id, ...body });
+      await update.mutateAsync({ id: grinder?.id, ...body });
       notify('Grinder updated');
     } else {
       await create.mutateAsync(body);
@@ -99,18 +114,33 @@ export default function GrinderFormDialog({ open, onClose, grinder, onRetire, on
             </Select>
           </FormControl>
           <Stack spacing={1}>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+            >
               <Typography variant="subtitle2">Ring Configurations</Typography>
-              <IconButton size="small" onClick={handleAddRing} aria-label="Add ring">
+              <IconButton
+                size="small"
+                onClick={handleAddRing}
+                aria-label="Add ring"
+              >
                 <AddIcon fontSize="small" />
               </IconButton>
             </Stack>
             {rings.map((ring, index) => (
-              <Stack key={index} direction="row" spacing={1} alignItems="center">
+              <Stack
+                key={index}
+                direction="row"
+                spacing={1}
+                alignItems="center"
+              >
                 <TextField
                   label="Label"
                   value={ring.label}
-                  onChange={(e) => handleRingChange(index, 'label', e.target.value)}
+                  onChange={(e) =>
+                    handleRingChange(index, 'label', e.target.value)
+                  }
                   size="small"
                   sx={{ flex: 2 }}
                 />
@@ -118,7 +148,9 @@ export default function GrinderFormDialog({ open, onClose, grinder, onRetire, on
                   label="Min"
                   type="number"
                   value={ring.min}
-                  onChange={(e) => handleRingChange(index, 'min', Number(e.target.value))}
+                  onChange={(e) =>
+                    handleRingChange(index, 'min', Number(e.target.value))
+                  }
                   size="small"
                   sx={{ flex: 1 }}
                 />
@@ -126,7 +158,9 @@ export default function GrinderFormDialog({ open, onClose, grinder, onRetire, on
                   label="Max"
                   type="number"
                   value={ring.max}
-                  onChange={(e) => handleRingChange(index, 'max', Number(e.target.value))}
+                  onChange={(e) =>
+                    handleRingChange(index, 'max', Number(e.target.value))
+                  }
                   size="small"
                   sx={{ flex: 1 }}
                 />
@@ -134,7 +168,9 @@ export default function GrinderFormDialog({ open, onClose, grinder, onRetire, on
                   label="Step"
                   type="number"
                   value={ring.step}
-                  onChange={(e) => handleRingChange(index, 'step', Number(e.target.value))}
+                  onChange={(e) =>
+                    handleRingChange(index, 'step', Number(e.target.value))
+                  }
                   size="small"
                   sx={{ flex: 1 }}
                 />
@@ -153,13 +189,31 @@ export default function GrinderFormDialog({ open, onClose, grinder, onRetire, on
       </DialogContent>
       <DialogActions>
         {isEdit && grinder?.retired_at && onActivate && (
-          <Button color="success" onClick={onActivate} sx={{ mr: 'auto' }} startIcon={<RestoreFromTrashIcon />}>Activate</Button>
+          <Button
+            color="success"
+            onClick={onActivate}
+            sx={{ mr: 'auto' }}
+            startIcon={<RestoreFromTrashIcon />}
+          >
+            Activate
+          </Button>
         )}
         {isEdit && !grinder?.retired_at && onRetire && (
-          <Button color="warning" onClick={onRetire} sx={{ mr: 'auto' }} startIcon={<ArchiveIcon />}>Retire</Button>
+          <Button
+            color="warning"
+            onClick={onRetire}
+            sx={{ mr: 'auto' }}
+            startIcon={<ArchiveIcon />}
+          >
+            Retire
+          </Button>
         )}
         <Button onClick={onClose}>Cancel</Button>
-        <Button variant="contained" onClick={handleSubmit} disabled={!name.trim()}>
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          disabled={!name.trim()}
+        >
           {isEdit ? 'Save' : 'Create'}
         </Button>
       </DialogActions>

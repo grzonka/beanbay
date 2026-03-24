@@ -1,7 +1,13 @@
-// frontend/src/features/brews/components/BrewWizard.tsx
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
-import { useQuery } from '@tanstack/react-query';
+import apiClient from '@/api/client';
+import { useNotification } from '@/components/NotificationProvider';
+import type { Grinder } from '@/features/equipment/hooks';
+import SuggestButton from '@/features/optimize/components/SuggestButton';
+import {
+  type Recommendation,
+  useLinkRecommendation,
+  useSuggest,
+} from '@/features/optimize/hooks';
+import { validateGrindDisplay } from '@/utils/grindValidation';
 import {
   Box,
   Button,
@@ -11,15 +17,13 @@ import {
   Stepper,
   Typography,
 } from '@mui/material';
-import { useNotification } from '@/components/NotificationProvider';
-import apiClient from '@/api/client';
-import { validateGrindDisplay } from '@/utils/grindValidation';
-import type { Grinder } from '@/features/equipment/hooks';
-import SuggestButton from '@/features/optimize/components/SuggestButton';
-import { useLinkRecommendation, useSuggest, type Recommendation } from '@/features/optimize/hooks';
+import { useQuery } from '@tanstack/react-query';
+// frontend/src/features/brews/components/BrewWizard.tsx
+import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { useCreateBrew } from '../hooks';
-import BrewStepSetup, { type SetupData } from './BrewStepSetup';
 import BrewStepParams, { type ParamsData } from './BrewStepParams';
+import BrewStepSetup, { type SetupData } from './BrewStepSetup';
 import BrewStepTaste, { type TasteData } from './BrewStepTaste';
 
 const STEPS = ['Setup', 'Parameters', 'Taste'];
@@ -124,11 +128,14 @@ export default function BrewWizard() {
     const patch: Partial<ParamsData> = {};
     if (vals.temperature != null) patch.temperature = String(vals.temperature);
     if (vals.dose != null) patch.dose = String(vals.dose);
-    if (vals.yield_amount != null) patch.yield_amount = String(vals.yield_amount);
+    if (vals.yield_amount != null)
+      patch.yield_amount = String(vals.yield_amount);
     if (vals.pressure != null) patch.pressure = String(vals.pressure);
     if (vals.flow_rate != null) patch.flow_rate = String(vals.flow_rate);
-    if (vals.pre_infusion_time != null) patch.pre_infusion_time = String(vals.pre_infusion_time);
-    if (vals.grind_setting_display != null) patch.grind_setting_display = String(vals.grind_setting_display);
+    if (vals.pre_infusion_time != null)
+      patch.pre_infusion_time = String(vals.pre_infusion_time);
+    if (vals.grind_setting_display != null)
+      patch.grind_setting_display = String(vals.grind_setting_display);
     if (vals.total_time != null) patch.total_time = String(vals.total_time);
     // bloom_weight and other non-ParamsData fields are intentionally skipped
     patchParams(patch);
@@ -168,9 +175,7 @@ export default function BrewWizard() {
     grindValidationError === null;
 
   const canNext =
-    activeStep === 0 ? step0Valid :
-    activeStep === 1 ? step1Valid :
-    true;
+    activeStep === 0 ? step0Valid : activeStep === 1 ? step1Valid : true;
 
   const handleNext = () => setActiveStep((s) => s + 1);
   const handleBack = () => setActiveStep((s) => s - 1);
@@ -179,20 +184,24 @@ export default function BrewWizard() {
     const { setup, params, taste } = state;
 
     const body: Record<string, unknown> = {
-      bag_id: setup.bag!.id,
-      brew_setup_id: setup.brew_setup!.id,
-      person_id: setup.person!.id,
+      bag_id: setup.bag?.id,
+      brew_setup_id: setup.brew_setup?.id,
+      person_id: setup.person?.id,
       dose: Number(params.dose),
       is_failed: params.is_failed,
       brewed_at: params.brewed_at || null,
     };
 
-    if (params.grind_setting_display.trim()) body.grind_setting_display = params.grind_setting_display.trim();
-    if (params.temperature.trim()) body.temperature = Number(params.temperature);
+    if (params.grind_setting_display.trim())
+      body.grind_setting_display = params.grind_setting_display.trim();
+    if (params.temperature.trim())
+      body.temperature = Number(params.temperature);
     if (params.pressure.trim()) body.pressure = Number(params.pressure);
     if (params.flow_rate.trim()) body.flow_rate = Number(params.flow_rate);
-    if (params.yield_amount.trim()) body.yield_amount = Number(params.yield_amount);
-    if (params.pre_infusion_time.trim()) body.pre_infusion_time = Number(params.pre_infusion_time);
+    if (params.yield_amount.trim())
+      body.yield_amount = Number(params.yield_amount);
+    if (params.pre_infusion_time.trim())
+      body.pre_infusion_time = Number(params.pre_infusion_time);
     if (params.total_time.trim()) body.total_time = Number(params.total_time);
     if (params.stop_mode) body.stop_mode_id = params.stop_mode.id;
     if (params.notes.trim()) body.notes = params.notes.trim();
@@ -207,7 +216,8 @@ export default function BrewWizard() {
       if (taste.balance != null) tasteBody.balance = taste.balance;
       if (taste.aftertaste != null) tasteBody.aftertaste = taste.aftertaste;
       if (taste.notes.trim()) tasteBody.notes = taste.notes.trim();
-      if (taste.flavor_tags.length > 0) tasteBody.flavor_tag_ids = taste.flavor_tags.map((t) => t.id);
+      if (taste.flavor_tags.length > 0)
+        tasteBody.flavor_tag_ids = taste.flavor_tags.map((t) => t.id);
       body.taste = tasteBody;
     }
 

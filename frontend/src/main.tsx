@@ -1,11 +1,11 @@
+import App from '@/App';
+import { NotificationProvider } from '@/components/NotificationProvider';
+import { ThemeProvider } from '@/theme/ThemeContext';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { ThemeProvider } from '@/theme/ThemeContext';
-import { NotificationProvider } from '@/components/NotificationProvider';
-import App from '@/App';
 
 const queryClient = new QueryClient({
   defaultOptions: {

@@ -1,17 +1,41 @@
-import { useState, useEffect } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from '@mui/material';
-import { Archive as ArchiveIcon, RestoreFromTrash as RestoreFromTrashIcon } from '@mui/icons-material';
-import AutocompleteCreate from '@/components/AutocompleteCreate';
 import apiClient from '@/api/client';
-import { useCreateBrewSetup, useUpdateBrewSetup, type BrewSetup } from './hooks';
+import AutocompleteCreate from '@/components/AutocompleteCreate';
 import { useNotification } from '@/components/NotificationProvider';
+import {
+  Archive as ArchiveIcon,
+  RestoreFromTrash as RestoreFromTrashIcon,
+} from '@mui/icons-material';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Stack,
+  TextField,
+} from '@mui/material';
+import { useEffect, useState } from 'react';
+import {
+  type BrewSetup,
+  useCreateBrewSetup,
+  useUpdateBrewSetup,
+} from './hooks';
 
-interface OptionType { id: string; name: string; }
+interface OptionType {
+  id: string;
+  name: string;
+}
 
 function makeCreateForm(endpoint: string, label: string) {
   return function CreateForm({
-    initialName, onCreated, onCancel,
-  }: { initialName: string; onCreated: (item: OptionType) => void; onCancel: () => void }) {
+    initialName,
+    onCreated,
+    onCancel,
+  }: {
+    initialName: string;
+    onCreated: (item: OptionType) => void;
+    onCancel: () => void;
+  }) {
     const [name, setName] = useState(initialName);
     const { notify } = useNotification();
 
@@ -23,10 +47,22 @@ function makeCreateForm(endpoint: string, label: string) {
 
     return (
       <Stack spacing={2} sx={{ pt: 1 }}>
-        <TextField label="Name" value={name} onChange={(e) => setName(e.target.value)} required autoFocus />
+        <TextField
+          label="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+          autoFocus
+        />
         <Stack direction="row" spacing={1} justifyContent="flex-end">
           <Button onClick={onCancel}>Cancel</Button>
-          <Button variant="contained" onClick={handleSubmit} disabled={!name.trim()}>Create</Button>
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            disabled={!name.trim()}
+          >
+            Create
+          </Button>
         </Stack>
       </Stack>
     );
@@ -47,7 +83,13 @@ interface BrewSetupFormDialogProps {
   onActivate?: () => void;
 }
 
-export default function BrewSetupFormDialog({ open, onClose, brewSetup, onRetire, onActivate }: BrewSetupFormDialogProps) {
+export default function BrewSetupFormDialog({
+  open,
+  onClose,
+  brewSetup,
+  onRetire,
+  onActivate,
+}: BrewSetupFormDialogProps) {
   const isEdit = !!brewSetup;
   const create = useCreateBrewSetup();
   const update = useUpdateBrewSetup();
@@ -108,7 +150,7 @@ export default function BrewSetupFormDialog({ open, onClose, brewSetup, onRetire
       water_id: water?.id ?? null,
     };
     if (isEdit) {
-      await update.mutateAsync({ id: brewSetup!.id, ...body });
+      await update.mutateAsync({ id: brewSetup?.id, ...body });
       notify('Brew setup updated');
     } else {
       await create.mutateAsync(body);
@@ -134,7 +176,9 @@ export default function BrewSetupFormDialog({ open, onClose, brewSetup, onRetire
             label="Brew Method"
             queryKey={['brew-methods']}
             fetchFn={async (q) => {
-              const { data } = await apiClient.get('/brew-methods', { params: { q, limit: 50 } });
+              const { data } = await apiClient.get('/brew-methods', {
+                params: { q, limit: 50 },
+              });
               return data;
             }}
             value={brewMethod}
@@ -148,7 +192,9 @@ export default function BrewSetupFormDialog({ open, onClose, brewSetup, onRetire
             label="Grinder"
             queryKey={['grinders']}
             fetchFn={async (q) => {
-              const { data } = await apiClient.get('/grinders', { params: { q, limit: 50 } });
+              const { data } = await apiClient.get('/grinders', {
+                params: { q, limit: 50 },
+              });
               return data;
             }}
             value={grinder}
@@ -159,7 +205,9 @@ export default function BrewSetupFormDialog({ open, onClose, brewSetup, onRetire
             label="Brewer"
             queryKey={['brewers']}
             fetchFn={async (q) => {
-              const { data } = await apiClient.get('/brewers', { params: { q, limit: 50 } });
+              const { data } = await apiClient.get('/brewers', {
+                params: { q, limit: 50 },
+              });
               return data;
             }}
             value={brewer}
@@ -170,7 +218,9 @@ export default function BrewSetupFormDialog({ open, onClose, brewSetup, onRetire
             label="Paper"
             queryKey={['papers']}
             fetchFn={async (q) => {
-              const { data } = await apiClient.get('/papers', { params: { q, limit: 50 } });
+              const { data } = await apiClient.get('/papers', {
+                params: { q, limit: 50 },
+              });
               return data;
             }}
             value={paper}
@@ -181,7 +231,9 @@ export default function BrewSetupFormDialog({ open, onClose, brewSetup, onRetire
             label="Water"
             queryKey={['waters']}
             fetchFn={async (q) => {
-              const { data } = await apiClient.get('/waters', { params: { q, limit: 50 } });
+              const { data } = await apiClient.get('/waters', {
+                params: { q, limit: 50 },
+              });
               return data;
             }}
             value={water}
@@ -192,10 +244,24 @@ export default function BrewSetupFormDialog({ open, onClose, brewSetup, onRetire
       </DialogContent>
       <DialogActions>
         {isEdit && brewSetup?.retired_at && onActivate && (
-          <Button color="success" onClick={onActivate} sx={{ mr: 'auto' }} startIcon={<RestoreFromTrashIcon />}>Activate</Button>
+          <Button
+            color="success"
+            onClick={onActivate}
+            sx={{ mr: 'auto' }}
+            startIcon={<RestoreFromTrashIcon />}
+          >
+            Activate
+          </Button>
         )}
         {isEdit && !brewSetup?.retired_at && onRetire && (
-          <Button color="warning" onClick={onRetire} sx={{ mr: 'auto' }} startIcon={<ArchiveIcon />}>Retire</Button>
+          <Button
+            color="warning"
+            onClick={onRetire}
+            sx={{ mr: 'auto' }}
+            startIcon={<ArchiveIcon />}
+          >
+            Retire
+          </Button>
         )}
         <Button onClick={onClose}>Cancel</Button>
         <Button variant="contained" onClick={handleSubmit} disabled={!isValid}>

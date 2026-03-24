@@ -15,12 +15,17 @@ apiClient.interceptors.response.use(
       message = detail;
     } else if (Array.isArray(detail)) {
       // FastAPI 422 validation errors: [{type, loc, msg, input}, ...]
-      message = detail.map((e: { msg: string; loc: (string | number)[] }) =>
-        `${e.loc.slice(1).join('.')}: ${e.msg}`
-      ).join('; ');
+      message = detail
+        .map(
+          (e: { msg: string; loc: (string | number)[] }) =>
+            `${e.loc.slice(1).join('.')}: ${e.msg}`,
+        )
+        .join('; ');
     } else {
       message =
-        (typeof error.response?.data === 'string' ? error.response.data : null) ??
+        (typeof error.response?.data === 'string'
+          ? error.response.data
+          : null) ??
         error.message ??
         'Something went wrong';
     }

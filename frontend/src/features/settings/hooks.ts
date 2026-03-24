@@ -1,6 +1,6 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import apiClient from '@/api/client';
 import type { PaginationParams } from '@/utils/pagination';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export interface LookupItem {
   id: string;
@@ -35,7 +35,10 @@ export function createLookupHooks(endpoint: string) {
     useUpdate: () => {
       const qc = useQueryClient();
       return useMutation({
-        mutationFn: async ({ id, ...body }: { id: string; [key: string]: unknown }) => {
+        mutationFn: async ({
+          id,
+          ...body
+        }: { id: string; [key: string]: unknown }) => {
           const { data } = await apiClient.patch(`/${endpoint}/${id}`, body);
           return data;
         },
@@ -45,7 +48,9 @@ export function createLookupHooks(endpoint: string) {
     useDelete: () => {
       const qc = useQueryClient();
       return useMutation({
-        mutationFn: async (id: string) => { await apiClient.delete(`/${endpoint}/${id}`); },
+        mutationFn: async (id: string) => {
+          await apiClient.delete(`/${endpoint}/${id}`);
+        },
         onSuccess: () => qc.invalidateQueries({ queryKey }),
       });
     },

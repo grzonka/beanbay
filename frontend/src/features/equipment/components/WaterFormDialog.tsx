@@ -1,11 +1,24 @@
-import { useState, useEffect } from 'react';
-import {
-  Button, Dialog, DialogActions, DialogContent, DialogTitle,
-  Stack, TextField, IconButton, Typography, Box,
-} from '@mui/material';
-import { Add as AddIcon, Archive as ArchiveIcon, Delete as DeleteIcon, RestoreFromTrash as RestoreFromTrashIcon } from '@mui/icons-material';
-import { waterHooks, type Water } from '../hooks';
 import { useNotification } from '@/components/NotificationProvider';
+import {
+  Add as AddIcon,
+  Archive as ArchiveIcon,
+  Delete as DeleteIcon,
+  RestoreFromTrash as RestoreFromTrashIcon,
+} from '@mui/icons-material';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { useEffect, useState } from 'react';
+import { type Water, waterHooks } from '../hooks';
 
 interface MineralRow {
   mineral_name: string;
@@ -20,7 +33,13 @@ interface WaterFormDialogProps {
   onActivate?: () => void;
 }
 
-export default function WaterFormDialog({ open, onClose, water, onRetire, onActivate }: WaterFormDialogProps) {
+export default function WaterFormDialog({
+  open,
+  onClose,
+  water,
+  onRetire,
+  onActivate,
+}: WaterFormDialogProps) {
   const [name, setName] = useState('');
   const [notes, setNotes] = useState('');
   const [minerals, setMinerals] = useState<MineralRow[]>([]);
@@ -33,7 +52,12 @@ export default function WaterFormDialog({ open, onClose, water, onRetire, onActi
     if (water) {
       setName(water.name);
       setNotes(water.notes ?? '');
-      setMinerals(water.minerals.map((m) => ({ mineral_name: m.mineral_name, ppm: m.ppm })));
+      setMinerals(
+        water.minerals.map((m) => ({
+          mineral_name: m.mineral_name,
+          ppm: m.ppm,
+        })),
+      );
     } else {
       setName('');
       setNotes('');
@@ -49,7 +73,11 @@ export default function WaterFormDialog({ open, onClose, water, onRetire, onActi
     setMinerals((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const updateMineral = (index: number, field: keyof MineralRow, value: string) => {
+  const updateMineral = (
+    index: number,
+    field: keyof MineralRow,
+    value: string,
+  ) => {
     setMinerals((prev) =>
       prev.map((m, i) => {
         if (i !== index) return m;
@@ -64,11 +92,14 @@ export default function WaterFormDialog({ open, onClose, water, onRetire, onActi
   const handleSubmit = async () => {
     const validMinerals = minerals
       .filter((m) => m.mineral_name.trim() && m.ppm !== '')
-      .map((m) => ({ mineral_name: m.mineral_name.trim(), ppm: Number(m.ppm) }));
+      .map((m) => ({
+        mineral_name: m.mineral_name.trim(),
+        ppm: Number(m.ppm),
+      }));
 
     if (isEdit) {
       await update.mutateAsync({
-        id: water!.id,
+        id: water?.id,
         name,
         notes: notes || null,
         minerals: validMinerals,
@@ -106,19 +137,36 @@ export default function WaterFormDialog({ open, onClose, water, onRetire, onActi
           />
 
           <Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                mb: 1,
+              }}
+            >
               <Typography variant="subtitle2">Minerals</Typography>
-              <IconButton size="small" onClick={addMineral} color="primary" aria-label="Add mineral">
+              <IconButton
+                size="small"
+                onClick={addMineral}
+                color="primary"
+                aria-label="Add mineral"
+              >
                 <AddIcon />
               </IconButton>
             </Box>
             <Stack spacing={1}>
               {minerals.map((mineral, index) => (
-                <Box key={index} sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                <Box
+                  key={index}
+                  sx={{ display: 'flex', gap: 1, alignItems: 'center' }}
+                >
                   <TextField
                     label="Mineral"
                     value={mineral.mineral_name}
-                    onChange={(e) => updateMineral(index, 'mineral_name', e.target.value)}
+                    onChange={(e) =>
+                      updateMineral(index, 'mineral_name', e.target.value)
+                    }
                     size="small"
                     sx={{ flex: 2 }}
                   />
@@ -126,7 +174,9 @@ export default function WaterFormDialog({ open, onClose, water, onRetire, onActi
                     label="PPM"
                     type="number"
                     value={mineral.ppm}
-                    onChange={(e) => updateMineral(index, 'ppm', e.target.value)}
+                    onChange={(e) =>
+                      updateMineral(index, 'ppm', e.target.value)
+                    }
                     size="small"
                     sx={{ flex: 1 }}
                     slotProps={{ htmlInput: { min: 0, step: 0.1 } }}
@@ -152,13 +202,31 @@ export default function WaterFormDialog({ open, onClose, water, onRetire, onActi
       </DialogContent>
       <DialogActions>
         {isEdit && water?.retired_at && onActivate && (
-          <Button color="success" onClick={onActivate} sx={{ mr: 'auto' }} startIcon={<RestoreFromTrashIcon />}>Activate</Button>
+          <Button
+            color="success"
+            onClick={onActivate}
+            sx={{ mr: 'auto' }}
+            startIcon={<RestoreFromTrashIcon />}
+          >
+            Activate
+          </Button>
         )}
         {isEdit && !water?.retired_at && onRetire && (
-          <Button color="warning" onClick={onRetire} sx={{ mr: 'auto' }} startIcon={<ArchiveIcon />}>Retire</Button>
+          <Button
+            color="warning"
+            onClick={onRetire}
+            sx={{ mr: 'auto' }}
+            startIcon={<ArchiveIcon />}
+          >
+            Retire
+          </Button>
         )}
         <Button onClick={onClose}>Cancel</Button>
-        <Button variant="contained" onClick={handleSubmit} disabled={!name.trim()}>
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          disabled={!name.trim()}
+        >
           {isEdit ? 'Save' : 'Create'}
         </Button>
       </DialogActions>

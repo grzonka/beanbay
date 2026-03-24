@@ -1,5 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import apiClient from '@/api/client';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -130,7 +130,9 @@ export function useCampaignProgress(campaignId: string) {
   return useQuery<CampaignProgress>({
     queryKey: ['optimize', 'campaigns', campaignId, 'progress'],
     queryFn: async () => {
-      const { data } = await apiClient.get(`/optimize/campaigns/${campaignId}/progress`);
+      const { data } = await apiClient.get(
+        `/optimize/campaigns/${campaignId}/progress`,
+      );
       return data;
     },
     enabled: !!campaignId,
@@ -143,11 +145,21 @@ export function usePosterior(
   points?: number,
 ) {
   return useQuery<PosteriorData>({
-    queryKey: ['optimize', 'campaigns', campaignId, 'posterior', params, points],
+    queryKey: [
+      'optimize',
+      'campaigns',
+      campaignId,
+      'posterior',
+      params,
+      points,
+    ],
     queryFn: async () => {
-      const { data } = await apiClient.get(`/optimize/campaigns/${campaignId}/posterior`, {
-        params: { params, points },
-      });
+      const { data } = await apiClient.get(
+        `/optimize/campaigns/${campaignId}/posterior`,
+        {
+          params: { params, points },
+        },
+      );
       return data;
     },
     enabled: !!campaignId,
@@ -159,7 +171,9 @@ export function useFeatureImportance(campaignId: string) {
   return useQuery<FeatureImportanceData>({
     queryKey: ['optimize', 'campaigns', campaignId, 'feature-importance'],
     queryFn: async () => {
-      const { data } = await apiClient.get(`/optimize/campaigns/${campaignId}/feature-importance`);
+      const { data } = await apiClient.get(
+        `/optimize/campaigns/${campaignId}/feature-importance`,
+      );
       return data;
     },
     enabled: !!campaignId,
@@ -170,7 +184,9 @@ export function useCampaignRecommendations(campaignId: string) {
   return useQuery<Recommendation[]>({
     queryKey: ['optimize', 'campaigns', campaignId, 'recommendations'],
     queryFn: async () => {
-      const { data } = await apiClient.get(`/optimize/campaigns/${campaignId}/recommendations`);
+      const { data } = await apiClient.get(
+        `/optimize/campaigns/${campaignId}/recommendations`,
+      );
       return data;
     },
     enabled: !!campaignId,
@@ -181,7 +197,9 @@ export function usePersonPreferences(personId: string) {
   return useQuery<PersonPreferences>({
     queryKey: ['optimize', 'people', personId, 'preferences'],
     queryFn: async () => {
-      const { data } = await apiClient.get(`/optimize/people/${personId}/preferences`);
+      const { data } = await apiClient.get(
+        `/optimize/people/${personId}/preferences`,
+      );
       return data;
     },
     enabled: !!personId,
@@ -204,7 +222,11 @@ interface JobStatus {
   error_message: string | null;
 }
 
-async function pollJobUntilDone(jobId: string, maxAttempts = 30, delayMs = 1000): Promise<JobStatus> {
+async function pollJobUntilDone(
+  jobId: string,
+  maxAttempts = 30,
+  delayMs = 1000,
+): Promise<JobStatus> {
   for (let i = 0; i < maxAttempts; i++) {
     const { data } = await apiClient.get<JobStatus>(`/optimize/jobs/${jobId}`);
     if (data.status === 'completed' || data.status === 'failed') {
@@ -220,7 +242,10 @@ export function useSuggest() {
   return useMutation({
     mutationFn: async (params: SuggestParams): Promise<Recommendation> => {
       // Step 1: Create or find campaign
-      const { data: campaign } = await apiClient.post('/optimize/campaigns', params);
+      const { data: campaign } = await apiClient.post(
+        '/optimize/campaigns',
+        params,
+      );
 
       // Step 2: Request a recommendation
       const { data: jobRef } = await apiClient.post(
@@ -242,7 +267,9 @@ export function useSuggest() {
     },
     onSuccess: (_data, variables) => {
       qc.invalidateQueries({ queryKey: ['optimize', 'campaigns'] });
-      qc.invalidateQueries({ queryKey: ['optimize', 'campaigns', variables.bean_id] });
+      qc.invalidateQueries({
+        queryKey: ['optimize', 'campaigns', variables.bean_id],
+      });
     },
   });
 }
@@ -251,13 +278,23 @@ export function useLinkRecommendation() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, brew_id }: { id: string; brew_id: string }) => {
-      const { data } = await apiClient.post(`/optimize/recommendations/${id}/link`, { brew_id });
+      const { data } = await apiClient.post(
+        `/optimize/recommendations/${id}/link`,
+        { brew_id },
+      );
       return data as Recommendation;
     },
     onSuccess: (data) => {
-      qc.invalidateQueries({ queryKey: ['optimize', 'campaigns', data.campaign_id] });
       qc.invalidateQueries({
-        queryKey: ['optimize', 'campaigns', data.campaign_id, 'recommendations'],
+        queryKey: ['optimize', 'campaigns', data.campaign_id],
+      });
+      qc.invalidateQueries({
+        queryKey: [
+          'optimize',
+          'campaigns',
+          data.campaign_id,
+          'recommendations',
+        ],
       });
     },
   });

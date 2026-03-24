@@ -1,17 +1,23 @@
-import { useState } from 'react';
-import { type GridColDef } from '@mui/x-data-grid';
-import {
-  Button, Dialog, DialogActions, DialogContent, DialogTitle,
-  FormControlLabel, Switch, Typography,
-} from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
-import PageHeader from '@/components/PageHeader';
 import DataTable from '@/components/DataTable';
-import { usePaginationParams } from '@/utils/pagination';
-import { useBeans, type Bean } from '../hooks';
-import BeanFormDialog from '../components/BeanFormDialog';
-import BagFormDialog from '../components/BagFormDialog';
+import PageHeader from '@/components/PageHeader';
 import RatingFormDialog from '@/features/ratings/RatingFormDialog';
+import { usePaginationParams } from '@/utils/pagination';
+import { Add as AddIcon } from '@mui/icons-material';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
+  Switch,
+  Typography,
+} from '@mui/material';
+import type { GridColDef } from '@mui/x-data-grid';
+import { useState } from 'react';
+import BagFormDialog from '../components/BagFormDialog';
+import BeanFormDialog from '../components/BeanFormDialog';
+import { type Bean, useBeans } from '../hooks';
 
 const columns: GridColDef<Bean>[] = [
   { field: 'name', headerName: 'Name', flex: 1, minWidth: 150 },
@@ -36,9 +42,13 @@ const columns: GridColDef<Bean>[] = [
 
 export default function BeansListPage() {
   const {
-    params, paginationModel, sortModel,
-    onPaginationModelChange, onSortModelChange,
-    setSearch, setIncludeRetired,
+    params,
+    paginationModel,
+    sortModel,
+    onPaginationModelChange,
+    onSortModelChange,
+    setSearch,
+    setIncludeRetired,
   } = usePaginationParams('name');
 
   const { data, isLoading } = useBeans(params);
@@ -91,7 +101,10 @@ export default function BeansListPage() {
           <Button
             variant="contained"
             startIcon={<AddIcon />}
-            onClick={() => { setEditBean(null); setFormOpen(true); }}
+            onClick={() => {
+              setEditBean(null);
+              setFormOpen(true);
+            }}
           >
             Add Bean
           </Button>
@@ -126,7 +139,10 @@ export default function BeansListPage() {
         detailPath={(row) => `/beans/${row.id}`}
         emptyTitle="No beans yet"
         emptyActionLabel="Add Bean"
-        onEmptyAction={() => { setEditBean(null); setFormOpen(true); }}
+        onEmptyAction={() => {
+          setEditBean(null);
+          setFormOpen(true);
+        }}
       />
       <BeanFormDialog
         open={formOpen}
@@ -144,11 +160,15 @@ export default function BeansListPage() {
       <Dialog open={ratingPromptOpen} onClose={handleRatingPromptNo}>
         <DialogTitle>Add a taste rating?</DialogTitle>
         <DialogContent>
-          <Typography>Would you like to add a taste rating for this bean?</Typography>
+          <Typography>
+            Would you like to add a taste rating for this bean?
+          </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleRatingPromptNo}>No</Button>
-          <Button variant="contained" onClick={handleRatingPromptYes}>Yes</Button>
+          <Button variant="contained" onClick={handleRatingPromptYes}>
+            Yes
+          </Button>
         </DialogActions>
       </Dialog>
       {newBeanId && (

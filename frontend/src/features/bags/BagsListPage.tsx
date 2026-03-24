@@ -1,19 +1,27 @@
-import { useMemo, useState } from 'react';
-import { type GridColDef } from '@mui/x-data-grid';
-import { Chip, MenuItem, TextField } from '@mui/material';
-import PageHeader from '@/components/PageHeader';
 import DataTable from '@/components/DataTable';
-import { usePaginationParams } from '@/utils/pagination';
-import { fmtDate } from '@/utils/date';
+import PageHeader from '@/components/PageHeader';
 import { useBeans } from '@/features/beans/hooks';
-import { useAllBags, type BagListItem } from './hooks';
+import { fmtDate } from '@/utils/date';
+import { usePaginationParams } from '@/utils/pagination';
+import { Chip, MenuItem, TextField } from '@mui/material';
+import type { GridColDef } from '@mui/x-data-grid';
+import { useMemo, useState } from 'react';
+import { type BagListItem, useAllBags } from './hooks';
 
-const ALL_BEANS_PARAMS = { offset: 0, limit: 200, sort_by: 'name', sort_dir: 'asc' as const };
+const ALL_BEANS_PARAMS = {
+  offset: 0,
+  limit: 200,
+  sort_by: 'name',
+  sort_dir: 'asc' as const,
+};
 
 export default function BagsListPage() {
   const {
-    params, paginationModel, sortModel,
-    onPaginationModelChange, onSortModelChange,
+    params,
+    paginationModel,
+    sortModel,
+    onPaginationModelChange,
+    onSortModelChange,
     setIncludeRetired,
   } = usePaginationParams('created_at');
 
@@ -62,7 +70,8 @@ export default function BagsListPage() {
         field: 'price',
         headerName: 'Price',
         width: 100,
-        renderCell: (p) => (p.row.price != null ? `$${p.row.price.toFixed(2)}` : '—'),
+        renderCell: (p) =>
+          p.row.price != null ? `$${p.row.price.toFixed(2)}` : '—',
       },
       {
         field: 'is_preground',

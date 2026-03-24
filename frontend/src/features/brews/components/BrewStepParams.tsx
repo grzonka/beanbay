@@ -1,3 +1,14 @@
+import apiClient from '@/api/client';
+import AutocompleteCreate from '@/components/AutocompleteCreate';
+import type { Recommendation } from '@/features/optimize/hooks';
+import {
+  type RingConfig,
+  getGrindPlaceholder,
+  getGrindRangeDisplay,
+  validateGrindDisplay,
+} from '@/utils/grindValidation';
+import GroupsIcon from '@mui/icons-material/Groups';
+import PeopleIcon from '@mui/icons-material/Person';
 // frontend/src/features/brews/components/BrewStepParams.tsx
 import {
   Alert,
@@ -10,19 +21,11 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import PeopleIcon from '@mui/icons-material/Person';
-import GroupsIcon from '@mui/icons-material/Groups';
-import AutocompleteCreate from '@/components/AutocompleteCreate';
-import apiClient from '@/api/client';
-import type { Recommendation } from '@/features/optimize/hooks';
-import {
-  validateGrindDisplay,
-  getGrindRangeDisplay,
-  getGrindPlaceholder,
-  type RingConfig,
-} from '@/utils/grindValidation';
 
-interface OptionItem { id: string; name: string; }
+interface OptionItem {
+  id: string;
+  name: string;
+}
 
 export interface ParamsData {
   grind_setting_display: string;
@@ -48,10 +51,18 @@ interface BrewStepParamsProps {
   onToggleMode?: () => void;
 }
 
-export default function BrewStepParams({ data, onChange, rings, suggestion, suggestButton, onToggleMode }: BrewStepParamsProps) {
-  const grindError = rings && data.grind_setting_display.trim()
-    ? validateGrindDisplay(data.grind_setting_display, rings)
-    : null;
+export default function BrewStepParams({
+  data,
+  onChange,
+  rings,
+  suggestion,
+  suggestButton,
+  onToggleMode,
+}: BrewStepParamsProps) {
+  const grindError =
+    rings && data.grind_setting_display.trim()
+      ? validateGrindDisplay(data.grind_setting_display, rings)
+      : null;
 
   const mode = suggestion?.optimization_mode;
   const isPersonal = mode === 'personal';
@@ -64,32 +75,44 @@ export default function BrewStepParams({ data, onChange, rings, suggestion, sugg
 
   return (
     <Stack spacing={2}>
-      {suggestButton && (
-        <Box sx={{ mb: 2 }}>
-          {suggestButton}
-        </Box>
-      )}
+      {suggestButton && <Box sx={{ mb: 2 }}>{suggestButton}</Box>}
 
       {suggestion && suggestion.predicted_score != null && (
-        <Alert severity="info" sx={{ mb: 2 }}
-          action={mode && onToggleMode ? (
-            <Tooltip title={modeTooltip} arrow>
-              <Chip
-                icon={isPersonal ? <PeopleIcon /> : <GroupsIcon />}
-                label={modeLabel}
-                size="small"
-                color={isPersonal ? 'success' : 'default'}
-                onClick={onToggleMode}
-                clickable
-                sx={{ mr: 1 }}
-              />
-            </Tooltip>
-          ) : undefined}
+        <Alert
+          severity="info"
+          sx={{ mb: 2 }}
+          action={
+            mode && onToggleMode ? (
+              <Tooltip title={modeTooltip} arrow>
+                <Chip
+                  icon={isPersonal ? <PeopleIcon /> : <GroupsIcon />}
+                  label={modeLabel}
+                  size="small"
+                  color={isPersonal ? 'success' : 'default'}
+                  onClick={onToggleMode}
+                  clickable
+                  sx={{ mr: 1 }}
+                />
+              </Tooltip>
+            ) : undefined
+          }
         >
           Suggested by optimizer ({suggestion.phase} phase)
-          {' — Predicted: ~'}{suggestion.predicted_score.toFixed(1)}
+          {' — Predicted: ~'}
+          {suggestion.predicted_score.toFixed(1)}
           {suggestion.predicted_std != null && (
-            <> ({(suggestion.predicted_score - suggestion.predicted_std).toFixed(1)}–{(suggestion.predicted_score + suggestion.predicted_std).toFixed(1)})</>
+            <>
+              {' '}
+              (
+              {(suggestion.predicted_score - suggestion.predicted_std).toFixed(
+                1,
+              )}
+              –
+              {(suggestion.predicted_score + suggestion.predicted_std).toFixed(
+                1,
+              )}
+              )
+            </>
           )}
         </Alert>
       )}
@@ -132,7 +155,10 @@ export default function BrewStepParams({ data, onChange, rings, suggestion, sugg
         onChange={(e) => onChange({ grind_setting_display: e.target.value })}
         fullWidth
         placeholder={rings ? getGrindPlaceholder(rings) : 'e.g. 18 clicks, 3.2'}
-        helperText={grindError ?? (rings ? `Range: ${getGrindRangeDisplay(rings)}` : undefined)}
+        helperText={
+          grindError ??
+          (rings ? `Range: ${getGrindRangeDisplay(rings)}` : undefined)
+        }
         error={!!grindError}
       />
 
@@ -187,7 +213,9 @@ export default function BrewStepParams({ data, onChange, rings, suggestion, sugg
         label="Stop Mode"
         queryKey={['stop-modes']}
         fetchFn={async (q) => {
-          const { data: d } = await apiClient.get('/stop-modes', { params: { q, limit: 50 } });
+          const { data: d } = await apiClient.get('/stop-modes', {
+            params: { q, limit: 50 },
+          });
           return d;
         }}
         value={data.stop_mode}

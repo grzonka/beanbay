@@ -1,4 +1,11 @@
-import { useState, useEffect } from 'react';
+import apiClient from '@/api/client';
+import AutocompleteCreate from '@/components/AutocompleteCreate';
+import { useNotification } from '@/components/NotificationProvider';
+import {
+  Archive as ArchiveIcon,
+  ExpandMore as ExpandMoreIcon,
+  RestoreFromTrash as RestoreFromTrashIcon,
+} from '@mui/icons-material';
 import {
   Accordion,
   AccordionDetails,
@@ -18,11 +25,8 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Archive as ArchiveIcon, ExpandMore as ExpandMoreIcon, RestoreFromTrash as RestoreFromTrashIcon } from '@mui/icons-material';
-import { brewerHooks, type Brewer } from '../hooks';
-import { useNotification } from '@/components/NotificationProvider';
-import AutocompleteCreate from '@/components/AutocompleteCreate';
-import apiClient from '@/api/client';
+import { useEffect, useState } from 'react';
+import { type Brewer, brewerHooks } from '../hooks';
 
 interface BrewerFormDialogProps {
   open: boolean;
@@ -60,20 +64,30 @@ type FormState = ReturnType<typeof defaultForm>;
 function numOrNull(val: string | number): number | null {
   if (val === '' || val === null || val === undefined) return null;
   const n = Number(val);
-  return isNaN(n) ? null : n;
+  return Number.isNaN(n) ? null : n;
 }
 
 async function fetchBrewMethods(q: string): Promise<{ items: NamedItem[] }> {
-  const { data } = await apiClient.get('/brew-methods', { params: { q, limit: 50 } });
+  const { data } = await apiClient.get('/brew-methods', {
+    params: { q, limit: 50 },
+  });
   return data;
 }
 
 async function fetchStopModes(q: string): Promise<{ items: NamedItem[] }> {
-  const { data } = await apiClient.get('/stop-modes', { params: { q, limit: 50 } });
+  const { data } = await apiClient.get('/stop-modes', {
+    params: { q, limit: 50 },
+  });
   return data;
 }
 
-export default function BrewerFormDialog({ open, onClose, brewer, onRetire, onActivate }: BrewerFormDialogProps) {
+export default function BrewerFormDialog({
+  open,
+  onClose,
+  brewer,
+  onRetire,
+  onActivate,
+}: BrewerFormDialogProps) {
   const [form, setForm] = useState<FormState>(defaultForm());
   const isEdit = !!brewer;
   const create = brewerHooks.useCreate();
@@ -113,22 +127,31 @@ export default function BrewerFormDialog({ open, onClose, brewer, onRetire, onAc
     const body = {
       name: form.name,
       temp_control_type: form.temp_control_type,
-      temp_min: form.temp_control_type !== 'none' ? numOrNull(form.temp_min) : null,
-      temp_max: form.temp_control_type !== 'none' ? numOrNull(form.temp_max) : null,
-      temp_step: form.temp_control_type !== 'none' ? numOrNull(form.temp_step) : null,
+      temp_min:
+        form.temp_control_type !== 'none' ? numOrNull(form.temp_min) : null,
+      temp_max:
+        form.temp_control_type !== 'none' ? numOrNull(form.temp_max) : null,
+      temp_step:
+        form.temp_control_type !== 'none' ? numOrNull(form.temp_step) : null,
       preinfusion_type: form.preinfusion_type,
-      preinfusion_max_time: form.preinfusion_type !== 'none' ? numOrNull(form.preinfusion_max_time) : null,
+      preinfusion_max_time:
+        form.preinfusion_type !== 'none'
+          ? numOrNull(form.preinfusion_max_time)
+          : null,
       pressure_control_type: form.pressure_control_type,
       pressure_min: numOrNull(form.pressure_min),
       pressure_max: numOrNull(form.pressure_max),
       flow_control_type: form.flow_control_type,
-      saturation_flow_rate: form.flow_control_type !== 'none' ? numOrNull(form.saturation_flow_rate) : null,
+      saturation_flow_rate:
+        form.flow_control_type !== 'none'
+          ? numOrNull(form.saturation_flow_rate)
+          : null,
       has_bloom: form.has_bloom,
       method_ids: form.methods.map((m) => m.id),
       stop_mode_ids: form.stop_modes.map((s) => s.id),
     };
     if (isEdit) {
-      await update.mutateAsync({ id: brewer!.id, ...body });
+      await update.mutateAsync({ id: brewer?.id, ...body });
       notify('Brewer updated');
     } else {
       await create.mutateAsync(body);
@@ -146,7 +169,12 @@ export default function BrewerFormDialog({ open, onClose, brewer, onRetire, onAc
       <DialogTitle>{isEdit ? 'Edit Brewer' : 'Add Brewer'}</DialogTitle>
       <DialogContent sx={{ px: 2, py: 1 }}>
         {/* Basic */}
-        <Accordion defaultExpanded disableGutters elevation={0} sx={{ '&:before': { display: 'none' } }}>
+        <Accordion
+          defaultExpanded
+          disableGutters
+          elevation={0}
+          sx={{ '&:before': { display: 'none' } }}
+        >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography variant="subtitle2">Basic</Typography>
           </AccordionSummary>
@@ -163,7 +191,11 @@ export default function BrewerFormDialog({ open, onClose, brewer, onRetire, onAc
         </Accordion>
 
         {/* Temperature */}
-        <Accordion disableGutters elevation={0} sx={{ '&:before': { display: 'none' } }}>
+        <Accordion
+          disableGutters
+          elevation={0}
+          sx={{ '&:before': { display: 'none' } }}
+        >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography variant="subtitle2">Temperature</Typography>
           </AccordionSummary>
@@ -212,7 +244,11 @@ export default function BrewerFormDialog({ open, onClose, brewer, onRetire, onAc
         </Accordion>
 
         {/* Pre-infusion */}
-        <Accordion disableGutters elevation={0} sx={{ '&:before': { display: 'none' } }}>
+        <Accordion
+          disableGutters
+          elevation={0}
+          sx={{ '&:before': { display: 'none' } }}
+        >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography variant="subtitle2">Pre-infusion</Typography>
           </AccordionSummary>
@@ -228,7 +264,9 @@ export default function BrewerFormDialog({ open, onClose, brewer, onRetire, onAc
                   <MenuItem value="none">None</MenuItem>
                   <MenuItem value="fixed">Fixed</MenuItem>
                   <MenuItem value="timed">Timed</MenuItem>
-                  <MenuItem value="adjustable_pressure">Adjustable Pressure</MenuItem>
+                  <MenuItem value="adjustable_pressure">
+                    Adjustable Pressure
+                  </MenuItem>
                   <MenuItem value="programmable">Programmable</MenuItem>
                   <MenuItem value="manual">Manual</MenuItem>
                 </Select>
@@ -247,7 +285,11 @@ export default function BrewerFormDialog({ open, onClose, brewer, onRetire, onAc
         </Accordion>
 
         {/* Pressure */}
-        <Accordion disableGutters elevation={0} sx={{ '&:before': { display: 'none' } }}>
+        <Accordion
+          disableGutters
+          elevation={0}
+          sx={{ '&:before': { display: 'none' } }}
+        >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography variant="subtitle2">Pressure</Typography>
           </AccordionSummary>
@@ -288,7 +330,11 @@ export default function BrewerFormDialog({ open, onClose, brewer, onRetire, onAc
         </Accordion>
 
         {/* Flow */}
-        <Accordion disableGutters elevation={0} sx={{ '&:before': { display: 'none' } }}>
+        <Accordion
+          disableGutters
+          elevation={0}
+          sx={{ '&:before': { display: 'none' } }}
+        >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography variant="subtitle2">Flow</Typography>
           </AccordionSummary>
@@ -321,7 +367,11 @@ export default function BrewerFormDialog({ open, onClose, brewer, onRetire, onAc
         </Accordion>
 
         {/* Features */}
-        <Accordion disableGutters elevation={0} sx={{ '&:before': { display: 'none' } }}>
+        <Accordion
+          disableGutters
+          elevation={0}
+          sx={{ '&:before': { display: 'none' } }}
+        >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography variant="subtitle2">Features</Typography>
           </AccordionSummary>
@@ -339,7 +389,11 @@ export default function BrewerFormDialog({ open, onClose, brewer, onRetire, onAc
         </Accordion>
 
         {/* Methods & Modes */}
-        <Accordion disableGutters elevation={0} sx={{ '&:before': { display: 'none' } }}>
+        <Accordion
+          disableGutters
+          elevation={0}
+          sx={{ '&:before': { display: 'none' } }}
+        >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography variant="subtitle2">Methods & Modes</Typography>
           </AccordionSummary>
@@ -358,7 +412,9 @@ export default function BrewerFormDialog({ open, onClose, brewer, onRetire, onAc
                 queryKey={['stop-modes']}
                 fetchFn={fetchStopModes}
                 value={form.stop_modes}
-                onChange={(val) => set('stop_modes', (val as NamedItem[]) ?? [])}
+                onChange={(val) =>
+                  set('stop_modes', (val as NamedItem[]) ?? [])
+                }
                 multiple
               />
             </Stack>
@@ -367,10 +423,24 @@ export default function BrewerFormDialog({ open, onClose, brewer, onRetire, onAc
       </DialogContent>
       <DialogActions>
         {isEdit && brewer?.retired_at && onActivate && (
-          <Button color="success" onClick={onActivate} sx={{ mr: 'auto' }} startIcon={<RestoreFromTrashIcon />}>Activate</Button>
+          <Button
+            color="success"
+            onClick={onActivate}
+            sx={{ mr: 'auto' }}
+            startIcon={<RestoreFromTrashIcon />}
+          >
+            Activate
+          </Button>
         )}
         {isEdit && !brewer?.retired_at && onRetire && (
-          <Button color="warning" onClick={onRetire} sx={{ mr: 'auto' }} startIcon={<ArchiveIcon />}>Retire</Button>
+          <Button
+            color="warning"
+            onClick={onRetire}
+            sx={{ mr: 'auto' }}
+            startIcon={<ArchiveIcon />}
+          >
+            Retire
+          </Button>
         )}
         <Button onClick={onClose}>Cancel</Button>
         <Button

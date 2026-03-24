@@ -1,11 +1,14 @@
+import apiClient from '@/api/client';
 // frontend/src/components/FlavorTagSelect.tsx
 import AutocompleteCreate from '@/components/AutocompleteCreate';
-import apiClient from '@/api/client';
+import { useNotification } from '@/components/NotificationProvider';
 import { Button, Stack, TextField } from '@mui/material';
 import { useState } from 'react';
-import { useNotification } from '@/components/NotificationProvider';
 
-interface FlavorTag { id: string; name: string; }
+interface FlavorTag {
+  id: string;
+  name: string;
+}
 
 interface FlavorTagSelectProps {
   value: FlavorTag[];
@@ -15,8 +18,14 @@ interface FlavorTagSelectProps {
 }
 
 function CreateFlavorTagForm({
-  initialName, onCreated, onCancel,
-}: { initialName: string; onCreated: (tag: FlavorTag) => void; onCancel: () => void; }) {
+  initialName,
+  onCreated,
+  onCancel,
+}: {
+  initialName: string;
+  onCreated: (tag: FlavorTag) => void;
+  onCancel: () => void;
+}) {
   const [name, setName] = useState(initialName);
   const { notify } = useNotification();
 
@@ -28,22 +37,41 @@ function CreateFlavorTagForm({
 
   return (
     <Stack spacing={2} sx={{ pt: 1 }}>
-      <TextField label="Name" value={name} onChange={(e) => setName(e.target.value)} required autoFocus />
+      <TextField
+        label="Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        required
+        autoFocus
+      />
       <Stack direction="row" spacing={1} justifyContent="flex-end">
         <Button onClick={onCancel}>Cancel</Button>
-        <Button variant="contained" onClick={handleSubmit} disabled={!name.trim()}>Create</Button>
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          disabled={!name.trim()}
+        >
+          Create
+        </Button>
       </Stack>
     </Stack>
   );
 }
 
-export default function FlavorTagSelect({ value, onChange, error, helperText }: FlavorTagSelectProps) {
+export default function FlavorTagSelect({
+  value,
+  onChange,
+  error,
+  helperText,
+}: FlavorTagSelectProps) {
   return (
     <AutocompleteCreate<FlavorTag>
       label="Flavor Tags"
       queryKey={['flavor-tags']}
       fetchFn={async (q) => {
-        const { data } = await apiClient.get('/flavor-tags', { params: { q, limit: 50 } });
+        const { data } = await apiClient.get('/flavor-tags', {
+          params: { q, limit: 50 },
+        });
         return data;
       }}
       value={value}

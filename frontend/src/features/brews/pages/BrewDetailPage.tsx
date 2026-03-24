@@ -1,35 +1,53 @@
-import { useState } from 'react';
-import { useParams } from 'react-router';
-import { useQuery } from '@tanstack/react-query';
-import {
-  Box, Button, Card, CardContent, Chip, CircularProgress,
-  Dialog, DialogActions, DialogContent, DialogTitle,
-  Divider, Grid, IconButton, Slider, Stack, TextField, Typography,
-} from '@mui/material';
-import {
-  Edit as EditIcon,
-  Archive as ArchiveIcon,
-  Add as AddIcon,
-  Delete as DeleteIcon,
-  Close as CloseIcon,
-} from '@mui/icons-material';
-import PageHeader from '@/components/PageHeader';
+import apiClient from '@/api/client';
 import ConfirmDialog from '@/components/ConfirmDialog';
-import TasteRadar, { brewTasteToRadar } from '@/components/TasteRadar';
 import FlavorTagSelect from '@/components/FlavorTagSelect';
 import { useNotification } from '@/components/NotificationProvider';
-import apiClient from '@/api/client';
+import PageHeader from '@/components/PageHeader';
+import TasteRadar, { brewTasteToRadar } from '@/components/TasteRadar';
 import type { Grinder } from '@/features/equipment/hooks';
-import {
-  validateGrindDisplay,
-  getGrindRangeDisplay,
-  getGrindPlaceholder,
-} from '@/utils/grindValidation';
 import { fmtDate } from '@/utils/date';
 import {
-  useBrew, useUpdateBrew, useDeleteBrew,
-  useUpsertBrewTaste, useDeleteBrewTaste,
-  type Brew, type BrewTaste,
+  getGrindPlaceholder,
+  getGrindRangeDisplay,
+  validateGrindDisplay,
+} from '@/utils/grindValidation';
+import {
+  Add as AddIcon,
+  Archive as ArchiveIcon,
+  Close as CloseIcon,
+  Delete as DeleteIcon,
+  Edit as EditIcon,
+} from '@mui/icons-material';
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Grid,
+  IconButton,
+  Slider,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useParams } from 'react-router';
+import {
+  type Brew,
+  type BrewTaste,
+  useBrew,
+  useDeleteBrew,
+  useDeleteBrewTaste,
+  useUpdateBrew,
+  useUpsertBrewTaste,
 } from '../hooks';
 
 // ─── helpers ────────────────────────────────────────────────────────────────
@@ -73,7 +91,11 @@ function BrewInfoCard({ brew }: { brew: Brew }) {
               <InfoRow label="Brewed At" value={fmtDate(brew.brewed_at)} />
               {brew.is_failed && (
                 <Stack direction="row" spacing={2} alignItems="center">
-                  <Typography variant="body2" color="text.secondary" sx={{ minWidth: 160 }}>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ minWidth: 160 }}
+                  >
                     Status
                   </Typography>
                   <Chip label="Failed" size="small" color="error" />
@@ -110,19 +132,31 @@ function BrewInfoCard({ brew }: { brew: Brew }) {
                 <InfoRow label="Yield" value={fmt(brew.yield_amount, 'g')} />
               </Grid>
               <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                <InfoRow label="Grind Setting" value={brew.grind_setting_display ?? fmt(brew.grind_setting)} />
+                <InfoRow
+                  label="Grind Setting"
+                  value={brew.grind_setting_display ?? fmt(brew.grind_setting)}
+                />
               </Grid>
               <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                <InfoRow label="Temperature" value={fmt(brew.temperature, '°C')} />
+                <InfoRow
+                  label="Temperature"
+                  value={fmt(brew.temperature, '°C')}
+                />
               </Grid>
               <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                 <InfoRow label="Pressure" value={fmt(brew.pressure, 'bar')} />
               </Grid>
               <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                <InfoRow label="Flow Rate" value={fmt(brew.flow_rate, 'ml/s')} />
+                <InfoRow
+                  label="Flow Rate"
+                  value={fmt(brew.flow_rate, 'ml/s')}
+                />
               </Grid>
               <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                <InfoRow label="Pre-infusion Time" value={fmt(brew.pre_infusion_time, 's')} />
+                <InfoRow
+                  label="Pre-infusion Time"
+                  value={fmt(brew.pre_infusion_time, 's')}
+                />
               </Grid>
               <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                 <InfoRow label="Total Time" value={fmt(brew.total_time, 's')} />
@@ -137,10 +171,16 @@ function BrewInfoCard({ brew }: { brew: Brew }) {
           {brew.notes && (
             <Grid size={{ xs: 12 }}>
               <Divider sx={{ mb: 2 }} />
-              <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+              <Typography
+                variant="subtitle2"
+                color="text.secondary"
+                gutterBottom
+              >
                 Notes
               </Typography>
-              <Typography variant="body2" whiteSpace="pre-wrap">{brew.notes}</Typography>
+              <Typography variant="body2" whiteSpace="pre-wrap">
+                {brew.notes}
+              </Typography>
             </Grid>
           )}
         </Grid>
@@ -152,7 +192,10 @@ function BrewInfoCard({ brew }: { brew: Brew }) {
 // ─── TasteSlider ─────────────────────────────────────────────────────────────
 
 function TasteSlider({
-  label, name, value, onChange,
+  label,
+  name,
+  value,
+  onChange,
 }: {
   label: string;
   name: string;
@@ -162,16 +205,32 @@ function TasteSlider({
   const isOff = value === null;
   return (
     <Box sx={{ px: 1 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Typography variant="body2" color={isOff ? 'text.disabled' : 'text.primary'}>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Typography
+          variant="body2"
+          color={isOff ? 'text.disabled' : 'text.primary'}
+        >
           {label}
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-          <Typography variant="body2" color={isOff ? 'text.disabled' : 'text.primary'}>
+          <Typography
+            variant="body2"
+            color={isOff ? 'text.disabled' : 'text.primary'}
+          >
             {isOff ? '—' : value.toFixed(1)}
           </Typography>
           {!isOff && (
-            <IconButton size="small" onClick={() => onChange(name, null)} sx={{ p: 0.25 }}>
+            <IconButton
+              size="small"
+              onClick={() => onChange(name, null)}
+              sx={{ p: 0.25 }}
+            >
               <CloseIcon sx={{ fontSize: 14 }} />
             </IconButton>
           )}
@@ -187,7 +246,11 @@ function TasteSlider({
         sx={{ opacity: isOff ? 0.3 : 1 }}
       />
       {isOff && (
-        <Typography variant="caption" color="text.disabled" sx={{ mt: -1, display: 'block' }}>
+        <Typography
+          variant="caption"
+          color="text.disabled"
+          sx={{ mt: -1, display: 'block' }}
+        >
           Tap to rate
         </Typography>
       )}
@@ -243,7 +306,9 @@ function TasteFormDialog({
   existingTaste?: BrewTaste | null;
   onClose: () => void;
 }) {
-  const [form, setForm] = useState<TasteFormState>(() => defaultTasteForm(existingTaste));
+  const [form, setForm] = useState<TasteFormState>(() =>
+    defaultTasteForm(existingTaste),
+  );
   const upsertTaste = useUpsertBrewTaste(brewId);
   const { notify } = useNotification();
 
@@ -283,8 +348,12 @@ function TasteFormDialog({
           {/* Score */}
           <Stack spacing={0.5}>
             <Stack direction="row" justifyContent="space-between">
-              <Typography variant="body2" fontWeight="medium">Score</Typography>
-              <Typography variant="body2" color="text.secondary">{form.score}</Typography>
+              <Typography variant="body2" fontWeight="medium">
+                Score
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {form.score}
+              </Typography>
             </Stack>
             <Slider
               value={form.score}
@@ -315,7 +384,9 @@ function TasteFormDialog({
           {/* Flavor tags */}
           <FlavorTagSelect
             value={form.flavor_tags}
-            onChange={(tags) => setForm((prev) => ({ ...prev, flavor_tags: tags }))}
+            onChange={(tags) =>
+              setForm((prev) => ({ ...prev, flavor_tags: tags }))
+            }
           />
 
           {/* Notes */}
@@ -324,7 +395,9 @@ function TasteFormDialog({
             multiline
             minRows={2}
             value={form.notes}
-            onChange={(e) => setForm((prev) => ({ ...prev, notes: e.target.value }))}
+            onChange={(e) =>
+              setForm((prev) => ({ ...prev, notes: e.target.value }))
+            }
           />
         </Stack>
       </DialogContent>
@@ -362,7 +435,12 @@ function TasteSection({ brew }: { brew: Brew }) {
     <>
       <Card variant="outlined" sx={{ mt: 3 }}>
         <CardContent>
-          <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            sx={{ mb: 2 }}
+          >
             <Typography variant="h6">Taste</Typography>
             <Stack direction="row" spacing={1}>
               {taste ? (
@@ -404,7 +482,9 @@ function TasteSection({ brew }: { brew: Brew }) {
               <Grid size={{ xs: 12, md: 5 }}>
                 {/* Score hero */}
                 <Box sx={{ mb: 2 }}>
-                  <Typography variant="caption" color="text.secondary">Score</Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    Score
+                  </Typography>
                   <Typography variant="h3" fontWeight="bold" color="primary">
                     {taste.score != null ? taste.score.toFixed(1) : '—'}
                   </Typography>
@@ -415,8 +495,14 @@ function TasteSection({ brew }: { brew: Brew }) {
                 {/* Axes values */}
                 <Stack spacing={0.5}>
                   {TASTE_AXES.map(({ name, label }) => (
-                    <Stack key={name} direction="row" justifyContent="space-between">
-                      <Typography variant="body2" color="text.secondary">{label}</Typography>
+                    <Stack
+                      key={name}
+                      direction="row"
+                      justifyContent="space-between"
+                    >
+                      <Typography variant="body2" color="text.secondary">
+                        {label}
+                      </Typography>
                       <Typography variant="body2" fontWeight="medium">
                         {taste[name] != null ? taste[name] : '—'}
                       </Typography>
@@ -434,7 +520,11 @@ function TasteSection({ brew }: { brew: Brew }) {
               {taste.flavor_tags.length > 0 && (
                 <Grid size={{ xs: 12 }}>
                   <Divider sx={{ mb: 1.5 }} />
-                  <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                  <Typography
+                    variant="subtitle2"
+                    color="text.secondary"
+                    gutterBottom
+                  >
                     Flavor Tags
                   </Typography>
                   <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
@@ -455,16 +545,23 @@ function TasteSection({ brew }: { brew: Brew }) {
               {taste.notes && (
                 <Grid size={{ xs: 12 }}>
                   <Divider sx={{ mb: 1.5 }} />
-                  <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                  <Typography
+                    variant="subtitle2"
+                    color="text.secondary"
+                    gutterBottom
+                  >
                     Taste Notes
                   </Typography>
-                  <Typography variant="body2" whiteSpace="pre-wrap">{taste.notes}</Typography>
+                  <Typography variant="body2" whiteSpace="pre-wrap">
+                    {taste.notes}
+                  </Typography>
                 </Grid>
               )}
             </Grid>
           ) : (
             <Typography variant="body2" color="text.secondary">
-              No taste recorded yet. Add taste data to track this brew's flavor profile.
+              No taste recorded yet. Add taste data to track this brew's flavor
+              profile.
             </Typography>
           )}
         </CardContent>
@@ -513,7 +610,8 @@ function brewToEditForm(brew: Brew): EditBrewForm {
     temperature: brew.temperature != null ? String(brew.temperature) : '',
     pressure: brew.pressure != null ? String(brew.pressure) : '',
     flow_rate: brew.flow_rate != null ? String(brew.flow_rate) : '',
-    pre_infusion_time: brew.pre_infusion_time != null ? String(brew.pre_infusion_time) : '',
+    pre_infusion_time:
+      brew.pre_infusion_time != null ? String(brew.pre_infusion_time) : '',
     total_time: brew.total_time != null ? String(brew.total_time) : '',
     notes: brew.notes ?? '',
     is_failed: brew.is_failed,
@@ -521,7 +619,7 @@ function brewToEditForm(brew: Brew): EditBrewForm {
 }
 
 function parseOptionalFloat(s: string): number | null {
-  const v = parseFloat(s);
+  const v = Number.parseFloat(s);
   return Number.isFinite(v) ? v : null;
 }
 
@@ -550,13 +648,15 @@ function EditBrewDialog({
   });
 
   const rings = grinder?.rings ?? undefined;
-  const grindError = rings && form.grind_setting_display.trim()
-    ? validateGrindDisplay(form.grind_setting_display, rings)
-    : null;
+  const grindError =
+    rings && form.grind_setting_display.trim()
+      ? validateGrindDisplay(form.grind_setting_display, rings)
+      : null;
 
   const handleOpen = () => setForm(brewToEditForm(brew));
 
-  const set = (field: keyof EditBrewForm) =>
+  const set =
+    (field: keyof EditBrewForm) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       setForm((prev) => ({ ...prev, [field]: e.target.value }));
 
@@ -591,10 +691,22 @@ function EditBrewDialog({
         <Stack spacing={2} sx={{ pt: 1 }}>
           <Grid container spacing={2}>
             <Grid size={{ xs: 6 }}>
-              <TextField label="Dose (g)" value={form.dose} onChange={set('dose')} type="number" fullWidth />
+              <TextField
+                label="Dose (g)"
+                value={form.dose}
+                onChange={set('dose')}
+                type="number"
+                fullWidth
+              />
             </Grid>
             <Grid size={{ xs: 6 }}>
-              <TextField label="Yield (g)" value={form.yield_amount} onChange={set('yield_amount')} type="number" fullWidth />
+              <TextField
+                label="Yield (g)"
+                value={form.yield_amount}
+                onChange={set('yield_amount')}
+                type="number"
+                fullWidth
+              />
             </Grid>
             <Grid size={{ xs: 12 }}>
               <TextField
@@ -603,25 +715,60 @@ function EditBrewDialog({
                 onChange={set('grind_setting_display')}
                 type="text"
                 fullWidth
-                placeholder={rings ? getGrindPlaceholder(rings) : 'e.g. 18 clicks, 3.2'}
-                helperText={grindError ?? (rings ? `Range: ${getGrindRangeDisplay(rings)}` : undefined)}
+                placeholder={
+                  rings ? getGrindPlaceholder(rings) : 'e.g. 18 clicks, 3.2'
+                }
+                helperText={
+                  grindError ??
+                  (rings ? `Range: ${getGrindRangeDisplay(rings)}` : undefined)
+                }
                 error={!!grindError}
               />
             </Grid>
             <Grid size={{ xs: 6 }}>
-              <TextField label="Temperature (°C)" value={form.temperature} onChange={set('temperature')} type="number" fullWidth />
+              <TextField
+                label="Temperature (°C)"
+                value={form.temperature}
+                onChange={set('temperature')}
+                type="number"
+                fullWidth
+              />
             </Grid>
             <Grid size={{ xs: 6 }}>
-              <TextField label="Pressure (bar)" value={form.pressure} onChange={set('pressure')} type="number" fullWidth />
+              <TextField
+                label="Pressure (bar)"
+                value={form.pressure}
+                onChange={set('pressure')}
+                type="number"
+                fullWidth
+              />
             </Grid>
             <Grid size={{ xs: 6 }}>
-              <TextField label="Flow Rate (ml/s)" value={form.flow_rate} onChange={set('flow_rate')} type="number" fullWidth />
+              <TextField
+                label="Flow Rate (ml/s)"
+                value={form.flow_rate}
+                onChange={set('flow_rate')}
+                type="number"
+                fullWidth
+              />
             </Grid>
             <Grid size={{ xs: 6 }}>
-              <TextField label="Pre-infusion Time (s)" value={form.pre_infusion_time} onChange={set('pre_infusion_time')} type="number" fullWidth />
+              <TextField
+                label="Pre-infusion Time (s)"
+                value={form.pre_infusion_time}
+                onChange={set('pre_infusion_time')}
+                type="number"
+                fullWidth
+              />
             </Grid>
             <Grid size={{ xs: 6 }}>
-              <TextField label="Total Time (s)" value={form.total_time} onChange={set('total_time')} type="number" fullWidth />
+              <TextField
+                label="Total Time (s)"
+                value={form.total_time}
+                onChange={set('total_time')}
+                type="number"
+                fullWidth
+              />
             </Grid>
           </Grid>
 
@@ -640,7 +787,9 @@ function EditBrewDialog({
               label={form.is_failed ? 'Failed' : 'Success'}
               color={form.is_failed ? 'error' : 'success'}
               size="small"
-              onClick={() => setForm((prev) => ({ ...prev, is_failed: !prev.is_failed }))}
+              onClick={() =>
+                setForm((prev) => ({ ...prev, is_failed: !prev.is_failed }))
+              }
               clickable
             />
           </Stack>
@@ -681,7 +830,12 @@ export default function BrewDetailPage() {
 
   if (isLoading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="40vh">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="40vh"
+      >
         <CircularProgress />
       </Box>
     );
@@ -699,10 +853,7 @@ export default function BrewDetailPage() {
     <>
       <PageHeader
         title="Brew"
-        breadcrumbs={[
-          { label: 'Brews', to: '/brews' },
-          { label: brewLabel },
-        ]}
+        breadcrumbs={[{ label: 'Brews', to: '/brews' }, { label: brewLabel }]}
         actions={
           <>
             <Button

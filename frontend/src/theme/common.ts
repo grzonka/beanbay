@@ -1,4 +1,4 @@
-import { type ThemeOptions } from '@mui/material/styles';
+import type { ThemeOptions } from '@mui/material/styles';
 
 export const commonThemeOptions: ThemeOptions = {
   typography: {

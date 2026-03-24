@@ -1,21 +1,25 @@
-import { useMemo } from 'react';
-import { type GridColDef } from '@mui/x-data-grid';
-import { Button, Chip } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
-import { useNavigate } from 'react-router';
-import PageHeader from '@/components/PageHeader';
 import DataTable from '@/components/DataTable';
-import { usePaginationParams } from '@/utils/pagination';
+import PageHeader from '@/components/PageHeader';
 import { fmtDate } from '@/utils/date';
-import { useBrews, type BrewListItem } from '../hooks';
+import { usePaginationParams } from '@/utils/pagination';
+import { Add as AddIcon } from '@mui/icons-material';
+import { Button, Chip } from '@mui/material';
+import type { GridColDef } from '@mui/x-data-grid';
+import { useMemo } from 'react';
+import { useNavigate } from 'react-router';
+import { type BrewListItem, useBrews } from '../hooks';
 
 export default function BrewsListPage() {
   const navigate = useNavigate();
 
   const {
-    params, paginationModel, sortModel,
-    onPaginationModelChange, onSortModelChange,
-    setSearch, setIncludeRetired,
+    params,
+    paginationModel,
+    sortModel,
+    onPaginationModelChange,
+    onSortModelChange,
+    setSearch,
+    setIncludeRetired,
   } = usePaginationParams('brewed_at');
 
   const { data, isLoading } = useBrews(params);

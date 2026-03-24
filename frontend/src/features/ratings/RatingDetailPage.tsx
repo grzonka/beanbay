@@ -1,20 +1,40 @@
-import { useState } from 'react';
-import { useParams } from 'react-router';
-import {
-  Box, Button, Card, CardContent, Chip, CircularProgress,
-  Dialog, DialogActions, DialogContent, DialogTitle, Divider,
-  Slider, Stack, TextField, Typography,
-} from '@mui/material';
-import { Archive as ArchiveIcon, Edit as EditIcon } from '@mui/icons-material';
-import PageHeader from '@/components/PageHeader';
-import TasteRadar, { beanTasteToRadar } from '@/components/TasteRadar';
 import ConfirmDialog from '@/components/ConfirmDialog';
 import FlavorTagSelect from '@/components/FlavorTagSelect';
 import { useNotification } from '@/components/NotificationProvider';
+import PageHeader from '@/components/PageHeader';
+import TasteRadar, { beanTasteToRadar } from '@/components/TasteRadar';
 import { fmtDateTime } from '@/utils/date';
-import { useRating, useDeleteRating, useUpsertBeanTaste, type BeanTaste } from './hooks';
+import { Archive as ArchiveIcon, Edit as EditIcon } from '@mui/icons-material';
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Slider,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { useState } from 'react';
+import { useParams } from 'react-router';
+import {
+  type BeanTaste,
+  useDeleteRating,
+  useRating,
+  useUpsertBeanTaste,
+} from './hooks';
 
-interface FlavorTag { id: string; name: string; }
+interface FlavorTag {
+  id: string;
+  name: string;
+}
 
 interface SliderFieldProps {
   label: string;
@@ -31,7 +51,10 @@ function SliderField({ label, value, onChange }: SliderFieldProps) {
       <Slider
         value={value}
         onChange={(_, v) => onChange(v as number)}
-        min={0} max={10} step={1} marks
+        min={0}
+        max={10}
+        step={1}
+        marks
         valueLabelDisplay="auto"
         size="small"
       />
@@ -39,7 +62,10 @@ function SliderField({ label, value, onChange }: SliderFieldProps) {
   );
 }
 
-interface InfoRowProps { label: string; value: React.ReactNode; }
+interface InfoRowProps {
+  label: string;
+  value: React.ReactNode;
+}
 
 function InfoRow({ label, value }: InfoRowProps) {
   return (
@@ -59,7 +85,12 @@ interface EditTasteDialogProps {
   taste: BeanTaste | null;
 }
 
-function EditTasteDialog({ open, onClose, ratingId, taste }: EditTasteDialogProps) {
+function EditTasteDialog({
+  open,
+  onClose,
+  ratingId,
+  taste,
+}: EditTasteDialogProps) {
   const { notify } = useNotification();
   const upsert = useUpsertBeanTaste(ratingId);
 
@@ -71,7 +102,9 @@ function EditTasteDialog({ open, onClose, ratingId, taste }: EditTasteDialogProp
   const [aroma, setAroma] = useState(taste?.aroma ?? 5);
   const [cleanCup, setCleanCup] = useState(taste?.clean_cup ?? 5);
   const [notes, setNotes] = useState(taste?.notes ?? '');
-  const [flavorTags, setFlavorTags] = useState<FlavorTag[]>(taste?.flavor_tags ?? []);
+  const [flavorTags, setFlavorTags] = useState<FlavorTag[]>(
+    taste?.flavor_tags ?? [],
+  );
 
   const handleSubmit = async () => {
     await upsert.mutateAsync({
@@ -96,22 +129,42 @@ function EditTasteDialog({ open, onClose, ratingId, taste }: EditTasteDialogProp
         <Stack spacing={2} sx={{ pt: 1 }}>
           <SliderField label="Score" value={score} onChange={setScore} />
           <SliderField label="Acidity" value={acidity} onChange={setAcidity} />
-          <SliderField label="Sweetness" value={sweetness} onChange={setSweetness} />
+          <SliderField
+            label="Sweetness"
+            value={sweetness}
+            onChange={setSweetness}
+          />
           <SliderField label="Body" value={body} onChange={setBody} />
-          <SliderField label="Complexity" value={complexity} onChange={setComplexity} />
+          <SliderField
+            label="Complexity"
+            value={complexity}
+            onChange={setComplexity}
+          />
           <SliderField label="Aroma" value={aroma} onChange={setAroma} />
-          <SliderField label="Clean Cup" value={cleanCup} onChange={setCleanCup} />
+          <SliderField
+            label="Clean Cup"
+            value={cleanCup}
+            onChange={setCleanCup}
+          />
           <TextField
-            label="Notes" value={notes}
+            label="Notes"
+            value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            multiline rows={3}
+            multiline
+            rows={3}
           />
           <FlavorTagSelect value={flavorTags} onChange={setFlavorTags} />
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} disabled={upsert.isPending}>Cancel</Button>
-        <Button variant="contained" onClick={handleSubmit} disabled={upsert.isPending}>
+        <Button onClick={onClose} disabled={upsert.isPending}>
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          disabled={upsert.isPending}
+        >
           Save
         </Button>
       </DialogActions>
@@ -138,7 +191,12 @@ export default function RatingDetailPage() {
 
   if (isLoading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="40vh">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="40vh"
+      >
         <CircularProgress />
       </Box>
     );
@@ -160,7 +218,9 @@ export default function RatingDetailPage() {
         ]}
         actions={
           <Button
-            variant="outlined" color="warning" startIcon={<ArchiveIcon />}
+            variant="outlined"
+            color="warning"
+            startIcon={<ArchiveIcon />}
             onClick={() => setRetireOpen(true)}
           >
             Retire
@@ -179,10 +239,17 @@ export default function RatingDetailPage() {
 
       {taste ? (
         <>
-          <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            sx={{ mb: 2 }}
+          >
             <Typography variant="h6">Taste Profile</Typography>
             <Button
-              variant="outlined" size="small" startIcon={<EditIcon />}
+              variant="outlined"
+              size="small"
+              startIcon={<EditIcon />}
               onClick={() => setEditTasteOpen(true)}
             >
               Edit Taste
@@ -196,13 +263,27 @@ export default function RatingDetailPage() {
           <Card variant="outlined" sx={{ mb: 3 }}>
             <CardContent>
               <Stack spacing={1.5}>
-                {taste.score != null && <InfoRow label="Score" value={taste.score} />}
-                {taste.acidity != null && <InfoRow label="Acidity" value={taste.acidity} />}
-                {taste.sweetness != null && <InfoRow label="Sweetness" value={taste.sweetness} />}
-                {taste.body != null && <InfoRow label="Body" value={taste.body} />}
-                {taste.complexity != null && <InfoRow label="Complexity" value={taste.complexity} />}
-                {taste.aroma != null && <InfoRow label="Aroma" value={taste.aroma} />}
-                {taste.clean_cup != null && <InfoRow label="Clean Cup" value={taste.clean_cup} />}
+                {taste.score != null && (
+                  <InfoRow label="Score" value={taste.score} />
+                )}
+                {taste.acidity != null && (
+                  <InfoRow label="Acidity" value={taste.acidity} />
+                )}
+                {taste.sweetness != null && (
+                  <InfoRow label="Sweetness" value={taste.sweetness} />
+                )}
+                {taste.body != null && (
+                  <InfoRow label="Body" value={taste.body} />
+                )}
+                {taste.complexity != null && (
+                  <InfoRow label="Complexity" value={taste.complexity} />
+                )}
+                {taste.aroma != null && (
+                  <InfoRow label="Aroma" value={taste.aroma} />
+                )}
+                {taste.clean_cup != null && (
+                  <InfoRow label="Clean Cup" value={taste.clean_cup} />
+                )}
                 {taste.notes && <InfoRow label="Notes" value={taste.notes} />}
               </Stack>
             </CardContent>
@@ -210,12 +291,22 @@ export default function RatingDetailPage() {
 
           {taste.flavor_tags.length > 0 && (
             <Box sx={{ mb: 3 }}>
-              <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+              <Typography
+                variant="subtitle2"
+                color="text.secondary"
+                gutterBottom
+              >
                 Flavor Tags
               </Typography>
               <Stack direction="row" spacing={0.5} flexWrap="wrap">
                 {taste.flavor_tags.map((tag) => (
-                  <Chip key={tag.id} label={tag.name} size="small" color="primary" variant="outlined" />
+                  <Chip
+                    key={tag.id}
+                    label={tag.name}
+                    size="small"
+                    color="primary"
+                    variant="outlined"
+                  />
                 ))}
               </Stack>
             </Box>
@@ -225,10 +316,18 @@ export default function RatingDetailPage() {
         </>
       ) : (
         <Box sx={{ mb: 3 }}>
-          <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Typography variant="body2" color="text.secondary">No taste data recorded.</Typography>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography variant="body2" color="text.secondary">
+              No taste data recorded.
+            </Typography>
             <Button
-              variant="outlined" size="small" startIcon={<EditIcon />}
+              variant="outlined"
+              size="small"
+              startIcon={<EditIcon />}
               onClick={() => setEditTasteOpen(true)}
             >
               Add Taste

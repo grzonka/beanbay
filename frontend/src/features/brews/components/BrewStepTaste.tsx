@@ -1,10 +1,21 @@
-// frontend/src/features/brews/components/BrewStepTaste.tsx
-import { Box, Grid, IconButton, Slider, Stack, TextField, Typography } from '@mui/material';
-import { Close as CloseIcon } from '@mui/icons-material';
 import FlavorTagSelect from '@/components/FlavorTagSelect';
 import TasteRadar, { brewTasteToRadar } from '@/components/TasteRadar';
+import { Close as CloseIcon } from '@mui/icons-material';
+// frontend/src/features/brews/components/BrewStepTaste.tsx
+import {
+  Box,
+  Grid,
+  IconButton,
+  Slider,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
 
-interface FlavorTag { id: string; name: string; }
+interface FlavorTag {
+  id: string;
+  name: string;
+}
 
 export interface TasteData {
   score: number | null;
@@ -23,7 +34,10 @@ interface BrewStepTasteProps {
   onChange: (patch: Partial<TasteData>) => void;
 }
 
-const AXES: { key: keyof Omit<TasteData, 'score' | 'notes' | 'flavor_tags'>; label: string }[] = [
+const AXES: {
+  key: keyof Omit<TasteData, 'score' | 'notes' | 'flavor_tags'>;
+  label: string;
+}[] = [
   { key: 'acidity', label: 'Acidity' },
   { key: 'sweetness', label: 'Sweetness' },
   { key: 'body', label: 'Body' },
@@ -32,22 +46,44 @@ const AXES: { key: keyof Omit<TasteData, 'score' | 'notes' | 'flavor_tags'>; lab
   { key: 'aftertaste', label: 'Aftertaste' },
 ];
 
-function TasteSlider({ label, value, onChange }: {
-  label: string; value: number | null; onChange: (v: number | null) => void;
+function TasteSlider({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: number | null;
+  onChange: (v: number | null) => void;
 }) {
   const isOff = value === null;
   return (
     <Box sx={{ px: 1 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Typography variant="body2" color={isOff ? 'text.disabled' : 'text.primary'}>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Typography
+          variant="body2"
+          color={isOff ? 'text.disabled' : 'text.primary'}
+        >
           {label}
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-          <Typography variant="body2" color={isOff ? 'text.disabled' : 'text.primary'}>
+          <Typography
+            variant="body2"
+            color={isOff ? 'text.disabled' : 'text.primary'}
+          >
             {isOff ? '—' : value.toFixed(1)}
           </Typography>
           {!isOff && (
-            <IconButton size="small" onClick={() => onChange(null)} sx={{ p: 0.25 }}>
+            <IconButton
+              size="small"
+              onClick={() => onChange(null)}
+              sx={{ p: 0.25 }}
+            >
               <CloseIcon sx={{ fontSize: 14 }} />
             </IconButton>
           )}
@@ -56,12 +92,18 @@ function TasteSlider({ label, value, onChange }: {
       <Slider
         value={value ?? 5}
         onChange={(_, v) => onChange(v as number)}
-        min={0} max={10} step={0.5}
+        min={0}
+        max={10}
+        step={0.5}
         valueLabelDisplay="auto"
         sx={{ opacity: isOff ? 0.3 : 1 }}
       />
       {isOff && (
-        <Typography variant="caption" color="text.disabled" sx={{ mt: -1, display: 'block' }}>
+        <Typography
+          variant="caption"
+          color="text.disabled"
+          sx={{ mt: -1, display: 'block' }}
+        >
           Tap to rate
         </Typography>
       )}
@@ -86,7 +128,11 @@ export default function BrewStepTaste({ data, onChange }: BrewStepTasteProps) {
       </Typography>
 
       <Box>
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+        >
           <Typography variant="body2">Overall Score</Typography>
           <Typography variant="body2" fontWeight="bold">
             {data.score != null ? data.score.toFixed(1) : '—'}

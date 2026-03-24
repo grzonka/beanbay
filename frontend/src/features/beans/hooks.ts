@@ -1,6 +1,6 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import apiClient from '@/api/client';
 import type { PaginationParams } from '@/utils/pagination';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 // ---- TypeScript interfaces ----
 
@@ -146,7 +146,10 @@ export function useCreateBean() {
 export function useUpdateBean() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, ...body }: { id: string; [key: string]: unknown }) => {
+    mutationFn: async ({
+      id,
+      ...body
+    }: { id: string; [key: string]: unknown }) => {
       const { data } = await apiClient.patch(`/beans/${id}`, body);
       return data;
     },
@@ -194,8 +197,14 @@ export function useCreateBag(beanId: string) {
 export function useUpdateBag(beanId: string) {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, ...body }: { id: string; [key: string]: unknown }) => {
-      const { data } = await apiClient.patch(`/beans/${beanId}/bags/${id}`, body);
+    mutationFn: async ({
+      id,
+      ...body
+    }: { id: string; [key: string]: unknown }) => {
+      const { data } = await apiClient.patch(
+        `/beans/${beanId}/bags/${id}`,
+        body,
+      );
       return data;
     },
     onSuccess: () => {
@@ -224,7 +233,9 @@ export function useBeanRatings(beanId: string, params: PaginationParams) {
   return useQuery<Paginated<BeanRating>>({
     queryKey: ['beans', beanId, 'ratings', params],
     queryFn: async () => {
-      const { data } = await apiClient.get(`/beans/${beanId}/ratings`, { params });
+      const { data } = await apiClient.get(`/beans/${beanId}/ratings`, {
+        params,
+      });
       return data;
     },
     enabled: !!beanId,

@@ -1,18 +1,24 @@
-import { useState } from 'react';
-import { type GridColDef } from '@mui/x-data-grid';
-import { Button } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
-import PageHeader from '@/components/PageHeader';
-import DataTable from '@/components/DataTable';
 import ConfirmDialog from '@/components/ConfirmDialog';
-import { usePaginationParams } from '@/utils/pagination';
-import { paperHooks, type Paper } from '../hooks';
-import PaperFormDialog from '../components/PaperFormDialog';
+import DataTable from '@/components/DataTable';
 import { useNotification } from '@/components/NotificationProvider';
+import PageHeader from '@/components/PageHeader';
+import { usePaginationParams } from '@/utils/pagination';
+import { Add as AddIcon } from '@mui/icons-material';
+import { Button } from '@mui/material';
+import type { GridColDef } from '@mui/x-data-grid';
+import { useState } from 'react';
+import PaperFormDialog from '../components/PaperFormDialog';
+import { type Paper, paperHooks } from '../hooks';
 
 export default function PapersPage() {
-  const { params, paginationModel, sortModel, onPaginationModelChange, onSortModelChange, setIncludeRetired } =
-    usePaginationParams('name');
+  const {
+    params,
+    paginationModel,
+    sortModel,
+    onPaginationModelChange,
+    onSortModelChange,
+    setIncludeRetired,
+  } = usePaginationParams('name');
   const { data, isLoading } = paperHooks.useList(params);
   const deletePaper = paperHooks.useDelete();
   const { notify } = useNotification();
@@ -54,7 +60,10 @@ export default function PapersPage() {
           <Button
             variant="contained"
             startIcon={<AddIcon />}
-            onClick={() => { setEditPaper(null); setFormOpen(true); }}
+            onClick={() => {
+              setEditPaper(null);
+              setFormOpen(true);
+            }}
           >
             Add Paper
           </Button>
@@ -71,10 +80,16 @@ export default function PapersPage() {
         onSortModelChange={onSortModelChange}
         includeRetired={params.include_retired}
         onIncludeRetiredChange={setIncludeRetired}
-        onRowClick={(row) => { setEditPaper(row); setFormOpen(true); }}
+        onRowClick={(row) => {
+          setEditPaper(row);
+          setFormOpen(true);
+        }}
         emptyTitle="No papers yet"
         emptyActionLabel="Add Paper"
-        onEmptyAction={() => { setEditPaper(null); setFormOpen(true); }}
+        onEmptyAction={() => {
+          setEditPaper(null);
+          setFormOpen(true);
+        }}
       />
       <PaperFormDialog
         open={formOpen}

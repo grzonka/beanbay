@@ -1,18 +1,24 @@
-import { useState } from 'react';
-import { type GridColDef } from '@mui/x-data-grid';
-import { Button, Chip, Stack } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
-import PageHeader from '@/components/PageHeader';
-import DataTable from '@/components/DataTable';
 import ConfirmDialog from '@/components/ConfirmDialog';
-import { usePaginationParams } from '@/utils/pagination';
-import { brewerHooks, type Brewer } from '../hooks';
-import BrewerFormDialog from '../components/BrewerFormDialog';
+import DataTable from '@/components/DataTable';
 import { useNotification } from '@/components/NotificationProvider';
+import PageHeader from '@/components/PageHeader';
+import { usePaginationParams } from '@/utils/pagination';
+import { Add as AddIcon } from '@mui/icons-material';
+import { Button, Chip, Stack } from '@mui/material';
+import type { GridColDef } from '@mui/x-data-grid';
+import { useState } from 'react';
+import BrewerFormDialog from '../components/BrewerFormDialog';
+import { type Brewer, brewerHooks } from '../hooks';
 
 export default function BrewersPage() {
-  const { params, paginationModel, sortModel, onPaginationModelChange, onSortModelChange, setIncludeRetired } =
-    usePaginationParams('name');
+  const {
+    params,
+    paginationModel,
+    sortModel,
+    onPaginationModelChange,
+    onSortModelChange,
+    setIncludeRetired,
+  } = usePaginationParams('name');
   const { data, isLoading } = brewerHooks.useList(params);
   const deleteBrewer = brewerHooks.useDelete();
   const { notify } = useNotification();
@@ -53,7 +59,13 @@ export default function BrewersPage() {
         const methods = (params.row as Brewer).methods;
         if (!methods?.length) return '—';
         return (
-          <Stack direction="row" spacing={0.5} flexWrap="wrap" alignItems="center" height="100%">
+          <Stack
+            direction="row"
+            spacing={0.5}
+            flexWrap="wrap"
+            alignItems="center"
+            height="100%"
+          >
             {methods.map((m) => (
               <Chip key={m.id} label={m.name} size="small" variant="outlined" />
             ))}
@@ -81,7 +93,10 @@ export default function BrewersPage() {
           <Button
             variant="contained"
             startIcon={<AddIcon />}
-            onClick={() => { setEditBrewer(null); setFormOpen(true); }}
+            onClick={() => {
+              setEditBrewer(null);
+              setFormOpen(true);
+            }}
           >
             Add Brewer
           </Button>
@@ -98,14 +113,23 @@ export default function BrewersPage() {
         onSortModelChange={onSortModelChange}
         includeRetired={params.include_retired}
         onIncludeRetiredChange={setIncludeRetired}
-        onRowClick={(row) => { setEditBrewer(row); setFormOpen(true); }}
+        onRowClick={(row) => {
+          setEditBrewer(row);
+          setFormOpen(true);
+        }}
         emptyTitle="No brewers yet"
         emptyActionLabel="Add Brewer"
-        onEmptyAction={() => { setEditBrewer(null); setFormOpen(true); }}
+        onEmptyAction={() => {
+          setEditBrewer(null);
+          setFormOpen(true);
+        }}
       />
       <BrewerFormDialog
         open={formOpen}
-        onClose={() => { setFormOpen(false); setEditBrewer(null); }}
+        onClose={() => {
+          setFormOpen(false);
+          setEditBrewer(null);
+        }}
         brewer={editBrewer}
         onRetire={editBrewer ? () => setRetireTarget(editBrewer) : undefined}
         onActivate={editBrewer?.retired_at ? handleActivate : undefined}

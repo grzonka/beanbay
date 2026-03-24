@@ -1,17 +1,39 @@
-import { useState, useEffect } from 'react';
-import {
-  Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack,
-  Switch, FormControlLabel, TextField, MenuItem, Select, FormControl,
-  InputLabel, Slider, Typography, Box, IconButton,
-} from '@mui/material';
-import { Delete as DeleteIcon } from '@mui/icons-material';
+import apiClient from '@/api/client';
 import AutocompleteCreate from '@/components/AutocompleteCreate';
 import FlavorTagSelect from '@/components/FlavorTagSelect';
-import apiClient from '@/api/client';
 import { useNotification } from '@/components/NotificationProvider';
-import { useCreateBean, useUpdateBean, type Bean, type FlavorTag } from '../hooks';
+import { Delete as DeleteIcon } from '@mui/icons-material';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  FormControlLabel,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
+  Slider,
+  Stack,
+  Switch,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { useEffect, useState } from 'react';
+import {
+  type Bean,
+  type FlavorTag,
+  useCreateBean,
+  useUpdateBean,
+} from '../hooks';
 
-interface OptionItem { id: string; name: string; }
+interface OptionItem {
+  id: string;
+  name: string;
+}
 
 interface OriginWithPercentage {
   origin: OptionItem;
@@ -26,7 +48,12 @@ interface BeanFormDialogProps {
 }
 
 function CreateInlineForm({
-  endpoint, label, fields, initialName, onCreated, onCancel,
+  endpoint,
+  label,
+  fields,
+  initialName,
+  onCreated,
+  onCancel,
 }: {
   endpoint: string;
   label: string;
@@ -35,7 +62,9 @@ function CreateInlineForm({
   onCreated: (item: OptionItem) => void;
   onCancel: () => void;
 }) {
-  const [values, setValues] = useState<Record<string, string>>({ name: initialName });
+  const [values, setValues] = useState<Record<string, string>>({
+    name: initialName,
+  });
   const { notify } = useNotification();
 
   const handleSubmit = async () => {
@@ -47,25 +76,42 @@ function CreateInlineForm({
   return (
     <Stack spacing={2} sx={{ pt: 1 }}>
       <TextField
-        label="Name" value={values.name ?? ''}
+        label="Name"
+        value={values.name ?? ''}
         onChange={(e) => setValues((v) => ({ ...v, name: e.target.value }))}
-        required autoFocus
+        required
+        autoFocus
       />
       {fields?.map((f) => (
         <TextField
-          key={f.key} label={f.label} value={values[f.key] ?? ''}
-          onChange={(e) => setValues((v) => ({ ...v, [f.key]: e.target.value }))}
+          key={f.key}
+          label={f.label}
+          value={values[f.key] ?? ''}
+          onChange={(e) =>
+            setValues((v) => ({ ...v, [f.key]: e.target.value }))
+          }
         />
       ))}
       <Stack direction="row" spacing={1} justifyContent="flex-end">
         <Button onClick={onCancel}>Cancel</Button>
-        <Button variant="contained" onClick={handleSubmit} disabled={!values.name?.trim()}>Create</Button>
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          disabled={!values.name?.trim()}
+        >
+          Create
+        </Button>
       </Stack>
     </Stack>
   );
 }
 
-export default function BeanFormDialog({ open, onClose, bean, onCreated }: BeanFormDialogProps) {
+export default function BeanFormDialog({
+  open,
+  onClose,
+  bean,
+  onCreated,
+}: BeanFormDialogProps) {
   const isEdit = !!bean;
   const create = useCreateBean();
   const update = useUpdateBean();
@@ -124,7 +170,9 @@ export default function BeanFormDialog({ open, onClose, bean, onCreated }: BeanF
   }, [bean, open]);
 
   const handleOriginsChange = (selected: OptionItem | OptionItem[] | null) => {
-    const arr = (Array.isArray(selected) ? selected : selected ? [selected] : []) as OptionItem[];
+    const arr = (
+      Array.isArray(selected) ? selected : selected ? [selected] : []
+    ) as OptionItem[];
     setOrigins((prev) => {
       const prevMap = new Map(prev.map((o) => [o.origin.id, o.percentage]));
       return arr.map((origin) => ({
@@ -136,7 +184,9 @@ export default function BeanFormDialog({ open, onClose, bean, onCreated }: BeanF
 
   const updatePercentage = (originId: string, val: string) => {
     setOrigins((prev) =>
-      prev.map((o) => (o.origin.id === originId ? { ...o, percentage: val } : o)),
+      prev.map((o) =>
+        o.origin.id === originId ? { ...o, percentage: val } : o,
+      ),
     );
   };
 
@@ -165,10 +215,14 @@ export default function BeanFormDialog({ open, onClose, bean, onCreated }: BeanF
     const patch: Record<string, unknown> = {};
 
     if (full.name !== bean.name) patch.name = full.name;
-    if (full.roaster_id !== (bean.roaster_id ?? null)) patch.roaster_id = full.roaster_id;
-    if (full.roast_degree !== (bean.roast_degree ?? 5)) patch.roast_degree = full.roast_degree;
-    if (full.bean_mix_type !== (bean.bean_mix_type ?? 'unknown')) patch.bean_mix_type = full.bean_mix_type;
-    if (full.bean_use_type !== (bean.bean_use_type ?? 'omni')) patch.bean_use_type = full.bean_use_type;
+    if (full.roaster_id !== (bean.roaster_id ?? null))
+      patch.roaster_id = full.roaster_id;
+    if (full.roast_degree !== (bean.roast_degree ?? 5))
+      patch.roast_degree = full.roast_degree;
+    if (full.bean_mix_type !== (bean.bean_mix_type ?? 'unknown'))
+      patch.bean_mix_type = full.bean_mix_type;
+    if (full.bean_use_type !== (bean.bean_use_type ?? 'omni'))
+      patch.bean_use_type = full.bean_use_type;
     if (full.decaf !== bean.decaf) patch.decaf = full.decaf;
     if (full.url !== (bean.url ?? null)) patch.url = full.url;
     if (full.ean !== (bean.ean ?? null)) patch.ean = full.ean;
@@ -185,7 +239,7 @@ export default function BeanFormDialog({ open, onClose, bean, onCreated }: BeanF
 
   const handleSubmit = async () => {
     if (isEdit) {
-      await update.mutateAsync({ id: bean!.id, ...buildPatchBody() });
+      await update.mutateAsync({ id: bean?.id, ...buildPatchBody() });
       notify('Bean updated');
       onClose();
     } else {
@@ -204,22 +258,30 @@ export default function BeanFormDialog({ open, onClose, bean, onCreated }: BeanF
       <DialogContent>
         <Stack spacing={2} sx={{ pt: 1 }}>
           <TextField
-            label="Name" value={name}
+            label="Name"
+            value={name}
             onChange={(e) => setName(e.target.value)}
-            required autoFocus
+            required
+            autoFocus
           />
 
           <AutocompleteCreate<OptionItem>
             label="Roaster"
             queryKey={['roasters']}
             fetchFn={async (q) => {
-              const { data } = await apiClient.get('/roasters', { params: { q, limit: 50 } });
+              const { data } = await apiClient.get('/roasters', {
+                params: { q, limit: 50 },
+              });
               return data;
             }}
             value={roaster}
             onChange={(v) => setRoaster(v as OptionItem | null)}
             renderCreateForm={(props) => (
-              <CreateInlineForm endpoint="roasters" label="Roaster" {...props} />
+              <CreateInlineForm
+                endpoint="roasters"
+                label="Roaster"
+                {...props}
+              />
             )}
           />
 
@@ -228,14 +290,21 @@ export default function BeanFormDialog({ open, onClose, bean, onCreated }: BeanF
             <Slider
               value={roastDegree}
               onChange={(_, v) => setRoastDegree(v as number)}
-              min={0} max={10} step={1} marks
+              min={0}
+              max={10}
+              step={1}
+              marks
               valueLabelDisplay="auto"
             />
           </Box>
 
           <FormControl fullWidth>
             <InputLabel>Mix Type</InputLabel>
-            <Select value={beanMixType} label="Mix Type" onChange={(e) => setBeanMixType(e.target.value)}>
+            <Select
+              value={beanMixType}
+              label="Mix Type"
+              onChange={(e) => setBeanMixType(e.target.value)}
+            >
               <MenuItem value="single_origin">Single Origin</MenuItem>
               <MenuItem value="blend">Blend</MenuItem>
               <MenuItem value="unknown">Unknown</MenuItem>
@@ -244,7 +313,11 @@ export default function BeanFormDialog({ open, onClose, bean, onCreated }: BeanF
 
           <FormControl fullWidth>
             <InputLabel>Use Type</InputLabel>
-            <Select value={beanUseType} label="Use Type" onChange={(e) => setBeanUseType(e.target.value)}>
+            <Select
+              value={beanUseType}
+              label="Use Type"
+              onChange={(e) => setBeanUseType(e.target.value)}
+            >
               <MenuItem value="filter">Filter</MenuItem>
               <MenuItem value="espresso">Espresso</MenuItem>
               <MenuItem value="omni">Omni</MenuItem>
@@ -252,18 +325,30 @@ export default function BeanFormDialog({ open, onClose, bean, onCreated }: BeanF
           </FormControl>
 
           <FormControlLabel
-            control={<Switch checked={decaf} onChange={(_, c) => setDecaf(c)} />}
+            control={
+              <Switch checked={decaf} onChange={(_, c) => setDecaf(c)} />
+            }
             label="Decaf"
           />
 
-          <TextField label="URL" value={url} onChange={(e) => setUrl(e.target.value)} />
-          <TextField label="EAN" value={ean} onChange={(e) => setEan(e.target.value)} />
+          <TextField
+            label="URL"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+          />
+          <TextField
+            label="EAN"
+            value={ean}
+            onChange={(e) => setEan(e.target.value)}
+          />
 
           <AutocompleteCreate<OptionItem>
             label="Origins"
             queryKey={['origins']}
             fetchFn={async (q) => {
-              const { data } = await apiClient.get('/origins', { params: { q, limit: 50 } });
+              const { data } = await apiClient.get('/origins', {
+                params: { q, limit: 50 },
+              });
               return data;
             }}
             value={origins.map((o) => o.origin)}
@@ -271,8 +356,12 @@ export default function BeanFormDialog({ open, onClose, bean, onCreated }: BeanF
             multiple
             renderCreateForm={(props) => (
               <CreateInlineForm
-                endpoint="origins" label="Origin"
-                fields={[{ key: 'country', label: 'Country' }, { key: 'region', label: 'Region' }]}
+                endpoint="origins"
+                label="Origin"
+                fields={[
+                  { key: 'country', label: 'Country' },
+                  { key: 'region', label: 'Region' },
+                ]}
                 {...props}
               />
             )}
@@ -280,20 +369,37 @@ export default function BeanFormDialog({ open, onClose, bean, onCreated }: BeanF
 
           {origins.length > 0 && (
             <Stack spacing={1}>
-              <Typography variant="caption" color="text.secondary">Origin Percentages (optional)</Typography>
+              <Typography variant="caption" color="text.secondary">
+                Origin Percentages (optional)
+              </Typography>
               {origins.map((o) => (
-                <Stack key={o.origin.id} direction="row" spacing={1} alignItems="center">
-                  <Typography variant="body2" sx={{ flex: 1 }}>{o.origin.name}</Typography>
+                <Stack
+                  key={o.origin.id}
+                  direction="row"
+                  spacing={1}
+                  alignItems="center"
+                >
+                  <Typography variant="body2" sx={{ flex: 1 }}>
+                    {o.origin.name}
+                  </Typography>
                   <TextField
-                    label="%" size="small" type="number"
+                    label="%"
+                    size="small"
+                    type="number"
                     value={o.percentage}
-                    onChange={(e) => updatePercentage(o.origin.id, e.target.value)}
+                    onChange={(e) =>
+                      updatePercentage(o.origin.id, e.target.value)
+                    }
                     sx={{ width: 90 }}
                     slotProps={{ input: { inputProps: { min: 0, max: 100 } } }}
                   />
                   <IconButton
                     size="small"
-                    onClick={() => setOrigins((prev) => prev.filter((x) => x.origin.id !== o.origin.id))}
+                    onClick={() =>
+                      setOrigins((prev) =>
+                        prev.filter((x) => x.origin.id !== o.origin.id),
+                      )
+                    }
                   >
                     <DeleteIcon fontSize="small" />
                   </IconButton>
@@ -306,7 +412,9 @@ export default function BeanFormDialog({ open, onClose, bean, onCreated }: BeanF
             label="Process Methods"
             queryKey={['process-methods']}
             fetchFn={async (q) => {
-              const { data } = await apiClient.get('/process-methods', { params: { q, limit: 50 } });
+              const { data } = await apiClient.get('/process-methods', {
+                params: { q, limit: 50 },
+              });
               return data;
             }}
             value={processes}
@@ -314,7 +422,8 @@ export default function BeanFormDialog({ open, onClose, bean, onCreated }: BeanF
             multiple
             renderCreateForm={(props) => (
               <CreateInlineForm
-                endpoint="process-methods" label="Process Method"
+                endpoint="process-methods"
+                label="Process Method"
                 fields={[{ key: 'category', label: 'Category' }]}
                 {...props}
               />
@@ -325,7 +434,9 @@ export default function BeanFormDialog({ open, onClose, bean, onCreated }: BeanF
             label="Varieties"
             queryKey={['bean-varieties']}
             fetchFn={async (q) => {
-              const { data } = await apiClient.get('/bean-varieties', { params: { q, limit: 50 } });
+              const { data } = await apiClient.get('/bean-varieties', {
+                params: { q, limit: 50 },
+              });
               return data;
             }}
             value={varieties}
@@ -333,28 +444,34 @@ export default function BeanFormDialog({ open, onClose, bean, onCreated }: BeanF
             multiple
             renderCreateForm={(props) => (
               <CreateInlineForm
-                endpoint="bean-varieties" label="Bean Variety"
+                endpoint="bean-varieties"
+                label="Bean Variety"
                 fields={[{ key: 'species', label: 'Species' }]}
                 {...props}
               />
             )}
           />
 
-          <FlavorTagSelect
-            value={flavorTags}
-            onChange={setFlavorTags}
-          />
+          <FlavorTagSelect value={flavorTags} onChange={setFlavorTags} />
 
           <TextField
-            label="Notes" value={notes}
+            label="Notes"
+            value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            multiline rows={3}
+            multiline
+            rows={3}
           />
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} disabled={isPending}>Cancel</Button>
-        <Button variant="contained" onClick={handleSubmit} disabled={!name.trim() || isPending}>
+        <Button onClick={onClose} disabled={isPending}>
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          disabled={!name.trim() || isPending}
+        >
           {isEdit ? 'Save' : 'Create'}
         </Button>
       </DialogActions>

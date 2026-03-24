@@ -1,6 +1,6 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import apiClient from '@/api/client';
 import type { PaginationParams } from '@/utils/pagination';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export interface Person {
   id: string;
@@ -43,7 +43,15 @@ export function useCreatePerson() {
 export function useUpdatePerson() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, ...body }: { id: string; name?: string; is_default?: boolean; retired_at?: string | null }) => {
+    mutationFn: async ({
+      id,
+      ...body
+    }: {
+      id: string;
+      name?: string;
+      is_default?: boolean;
+      retired_at?: string | null;
+    }) => {
       const { data } = await apiClient.patch(`/people/${id}`, body);
       return data;
     },
@@ -54,7 +62,9 @@ export function useUpdatePerson() {
 export function useDeletePerson() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (id: string) => { await apiClient.delete(`/people/${id}`); },
+    mutationFn: async (id: string) => {
+      await apiClient.delete(`/people/${id}`);
+    },
     onSuccess: () => qc.invalidateQueries({ queryKey: ['people'] }),
   });
 }

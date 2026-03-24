@@ -1,6 +1,6 @@
 import { useTheme } from '@mui/material';
-import _createPlotlyComponent from 'react-plotly.js/factory';
 import Plotly from 'plotly.js-dist-min';
+import _createPlotlyComponent from 'react-plotly.js/factory';
 
 // CJS/ESM interop: factory may be wrapped in { default: fn } due to __esModule flag
 const createPlotlyComponent =

@@ -1,11 +1,14 @@
-// frontend/src/features/brews/components/BrewStepSetup.tsx
-import { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Button, Stack, TextField, Typography } from '@mui/material';
-import AutocompleteCreate from '@/components/AutocompleteCreate';
 import apiClient from '@/api/client';
+import AutocompleteCreate from '@/components/AutocompleteCreate';
+import { Button, Stack, TextField, Typography } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+// frontend/src/features/brews/components/BrewStepSetup.tsx
+import { useEffect, useState } from 'react';
 
-interface OptionItem { id: string; name: string; }
+interface OptionItem {
+  id: string;
+  name: string;
+}
 
 interface BagOption extends OptionItem {
   bean_id: string;
@@ -30,8 +33,14 @@ interface BrewStepSetupProps {
 }
 
 function CreatePersonForm({
-  initialName, onCreated, onCancel,
-}: { initialName: string; onCreated: (item: OptionItem) => void; onCancel: () => void; }) {
+  initialName,
+  onCreated,
+  onCancel,
+}: {
+  initialName: string;
+  onCreated: (item: OptionItem) => void;
+  onCancel: () => void;
+}) {
   const [name, setName] = useState(initialName);
 
   const handleSubmit = async () => {
@@ -50,7 +59,11 @@ function CreatePersonForm({
       />
       <Stack direction="row" spacing={1} justifyContent="flex-end">
         <Button onClick={onCancel}>Cancel</Button>
-        <Button variant="contained" onClick={handleSubmit} disabled={!name.trim()}>
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          disabled={!name.trim()}
+        >
           Create
         </Button>
       </Stack>
@@ -60,10 +73,14 @@ function CreatePersonForm({
 
 export default function BrewStepSetup({ data, onChange }: BrewStepSetupProps) {
   // Fetch people to auto-select default
-  const { data: peopleData } = useQuery<{ items: { id: string; name: string; is_default?: boolean }[] }>({
+  const { data: peopleData } = useQuery<{
+    items: { id: string; name: string; is_default?: boolean }[];
+  }>({
     queryKey: ['people', { limit: 100 }],
     queryFn: async () => {
-      const { data: d } = await apiClient.get('/people', { params: { limit: 100 } });
+      const { data: d } = await apiClient.get('/people', {
+        params: { limit: 100 },
+      });
       return d;
     },
     staleTime: 60_000,
@@ -73,10 +90,12 @@ export default function BrewStepSetup({ data, onChange }: BrewStepSetupProps) {
     if (!data.person && peopleData) {
       const defaultPerson = peopleData.items.find((p) => p.is_default);
       if (defaultPerson) {
-        onChange({ person: { id: defaultPerson.id, name: defaultPerson.name } });
+        onChange({
+          person: { id: defaultPerson.id, name: defaultPerson.name },
+        });
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [peopleData]);
 
   return (
@@ -89,9 +108,17 @@ export default function BrewStepSetup({ data, onChange }: BrewStepSetupProps) {
         label="Bag"
         queryKey={['bags']}
         fetchFn={async (q) => {
-          const { data: d } = await apiClient.get('/bags', { params: { q, limit: 50 } });
+          const { data: d } = await apiClient.get('/bags', {
+            params: { q, limit: 50 },
+          });
           const items: BagOption[] = (d.items ?? []).map(
-            (bag: { id: string; bean_id: string; bean_name: string | null; weight: number | null; roast_date: string | null }) => ({
+            (bag: {
+              id: string;
+              bean_id: string;
+              bean_name: string | null;
+              weight: number | null;
+              roast_date: string | null;
+            }) => ({
               id: bag.id,
               bean_id: bag.bean_id,
               weight: bag.weight,
@@ -116,9 +143,16 @@ export default function BrewStepSetup({ data, onChange }: BrewStepSetupProps) {
         label="Brew Setup"
         queryKey={['brew-setups']}
         fetchFn={async (q) => {
-          const { data: d } = await apiClient.get('/brew-setups', { params: { q, limit: 50 } });
+          const { data: d } = await apiClient.get('/brew-setups', {
+            params: { q, limit: 50 },
+          });
           const items: BrewSetupOption[] = (d.items ?? []).map(
-            (s: { id: string; name: string | null; brew_method_name: string | null; grinder_id: string | null }) => ({
+            (s: {
+              id: string;
+              name: string | null;
+              brew_method_name: string | null;
+              grinder_id: string | null;
+            }) => ({
               id: s.id,
               brew_method_name: s.brew_method_name,
               grinder_id: s.grinder_id ?? null,
@@ -140,7 +174,9 @@ export default function BrewStepSetup({ data, onChange }: BrewStepSetupProps) {
         label="Person"
         queryKey={['people']}
         fetchFn={async (q) => {
-          const { data: d } = await apiClient.get('/people', { params: { q, limit: 50 } });
+          const { data: d } = await apiClient.get('/people', {
+            params: { q, limit: 50 },
+          });
           return d;
         }}
         value={data.person}
