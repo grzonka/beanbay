@@ -1,5 +1,5 @@
+import { useCallback, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router';
-import { useCallback, useMemo } from 'react';
 import type { GridPaginationModel, GridSortModel } from '@mui/x-data-grid';
 
 export interface PaginationParams {
@@ -97,4 +97,41 @@ export function usePaginationParams(defaultSortBy = 'created_at') {
     setSearch,
     setIncludeRetired,
   };
+}
+
+interface UsePaginationOptions {
+  field: string;
+  sort: 'asc' | 'desc';
+}
+
+/**
+ * Local-state pagination hook for components that don't sync with URL params.
+ *
+ * Parameters
+ * ----------
+ * defaultSort : UsePaginationOptions
+ *     Initial sort field and direction.
+ *
+ * Returns
+ * -------
+ * Object with paginationModel, onPaginationModelChange, sortModel, onSortModelChange.
+ */
+export function usePagination(defaultSort: UsePaginationOptions) {
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
+    page: 0,
+    pageSize: 25,
+  });
+  const [sortModel, setSortModel] = useState<GridSortModel>([
+    { field: defaultSort.field, sort: defaultSort.sort },
+  ]);
+
+  const onPaginationModelChange = useCallback((model: GridPaginationModel) => {
+    setPaginationModel(model);
+  }, []);
+
+  const onSortModelChange = useCallback((model: GridSortModel) => {
+    setSortModel(model);
+  }, []);
+
+  return { paginationModel, onPaginationModelChange, sortModel, onSortModelChange };
 }

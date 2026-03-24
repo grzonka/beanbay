@@ -49,12 +49,17 @@ export interface CampaignProgress {
   score_history: ScoreHistoryEntry[];
 }
 
+export interface PosteriorMeasurement {
+  values: Record<string, number>;
+  score: number;
+}
+
 export interface PosteriorData {
   params: string[];
-  grid: Record<string, number[]>;
-  mean: number[];
-  std: number[];
-  measurements: Record<string, unknown>[];
+  grid: number[][];
+  mean: number[] | number[][];
+  std: number[] | number[][];
+  measurements: PosteriorMeasurement[];
 }
 
 export interface FeatureImportanceData {
@@ -121,14 +126,14 @@ export function useCampaignProgress(campaignId: string) {
 
 export function usePosterior(
   campaignId: string,
-  params: string[],
+  params: string,
   points?: number,
 ) {
   return useQuery<PosteriorData>({
     queryKey: ['optimize', 'campaigns', campaignId, 'posterior', params, points],
     queryFn: async () => {
       const { data } = await apiClient.get(`/optimize/campaigns/${campaignId}/posterior`, {
-        params: { params: params.join(','), points },
+        params: { params, points },
       });
       return data;
     },
