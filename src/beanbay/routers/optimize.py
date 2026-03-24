@@ -658,8 +658,6 @@ def get_posterior_predictions(
             )
 
     # 5. Load measurements (same query pattern as taskiq worker)
-    from beanbay.models.bean import Bag
-
     stmt = (
         select(Brew)
         .join(Bag, Brew.bag_id == Bag.id)
