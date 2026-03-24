@@ -1,73 +1,65 @@
-// frontend/src/components/TasteRadar.tsx
-import {
-  Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer,
-} from 'recharts';
 import { useTheme } from '@mui/material';
+import PlotlyChart from './PlotlyChart';
 
-interface TasteDataPoint { axis: string; value: number | null; }
+export interface TasteDataPoint { axis: string; value: number; }
 
 interface TasteRadarProps { data: TasteDataPoint[]; maxValue?: number; size?: number; }
 
 export default function TasteRadar({ data, maxValue = 10, size = 300 }: TasteRadarProps) {
   const theme = useTheme();
-  const chartData = data.map((d) => ({ axis: d.axis, value: d.value ?? 0 }));
+  if (data.length === 0) return null;
+  const axes = data.map((d) => d.axis);
+  const values = data.map((d) => d.value);
 
   return (
-    <ResponsiveContainer width="100%" height={size}>
-      <RadarChart data={chartData}>
-        <PolarGrid stroke={theme.palette.divider} />
-        <PolarAngleAxis dataKey="axis" tick={{ fill: theme.palette.text.secondary, fontSize: 12 }} />
-        <PolarRadiusAxis domain={[0, maxValue]} tick={{ fill: theme.palette.text.secondary, fontSize: 10 }} axisLine={false} />
-        <Radar name="Taste" dataKey="value" stroke={theme.palette.primary.main} fill={theme.palette.primary.main} fillOpacity={0.3} />
-      </RadarChart>
-    </ResponsiveContainer>
+    <PlotlyChart
+      data={[{
+        type: 'scatterpolar', r: [...values, values[0]], theta: [...axes, axes[0]],
+        fill: 'toself', fillcolor: `${theme.palette.primary.main}4D`,
+        line: { color: theme.palette.primary.main }, name: 'Taste',
+      }]}
+      layout={{
+        polar: {
+          radialaxis: { visible: true, range: [0, maxValue], color: theme.palette.text.secondary },
+          angularaxis: { color: theme.palette.text.secondary },
+          bgcolor: 'transparent',
+        },
+        height: size, showlegend: false, margin: { t: 30, r: 30, b: 30, l: 30 },
+      }}
+    />
   );
 }
 
-export function brewTasteToRadar(taste: {
-  acidity?: number | null; sweetness?: number | null; body?: number | null;
-  bitterness?: number | null; balance?: number | null; aftertaste?: number | null;
-}): TasteDataPoint[] {
+// Helper functions (backwards compatible re-exports)
+
+interface BrewTaste { acidity?: number | null; sweetness?: number | null; body?: number | null; bitterness?: number | null; balance?: number | null; aftertaste?: number | null; }
+
+export function brewTasteToRadar(taste: BrewTaste): TasteDataPoint[] {
   return [
-    { axis: 'Acidity', value: taste.acidity ?? null },
-    { axis: 'Sweetness', value: taste.sweetness ?? null },
-    { axis: 'Body', value: taste.body ?? null },
-    { axis: 'Bitterness', value: taste.bitterness ?? null },
-    { axis: 'Balance', value: taste.balance ?? null },
-    { axis: 'Aftertaste', value: taste.aftertaste ?? null },
+    { axis: 'Acidity', value: taste.acidity ?? 0 }, { axis: 'Sweetness', value: taste.sweetness ?? 0 },
+    { axis: 'Body', value: taste.body ?? 0 }, { axis: 'Bitterness', value: taste.bitterness ?? 0 },
+    { axis: 'Balance', value: taste.balance ?? 0 }, { axis: 'Aftertaste', value: taste.aftertaste ?? 0 },
   ];
 }
 
-export function beanTasteToRadar(taste: {
-  acidity?: number | null; sweetness?: number | null; body?: number | null;
-  complexity?: number | null; aroma?: number | null; clean_cup?: number | null;
-}): TasteDataPoint[] {
+interface BeanTaste { acidity?: number | null; sweetness?: number | null; body?: number | null; complexity?: number | null; aroma?: number | null; clean_cup?: number | null; }
+
+export function beanTasteToRadar(taste: BeanTaste): TasteDataPoint[] {
   return [
-    { axis: 'Acidity', value: taste.acidity ?? null },
-    { axis: 'Sweetness', value: taste.sweetness ?? null },
-    { axis: 'Body', value: taste.body ?? null },
-    { axis: 'Complexity', value: taste.complexity ?? null },
-    { axis: 'Aroma', value: taste.aroma ?? null },
-    { axis: 'Clean Cup', value: taste.clean_cup ?? null },
+    { axis: 'Acidity', value: taste.acidity ?? 0 }, { axis: 'Sweetness', value: taste.sweetness ?? 0 },
+    { axis: 'Body', value: taste.body ?? 0 }, { axis: 'Complexity', value: taste.complexity ?? 0 },
+    { axis: 'Aroma', value: taste.aroma ?? 0 }, { axis: 'Clean Cup', value: taste.clean_cup ?? 0 },
   ];
 }
 
-export function cuppingToRadar(cupping: {
-  dry_fragrance?: number | null; wet_aroma?: number | null; brightness?: number | null;
-  flavor?: number | null; body?: number | null; finish?: number | null;
-  sweetness?: number | null; clean_cup?: number | null; complexity?: number | null;
-  uniformity?: number | null;
-}): TasteDataPoint[] {
+interface CuppingScores { dry_fragrance?: number | null; wet_aroma?: number | null; brightness?: number | null; flavor?: number | null; body?: number | null; finish?: number | null; sweetness?: number | null; clean_cup?: number | null; complexity?: number | null; uniformity?: number | null; }
+
+export function cuppingToRadar(scores: CuppingScores): TasteDataPoint[] {
   return [
-    { axis: 'Dry Fragrance', value: cupping.dry_fragrance ?? null },
-    { axis: 'Wet Aroma', value: cupping.wet_aroma ?? null },
-    { axis: 'Brightness', value: cupping.brightness ?? null },
-    { axis: 'Flavor', value: cupping.flavor ?? null },
-    { axis: 'Body', value: cupping.body ?? null },
-    { axis: 'Finish', value: cupping.finish ?? null },
-    { axis: 'Sweetness', value: cupping.sweetness ?? null },
-    { axis: 'Clean Cup', value: cupping.clean_cup ?? null },
-    { axis: 'Complexity', value: cupping.complexity ?? null },
-    { axis: 'Uniformity', value: cupping.uniformity ?? null },
+    { axis: 'Dry Fragrance', value: scores.dry_fragrance ?? 0 }, { axis: 'Wet Aroma', value: scores.wet_aroma ?? 0 },
+    { axis: 'Brightness', value: scores.brightness ?? 0 }, { axis: 'Flavor', value: scores.flavor ?? 0 },
+    { axis: 'Body', value: scores.body ?? 0 }, { axis: 'Finish', value: scores.finish ?? 0 },
+    { axis: 'Sweetness', value: scores.sweetness ?? 0 }, { axis: 'Clean Cup', value: scores.clean_cup ?? 0 },
+    { axis: 'Complexity', value: scores.complexity ?? 0 }, { axis: 'Uniformity', value: scores.uniformity ?? 0 },
   ];
 }
