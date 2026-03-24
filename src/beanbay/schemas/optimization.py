@@ -4,6 +4,8 @@ Schemas for campaigns, recommendations, optimization jobs, bean parameter
 overrides, method defaults, campaign progress, and person preferences.
 """
 
+from __future__ import annotations
+
 import json
 import uuid
 from datetime import datetime
@@ -131,15 +133,21 @@ class EffectiveRange(SQLModel):
 
 
 class CampaignDetailRead(CampaignRead):
-    """Extended campaign schema with effective parameter ranges.
+    """Extended campaign schema with effective parameter ranges and progress.
 
     Attributes
     ----------
     effective_ranges : list[EffectiveRange]
         Resolved parameter ranges for this campaign.
+    convergence : ConvergenceInfo | None
+        Convergence status information.
+    score_history : list[ScoreHistoryEntry]
+        Chronological score history.
     """
 
     effective_ranges: list[EffectiveRange] = []
+    convergence: ConvergenceInfo | None = None
+    score_history: list[ScoreHistoryEntry] = []
 
 
 # ---------------------------------------------------------------------------
@@ -170,6 +178,10 @@ class RecommendationRead(SQLModel):
         Recommendation status (pending, accepted, rejected).
     created_at : datetime
         Creation timestamp.
+    optimization_mode : str | None
+        Optimization mode used (auto, community, personal).
+    personal_brew_count : int | None
+        Number of personal brews used for optimization.
     """
 
     id: uuid.UUID
@@ -181,6 +193,8 @@ class RecommendationRead(SQLModel):
     parameter_values: dict
     status: str
     created_at: datetime
+    optimization_mode: str | None = None
+    personal_brew_count: int | None = None
 
     @model_validator(mode="before")
     @classmethod
@@ -211,6 +225,8 @@ class RecommendationRead(SQLModel):
                 "parameter_values",
                 "status",
                 "created_at",
+                "optimization_mode",
+                "personal_brew_count",
             ):
                 d[field] = getattr(data, field, None)
             data = d
@@ -221,6 +237,21 @@ class RecommendationRead(SQLModel):
         elif pv is None:
             data["parameter_values"] = {}
         return data
+
+
+class RecommendRequest(SQLModel):
+    """Optional body for POST /campaigns/{id}/recommend.
+
+    Attributes
+    ----------
+    person_id : uuid.UUID | None
+        Person to optimize for.
+    mode : str
+        Optimization mode: auto, community, or personal.
+    """
+
+    person_id: uuid.UUID | None = None
+    mode: str = "auto"
 
 
 # ---------------------------------------------------------------------------
@@ -501,6 +532,33 @@ class MethodBreakdown(SQLModel):
     avg_score: float
 
 
+class TasteProfile(SQLModel):
+    """Averaged sub-scores from a person's top brews.
+
+    Attributes
+    ----------
+    acidity : float | None
+        Average acidity score.
+    sweetness : float | None
+        Average sweetness score.
+    body : float | None
+        Average body score.
+    bitterness : float | None
+        Average bitterness score.
+    balance : float | None
+        Average balance score.
+    aftertaste : float | None
+        Average aftertaste score.
+    """
+
+    acidity: float | None = None
+    sweetness: float | None = None
+    body: float | None = None
+    bitterness: float | None = None
+    balance: float | None = None
+    aftertaste: float | None = None
+
+
 class PersonPreferences(SQLModel):
     """Aggregated preference data for a person.
 
@@ -520,6 +578,10 @@ class PersonPreferences(SQLModel):
         Preferences by coffee origin.
     method_breakdown : list[MethodBreakdown]
         Usage and scores by brew method.
+    taste_profile : TasteProfile | None
+        Averaged sub-scores from top brews.
+    taste_profile_brew_count : int
+        Number of brews used to compute the taste profile.
     """
 
     person: dict
@@ -529,6 +591,8 @@ class PersonPreferences(SQLModel):
     roast_preference: dict = {}
     origin_preferences: list[OriginPreference] = []
     method_breakdown: list[MethodBreakdown] = []
+    taste_profile: TasteProfile | None = None
+    taste_profile_brew_count: int = 0
 
 
 # ---------------------------------------------------------------------------

@@ -1766,3 +1766,23 @@ class TestPersonAwareOptimization:
         session.refresh(rec)
         assert rec.optimization_mode == "community"
         assert rec.personal_brew_count == 3
+
+
+class TestRecommendationReadSchema:
+    """RecommendationRead schema includes optimization_mode fields."""
+
+    def test_recommendation_read_has_mode_fields(self, recommend_client, recommend_session):
+        """RecommendationRead exposes optimization_mode and personal_brew_count."""
+        ids = _setup_campaign(recommend_client, recommend_session)
+        resp = recommend_client.post(RECOMMEND.format(campaign_id=ids["campaign_id"]))
+        assert resp.status_code == 202
+        job_id = resp.json()["job_id"]
+        job_resp = recommend_client.get(f"{JOBS}/{job_id}")
+        assert job_resp.json()["status"] == "completed"
+        result_id = job_resp.json()["result_id"]
+
+        rec_resp = recommend_client.get(f"{RECOMMENDATIONS}/{result_id}")
+        rec = rec_resp.json()
+        # Fields should exist (null is fine for legacy recommendations)
+        assert "optimization_mode" in rec
+        assert "personal_brew_count" in rec
