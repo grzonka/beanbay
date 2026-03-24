@@ -1503,6 +1503,7 @@ def get_person_preferences(
         brew_stats={
             "total_brews": total_brews,
             "avg_score": round(float(avg_score), 2) if avg_score is not None else None,
+            "favorite_method": method_breakdown[0].method if method_breakdown else None,
         },
         top_beans=top_beans,
         flavor_profile=flavor_profile,

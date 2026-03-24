@@ -141,7 +141,7 @@ export default function AppLayout() {
         </Drawer>
       )}
 
-      <Box component="main" sx={{ flexGrow: 1, p: { xs: 2, sm: 3 }, mt: 8, width: { md: `calc(100% - ${drawerWidth}px)` } }}>
+      <Box component="main" sx={{ flexGrow: 1, p: { xs: 2, sm: 3 }, mt: 8, pb: { xs: 10, sm: 3 }, width: { md: `calc(100% - ${drawerWidth}px)` } }}>
         <Outlet />
       </Box>
 
