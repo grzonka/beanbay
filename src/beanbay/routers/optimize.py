@@ -777,6 +777,92 @@ def get_posterior_predictions(
 
 
 # ======================================================================
+# Feature Importance (SHAP)
+# ======================================================================
+
+
+@router.get(
+    "/optimize/campaigns/{campaign_id}/feature-importance",
+    response_model=FeatureImportanceResponse,
+)
+def get_feature_importance(
+    campaign_id: uuid.UUID,
+    session: SessionDep,
+) -> FeatureImportanceResponse:
+    """Compute per-parameter feature importance via SHAP.
+
+    Uses the BayBE campaign's trained surrogate model and SHAP
+    KernelExplainer to estimate how much each parameter contributes
+    to the predicted score. Requires at least 3 measurements.
+
+    Parameters
+    ----------
+    campaign_id : uuid.UUID
+        Primary key of the campaign.
+    session : SessionDep
+        Database session.
+
+    Returns
+    -------
+    FeatureImportanceResponse
+        Parameter names and importance values sorted descending.
+
+    Raises
+    ------
+    HTTPException
+        404 if the campaign does not exist.
+        422 if campaign has no trained model or < 3 measurements.
+    """
+    import numpy as np
+    from baybe import Campaign as BaybeCampaign
+    from baybe.insights.shap import SHAPInsight
+
+    # 1. Load campaign
+    campaign = session.get(Campaign, campaign_id)
+    if campaign is None:
+        raise HTTPException(status_code=404, detail="Campaign not found.")
+
+    if not campaign.campaign_json:
+        raise HTTPException(
+            status_code=422,
+            detail="Campaign has no trained model. Request a recommendation first.",
+        )
+
+    # 2. Validate minimum measurement count
+    if campaign.measurement_count < 3:
+        raise HTTPException(
+            status_code=422,
+            detail=f"Need at least 3 measurements for SHAP analysis, found {campaign.measurement_count}.",
+        )
+
+    # 3. Restore BayBE campaign and compute SHAP insight
+    baybe_campaign = BaybeCampaign.from_json(campaign.campaign_json)
+    insight = SHAPInsight.from_campaign(baybe_campaign)
+
+    # 4. Extract per-feature importance from the SHAP explanation
+    #    explain() returns a tuple of shap.Explanation (one per target);
+    #    we use target 0 (single-objective).
+    explanation = insight.explain_target(0)
+    feature_names = list(explanation.feature_names)
+    importance_values = np.abs(explanation.values).mean(axis=0).tolist()
+
+    # 5. Sort by importance descending
+    paired = sorted(
+        zip(feature_names, importance_values),
+        key=lambda x: x[1],
+        reverse=True,
+    )
+    sorted_names = [p[0] for p in paired]
+    sorted_importance = [round(p[1], 6) for p in paired]
+
+    return FeatureImportanceResponse(
+        parameters=sorted_names,
+        importance=sorted_importance,
+        measurement_count=campaign.measurement_count,
+    )
+
+
+# ======================================================================
 # Method Parameter Defaults
 # ======================================================================
 

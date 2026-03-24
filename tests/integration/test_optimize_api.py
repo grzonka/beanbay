@@ -1245,3 +1245,53 @@ class TestPosteriorPredictions:
             params={"params": "nonexistent_param"},
         )
         assert resp.status_code == 422
+
+
+# ---------------------------------------------------------------------------
+# Feature Importance tests
+# ---------------------------------------------------------------------------
+
+IMPORTANCE = "/api/v1/optimize/campaigns/{campaign_id}/feature-importance"
+
+
+class TestFeatureImportance:
+    """Tests for GET /optimize/campaigns/{id}/feature-importance."""
+
+    def test_feature_importance_with_enough_data(
+        self, recommend_client, recommend_session
+    ):
+        """Returns sorted parameter importance with >= 3 measurements."""
+        ids = _setup_trained_campaign(
+            recommend_client, recommend_session, measurement_count=4
+        )
+        resp = recommend_client.get(
+            IMPORTANCE.format(campaign_id=ids["campaign_id"])
+        )
+        assert resp.status_code == 200
+        body = resp.json()
+        assert len(body["parameters"]) > 0
+        assert len(body["importance"]) == len(body["parameters"])
+        assert body["measurement_count"] == 4
+        # Verify sorted descending
+        for i in range(len(body["importance"]) - 1):
+            assert body["importance"][i] >= body["importance"][i + 1]
+
+    def test_feature_importance_insufficient_data(
+        self, recommend_client, recommend_session
+    ):
+        """Returns 422 when campaign has < 3 measurements."""
+        ids = _setup_trained_campaign(
+            recommend_client, recommend_session, measurement_count=2
+        )
+        resp = recommend_client.get(
+            IMPORTANCE.format(campaign_id=ids["campaign_id"])
+        )
+        assert resp.status_code == 422
+
+    def test_feature_importance_not_found(self, recommend_client):
+        """Returns 404 for non-existent campaign."""
+        fake_id = str(uuid.uuid4())
+        resp = recommend_client.get(
+            IMPORTANCE.format(campaign_id=fake_id)
+        )
+        assert resp.status_code == 404

@@ -8,8 +8,10 @@ dependencies = [
     "alembic>=1.18.4",
     "baybe>=0.12",
     "fastapi[standard]>=0.115",
+    "matplotlib>=3.10.8",
     "pydantic>=2.12.5",
     "pydantic-settings>=2.0",
+    "shap>=0.51.0",
     "sqlmodel>=0.0.37",
     "taskiq>=0.11",
 ]
