@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { type GridColDef } from '@mui/x-data-grid';
 import { Button, Chip } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
@@ -21,6 +22,7 @@ export default function PeoplePage() {
   const [editPerson, setEditPerson] = useState<Person | null>(null);
   const [retireTarget, setRetireTarget] = useState<Person | null>(null);
 
+  const navigate = useNavigate();
   const updatePerson = useUpdatePerson();
 
   const handleRetire = async () => {
@@ -59,7 +61,7 @@ export default function PeoplePage() {
         paginationModel={paginationModel} onPaginationModelChange={onPaginationModelChange}
         sortModel={sortModel} onSortModelChange={onSortModelChange}
         includeRetired={params.include_retired} onIncludeRetiredChange={setIncludeRetired}
-        onRowClick={(row) => { setEditPerson(row); setFormOpen(true); }}
+        onRowClick={(row) => navigate(`/people/${row.id}/preferences`)}
         emptyTitle="No people yet" emptyActionLabel="Add Person"
         onEmptyAction={() => { setEditPerson(null); setFormOpen(true); }}
       />
