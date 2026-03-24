@@ -45,6 +45,7 @@ from beanbay.schemas.optimization import (
     ScoreHistoryEntry,
     TopBean,
 )
+from beanbay.services.campaign import ensure_campaign
 from beanbay.services.parameter_ranges import compute_effective_ranges
 from beanbay.services.taskiq_broker import generate_recommendation
 
@@ -240,6 +241,16 @@ def _campaign_to_detail(
 
     ranges = _compute_campaign_ranges(session, campaign)
 
+    # Derive a display name: prefer explicit setup name, fall back to method name
+    if setup is not None:
+        if setup.name:
+            brew_setup_name = setup.name
+        else:
+            method = session.get(BrewMethod, setup.brew_method_id)
+            brew_setup_name = method.name if method else None
+    else:
+        brew_setup_name = None
+
     return CampaignDetailRead(
         id=campaign.id,
         bean_id=campaign.bean_id,
@@ -250,7 +261,7 @@ def _campaign_to_detail(
         created_at=campaign.created_at,
         updated_at=campaign.updated_at,
         bean_name=bean.name if bean else None,
-        brew_setup_name=setup.name if setup else None,
+        brew_setup_name=brew_setup_name,
         effective_ranges=ranges,
     )
 
@@ -300,26 +311,12 @@ def create_or_get_campaign(
     if setup is None:
         raise HTTPException(status_code=404, detail="BrewSetup not found.")
 
-    # Check for existing campaign
-    existing = session.exec(
-        select(Campaign).where(
-            Campaign.bean_id == payload.bean_id,
-            Campaign.brew_setup_id == payload.brew_setup_id,
-        )
-    ).first()
-
-    if existing is not None:
-        response.status_code = 200
-        return _campaign_to_detail(session, existing)
-
-    # Create new campaign
-    campaign = Campaign(
-        bean_id=payload.bean_id,
-        brew_setup_id=payload.brew_setup_id,
+    campaign, created = ensure_campaign(
+        session, bean_id=payload.bean_id, brew_setup_id=payload.brew_setup_id
     )
-    session.add(campaign)
-    session.commit()
-    session.refresh(campaign)
+
+    if not created:
+        response.status_code = 200
 
     return _campaign_to_detail(session, campaign)
 
@@ -363,11 +360,20 @@ def list_campaigns(
     for campaign in campaigns:
         bean = session.get(Bean, campaign.bean_id)
         setup = session.get(BrewSetup, campaign.brew_setup_id)
+        # Derive a display name: prefer explicit setup name, fall back to method name
+        if setup is not None:
+            if setup.name:
+                brew_setup_name = setup.name
+            else:
+                method = session.get(BrewMethod, setup.brew_method_id)
+                brew_setup_name = method.name if method else None
+        else:
+            brew_setup_name = None
         results.append(
             CampaignListRead(
                 id=campaign.id,
                 bean_name=bean.name if bean else None,
-                brew_setup_name=setup.name if setup else None,
+                brew_setup_name=brew_setup_name,
                 phase=campaign.phase,
                 measurement_count=campaign.measurement_count,
                 best_score=campaign.best_score,

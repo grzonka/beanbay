@@ -908,6 +908,73 @@ class TestPersonPreferences:
         assert "Person" in resp.json()["detail"]
 
 
+class TestAutoCampaignOnBrew:
+    """Verify campaigns are auto-created when brews are logged."""
+
+    def test_brew_creates_campaign(self, recommend_client, recommend_session):
+        """Creating a brew auto-creates a campaign for the bean+setup."""
+        seed_brew_methods(recommend_session)
+        recommend_session.commit()
+        seed_method_parameter_defaults(recommend_session)
+        recommend_session.commit()
+
+        method_id = _create_brew_method(recommend_client, "espresso_auto1")
+        bean_id = _create_bean(recommend_client, "Auto Bean")
+        setup_id = _create_brew_setup(recommend_client, method_id)
+        person_id = _create_person(recommend_client, "Auto Tester")
+        bag_id = _create_bag(recommend_client, bean_id)
+
+        # Before brew: no campaign should exist
+        resp = recommend_client.get(
+            CAMPAIGNS, params={"bean_id": bean_id}
+        )
+        assert resp.status_code == 200
+        assert len(resp.json()) == 0
+
+        # Create a brew
+        _create_brew_with_taste(
+            recommend_client, bag_id, setup_id, person_id, score=7.5,
+        )
+
+        # After brew: campaign should exist
+        resp = recommend_client.get(
+            CAMPAIGNS, params={"bean_id": bean_id}
+        )
+        assert resp.status_code == 200
+        campaigns = resp.json()
+        assert len(campaigns) >= 1
+        campaign = campaigns[0]
+        assert campaign["bean_name"] is not None
+        assert campaign["brew_setup_name"] is not None
+
+    def test_second_brew_same_campaign(self, recommend_client, recommend_session):
+        """A second brew for the same bean+setup does not create a second campaign."""
+        seed_brew_methods(recommend_session)
+        recommend_session.commit()
+        seed_method_parameter_defaults(recommend_session)
+        recommend_session.commit()
+
+        method_id = _create_brew_method(recommend_client, "espresso_auto2")
+        bean_id = _create_bean(recommend_client, "Auto Bean 2")
+        setup_id = _create_brew_setup(recommend_client, method_id)
+        person_id = _create_person(recommend_client, "Auto Tester 2")
+        bag_id = _create_bag(recommend_client, bean_id)
+
+        _create_brew_with_taste(
+            recommend_client, bag_id, setup_id, person_id, score=7.0,
+        )
+        _create_brew_with_taste(
+            recommend_client, bag_id, setup_id, person_id, score=8.0,
+        )
+
+        resp = recommend_client.get(
+            CAMPAIGNS, params={"bean_id": bean_id}
+        )
+        campaigns = resp.json()
+        matching = [c for c in campaigns if c["brew_setup_name"] is not None]
+        assert len(matching) == 1  # Only one campaign, not two
+
+
 # ---------------------------------------------------------------------------
 # Campaign Progress tests
 # ---------------------------------------------------------------------------

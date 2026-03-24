@@ -29,6 +29,7 @@ from beanbay.schemas.brew import (
     BrewUpdate,
 )
 from beanbay.schemas.common import PaginatedResponse
+from beanbay.services.campaign import ensure_campaign
 from beanbay.utils.grinder_display import from_display, to_display
 
 router = APIRouter(tags=["Brews"])
@@ -494,6 +495,12 @@ def create_brew(
         _create_taste(session, db_brew, payload.taste)
 
     session.commit()
+
+    # Auto-create campaign for this bean+setup combination
+    ensure_campaign(
+        session, bean_id=bag.bean_id, brew_setup_id=payload.brew_setup_id
+    )
+
     session.refresh(db_brew)
     return _brew_to_read(db_brew)  # type: ignore[return-value]
 
