@@ -3,7 +3,7 @@ import apiClient from '@/api/client';
 import type { PaginationParams } from '@/utils/pagination';
 
 export interface BagListItem {
-  id: string; bean_id: string; roast_date: string | null; opened_at: string | null;
+  id: string; bean_id: string; bean_name: string | null; roast_date: string | null; opened_at: string | null;
   weight: number; price: number | null; is_preground: boolean; notes: string | null;
   bought_at: string | null; vendor_id: string | null; frozen_at: string | null;
   thawed_at: string | null; storage_type_id: string | null; best_date: string | null;

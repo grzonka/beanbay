@@ -8,6 +8,7 @@ import uuid
 from datetime import date, datetime, timezone
 from fastapi import APIRouter, HTTPException, Query
 from sqlalchemy import func
+from sqlalchemy.orm import selectinload
 from sqlmodel import Session, select
 
 from beanbay.dependencies import SessionDep, validate_sort
@@ -584,7 +585,7 @@ def list_bean_bags(
     if db_bean is None:
         raise HTTPException(status_code=404, detail="Bean not found.")
 
-    stmt = select(Bag).where(Bag.bean_id == bean_id)
+    stmt = select(Bag).where(Bag.bean_id == bean_id).options(selectinload(Bag.bean))
     count_stmt = (
         select(func.count()).select_from(Bag).where(Bag.bean_id == bean_id)
     )
@@ -603,8 +604,13 @@ def list_bean_bags(
     stmt = stmt.offset(offset).limit(limit)
     items = session.exec(stmt).all()
 
-    return PaginatedResponse(  # type: ignore[return-value]
-        items=items,
+    return PaginatedResponse(
+        items=[
+            BagRead.model_validate(
+                bag, update={"bean_name": bag.bean.name if bag.bean else None}
+            )
+            for bag in items
+        ],
         total=total,
         limit=limit,
         offset=offset,
@@ -718,7 +724,7 @@ def list_bags(
     """
     validate_sort(sort_by, sort_dir, BAG_SORTABLE)
 
-    stmt = select(Bag)
+    stmt = select(Bag).options(selectinload(Bag.bean))
     count_stmt = select(func.count()).select_from(Bag)
 
     if not include_retired:
@@ -747,8 +753,13 @@ def list_bags(
     stmt = stmt.offset(offset).limit(limit)
     items = session.exec(stmt).all()
 
-    return PaginatedResponse(  # type: ignore[return-value]
-        items=items,
+    return PaginatedResponse(
+        items=[
+            BagRead.model_validate(
+                bag, update={"bean_name": bag.bean.name if bag.bean else None}
+            )
+            for bag in items
+        ],
         total=total,
         limit=limit,
         offset=offset,

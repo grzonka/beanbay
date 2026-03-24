@@ -59,16 +59,6 @@ function CreatePersonForm({
 }
 
 export default function BrewStepSetup({ data, onChange }: BrewStepSetupProps) {
-  // Fetch beans for name resolution (bag list items only have bean_id, not bean name)
-  const { data: beansData } = useQuery<{ items: { id: string; name: string }[] }>({
-    queryKey: ['beans', { limit: 200 }],
-    queryFn: async () => {
-      const { data: d } = await apiClient.get('/beans', { params: { limit: 200 } });
-      return d;
-    },
-    staleTime: 60_000,
-  });
-
   // Fetch people to auto-select default
   const { data: peopleData } = useQuery<{ items: { id: string; name: string; is_default?: boolean }[] }>({
     queryKey: ['people', { limit: 100 }],
@@ -89,9 +79,6 @@ export default function BrewStepSetup({ data, onChange }: BrewStepSetupProps) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [peopleData]);
 
-  const beanMap: Record<string, string> = {};
-  (beansData?.items ?? []).forEach((b) => { beanMap[b.id] = b.name; });
-
   return (
     <Stack spacing={3}>
       <Typography variant="body2" color="text.secondary">
@@ -104,13 +91,13 @@ export default function BrewStepSetup({ data, onChange }: BrewStepSetupProps) {
         fetchFn={async (q) => {
           const { data: d } = await apiClient.get('/bags', { params: { q, limit: 50 } });
           const items: BagOption[] = (d.items ?? []).map(
-            (bag: { id: string; bean_id: string; weight: number | null; roast_date: string | null }) => ({
+            (bag: { id: string; bean_id: string; bean_name: string | null; weight: number | null; roast_date: string | null }) => ({
               id: bag.id,
               bean_id: bag.bean_id,
               weight: bag.weight,
               roast_date: bag.roast_date,
               name: [
-                beanMap[bag.bean_id] ?? 'Unknown bean',
+                bag.bean_name ?? 'Unknown bean',
                 bag.weight != null ? `${bag.weight}g` : null,
                 bag.roast_date ? `roasted ${bag.roast_date}` : null,
               ]

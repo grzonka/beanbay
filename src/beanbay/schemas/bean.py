@@ -107,6 +107,8 @@ class BagRead(BagBase):
         Primary key.
     bean_id : uuid.UUID
         Parent bean's primary key.
+    bean_name : str | None
+        Name of the parent bean (denormalized for display).
     roast_date : date | None
         Date the coffee was roasted.
     opened_at : date | None
@@ -143,6 +145,7 @@ class BagRead(BagBase):
 
     id: uuid.UUID
     bean_id: uuid.UUID
+    bean_name: str | None = None
     created_at: datetime
     updated_at: datetime
     retired_at: datetime | None
