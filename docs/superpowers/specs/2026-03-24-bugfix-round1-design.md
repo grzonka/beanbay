@@ -163,13 +163,35 @@ The `ensure_campaign` function:
 
 ---
 
+---
+
+## Bug 7: Bags not marked as opened when used in a brew
+
+**Severity**: Minor — "Bags Unopened" dashboard stat is wrong.
+
+**Root cause**: `create_brew()` in `brews.py` does not set `opened_at` on the bag when a brew is created with it. A bag used in a brew should be considered opened.
+
+**Fix**: In `create_brew()`, after validating the bag exists, set `bag.opened_at` to the current time if it's still `None`:
+
+```python
+if bag.opened_at is None:
+    bag.opened_at = datetime.now(timezone.utc)
+    session.add(bag)
+```
+
+**Files**:
+- Modify: `src/beanbay/routers/brews.py` — auto-set `bag.opened_at` in `create_brew()` if null
+
+**Verification**: Create a brew with a fresh bag. Check `/beans/{id}` detail — the bag should show an `opened_at` date. Dashboard "Bags Unopened" should decrement.
+
+---
+
 ## Dependencies Between Fixes
 
-All 6 fixes are independent and can be implemented in any order. No fix depends on another.
+All 7 fixes are independent and can be implemented in any order. No fix depends on another.
 
 ---
 
 ## Out of Scope
 
-- **"Bags Unopened" count**: Shows 2 because both bags have `opened_at=null`. Correct behavior — bags were never opened.
 - **Plotly chunk size warning**: 4.6MB Plotly bundle is inherent. Could be addressed with dynamic import in a future optimization pass.
